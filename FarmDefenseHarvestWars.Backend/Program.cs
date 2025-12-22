@@ -1,15 +1,28 @@
+using FarmDefenseHarvestWars.Backend.Data;
+using FarmDefenseHarvestWars.Backend.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Configurăm Baza de Date (PostgreSQL)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
+// 2. Activăm Identity (Login/Register) + API Endpoints
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// 3. Adăugăm Controllerele (pentru logica jocului)
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurare Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,8 +30,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
+
+// Aici e MAGIA: .NET 8 creează automat rutele /register și /login
+app.MapIdentityApi<ApplicationUser>();
 
 app.MapControllers();
 

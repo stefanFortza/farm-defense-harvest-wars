@@ -1,0 +1,30 @@
+services:
+  # Serviciul de Bază de Date
+  db:
+    image: postgres:16-alpine # Folosim Alpine că e mic și rapid
+    container_name: farm_db_local
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=FarmWarsDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - farm_db_data:/var/lib/postgresql/data
+
+  # Opțional: PgAdmin (Interfață grafică web pentru baza de date)
+  # Te ajută să vezi tabelele direct în browser fără să instalezi nimic.
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: farm_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@farm.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  farm_db_data: # Aici se salvează datele fizic pe disk-ul tău, gestionat de Docker

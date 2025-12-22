@@ -1,0 +1,71 @@
+# .gitignore for FarmDefenseHarvestWars
+
+# Build / output
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Visual Studio, VS Code, Rider
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+.packages/
+.nuget/
+
+# Logs
+*.log
+
+# Dotnet tools
+.dotnet/tools/
+
+# Database files
+*.db
+*.sqlite
+*.db-shm
+*.db-wal
+
+# User secrets / env
+secrets.json
+.env
+.env.*
+
+# Docker overrides (local)
+docker-compose.override.yml
+
+# Godot
+.import/
+.export_presets.cfg
+.godot/
+.mono/
+mono_crash.*
+
+# Ignore JetBrains project files
+*.ipr
+*.iws
+
+# Ignore temporary files
+*.tmp
+*~
+
+# Ignore compiled Native/VS artifacts
+*.obj
+*.pch
+
+# Ignore generated files
+**/*.generated.cs
+
+# Keep migrations and source files tracked intentionally
+# (do not ignore Migrations/ or other source files)
