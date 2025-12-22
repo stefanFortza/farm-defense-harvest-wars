@@ -1411,6 +1411,16 @@
             "rid": "win"
           }
         }
+      },
+      "FarmDefenseHarvestWars.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/FarmDefenseHarvestWars.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FarmDefenseHarvestWars.Shared.dll": {}
+        }
       }
     }
   },
@@ -3720,10 +3730,16 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "FarmDefenseHarvestWars.Shared/1.0.0": {
+      "type": "project",
+      "path": "../FarmDefenseHarvestWars.Shared/FarmDefenseHarvestWars.Shared.csproj",
+      "msbuildProject": "../FarmDefenseHarvestWars.Shared/FarmDefenseHarvestWars.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "FarmDefenseHarvestWars.Shared >= 1.0.0",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 10.0.1",
       "Microsoft.AspNetCore.OpenApi >= 10.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.1",
@@ -3756,7 +3772,11 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.Shared/FarmDefenseHarvestWars.Shared.csproj": {
+              "projectPath": "/home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.Shared/FarmDefenseHarvestWars.Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

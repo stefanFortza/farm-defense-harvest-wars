@@ -1,0 +1,4 @@
+{
+  "email": "fermier@joc.com",
+  "password": "Password123!"
+}
