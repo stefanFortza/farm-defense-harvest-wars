@@ -2,27 +2,49 @@ using FarmDefenseHarvestWars.Backend.Data;
 using FarmDefenseHarvestWars.Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configurăm Baza de Date (PostgreSQL)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// 1. Configurare SQLite
+// Asigură-te că ai pachetul: Microsoft.EntityFrameworkCore.Sqlite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseSqlite("Data Source=game_dev.db"));
 
-// 2. Activăm Identity (Login/Register) + API Endpoints
+// 2. Configurare Identity (Login/Register)
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// 3. Adăugăm Controllerele (pentru logica jocului)
+// 3. Controllere
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// 4. Configurare SWAGGER (Versiunea NOUĂ pentru .NET 10 / Swashbuckle v10+)
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Farm Defense API", Version = "v1" });
+
+    // A. Definim Schema de Securitate
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+
+    // B. Aplicăm cerința de securitate (SINTAXA NOUĂ)
+    // Aceasta leagă butonul de lacăt de schema definită mai sus
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
 
 var app = builder.Build();
 
-// Configurare Pipeline
+// 5. Pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -30,11 +52,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Ordinea contează aici!
 app.UseAuthorization();
 
-// Aici e MAGIA: .NET 8 creează automat rutele /register și /login
+// Mapăm rutele automate de Identity (/register, /login)
 app.MapIdentityApi<ApplicationUser>();
 
+// Mapăm controllerele tale (Joc, Inventar, etc.)
 app.MapControllers();
 
 app.Run();
