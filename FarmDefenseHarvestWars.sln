@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmDefenseHarvestWars.Shared", "FarmDefenseHarvestWars.Shared\FarmDefenseHarvestWars.Shared.csproj", "{7F7F4932-3E37-4733-8234-86270A58F7E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmDefenseHarvestWars.Backend", "FarmDefenseHarvestWars.Backend\FarmDefenseHarvestWars.Backend.csproj", "{DA8C4BC6-B2F7-4530-AD38-9F05D661D428}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmDefenseHarvestWars.GameClient", "FarmDefenseHarvestWars.GameClient\FarmDefenseHarvestWars.GameClient.csproj", "{76108CD3-F2C8-4F86-A6A8-C38B25910C57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F7F4932-3E37-4733-8234-86270A58F7E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F7F4932-3E37-4733-8234-86270A58F7E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F7F4932-3E37-4733-8234-86270A58F7E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F7F4932-3E37-4733-8234-86270A58F7E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA8C4BC6-B2F7-4530-AD38-9F05D661D428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA8C4BC6-B2F7-4530-AD38-9F05D661D428}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA8C4BC6-B2F7-4530-AD38-9F05D661D428}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA8C4BC6-B2F7-4530-AD38-9F05D661D428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76108CD3-F2C8-4F86-A6A8-C38B25910C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76108CD3-F2C8-4F86-A6A8-C38B25910C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76108CD3-F2C8-4F86-A6A8-C38B25910C57}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{76108CD3-F2C8-4F86-A6A8-C38B25910C57}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+EndGlobal

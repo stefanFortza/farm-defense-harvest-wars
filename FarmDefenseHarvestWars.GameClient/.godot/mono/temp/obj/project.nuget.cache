@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "OMTasGf+B8v21Z6Iu4hZO/IVehrx/S9VB0+B5N/wWl+tW29ZRFmt69KAVFxzKjo7Qxqu7Mx/91x5vrqj/46l4A==",
+  "success": true,
+  "projectFilePath": "/home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/FarmDefenseHarvestWars.GameClient.csproj",
+  "expectedPackageFiles": [
+    "/home/stefantacu/.nuget/packages/godot.sourcegenerators/4.5.0/godot.sourcegenerators.4.5.0.nupkg.sha512",
+    "/home/stefantacu/.nuget/packages/godotsharp/4.5.0/godotsharp.4.5.0.nupkg.sha512",
+    "/home/stefantacu/.nuget/packages/godotsharpeditor/4.5.0/godotsharpeditor.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
