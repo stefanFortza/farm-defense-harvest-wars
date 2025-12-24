@@ -1,9 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cspvoo0mf44pv"]
+[gd_scene load_steps=2 format=3 uid="uid://cspvoo0mf44pv"]
 
-[ext_resource type="Script" uid="uid://c8dp70hjsl8p2" path="res://Scenes/Authentication/LoginScreen.cs" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://mainmenu1" path="res://Scenes/Menus/MainMenu.tscn" id="2_aqlxs"]
+[ext_resource type="Script" path="res://Scenes/Authentication/RegisterScreen.cs" id="1_script"]
 
-[node name="LoginScreen" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "LoginButton", "RegisterButton", "StatusLabel")]
+[node name="RegisterScreen" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ConfirmPasswordInput", "RegisterButton", "BackButton", "StatusLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,10 +12,10 @@ grow_vertical = 2
 script = ExtResource("1_script")
 EmailInput = NodePath("VBoxContainer/EmailInput")
 PasswordInput = NodePath("VBoxContainer/PasswordInput")
-LoginButton = NodePath("VBoxContainer/LoginButton")
+ConfirmPasswordInput = NodePath("VBoxContainer/ConfirmPasswordInput")
 RegisterButton = NodePath("VBoxContainer/RegisterButton")
+BackButton = NodePath("VBoxContainer/BackButton")
 StatusLabel = NodePath("VBoxContainer/StatusLabel")
-MainMenuScene = ExtResource("2_aqlxs")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -26,9 +25,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -150.0
-offset_top = -100.0
+offset_top = -125.0
 offset_right = 150.0
-offset_bottom = 100.0
+offset_bottom = 125.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -42,15 +41,20 @@ layout_mode = 2
 placeholder_text = "Parola"
 secret = true
 
-[node name="LoginButton" type="Button" parent="VBoxContainer"]
+[node name="ConfirmPasswordInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
-text = "Logare"
+placeholder_text = "Confirmă Parola"
+secret = true
 
 [node name="RegisterButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Înregistrare"
+text = "Creează Cont"
+
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Înapoi la Login"
 
 [node name="StatusLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "Așteptare..."
+text = ""
 horizontal_alignment = 1

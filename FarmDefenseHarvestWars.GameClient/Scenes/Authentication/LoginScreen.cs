@@ -7,6 +7,7 @@ public partial class LoginScreen : Control
     [Export] public LineEdit EmailInput = null!;
     [Export] public LineEdit PasswordInput = null!;
     [Export] public Button LoginButton = null!;
+    [Export] public Button RegisterButton = null!;
     [Export] public Label StatusLabel = null!;
 
     // Calea către scena jocului (o vom modifica când facem harta)
@@ -16,6 +17,10 @@ public partial class LoginScreen : Control
     {
         // Conectăm semnalul de apăsare a butonului
         LoginButton.Pressed += OnLoginPressed;
+        if (RegisterButton != null)
+        {
+            RegisterButton.Pressed += () => GetTree().ChangeSceneToFile("res://Scenes/Authentication/RegisterScreen.tscn");
+        }
 
         // Resetăm statusul
         StatusLabel.Text = "";
