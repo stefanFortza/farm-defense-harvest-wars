@@ -45,6 +45,9 @@
         }
       },
       "FarmDefenseHarvestWars.Shared/1.0.0": {
+        "dependencies": {
+          "Refit": "9.0.2"
+        },
         "runtime": {
           "FarmDefenseHarvestWars.Shared.dll": {
             "assemblyVersion": "1.0.0.0",
