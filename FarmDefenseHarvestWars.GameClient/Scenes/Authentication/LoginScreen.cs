@@ -10,8 +10,7 @@ public partial class LoginScreen : Control
     [Export] public Label StatusLabel = null!;
 
     // Calea către scena jocului (o vom modifica când facem harta)
-    [Export] public PackedScene gameScene = null!;
-    private const string GameScenePath = "res://Scenes/Gameplay/FarmMap.tscn";
+    [Export] public PackedScene MainMenuScene = null!;
 
     public override void _Ready()
     {
@@ -51,7 +50,7 @@ public partial class LoginScreen : Control
                 StatusLabel.Modulate = Colors.Green;
                 await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
                 // GetTree().ChangeSceneToFile(GameScenePath);
-                GetTree().ChangeSceneToPacked(gameScene);
+                GetTree().ChangeSceneToPacked(MainMenuScene);
                 return;
             }
 
