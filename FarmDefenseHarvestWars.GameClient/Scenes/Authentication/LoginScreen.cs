@@ -6,17 +6,18 @@ using System.Text.Json;
 using System.Threading.Tasks;
 // Importăm DTO-urile din Shared (Trebuie să meargă dacă ai făcut referința corect)
 using FarmDefenseHarvestWars.Shared.Models;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 
 public partial class LoginScreen : Control
 {
-    [Export] public LineEdit EmailInput;
-    [Export] public LineEdit PasswordInput;
-    [Export] public Button LoginButton;
-    [Export] public Label StatusLabel;
+    [Export] public LineEdit EmailInput = null!;
+    [Export] public LineEdit PasswordInput = null!;
+    [Export] public Button LoginButton = null!;
+    [Export] public Label StatusLabel = null!;
 
     // Adresa Backend-ului (Verifică portul în terminalul dotnet run!)
     private const string BaseUrl = "http://localhost:5177";
-    private static readonly NetHttp.HttpClient _client = new NetHttp.HttpClient();
+    private static readonly NetHttp.HttpClient _client = NetworkManager.HttpClient;
 
     public override void _Ready()
     {

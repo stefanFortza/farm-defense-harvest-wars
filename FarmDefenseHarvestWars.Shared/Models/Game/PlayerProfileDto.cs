@@ -1,4 +1,4 @@
-namespace FarmDefenseHarvestWars.Shared.Models;
+namespace FarmDefenseHarvestWars.Shared.Models.Game;
 
 public class PlayerProfileDto
 {

@@ -1,4 +1,5 @@
 is_global = true
+build_property.RefitInternalNamespace = FarmDefenseHarvestWars.GameClient
 build_property.GodotDisabledSourceGenerators = 
 build_property.GodotProjectDir = /home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/
 build_property.GodotProjectDirBase64 = L2hvbWUvc3RlZmFudGFjdS9naXRodWIvZmFybS1kZWZlbnNlLWhhcnZlc3Qtd2Fycy9GYXJtRGVmZW5zZUhhcnZlc3RXYXJzLkdhbWVDbGllbnQv

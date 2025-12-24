@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8k2j3l4m5n6o"]
+[gd_scene load_steps=2 format=3 uid="uid://cspvoo0mf44pv"]
 
-[ext_resource type="Script" path="res://LoginScreen.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://c8dp70hjsl8p2" path="res://Scenes/Authentication/LoginScreen.cs" id="1_script"]
 
-[node name="LoginScreen" type="Control"]
+[node name="LoginScreen" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "LoginButton", "StatusLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

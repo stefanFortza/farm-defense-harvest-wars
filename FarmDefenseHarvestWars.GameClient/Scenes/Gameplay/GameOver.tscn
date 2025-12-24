@@ -1,0 +1,6 @@
+[gd_scene load_steps=1 format=3 uid="uid://gameover1"]
+
+[node name="GameOver" type="Control"]
+
+[node name="Label" type="Label" parent="."]
+text = "Game Over"

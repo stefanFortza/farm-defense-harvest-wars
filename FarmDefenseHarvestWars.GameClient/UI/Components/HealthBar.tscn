@@ -1,0 +1,4 @@
+[gd_scene load_steps=1 format=3 uid="uid://healthbar1"]
+
+[node name="HealthBar" type="TextureProgress2D"]
+

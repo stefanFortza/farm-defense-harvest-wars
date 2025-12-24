@@ -18,3 +18,4 @@
 /home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/.godot/mono/temp/obj/Debug/FarmDefenseHarvestWars.GameClient.pdb
 /home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/.godot/mono/temp/obj/Debug/FarmDefenseHarvestWars.GameClient.genruntimeconfig.cache
 /home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/.godot/mono/temp/obj/Debug/ref/FarmDefenseHarvestWars.GameClient.dll
+/home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/.godot/mono/temp/bin/Debug/Refit.dll

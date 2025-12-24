@@ -37,9 +37,29 @@
           }
         }
       },
+      "Refit/9.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Refit.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Refit.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/netstandard2.0/refit.props": {},
+          "buildTransitive/netstandard2.0/refit.targets": {}
+        }
+      },
       "FarmDefenseHarvestWars.Shared/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Refit": "9.0.2"
+        },
         "compile": {
           "bin/placeholder/FarmDefenseHarvestWars.Shared.dll": {}
         },
@@ -89,6 +109,35 @@
         "lib/net8.0/GodotSharpEditor.xml"
       ]
     },
+    "Refit/9.0.2": {
+      "sha512": "zLAfOh1iYE1bXFdnPjX5V6Nq8d4vBwxXaCovNNcAt9Fz3mfxAqHS3fckbBX4wetVgN1A6tIOzrDtPTN2c4FNrQ==",
+      "type": "package",
+      "path": "refit/9.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE/LICENSE",
+        "README.md",
+        "analyzers/dotnet/roslyn3.8/cs/InterfaceStubGeneratorV1.dll",
+        "analyzers/dotnet/roslyn4.1/cs/InterfaceStubGeneratorV2.dll",
+        "build/netstandard2.0/refit.targets",
+        "buildTransitive/netstandard2.0/refit.props",
+        "buildTransitive/netstandard2.0/refit.targets",
+        "lib/net10.0/Refit.dll",
+        "lib/net10.0/Refit.xml",
+        "lib/net462/Refit.dll",
+        "lib/net462/Refit.xml",
+        "lib/net8.0/Refit.dll",
+        "lib/net8.0/Refit.xml",
+        "lib/net9.0/Refit.dll",
+        "lib/net9.0/Refit.xml",
+        "lib/netstandard2.0/Refit.dll",
+        "lib/netstandard2.0/Refit.xml",
+        "refit.9.0.2.nupkg.sha512",
+        "refit.nuspec",
+        "refit_logo.png"
+      ]
+    },
     "FarmDefenseHarvestWars.Shared/1.0.0": {
       "type": "project",
       "path": "../FarmDefenseHarvestWars.Shared/FarmDefenseHarvestWars.Shared.csproj",
@@ -100,7 +149,8 @@
       "FarmDefenseHarvestWars.Shared >= 1.0.0",
       "Godot.SourceGenerators >= 4.5.0",
       "GodotSharp >= 4.5.0",
-      "GodotSharpEditor >= 4.5.0"
+      "GodotSharpEditor >= 4.5.0",
+      "Refit >= 9.0.2"
     ]
   },
   "packageFolders": {
@@ -165,6 +215,10 @@
             "target": "Package",
             "version": "[4.5.0, )",
             "autoReferenced": true
+          },
+          "Refit": {
+            "target": "Package",
+            "version": "[9.0.2, )"
           }
         },
         "imports": [

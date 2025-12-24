@@ -1,5 +1,6 @@
 using FarmDefenseHarvestWars.Backend.Models;
 using FarmDefenseHarvestWars.Shared.Models; // Importăm DTO-ul
+using FarmDefenseHarvestWars.Shared.Models.Game;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,6 @@ public class GameController : ControllerBase
     {
         // 1. Identificăm cine a făcut cererea pe baza Token-ului
         var user = await _userManager.GetUserAsync(User);
-
         if (user == null)
         {
             return Unauthorized("User not found.");

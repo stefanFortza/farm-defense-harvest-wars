@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "95fvgzAHQWM=",
+  "dgSpecHash": "KGPBeazUI08=",
   "success": true,
   "projectFilePath": "/home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.Shared/FarmDefenseHarvestWars.Shared.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/stefantacu/.nuget/packages/refit/9.0.2/refit.9.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

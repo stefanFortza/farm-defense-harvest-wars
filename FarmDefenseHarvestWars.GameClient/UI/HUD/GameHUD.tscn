@@ -1,0 +1,5 @@
+[gd_scene load_steps=1 format=3 uid="uid://gamehud1"]
+
+[node name="GameHUD" type="CanvasLayer"]
+
+[node name="ResourcePanel" instance=ExtResource( 1 ) parent="."]
