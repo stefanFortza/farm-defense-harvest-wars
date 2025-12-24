@@ -5,3 +5,4 @@ res://Scenes/Authentication/LoginScreen.cs
 res://_Autoload/NetworkManager.cs
 res://Entities/Enemies/WolfEnemy.cs
 res://Scenes/Authentication/LoginScreen.tscn
+res://_Autoload/GameState.cs

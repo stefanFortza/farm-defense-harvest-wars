@@ -1,7 +1,5 @@
 using Godot;
 using System;
-using Refit; // Necesar pentru a prinde erorile specifice API
-using FarmDefenseHarvestWars.Shared.Models.Auth; // Aici sunt DTO-urile tale
 
 public partial class LoginScreen : Control
 {
@@ -12,6 +10,7 @@ public partial class LoginScreen : Control
     [Export] public Label StatusLabel = null!;
 
     // Calea către scena jocului (o vom modifica când facem harta)
+    [Export] public PackedScene gameScene = null!;
     private const string GameScenePath = "res://Scenes/Gameplay/FarmMap.tscn";
 
     public override void _Ready()
@@ -21,6 +20,11 @@ public partial class LoginScreen : Control
 
         // Resetăm statusul
         StatusLabel.Text = "";
+
+        //   "email": "fermier@joc.com",
+        //   "password": "Password123!"
+        EmailInput.Text = "fermier@joc.com";
+        PasswordInput.Text = "Password123!";
     }
 
     private async void OnLoginPressed()
@@ -39,45 +43,22 @@ public partial class LoginScreen : Control
 
         try
         {
-            // 3. Creăm DTO-ul (Strongly Typed)
-            var loginRequest = new LoginRequestDto
+            bool success = await NetworkManager.Instance.AuthenticateAsync(EmailInput.Text, PasswordInput.Text);
+
+            if (success)
             {
-                Email = EmailInput.Text,
-                Password = PasswordInput.Text
-            };
-
-            // 4. Apelăm Singleton-ul (Refit face request-ul în spate)
-            // Variabila 'response' va fi automat de tip LoginResponseDto
-            var response = await NetworkManager.Instance.Api.LoginAsync(loginRequest);
-
-            // 5. SUCCES: Salvăm token-ul în memorie
-            NetworkManager.Instance.SetToken(response.AccessToken);
-
-            StatusLabel.Text = "Succes! Se încarcă jocul...";
-            StatusLabel.Modulate = Colors.Green;
-
-            // Așteptăm puțin să vadă utilizatorul mesajul (opțional)
-            await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
-
-            // 6. Schimbăm scena
-            GetTree().ChangeSceneToFile(GameScenePath);
-        }
-        catch (ApiException ex)
-        {
-            // Aici prindem erorile de la Server (ex: 401 Unauthorized - Parolă greșită)
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                ShowError("Email sau parolă greșită!");
+                StatusLabel.Text = "Succes! Se încarcă jocul...";
+                StatusLabel.Modulate = Colors.Green;
+                await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
+                // GetTree().ChangeSceneToFile(GameScenePath);
+                GetTree().ChangeSceneToPacked(gameScene);
+                return;
             }
-            else
-            {
-                ShowError($"Eroare server: {ex.StatusCode}");
-                GD.PrintErr(ex.Content); // Vedem detalii în consolă
-            }
+
+            ShowError("Email sau parolă greșită!");
         }
         catch (Exception ex)
         {
-            // Aici prindem erorile de conexiune (ex: Serverul e oprit)
             ShowError("Nu se poate conecta la server.");
             GD.PrintErr(ex.Message);
         }
