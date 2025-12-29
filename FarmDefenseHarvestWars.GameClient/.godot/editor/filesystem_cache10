@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1767024445
+::res://::1767024912
 icon.svg::CompressedTexture2D::2376417301090988011::1766230336::1766230343::1::::<><><>0<>0<>f95e29fbd4d098675ecf60aa09eeecf8<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://_Autoload/::1767014116
 AudioController.cs::CSharpScript::7665804248850742430::1766400690::0::1::::<>Node<><>0<>0<><>::
@@ -1091,10 +1091,13 @@ WolfEnemy.cs::CSharpScript::4069002526674375218::1766400690::0::1::::<>Node2D<><
 WolfEnemy.tscn::PackedScene::29962560::1766400695::0::1::::<><><>0<>0<><>::
 ::res://Entities/Projectiles/::1766400695
 MilkProjectile.tscn::PackedScene::21867181592444::1766400695::0::1::::<><><>0<>0<><>::
-::res://Entities/Units/::1767014116
-CowUnit.cs::CSharpScript::6077745373604851800::1767014116::0::1::::<>CharacterBody2D<><>0<>0<><>::
-CowUnit.tscn::PackedScene::95566::1766400695::0::1::::<><><>0<>0<><>::
-WolfUnit.cs::CSharpScript::40792927807332551::1767014116::0::1::::<>CharacterBody2D<><>0<>0<><>::
+::res://Entities/Units/::1767024912
+::res://Entities/Units/Defenders/::1767024909
+::res://Entities/Units/Enemies/::1767024912
+CowUnit.cs::CSharpScript::6077745373604851800::1767014116::0::1::::<><><>0<>0<><>::
+CowUnit.tscn::PackedScene::95566::1767024912::0::1::::<><><>0<>0<><>::uid://csudtws27rhvk::::res://Entities/Units/Enemies/CowUnit.cs
+WolfUnit.cs::CSharpScript::40792927807332551::1767014116::0::1::::<><><>0<>0<><>::
+WolfUnit.tscn::PackedScene::2809953958897320285::1767024615::0::1::::<><><>0<>0<><>::res://Entities/Units/WolfUnit.cs
 ::res://Resources/::1766400554
 ::res://Resources/ItemData/::1766400669
 README.md::TextFile::-1::1766400690::0::1::::<><><>0<>0<><>::
@@ -1121,7 +1124,7 @@ Pathfinding.cs::CSharpScript::8739999904201536643::1766400690::0::1::::<><><>0<>
 ::res://Scripts/Gameplay/::1767014116
 GameplayController.cs::CSharpScript::5655539605238873153::1767014116::0::1::::<>Node2D<><>0<>0<><>::
 GridManager.cs::CSharpScript::6945974826800770160::1767014116::0::1::::<>Node2D<><>0<>0<><>::
-UnitManager.cs::CSharpScript::1943150333618779654::1767014116::0::1::::<>Node<><>0<>0<><>::
+UnitManager.cs::CSharpScript::1943150333618779654::1767024609::0::1::::<>Node<><>0<>0<><>::
 ::res://Scripts/Utils/::1766400695
 Logger.cs::CSharpScript::3710513040405886761::1766400690::0::1::::<><><>0<>0<><>::
 ::res://UI/::1766400535

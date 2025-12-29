@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://base_unit_template"]
+
+[node name="BaseUnit" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+offset_bottom = -35.0
+show_percentage = false

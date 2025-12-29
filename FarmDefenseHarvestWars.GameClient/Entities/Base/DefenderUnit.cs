@@ -12,16 +12,11 @@ public abstract partial class DefenderUnit : BaseUnit
     {
         base._Ready();
 
-        // Setup Timer
-        _actionTimer = new Timer();
+        // Get Timer from Scene
+        _actionTimer = GetNode<Timer>("ActionTimer");
         _actionTimer.WaitTime = ActionInterval;
         _actionTimer.OneShot = false;
         _actionTimer.Timeout += OnActionTimerTimeout;
-        AddChild(_actionTimer);
-        _actionTimer.Start();
-    }
-
-    protected virtual void OnActionTimerTimeout()
     {
         // Override this in subclasses (e.g., Cow blocks, Chicken shoots)
     }

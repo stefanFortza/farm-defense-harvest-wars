@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cow1"]
+
+[ext_resource type="PackedScene" uid="uid://defender_unit_base" path="res://Entities/Base/DefenderUnit.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://csudtws27rhvk" path="res://Entities/Units/Defenders/CowUnit.cs" id="2_script"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cow"]
+size = Vector2(40, 40)
+
+[node name="CowUnit" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+
+[node name="CollisionShape2D" parent="." index="0"]
+shape = SubResource("RectangleShape2D_cow")
+
+[node name="Sprite2D" parent="." index="1"]
+modulate = Color(0.2, 0.6, 1, 1)
+scale = Vector2(0.5, 0.5)

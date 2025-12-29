@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://defender_unit_base"]
+
+[ext_resource type="PackedScene" uid="uid://base_unit_template" path="res://Entities/Base/BaseUnit.tscn" id="1_base"]
+
+[node name="DefenderUnit" instance=ExtResource("1_base")]
+
+[node name="ActionTimer" type="Timer" parent="." index="3"]

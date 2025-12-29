@@ -10,8 +10,8 @@ public partial class UnitManager : Node
     public override void _Ready()
     {
         // Load unit scenes (Hardcoded for now, could be dynamic)
-        LoadUnitScene("Cow", "res://Entities/Units/CowUnit.tscn");
-        LoadUnitScene("Wolf", "res://Entities/Units/WolfUnit.tscn");
+        LoadUnitScene("Cow", "res://Entities/Units/Defenders/CowUnit.tscn");
+        LoadUnitScene("Wolf", "res://Entities/Units/Enemies/WolfUnit.tscn");
     }
 
     private void LoadUnitScene(string key, string path)
