@@ -1,6 +1,11 @@
-[gd_scene format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=2 format=3 uid="uid://cag1tn1qrlacf"]
+
+[ext_resource type="Script" path="res://Entities/Base/UnitVisuals.cs" id="1_visuals"]
 
 [node name="BaseUnit" type="CharacterBody2D"]
+
+[node name="UnitVisuals" type="Node" parent="."]
+script = ExtResource("1_visuals")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 

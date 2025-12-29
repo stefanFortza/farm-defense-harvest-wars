@@ -31,8 +31,8 @@ Construirea scenei de joc și a mecanicilor de bază (fără server momentan).
 * [x] **Game Scene**: Creare scenă `Gameplay.tscn` (1v1 Arena).
 * [x] **Grid System**: Implementare TileMap și logică de plasare pe grid.
 * [x] **Unit Spawning**: Sistem de instanțiere dinamică a unităților (Vaci, Găini).
+* [x] **Combat Logic**: Sistem de Health, Damage și Attack Range (Attacker vs Defender).
 * [ ] **Basic AI**: Pathfinding simplu (NavigationServer2D) către baza inamică.
-* [ ] **Combat Logic**: Sistem de Health, Damage și Attack Range.
 * [ ] **Economy**: Generare pasivă de resurse (Aur) și costuri de unități.
 
 ## 📡 Phase 3: Multiplayer Synchronization
@@ -69,10 +69,3 @@ Finisarea experienței vizuale.
 
 * *Versiunea actuală rulează pe .NET 10 (Experimental) pentru Backend.*
 * *Comunicarea HTTP este strict tipizată folosind DTO-uri partajate.*
-
----
-
-### Sfat pentru Licență:
-
-Pe măsură ce lucrezi, intră în acest fișier pe GitHub și bifează căsuțele (schimbă `[ ]` în `[x]`).
-Profesorilor le place enorm să vadă "activitate" și un plan care devine verde treptat. Arată că ești organizat!

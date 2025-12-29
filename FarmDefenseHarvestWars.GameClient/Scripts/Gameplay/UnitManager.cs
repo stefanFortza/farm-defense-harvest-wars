@@ -1,25 +1,26 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 public partial class UnitManager : Node
 {
     // Dictionary to hold packed scenes for units
-    private Dictionary<string, PackedScene> _unitScenes = new Dictionary<string, PackedScene>();
+    private Dictionary<UnitType, PackedScene> _unitScenes = new Dictionary<UnitType, PackedScene>();
 
     public override void _Ready()
     {
         // Load unit scenes (Hardcoded for now, could be dynamic)
-        LoadUnitScene("Cow", "res://Entities/Units/Defenders/CowUnit.tscn");
-        LoadUnitScene("Wolf", "res://Entities/Units/Enemies/WolfUnit.tscn");
+        LoadUnitScene(UnitType.Cow, "res://Entities/Units/Defenders/CowUnit.tscn");
+        LoadUnitScene(UnitType.Wolf, "res://Entities/Units/Enemies/WolfUnit.tscn");
     }
 
-    private void LoadUnitScene(string key, string path)
+    private void LoadUnitScene(UnitType type, string path)
     {
         var scene = GD.Load<PackedScene>(path);
         if (scene != null)
         {
-            _unitScenes[key] = scene;
+            _unitScenes[type] = scene;
         }
         else
         {
@@ -27,7 +28,7 @@ public partial class UnitManager : Node
         }
     }
 
-    public BaseUnit SpawnUnit(string unitType, Vector2 position, Node parent)
+    public BaseUnit SpawnUnit(UnitType unitType, Vector2 position, Node parent)
     {
         if (_unitScenes.TryGetValue(unitType, out var scene))
         {

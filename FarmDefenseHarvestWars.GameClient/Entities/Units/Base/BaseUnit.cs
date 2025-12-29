@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 public abstract partial class BaseUnit : CharacterBody2D
 {
@@ -8,7 +9,10 @@ public abstract partial class BaseUnit : CharacterBody2D
     // Synced via MultiplayerSynchronizer in the future
     public int CurrentHealth { get; protected set; }
 
-    public abstract string UnitName { get; }
+    public abstract UnitType Type { get; }
+
+    [Signal] public delegate void HealthChangedEventHandler(int newHealth, int maxHealth);
+    [Signal] public delegate void DiedEventHandler();
 
     public override void _Ready()
     {
@@ -21,7 +25,9 @@ public abstract partial class BaseUnit : CharacterBody2D
     {
         // In a real scenario, check if IsMultiplayerAuthority()
         CurrentHealth -= amount;
-        GD.Print($"{UnitName} took {amount} damage. HP: {CurrentHealth}/{MaxHealth}");
+        EmitSignal(SignalName.HealthChanged, CurrentHealth, MaxHealth);
+
+        GD.Print($"{Type} took {amount} damage. HP: {CurrentHealth}/{MaxHealth}");
 
         if (CurrentHealth <= 0)
         {
@@ -31,7 +37,8 @@ public abstract partial class BaseUnit : CharacterBody2D
 
     protected virtual void Die()
     {
-        GD.Print($"{UnitName} died!");
+        EmitSignal(SignalName.Died);
+        GD.Print($"{Type} died!");
         QueueFree();
     }
 }

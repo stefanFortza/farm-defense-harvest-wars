@@ -12,6 +12,8 @@ public partial class MainMenu : Control
     [Export] public TextureRect GoldIcon { get; set; } = null!;
     [Export] public TextureRect LevelIcon { get; set; } = null!;
 
+    [Export] public PackedScene GameWorldScene { get; set; } = null!;
+
     public override void _Ready()
     {
         // Conectăm semnalele butoanelor
@@ -52,7 +54,7 @@ public partial class MainMenu : Control
     private void OnPlayPressed()
     {
         // Aici vom încărca scena de joc
-        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/FarmMap.tscn");
+        GetTree().ChangeSceneToPacked(GameWorldScene);
     }
 
     private void OnLogoutPressed()

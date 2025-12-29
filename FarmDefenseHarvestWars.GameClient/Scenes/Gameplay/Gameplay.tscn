@@ -1,8 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://gameplay_scene_001"]
+[gd_scene load_steps=4 format=3 uid="uid://3yuk0qwv4qbj"]
 
-[ext_resource type="Script" path="res://Scripts/Gameplay/GameplayController.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://cmtt58eqjrcir" path="res://Scripts/Gameplay/GameplayController.cs" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="2_map"]
-[ext_resource type="Script" path="res://Scripts/Gameplay/UnitManager.cs" id="3_unitmanager"]
+[ext_resource type="Script" uid="uid://2xjnw3aso7o1" path="res://Scripts/Gameplay/UnitManager.cs" id="3_unitmanager"]
 
 [node name="Gameplay" type="Node2D"]
 script = ExtResource("1_script")
@@ -13,6 +13,5 @@ script = ExtResource("1_script")
 script = ExtResource("3_unitmanager")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(576, 324)
 
 [node name="HUD" type="CanvasLayer" parent="."]

@@ -8,10 +8,7 @@ public partial class GridManager : Node2D
     public override void _Ready()
     {
         // Auto-wire if not set in editor
-        if (GroundLayer == null)
-        {
-            GroundLayer = GetNodeOrNull<TileMapLayer>("Ground");
-        }
+        GroundLayer ??= GetNodeOrNull<TileMapLayer>("Ground");
 
         if (GroundLayer == null)
         {

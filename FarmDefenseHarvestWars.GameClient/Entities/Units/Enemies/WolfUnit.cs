@@ -1,8 +1,9 @@
 using Godot;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 public partial class WolfUnit : AttackerUnit
 {
-    public override string UnitName => "Wolf";
+    public override UnitType Type => UnitType.Wolf;
 
     public override void _Ready()
     {

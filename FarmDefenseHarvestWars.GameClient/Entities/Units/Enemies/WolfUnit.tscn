@@ -1,5 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cnapywfs7vvi7"]
+[gd_scene load_steps=3 format=3 uid="uid://cnapywfs7vvi7"]
 
-[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit.tscn" id="1_av6us"]
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit.tscn" id="1_xj8l3"]
+[ext_resource type="Script" uid="uid://t04aymm6gwl" path="res://Entities/Units/Enemies/WolfUnit.cs" id="2_script"]
 
-[node name="WolfUnit" instance=ExtResource("1_av6us")]
+[node name="WolfUnit" instance=ExtResource("1_xj8l3")]
+script = ExtResource("2_script")

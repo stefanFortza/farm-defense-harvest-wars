@@ -3,3 +3,5 @@
 [ext_resource type="PackedScene" uid="uid://cag1tn1qrlacf" path="res://Entities/Units/Base/BaseUnit.tscn" id="1_bfqt0"]
 
 [node name="DefenderUnit" instance=ExtResource("1_bfqt0")]
+
+[node name="ActionTimer" type="Timer" parent="." index="4"]

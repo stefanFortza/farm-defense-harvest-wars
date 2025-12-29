@@ -14,7 +14,7 @@ load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0
 atlas = SubResource("CompressedTexture2D_tfrft")
 region = Rect2(48, 0, 16, 16)
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("WelcomeLabel", "GoldLabel", "PlayButton", "LogoutButton")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("WelcomeLabel", "GoldLabel", "PlayButton", "LogoutButton", "GoldIcon", "LevelIcon")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,6 +26,8 @@ WelcomeLabel = NodePath("CenterContainer/VBoxContainer/WelcomeLabel")
 GoldLabel = NodePath("CenterContainer/VBoxContainer/StatsContainer/GoldLabel")
 PlayButton = NodePath("CenterContainer/VBoxContainer/PlayButton")
 LogoutButton = NodePath("CenterContainer/VBoxContainer/LogoutButton")
+GoldIcon = NodePath("CenterContainer/VBoxContainer/StatsContainer/GoldIcon")
+LevelIcon = NodePath("CenterContainer/VBoxContainer/StatsContainer/LevelIcon")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -41,7 +43,7 @@ theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 17
 text = "Farm Defense"
 horizontal_alignment = 1
 
@@ -52,11 +54,10 @@ horizontal_alignment = 1
 
 [node name="StatsContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 5
 alignment = 1
 
 [node name="GoldIcon" type="TextureRect" parent="CenterContainer/VBoxContainer/StatsContainer"]
-custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = SubResource("AtlasTexture_hqtmt")
 stretch_mode = 5
@@ -64,32 +65,33 @@ stretch_mode = 5
 [node name="GoldLabel" type="Label" parent="CenterContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_font_sizes/font_size = 12
 text = "0"
 
 [node name="Separator" type="VSeparator" parent="CenterContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 
 [node name="LevelIcon" type="TextureRect" parent="CenterContainer/VBoxContainer/StatsContainer"]
-custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = SubResource("AtlasTexture_uv623")
 stretch_mode = 5
 
 [node name="LevelLabel" type="Label" parent="CenterContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "Nivel: 1"
 
 [node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(70, 20)
 layout_mode = 2
 text = "JOACĂ"
 
 [node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(50, 20)
 layout_mode = 2
 text = "SETĂRI"
 
 [node name="LogoutButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(50, 20)
 layout_mode = 2
 text = "LOGOUT"

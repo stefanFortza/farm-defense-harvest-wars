@@ -6,7 +6,7 @@ public abstract partial class DefenderUnit : BaseUnit
     // They might have an action timer for shooting or producing resources.
 
     [Export] public float ActionInterval { get; set; } = 1.0f;
-    protected Timer _actionTimer;
+    protected Timer _actionTimer = null!;
 
     public override void _Ready()
     {
@@ -17,7 +17,18 @@ public abstract partial class DefenderUnit : BaseUnit
         _actionTimer.WaitTime = ActionInterval;
         _actionTimer.OneShot = false;
         _actionTimer.Timeout += OnActionTimerTimeout;
-        {
-            // Override this in subclasses (e.g., Cow blocks, Chicken shoots)
-        }
+        _actionTimer.Start();
     }
+
+    protected override void Die()
+    {
+        // Stop timer before dying
+        _actionTimer.Stop();
+        base.Die();
+    }
+
+    protected virtual void OnActionTimerTimeout()
+    {
+        // Override this in subclasses (e.g., Cow blocks, Chicken shoots)
+    }
+}
