@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://cnl2b6psuuhba"]
+
+[ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/defender_unit.tscn" id="1_xq5pq"]
+
+[node name="CowUnit" instance=ExtResource("1_xq5pq")]

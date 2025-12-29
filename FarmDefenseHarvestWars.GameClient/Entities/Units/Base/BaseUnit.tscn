@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://base_unit_template"]
+[gd_scene format=3 uid="uid://cag1tn1qrlacf"]
 
 [node name="BaseUnit" type="CharacterBody2D"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -20.0
