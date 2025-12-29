@@ -17,7 +17,7 @@ public abstract partial class DefenderUnit : BaseUnit
         _actionTimer.WaitTime = ActionInterval;
         _actionTimer.OneShot = false;
         _actionTimer.Timeout += OnActionTimerTimeout;
-    {
-        // Override this in subclasses (e.g., Cow blocks, Chicken shoots)
+        {
+            // Override this in subclasses (e.g., Cow blocks, Chicken shoots)
+        }
     }
-}
