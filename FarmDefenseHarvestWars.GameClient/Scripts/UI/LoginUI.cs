@@ -6,10 +6,10 @@ public partial class LoginUI : Control
     [Signal] public delegate void LoginSuccessEventHandler();
     [Signal] public delegate void GoToRegisterEventHandler();
 
-    [Export] public LineEdit EmailInput { get; set; }
-    [Export] public LineEdit PasswordInput { get; set; }
-    [Export] public Label ErrorLabel { get; set; }
-    [Export] public Button LoginButton { get; set; }
+    [Export] public LineEdit EmailInput { get; set; } = null!;
+    [Export] public LineEdit PasswordInput { get; set; } = null!;
+    [Export] public Label ErrorLabel { get; set; } = null!;
+    [Export] public Button LoginButton { get; set; } = null!;
 
     public override void _Ready()
     {

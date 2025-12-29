@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 public partial class MainMenuUI : Control
 {
@@ -16,6 +18,17 @@ public partial class MainMenuUI : Control
 
     public override void _Ready()
     {
+        // 1. Check launch args
+        string[] args = OS.GetCmdlineArgs();
+
+        // 2. Check for "--server"
+        if (args.Contains("--server"))
+        {
+            GD.Print("Argument '--server' detected! Starting auto server...");
+            StartAutoServer();
+            return; // Stop rest of initialization
+        }
+
         // Ensure correct initial state
         CloseAllOverlays();
 
@@ -31,6 +44,17 @@ public partial class MainMenuUI : Control
         {
             GameState.Instance.ProfileUpdated += UpdateUI;
         }
+    }
+
+    private async Task StartAutoServer()
+    {
+        // Start server
+        NetworkManager.Instance.StartServer();
+
+        // Defer the frame to ensure server is fully initialized
+
+        // Change scene immediately to GameWorld
+        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld.tscn");
     }
 
     public override void _ExitTree()
@@ -67,8 +91,20 @@ public partial class MainMenuUI : Control
 
     public void OnFindMatchPressed()
     {
+        // DEBUG MODE: Connect directly to localhost
+        // In Phase 4, this will be replaced by the Matchmaking API call
+
+        // 1. Connect to local server
+        NetworkManager.Instance.JoinGame("127.0.0.1");
+
+        // 2. Change scene immediately
+        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld.tscn");
+
+        /* 
+        // OLD SIMULATION CODE (Commented out for Phase 2)
         if (MatchmakingPanel != null) MatchmakingPanel.Visible = true;
         _matchmakingTimer.Start();
+        */
     }
 
     public void OnSettingsPressed()

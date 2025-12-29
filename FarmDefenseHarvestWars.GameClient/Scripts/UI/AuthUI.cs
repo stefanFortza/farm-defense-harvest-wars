@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class AuthUI : Control
 {
@@ -8,6 +9,13 @@ public partial class AuthUI : Control
 
     public override void _Ready()
     {
+        // Check for server mode to bypass auth
+        if (OS.GetCmdlineArgs().Contains("--server"))
+        {
+            GetTree().ChangeSceneToFile("res://Scenes/Menus/MainMenu.tscn");
+            return;
+        }
+
         // Connect signals
         if (LoginPanel != null)
         {

@@ -8,11 +8,11 @@ public partial class RegisterUI : Control
     [Signal] public delegate void RegisterSuccessEventHandler();
     [Signal] public delegate void BackToLoginEventHandler();
 
-    [Export] public LineEdit EmailInput { get; set; }
-    [Export] public LineEdit PasswordInput { get; set; }
-    [Export] public LineEdit ConfirmPasswordInput { get; set; }
-    [Export] public Label ErrorLabel { get; set; }
-    [Export] public Button RegisterButton { get; set; }
+    [Export] public LineEdit EmailInput { get; set; } = null!;
+    [Export] public LineEdit PasswordInput { get; set; } = null!;
+    [Export] public LineEdit ConfirmPasswordInput { get; set; } = null!;
+    [Export] public Label ErrorLabel { get; set; } = null!;
+    [Export] public Button RegisterButton { get; set; } = null!;
 
     public override void _Ready()
     {

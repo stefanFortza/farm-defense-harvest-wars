@@ -3,12 +3,23 @@ using System;
 
 public partial class GameUI : CanvasLayer
 {
-    [Export] public Control GameOverPanel { get; set; }
-    [Export] public Label WinnerLabel { get; set; }
+    [Export] public Control GameOverPanel { get; set; } = null!;
+    [Export] public Label WinnerLabel { get; set; } = null!;
+    [Export] public Label RoleLabel { get; set; } = null!;
 
     public override void _Ready()
     {
         if (GameOverPanel != null) GameOverPanel.Visible = false;
+        UpdateRoleLabel();
+    }
+
+    public void UpdateRoleLabel()
+    {
+        if (RoleLabel != null)
+        {
+            var role = NetworkManager.Instance.GetCurrentRole();
+            RoleLabel.Text = $"Role: {role}";
+        }
     }
 
     public void ShowGameOver(string winnerName)

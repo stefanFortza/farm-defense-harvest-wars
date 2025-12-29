@@ -16,10 +16,11 @@ script = ExtResource("3_grid")
 [node name="UnitManager" type="Node2D" parent="."]
 script = ExtResource("4_units")
 
-[node name="GameUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("GameOverPanel", "WinnerLabel")]
+[node name="GameUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("GameOverPanel", "WinnerLabel", "RoleLabel")]
 script = ExtResource("5_ui")
 GameOverPanel = NodePath("GameOverPanel")
 WinnerLabel = NodePath("GameOverPanel/VBoxContainer/WinnerLabel")
+RoleLabel = NodePath("HUD/RoleLabel")
 
 [node name="HUD" type="Control" parent="GameUI"]
 layout_mode = 3
@@ -29,6 +30,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="RoleLabel" type="Label" parent="GameUI/HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 43.0
+grow_horizontal = 0
+text = "Role: Spectator"
+horizontal_alignment = 2
 
 [node name="Label" type="Label" parent="GameUI/HUD"]
 layout_mode = 0

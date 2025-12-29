@@ -7,6 +7,7 @@ public partial class GameplayController : Node2D
     // References
     private UnitManager _unitManager = null!;
     private GridManager _gridManager = null!;
+    private GameUI _gameUI = null!;
 
     public override void _Ready()
     {
@@ -14,6 +15,10 @@ public partial class GameplayController : Node2D
 
         _unitManager = GetNode<UnitManager>("UnitManager");
         _gridManager = GetNode<GridManager>("FarmMap");
+        _gameUI = GetNode<GameUI>("GameUI");
+
+        // Update Role Label
+        _gameUI.UpdateRoleLabel();
 
         // Test Spawn (Delayed to ensure everything is ready)
         GetTree().CreateTimer(1.0f).Timeout += () =>

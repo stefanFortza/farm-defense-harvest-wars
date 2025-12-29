@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://main_menu_scene"]
+[gd_scene load_steps=6 format=3 uid="uid://b7230yfgel0k2"]
 
 [ext_resource type="Script" path="res://Scripts/UI/MainMenuUI.cs" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_icons"]
