@@ -21,16 +21,16 @@ Focus pe securitate, baza de date și comunicarea Client-Server.
 * [x] **Database Architecture**: Configurare EF Core și Migrări (User table).
 * [x] **Authentication API**: Endpoint-uri pentru `/register` și `/login` (Identity).
 * [x] **Security**: Implementare JWT Bearer Tokens și Swagger Auth.
-* [ ] **Networking Client**: Configurare `HttpClient` și `Refit` în Godot.
-* [ ] **State Management**: Implementare `GameState` și `NetworkManager` (Singleton/Autoload).
+* [x] **Networking Client**: Configurare `HttpClient` și `Refit` în Godot.
+* [x] **State Management**: Implementare `GameState` și `NetworkManager` (Singleton/Autoload).
 
 ## 🎮 Phase 2: Core Gameplay Loop (Frontend)
 
 Construirea scenei de joc și a mecanicilor de bază (fără server momentan).
 
-* [ ] **Game Scene**: Creare scenă `Gameplay.tscn` (1v1 Arena).
-* [ ] **Grid System**: Implementare TileMap și logică de plasare pe grid.
-* [ ] **Unit Spawning**: Sistem de instanțiere dinamică a unităților (Vaci, Găini).
+* [x] **Game Scene**: Creare scenă `Gameplay.tscn` (1v1 Arena).
+* [x] **Grid System**: Implementare TileMap și logică de plasare pe grid.
+* [x] **Unit Spawning**: Sistem de instanțiere dinamică a unităților (Vaci, Găini).
 * [ ] **Basic AI**: Pathfinding simplu (NavigationServer2D) către baza inamică.
 * [ ] **Combat Logic**: Sistem de Health, Damage și Attack Range.
 * [ ] **Economy**: Generare pasivă de resurse (Aur) și costuri de unități.

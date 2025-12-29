@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://gameplay_scene_001"]
+
+[ext_resource type="Script" path="res://Scripts/Gameplay/GameplayController.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="2_map"]
+[ext_resource type="Script" path="res://Scripts/Gameplay/UnitManager.cs" id="3_unitmanager"]
+
+[node name="Gameplay" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="FarmMap" parent="." instance=ExtResource("2_map")]
+
+[node name="UnitManager" type="Node" parent="."]
+script = ExtResource("3_unitmanager")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
+[node name="HUD" type="CanvasLayer" parent="."]

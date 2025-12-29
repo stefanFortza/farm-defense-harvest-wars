@@ -45,7 +45,7 @@ public partial class NetworkManager : Node
             var loginRes = await Api.LoginAsync(loginReq);
 
             // Save token for subsequent requests
-            _accessToken = loginRes.AccessToken;
+            SetToken(loginRes.AccessToken);
 
             // Fetch profile using the authenticated client
             var profile = await Api.GetProfileAsync();
