@@ -24,7 +24,12 @@ GameState="*res://_Autoload/GameState.cs"
 
 project/assembly_name="FarmDefenseHarvestWars.GameClient"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/AutoKey_SpriteFrames/plugin.cfg", "res://addons/sprite_anim_importer/plugin.cfg", "res://addons/sprite_frames_generator/plugin.cfg")
+
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
