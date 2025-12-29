@@ -11,7 +11,7 @@ public partial class UnitManager : Node
     {
         // Load unit scenes (Hardcoded for now, could be dynamic)
         LoadUnitScene("Cow", "res://Entities/Units/CowUnit.tscn");
-        // LoadUnitScene("Chicken", "res://Entities/Units/ChickenUnit.tscn");
+        LoadUnitScene("Wolf", "res://Entities/Units/WolfUnit.tscn");
     }
 
     private void LoadUnitScene(string key, string path)

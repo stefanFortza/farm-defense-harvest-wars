@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgbfsca4cvqqv"]
+
+[ext_resource type="Script" path="res://Entities/Units/WolfUnit.cs" id="1_script"]
+
+[node name="WolfUnit" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
