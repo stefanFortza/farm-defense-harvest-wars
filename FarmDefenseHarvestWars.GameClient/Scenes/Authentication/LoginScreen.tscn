@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cspvoo0mf44pv"]
+[gd_scene load_steps=3 format=3 uid="uid://cspvoo0mf44pv"]
 
 [ext_resource type="Script" uid="uid://c8dp70hjsl8p2" path="res://Scenes/Authentication/LoginScreen.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://mainmenu1" path="res://Scenes/Menus/MainMenu.tscn" id="2_aqlxs"]
 
-[node name="LoginScreen" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "LoginButton", "StatusLabel")]
+[node name="LoginScreen" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "LoginButton", "RegisterButton", "StatusLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +14,9 @@ script = ExtResource("1_script")
 EmailInput = NodePath("VBoxContainer/EmailInput")
 PasswordInput = NodePath("VBoxContainer/PasswordInput")
 LoginButton = NodePath("VBoxContainer/LoginButton")
+RegisterButton = NodePath("VBoxContainer/RegisterButton")
 StatusLabel = NodePath("VBoxContainer/StatusLabel")
+MainMenuScene = ExtResource("2_aqlxs")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -42,6 +45,10 @@ secret = true
 [node name="LoginButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Logare"
+
+[node name="RegisterButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Înregistrare"
 
 [node name="StatusLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2

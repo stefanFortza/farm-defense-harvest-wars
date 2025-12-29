@@ -1,7 +1,0 @@
-res://Entities/Units/CowUnit.cs
-res://_Autoload/AudioController.cs
-res://_Autoload/GameStateManager.cs
-res://Scenes/Authentication/LoginScreen.cs
-res://_Autoload/NetworkManager.cs
-res://Entities/Enemies/WolfEnemy.cs
-res://Scenes/Authentication/LoginScreen.tscn

@@ -15,6 +15,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Dezactivează cerințele de complexitate
+    options.Password.RequireDigit = false;           // Nu cere cifre (0-9)
+    options.Password.RequireLowercase = false;       // Nu cere litere mici
+    options.Password.RequireUppercase = false;       // Nu cere litere mari
+    options.Password.RequireNonAlphanumeric = false; // Nu cere caractere speciale (!@#)
+    options.Password.RequiredUniqueChars = 0;        // Nu cere caractere unice
+
+    // Setează lungimea minimă (Default e 6, poți pune 1 sau 3 pentru teste)
+    options.Password.RequiredLength = 3;
+});
 
 // 3. Controllere
 builder.Services.AddControllers();
