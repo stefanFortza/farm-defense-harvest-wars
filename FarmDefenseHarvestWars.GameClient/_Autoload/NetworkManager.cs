@@ -80,6 +80,5 @@ public partial class NetworkManager : Node
     {
         _accessToken = "";
         GameState.Instance.ClearState();
-        GetTree().ChangeSceneToFile("res://Scenes/Authentication/LoginScreen.tscn");
     }
 }

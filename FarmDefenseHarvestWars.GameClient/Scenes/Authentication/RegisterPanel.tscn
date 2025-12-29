@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dymml2f8awfj3"]
+[gd_scene load_steps=2 format=3 uid="uid://register_panel_scene"]
 
-[ext_resource type="Script" path="res://Scenes/Authentication/RegisterScreen.cs" id="1_script"]
+[ext_resource type="Script" path="res://Scripts/UI/RegisterUI.cs" id="1_script"]
 
-[node name="RegisterScreen" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ConfirmPasswordInput", "RegisterButton", "BackButton", "StatusLabel")]
+[node name="RegisterPanel" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ConfirmPasswordInput", "ErrorLabel", "RegisterButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,9 +13,8 @@ script = ExtResource("1_script")
 EmailInput = NodePath("VBoxContainer/EmailInput")
 PasswordInput = NodePath("VBoxContainer/PasswordInput")
 ConfirmPasswordInput = NodePath("VBoxContainer/ConfirmPasswordInput")
+ErrorLabel = NodePath("VBoxContainer/ErrorLabel")
 RegisterButton = NodePath("VBoxContainer/RegisterButton")
-BackButton = NodePath("VBoxContainer/BackButton")
-StatusLabel = NodePath("VBoxContainer/StatusLabel")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -25,12 +24,17 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -150.0
-offset_top = -125.0
+offset_top = -150.0
 offset_right = 150.0
-offset_bottom = 125.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Register"
+horizontal_alignment = 1
 
 [node name="EmailInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
@@ -38,23 +42,25 @@ placeholder_text = "Email"
 
 [node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
-placeholder_text = "Parola"
+placeholder_text = "Password"
 secret = true
 
 [node name="ConfirmPasswordInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
-placeholder_text = "Confirmă Parola"
+placeholder_text = "Confirm Password"
 secret = true
 
 [node name="RegisterButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Creează Cont"
+text = "Register"
 
-[node name="BackButton" type="Button" parent="VBoxContainer"]
+[node name="BackToLoginButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Înapoi la Login"
+text = "Back to Login"
 
-[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+[node name="ErrorLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = ""
 horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/RegisterButton" to="." method="OnRegisterPressed"]
+[connection signal="pressed" from="VBoxContainer/BackToLoginButton" to="." method="OnBackToLoginPressed"]
