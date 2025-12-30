@@ -1,17 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://game_world_scene"]
+[gd_scene load_steps=5 format=3 uid="uid://b3eudmxt181c6"]
 
-[ext_resource type="Script" path="res://Scripts/Gameplay/GameplayController.cs" id="1_controller"]
-[ext_resource type="TileSet" path="res://Resources/DefaultTileset.tres" id="2_tileset"]
-[ext_resource type="Script" path="res://Scripts/Gameplay/GridManager.cs" id="3_grid"]
-[ext_resource type="Script" path="res://Scripts/Gameplay/UnitManager.cs" id="4_units"]
-[ext_resource type="Script" path="res://Scripts/UI/GameUI.cs" id="5_ui"]
+[ext_resource type="Script" uid="uid://cmtt58eqjrcir" path="res://Scripts/Gameplay/GameplayController.cs" id="1_controller"]
+[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="2_vhl2x"]
+[ext_resource type="Script" uid="uid://2xjnw3aso7o1" path="res://Scripts/Gameplay/UnitManager.cs" id="4_units"]
+[ext_resource type="Script" uid="uid://dbcv5oydmri8p" path="res://Scripts/UI/GameUI.cs" id="5_ui"]
 
 [node name="GameWorld" type="Node2D"]
 script = ExtResource("1_controller")
 
-[node name="FarmMap" type="TileMapLayer" parent="."]
-tile_set = ExtResource("2_tileset")
-script = ExtResource("3_grid")
+[node name="FarmMap" parent="." instance=ExtResource("2_vhl2x")]
 
 [node name="UnitManager" type="Node2D" parent="."]
 script = ExtResource("4_units")
@@ -92,5 +89,5 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Back to Menu"
 
-[connection signal="pressed" from="GameUI/GameOverPanel/VBoxContainer/BackToMenuButton" to="GameUI" method="OnBackToMenuPressed"]
 [connection signal="pressed" from="GameUI/HUD/DebugWinButton" to="GameUI" method="OnDebugWinPressed"]
+[connection signal="pressed" from="GameUI/GameOverPanel/VBoxContainer/BackToMenuButton" to="GameUI" method="OnBackToMenuPressed"]
