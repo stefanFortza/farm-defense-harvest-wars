@@ -1,17 +1,27 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3eudmxt181c6"]
 
-[ext_resource type="Script" uid="uid://cmtt58eqjrcir" path="res://Scripts/Gameplay/GameplayController.cs" id="1_controller"]
+[ext_resource type="Script" path="res://Scenes/Gameplay/GameplayController.cs" id="1_controller"]
 [ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="2_vhl2x"]
-[ext_resource type="Script" uid="uid://2xjnw3aso7o1" path="res://Scripts/Gameplay/UnitManager.cs" id="4_units"]
-[ext_resource type="Script" uid="uid://dbcv5oydmri8p" path="res://Scripts/UI/GameUI.cs" id="5_ui"]
+[ext_resource type="Script" path="res://Scenes/Gameplay/UnitManager.cs" id="4_units"]
+[ext_resource type="Script" path="res://Scenes/Gameplay/GameUI.cs" id="5_ui"]
 
 [node name="GameWorld" type="Node2D"]
 script = ExtResource("1_controller")
 
-[node name="FarmMap" parent="." instance=ExtResource("2_vhl2x")]
-
 [node name="UnitManager" type="Node2D" parent="."]
 script = ExtResource("4_units")
+
+[node name="FarmMap" parent="." instance=ExtResource("2_vhl2x")]
+
+[node name="UnitContainer" type="Node2D" parent="."]
+
+[node name="ProjectileContainer" type="Node2D" parent="."]
+
+[node name="UnitSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://cnl2b6psuuhba", "uid://cnapywfs7vvi7")
+spawn_path = NodePath("../UnitContainer")
+
+[node name="ProjectileSpawner" type="MultiplayerSpawner" parent="."]
 
 [node name="GameUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("GameOverPanel", "WinnerLabel", "RoleLabel")]
 script = ExtResource("5_ui")

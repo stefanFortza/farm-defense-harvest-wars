@@ -1,8 +1,9 @@
+res://Scenes/Gameplay
+res://Entities/Units/Enemies
+res://Entities/Units/Defenders
 /home/stefantacu/github/farm-defense-harvest-wars/FarmDefenseHarvestWars.GameClient/Scripts/UI
 res://Resources
 res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Cow
-res://Entities/Units/Enemies
-res://Entities/Units/Defenders
 res://Entities/Units/Base
 res://_Autoload
 res://

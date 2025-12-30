@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://register_panel_scene"]
+[gd_scene load_steps=2 format=3 uid="uid://ch22hr1lpt8t0"]
 
-[ext_resource type="Script" path="res://Scripts/UI/RegisterUI.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://m7ccd1ln571s" path="res://Scenes/Authentication/RegisterUI.cs" id="1_script"]
 
 [node name="RegisterPanel" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ConfirmPasswordInput", "ErrorLabel", "RegisterButton")]
 layout_mode = 3

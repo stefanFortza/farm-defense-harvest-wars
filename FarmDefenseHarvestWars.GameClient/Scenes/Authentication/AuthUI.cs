@@ -12,7 +12,8 @@ public partial class AuthUI : Control
         // Check for server mode to bypass auth
         if (OS.GetCmdlineArgs().Contains("--server"))
         {
-            GetTree().ChangeSceneToFile("res://Scenes/Menus/MainMenu.tscn");
+            // Use CallDeferred to avoid "Parent node is busy" error during _Ready
+            GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, "res://Scenes/Menus/MainMenu.tscn");
             return;
         }
 

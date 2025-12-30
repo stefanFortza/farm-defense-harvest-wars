@@ -9,6 +9,9 @@ public partial class GameplayController : Node2D
     private GridManager _gridManager = null!;
     private GameUI _gameUI = null!;
 
+    private Node2D _unitContainer = null!;
+    private Node2D _projectileContainer = null!;
+
     public override void _Ready()
     {
         GD.Print("Gameplay Scene Initialized");
@@ -17,8 +20,14 @@ public partial class GameplayController : Node2D
         _gridManager = GetNode<GridManager>("FarmMap");
         _gameUI = GetNode<GameUI>("GameUI");
 
+        _unitContainer = GetNode<Node2D>("UnitContainer");
+        _projectileContainer = GetNode<Node2D>("ProjectileContainer");
+
         // Update Role Label
         _gameUI.UpdateRoleLabel();
+
+        if (!Multiplayer.IsServer())
+            return;
 
         // Test Spawn (Delayed to ensure everything is ready)
         GetTree().CreateTimer(1.0f).Timeout += () =>
@@ -37,7 +46,7 @@ public partial class GameplayController : Node2D
         if (_gridManager == null || _unitManager == null) return;
 
         Vector2 worldPos = _gridManager.GetWorldPosition(gridPos);
-        _unitManager.SpawnUnit(unitType, worldPos, this);
+        _unitManager.SpawnUnit(unitType, worldPos, _unitContainer);
     }
 
     public override void _Process(double delta)

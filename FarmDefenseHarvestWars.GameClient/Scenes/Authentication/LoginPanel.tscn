@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ddrjliaojkv2y"]
 
-[ext_resource type="Script" uid="uid://bl3j3enefymlc" path="res://Scripts/UI/LoginUI.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://bl3j3enefymlc" path="res://Scenes/Authentication/LoginUI.cs" id="1_qwl4c"]
 
 [node name="LoginPanel" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ErrorLabel", "LoginButton")]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_script")
+script = ExtResource("1_qwl4c")
 EmailInput = NodePath("VBoxContainer/EmailInput")
 PasswordInput = NodePath("VBoxContainer/PasswordInput")
 ErrorLabel = NodePath("VBoxContainer/ErrorLabel")

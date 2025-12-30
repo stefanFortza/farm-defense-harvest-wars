@@ -1,11 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://farmmap1"]
 
-[ext_resource type="Script" uid="uid://c57xgqkp7rovg" path="res://Scripts/Gameplay/GridManager.cs" id="1_gridmanager"]
+[ext_resource type="Script" path="res://Scenes/Gameplay/GridManager.cs" id="1_a1q0j"]
 [ext_resource type="TileSet" uid="uid://d328k3ewg0nay" path="res://Resources/DefaultTileset.tres" id="2_a1q0j"]
 
-[node name="FarmMap" type="Node2D" node_paths=PackedStringArray("GroundLayer")]
-script = ExtResource("1_gridmanager")
-GroundLayer = NodePath("Ground")
+[node name="FarmMap" type="Node2D"]
+script = ExtResource("1_a1q0j")
 
 [node name="Ground" type="TileMapLayer" parent="."]
 tile_set = ExtResource("2_a1q0j")

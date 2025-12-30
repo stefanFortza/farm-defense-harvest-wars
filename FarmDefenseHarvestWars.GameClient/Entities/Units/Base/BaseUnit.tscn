@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=3 format=3 uid="uid://cag1tn1qrlacf"]
 
-[ext_resource type="Script" path="res://Entities/Base/UnitVisuals.cs" id="1_visuals"]
+[ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Base/UnitVisuals.cs" id="1_visuals"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 0
 
 [node name="BaseUnit" type="CharacterBody2D"]
 
@@ -17,3 +22,6 @@ offset_top = -40.0
 offset_right = 20.0
 offset_bottom = -35.0
 show_percentage = false
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_r1xd3")
