@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3eudmxt181c6"]
 
-[ext_resource type="Script" path="res://Scenes/Gameplay/GameplayController.cs" id="1_controller"]
+[ext_resource type="Script" uid="uid://cmtt58eqjrcir" path="res://Scenes/Gameplay/GameplayController.cs" id="1_controller"]
 [ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="2_vhl2x"]
-[ext_resource type="Script" path="res://Scenes/Gameplay/UnitManager.cs" id="4_units"]
-[ext_resource type="Script" path="res://Scenes/Gameplay/GameUI.cs" id="5_ui"]
+[ext_resource type="Script" uid="uid://2xjnw3aso7o1" path="res://Scenes/Gameplay/UnitManager.cs" id="4_units"]
+[ext_resource type="Script" uid="uid://dbcv5oydmri8p" path="res://Scenes/Gameplay/GameUI.cs" id="5_ui"]
 
 [node name="GameWorld" type="Node2D"]
 script = ExtResource("1_controller")
