@@ -4,7 +4,6 @@ using System;
 public partial class LoginUI : Control
 {
     [Signal] public delegate void LoginSuccessEventHandler();
-    [Signal] public delegate void GoToRegisterEventHandler();
 
     [Export] public LineEdit EmailInput { get; set; } = null!;
     [Export] public LineEdit PasswordInput { get; set; } = null!;
@@ -14,14 +13,14 @@ public partial class LoginUI : Control
     public override void _Ready()
     {
         // Pre-fill for development convenience
-        if (EmailInput != null) EmailInput.Text = "fermier@joc.com";
-        if (PasswordInput != null) PasswordInput.Text = "Password123!";
-        if (ErrorLabel != null) ErrorLabel.Text = "";
+        EmailInput?.Text = "fermier@joc.com";
+        PasswordInput?.Text = "Password123!";
+        ErrorLabel?.Text = "";
     }
 
     public async void OnLoginPressed()
     {
-        if (LoginButton != null) LoginButton.Disabled = true;
+        LoginButton?.Disabled = true;
         ShowMessage("Connecting...", Colors.Yellow);
 
         // 1. Local Validation
@@ -55,13 +54,8 @@ public partial class LoginUI : Control
         }
         finally
         {
-            if (LoginButton != null) LoginButton.Disabled = false;
+            LoginButton?.Disabled = false;
         }
-    }
-
-    public void OnGoToRegisterPressed()
-    {
-        EmitSignal(SignalName.GoToRegister);
     }
 
     private void ShowMessage(string message, Color color)

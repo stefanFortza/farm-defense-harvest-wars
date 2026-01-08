@@ -1,30 +1,103 @@
-[gd_scene load_steps=5 format=3 uid="uid://13xs638acrl2"]
+[gd_scene load_steps=10 format=3 uid="uid://13xs638acrl2"]
 
+[ext_resource type="Texture2D" uid="uid://dkaacttteavom" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/Book_UI.png" id="1_0oroa"]
 [ext_resource type="Script" uid="uid://c3a8b6k8tt5e2" path="res://Scenes/Authentication/AuthUI.cs" id="1_lrxoj"]
 [ext_resource type="PackedScene" uid="uid://ddrjliaojkv2y" path="res://Scenes/Authentication/LoginPanel.tscn" id="2_login"]
 [ext_resource type="PackedScene" uid="uid://ch22hr1lpt8t0" path="res://Scenes/Authentication/RegisterPanel.tscn" id="3_register"]
 [ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="4_rh3ju"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4lyl"]
+atlas = ExtResource("1_0oroa")
+region = Rect2(8, 0, 88, 144)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vuoyj"]
+atlas = ExtResource("1_0oroa")
+region = Rect2(96, 0, 48, 144)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kat8d"]
+load_path = "res://.godot/imported/Book_UI.png-ea919fcb508ac880269eae8899c709b5.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jdyd7"]
+atlas = SubResource("CompressedTexture2D_kat8d")
+region = Rect2(144, 0, 88, 144)
+
 [node name="AuthScene" type="Node2D"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="FarmMap" parent="." instance=ExtResource("4_rh3ju")]
 
-[node name="AuthScene" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("LoginPanel", "RegisterPanel")]
-layout_mode = 3
+[node name="AuthUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("LoginPanel", "RegisterPanel")]
+script = ExtResource("1_lrxoj")
+LoginPanel = NodePath("BookCenter/BookBinder/PageLeft/MarginContainer/LoginPanel")
+RegisterPanel = NodePath("BookCenter/BookBinder/PageRight/MarginContainer/RegisterPanel")
+
+[node name="BookCenter" type="CenterContainer" parent="AuthUI"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_lrxoj")
-LoginPanel = NodePath("LoginPanel")
-RegisterPanel = NodePath("RegisterPanel")
 
-[node name="LoginPanel" parent="CanvasLayer/AuthScene" instance=ExtResource("2_login")]
+[node name="BookBinder" type="HBoxContainer" parent="AuthUI/BookCenter"]
+custom_minimum_size = Vector2(240, 160)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PageLeft" type="NinePatchRect" parent="AuthUI/BookCenter/BookBinder"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("AtlasTexture_x4lyl")
+region_rect = Rect2(0, 0, 88, 144)
+patch_margin_left = 24
+patch_margin_top = 32
+patch_margin_bottom = 32
+
+[node name="MarginContainer" type="MarginContainer" parent="AuthUI/BookCenter/BookBinder/PageLeft"]
 layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
 
-[node name="RegisterPanel" parent="CanvasLayer/AuthScene" instance=ExtResource("3_register")]
-visible = false
+[node name="LoginPanel" parent="AuthUI/BookCenter/BookBinder/PageLeft/MarginContainer" instance=ExtResource("2_login")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Spine" type="NinePatchRect" parent="AuthUI/BookCenter/BookBinder"]
+z_index = -1
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+texture = SubResource("AtlasTexture_vuoyj")
+region_rect = Rect2(0, 0, 48, 144)
+patch_margin_top = 24
+patch_margin_bottom = 32
+
+[node name="PageRight" type="NinePatchRect" parent="AuthUI/BookCenter/BookBinder"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("AtlasTexture_jdyd7")
+region_rect = Rect2(0, 0, 88, 144)
+patch_margin_top = 32
+patch_margin_right = 24
+patch_margin_bottom = 32
+
+[node name="MarginContainer" type="MarginContainer" parent="AuthUI/BookCenter/BookBinder/PageRight"]
 layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_right = 20
 
-[node name="FarmMap" parent="." instance=ExtResource("4_rh3ju")]
+[node name="RegisterPanel" parent="AuthUI/BookCenter/BookBinder/PageRight/MarginContainer" instance=ExtResource("3_register")]
+layout_mode = 2

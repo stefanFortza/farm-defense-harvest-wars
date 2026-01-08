@@ -3,9 +3,12 @@
 [ext_resource type="FontFile" uid="uid://bh07rtt0cay5h" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/alagard.ttf" id="1_6h47m"]
 
 [resource]
-Button/font_sizes/font_size = 18
+AuthEditInput/base_type = &"LineEdit"
+AuthEditInput/font_sizes/font_size = 9
+AuthEditInput/fonts/font = ExtResource("1_6h47m")
+AuthEditInput/styles/focus = null
+Button/font_sizes/font_size = 9
 Button/fonts/font = ExtResource("1_6h47m")
-Label/font_sizes/font_size = 18
+Label/font_sizes/font_size = 9
 Label/fonts/font = ExtResource("1_6h47m")
-LineEdit/font_sizes/font_size = 18
-LineEdit/fonts/font = ExtResource("1_6h47m")
+TabContainer/fonts/font = ExtResource("1_6h47m")
