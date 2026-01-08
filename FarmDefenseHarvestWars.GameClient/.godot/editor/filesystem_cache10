@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1767871793
+::res://::1767899359
 icon.svg::CompressedTexture2D::2376417301090988011::1766230336::1766230343::1::::<><><>0<>0<>f95e29fbd4d098675ecf60aa09eeecf8<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://_Autoload/::1767014116
 AudioController.cs::CSharpScript::7665804248850742430::1766400690::0::1::::<>Node<><>0<>0<><>::
@@ -1087,11 +1087,11 @@ Weapon_Stands.png::CompressedTexture2D::2548568284632919408::1767014116::1767014
 Wood_Spikes.png::CompressedTexture2D::5451393295838930578::1767014116::1767014116::1::::<><><>0<>0<>3ee96dbd96a464d1b60fb7c1f1f4d1e0<>res://.godot/imported/Wood_Spikes.png-f588214546255300080c7be46d02ec46.ctex::
 ::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/::1767014116
 read_me.txt::TextFile::-1::1767014116::0::1::::<><><>0<>0<><>::
-::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/::1767899154
+::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/::1767899290
 alagard.ttf::FontFile::2931326363709255907::1372790110::1767899290::1::::<><><>0<>0<>489b7f7964ae68c06802bbabe0de49bc<>res://.godot/imported/alagard.ttf-6948c8f49a02056af5e3955a2cf4cb5a.fontdata::
 CuteFantasy-5x9.ttf::FontFile::8714322584937365435::1767014116::1767869986::1::::<><><>0<>0<>0d0cbf49342c6db7f05e7982a34f70bb<>res://.godot/imported/CuteFantasy-5x9.ttf-a2390dac5324c9e7ae3bab97c8194209.fontdata::
 Cute_Fantasy_Font_5x9.png::CompressedTexture2D::8901646825299778886::1767014116::1767014116::1::::<><><>0<>0<>ae3afd688c60d4244990cbe7380b113f<>res://.godot/imported/Cute_Fantasy_Font_5x9.png-70deeb7da0f0d5254d41142f57951e1b.ctex::
-::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/pixel_operator/::1767899154
+::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/pixel_operator/::1767899301
 LICENSE.txt::TextFile::-1::1538644500::0::1::::<><><>0<>0<><>::
 PixelOperator8-Bold.ttf::FontFile::8225178594430729409::1538644500::1767899301::1::::<><><>0<>0<>1858c8aa7b26fa9423b04721b255d84f<>res://.godot/imported/PixelOperator8-Bold.ttf-439a239832388b71899230f0dbac5b4b.fontdata::
 PixelOperator8.ttf::FontFile::7098069714332345871::1538644500::1767899301::1::::<><><>0<>0<>36cf913c5c067add161e3734aa6da2c7<>res://.godot/imported/PixelOperator8.ttf-0f9f9ec8015afd8c5ea566b73720f6aa.fontdata::
@@ -1145,20 +1145,20 @@ CowUnit.tscn::PackedScene::5709647286815159326::1767029064::0::1::::<><><>0<>0<>
 ::res://Entities/Units/Enemies/::1767029051
 WolfUnit.cs::CSharpScript::40792927807332551::1767028502::0::1::::<>CharacterBody2D<><>0<>0<><>::
 WolfUnit.tscn::PackedScene::5686251112725013164::1767029051::0::1::::<><><>0<>0<><>::uid://dxtxhtnhthoma::::res://Entities/Units/Base/AttackerUnit.tscn<>uid://t04aymm6gwl::::res://Entities/Units/Enemies/WolfUnit.cs
-::res://Resources/::1767870223
+::res://Resources/::1767903196
 DefaultTileset.tres::TileSet::9182310868845782836::1767868897::0::1::::<><><>0<>0<><>::uid://cxkagy0meflci::::res://Assets/Cute_Fantasy/Cute_Fantasy/Tiles/Grass/Grass_Tiles_1.png<>uid://cfjgvafmsrrv8::::res://Assets/Cute_Fantasy/Cute_Fantasy/Tiles/Grass/Grass_1_Middle.png<>uid://fudpssn8lg27::::res://Assets/Cute_Fantasy/Cute_Fantasy/Tiles/FarmLand/FarmLand_Tile.png<>uid://cauwxdhpj3xq3::::res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Fences.png<>uid://3x3e0jpcsruc::::res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Fence_Big.png<>uid://bsyyvfrui012e::::res://Assets/Cute_Fantasy/Cute_Fantasy/Trees/Big_Oak_Tree.png<>uid://cdg81h1fobhwl::::res://Assets/Cute_Fantasy/Cute_Fantasy/Tiles/Grass/Grass_2_Middle.png
-PixelTheme.tres::Theme::6220856384927085034::1767870223::0::1::::<><><>0<>0<><>::uid://dwfjvcqo8j1fr::::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/CuteFantasy-5x9.ttf
+PixelTheme.tres::Theme::6220856384927085034::1767903196::0::1::::<><><>0<>0<><>::uid://bh07rtt0cay5h::::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/alagard.ttf
 ::res://Resources/ItemData/::1766400669
 README.md::TextFile::-1::1766400690::0::1::::<><><>0<>0<><>::
 ::res://Resources/UnitStats/::1767014116
 CowStats.tres::Resource::2420574575719686329::1767014116::0::1::::<><><>0<>0<><>::
 ::res://Scenes/::1766400521
-::res://Scenes/Authentication/::1767871767
-AuthScene.tscn::PackedScene::1884142819804278277::1767871233::0::1::::<><><>0<>0<><>::uid://c3a8b6k8tt5e2::::res://Scenes/Authentication/AuthUI.cs<>uid://ddrjliaojkv2y::::res://Scenes/Authentication/LoginPanel.tscn<>uid://ch22hr1lpt8t0::::res://Scenes/Authentication/RegisterPanel.tscn<>uid://farmmap1::::res://Scenes/Gameplay/FarmMap.tscn
-AuthUI.cs::CSharpScript::6740136081003746691::1767100074::0::1::::<>Control<><>0<>0<><>::
-LoginPanel.tscn::PackedScene::7405489521315610914::1767871767::0::1::::<><><>0<>0<><>::uid://cuvouiyt7ahos::::res://Resources/PixelTheme.tres<>uid://bl3j3enefymlc::::res://Scenes/Authentication/LoginUI.cs
-LoginUI.cs::CSharpScript::3216897226354605176::1767046241::0::1::::<>Control<><>0<>0<><>::
-RegisterPanel.tscn::PackedScene::5321554265156559115::1767871929::0::1::::<><><>0<>0<><>::uid://cuvouiyt7ahos::::res://Resources/PixelTheme.tres<>uid://m7ccd1ln571s::::res://Scenes/Authentication/RegisterUI.cs
+::res://Scenes/Authentication/::1767904004
+AuthScene.tscn::PackedScene::1884142819804278277::1767904004::0::1::::<><><>0<>0<><>::uid://dkaacttteavom::::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/Book_UI.png<>uid://c3a8b6k8tt5e2::::res://Scenes/Authentication/AuthUI.cs<>uid://ddrjliaojkv2y::::res://Scenes/Authentication/LoginPanel.tscn<>uid://ch22hr1lpt8t0::::res://Scenes/Authentication/RegisterPanel.tscn<>uid://farmmap1::::res://Scenes/Gameplay/FarmMap.tscn
+AuthUI.cs::CSharpScript::6740136081003746691::1767903990::0::1::::<>Node<><>0<>0<><>::
+LoginPanel.tscn::PackedScene::7405489521315610914::1767903687::0::1::::<><><>0<>0<><>::uid://cuvouiyt7ahos::::res://Resources/PixelTheme.tres<>uid://bl3j3enefymlc::::res://Scenes/Authentication/LoginUI.cs
+LoginUI.cs::CSharpScript::3216897226354605176::1767903905::0::1::::<>Control<><>0<>0<><>::
+RegisterPanel.tscn::PackedScene::5321554265156559115::1767903693::0::1::::<><><>0<>0<><>::uid://cuvouiyt7ahos::::res://Resources/PixelTheme.tres<>uid://m7ccd1ln571s::::res://Scenes/Authentication/RegisterUI.cs
 RegisterUI.cs::CSharpScript::908451415612988454::1767871929::0::1::::<>Control<><>0<>0<><>::
 ::res://Scenes/Gameplay/::1767129155
 FarmMap.tscn::PackedScene::263405661144::1767113285::0::1::::<><><>0<>0<><>::uid://c57xgqkp7rovg::::res://Scenes/Gameplay/GridManager.cs<>uid://d328k3ewg0nay::::res://Resources/DefaultTileset.tres<>uid://tw28gxoig885::::res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Buildings/Unique_Buildings/Barn/Barn_Base_Black.png
@@ -1182,6 +1182,7 @@ Logger.cs::CSharpScript::3710513040405886761::1766400690::0::1::::<><><>0<>0<><>
 ::res://UI/::1766400535
 ::res://UI/Components/::1766400695
 HealthBar.tscn::PackedScene::432179990500724::1766400695::0::1::::<><><>0<>0<><>::
+BookUI.tscn::PackedScene::8264121618861958914::1767904277::0::1::::<><><>0<>0<><>::uid://dkaacttteavom::::res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/Book_UI.png<>uid://ddrjliaojkv2y::::res://Scenes/Authentication/LoginPanel.tscn<>uid://ch22hr1lpt8t0::::res://Scenes/Authentication/RegisterPanel.tscn
 ResourcePanel.tscn::PackedScene::6684577665469540968::1766400695::0::1::::<><><>0<>0<><>::
 ::res://UI/HUD/::1766400663
 GameHUD.tscn::PackedScene::315690969672::1766400690::0::1::::<><><>0<>0<><>::
