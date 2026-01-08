@@ -1,10 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://13xs638acrl2"]
+[gd_scene load_steps=5 format=3 uid="uid://13xs638acrl2"]
 
 [ext_resource type="Script" uid="uid://c3a8b6k8tt5e2" path="res://Scenes/Authentication/AuthUI.cs" id="1_lrxoj"]
 [ext_resource type="PackedScene" uid="uid://ddrjliaojkv2y" path="res://Scenes/Authentication/LoginPanel.tscn" id="2_login"]
 [ext_resource type="PackedScene" uid="uid://ch22hr1lpt8t0" path="res://Scenes/Authentication/RegisterPanel.tscn" id="3_register"]
+[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="4_rh3ju"]
 
-[node name="AuthScene" type="Control" node_paths=PackedStringArray("LoginPanel", "RegisterPanel")]
+[node name="AuthScene" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="AuthScene" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("LoginPanel", "RegisterPanel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,9 +20,11 @@ script = ExtResource("1_lrxoj")
 LoginPanel = NodePath("LoginPanel")
 RegisterPanel = NodePath("RegisterPanel")
 
-[node name="LoginPanel" parent="." instance=ExtResource("2_login")]
+[node name="LoginPanel" parent="CanvasLayer/AuthScene" instance=ExtResource("2_login")]
 layout_mode = 1
 
-[node name="RegisterPanel" parent="." instance=ExtResource("3_register")]
+[node name="RegisterPanel" parent="CanvasLayer/AuthScene" instance=ExtResource("3_register")]
 visible = false
 layout_mode = 1
+
+[node name="FarmMap" parent="." instance=ExtResource("4_rh3ju")]

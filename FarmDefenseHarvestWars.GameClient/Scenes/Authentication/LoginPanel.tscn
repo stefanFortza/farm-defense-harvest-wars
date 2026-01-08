@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ddrjliaojkv2y"]
+[gd_scene load_steps=3 format=3 uid="uid://ddrjliaojkv2y"]
 
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_e0aq5"]
 [ext_resource type="Script" uid="uid://bl3j3enefymlc" path="res://Scenes/Authentication/LoginUI.cs" id="1_qwl4c"]
 
 [node name="LoginPanel" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ErrorLabel", "LoginButton")]
@@ -9,11 +10,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_e0aq5")
 script = ExtResource("1_qwl4c")
 EmailInput = NodePath("VBoxContainer/EmailInput")
 PasswordInput = NodePath("VBoxContainer/PasswordInput")
 ErrorLabel = NodePath("VBoxContainer/ErrorLabel")
-LoginButton = NodePath("VBoxContainer/LoginButton")
+LoginButton = NodePath("VBoxContainer/HBoxContainer/LoginButton")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -22,39 +24,55 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -150.0
-offset_right = 150.0
-offset_bottom = 150.0
+offset_left = -52.5
+offset_top = -51.5
+offset_right = 52.5
+offset_bottom = 51.5
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_e0aq5")
 alignment = 1
 
 [node name="Title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 18
 text = "Login"
 horizontal_alignment = 1
 
 [node name="EmailInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 9
 placeholder_text = "Email"
 
 [node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 9
 placeholder_text = "Password"
 secret = true
 
-[node name="LoginButton" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+
+[node name="LoginButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 9
 text = "Login"
 
-[node name="GoToRegisterButton" type="Button" parent="VBoxContainer"]
+[node name="GoToRegisterButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 9
 text = "Create Account"
 
 [node name="ErrorLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_e0aq5")
 horizontal_alignment = 1
 
-[connection signal="pressed" from="VBoxContainer/LoginButton" to="." method="OnLoginPressed"]
-[connection signal="pressed" from="VBoxContainer/GoToRegisterButton" to="." method="OnGoToRegisterPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LoginButton" to="." method="OnLoginPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GoToRegisterButton" to="." method="OnGoToRegisterPressed"]

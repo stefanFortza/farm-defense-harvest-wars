@@ -17,6 +17,7 @@ public partial class RegisterUI : Control
     public override void _Ready()
     {
         if (ErrorLabel != null) ErrorLabel.Text = "";
+        if (RegisterButton != null) RegisterButton.Pressed += OnRegisterPressed;
     }
 
     public async void OnRegisterPressed()

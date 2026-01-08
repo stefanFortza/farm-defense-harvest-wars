@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dwfjvcqo8j1fr"
-path="res://.godot/imported/CuteFantasy-5x9.ttf-a2390dac5324c9e7ae3bab97c8194209.fontdata"
+uid="uid://b0w872nq778p0"
+path="res://.godot/imported/PixelOperatorMono8-Bold.ttf-ec91dad30fbcb82823b8e076e9f53c00.fontdata"
 
 [deps]
 
-source_file="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/CuteFantasy-5x9.ttf"
-dest_files=["res://.godot/imported/CuteFantasy-5x9.ttf-a2390dac5324c9e7ae3bab97c8194209.fontdata"]
+source_file="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/pixel_operator/PixelOperatorMono8-Bold.ttf"
+dest_files=["res://.godot/imported/PixelOperatorMono8-Bold.ttf-ec91dad30fbcb82823b8e076e9f53c00.fontdata"]
 
 [params]
 

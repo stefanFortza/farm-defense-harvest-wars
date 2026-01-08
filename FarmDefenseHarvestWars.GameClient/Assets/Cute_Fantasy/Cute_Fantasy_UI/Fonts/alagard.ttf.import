@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dwfjvcqo8j1fr"
-path="res://.godot/imported/CuteFantasy-5x9.ttf-a2390dac5324c9e7ae3bab97c8194209.fontdata"
+uid="uid://bh07rtt0cay5h"
+path="res://.godot/imported/alagard.ttf-6948c8f49a02056af5e3955a2cf4cb5a.fontdata"
 
 [deps]
 
-source_file="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/CuteFantasy-5x9.ttf"
-dest_files=["res://.godot/imported/CuteFantasy-5x9.ttf-a2390dac5324c9e7ae3bab97c8194209.fontdata"]
+source_file="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/alagard.ttf"
+dest_files=["res://.godot/imported/alagard.ttf-6948c8f49a02056af5e3955a2cf4cb5a.fontdata"]
 
 [params]
 

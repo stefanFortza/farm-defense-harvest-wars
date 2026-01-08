@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ch22hr1lpt8t0"]
+[gd_scene load_steps=3 format=3 uid="uid://ch22hr1lpt8t0"]
 
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_fbgkp"]
 [ext_resource type="Script" uid="uid://m7ccd1ln571s" path="res://Scenes/Authentication/RegisterUI.cs" id="1_script"]
 
 [node name="RegisterPanel" type="Control" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ConfirmPasswordInput", "ErrorLabel", "RegisterButton")]
@@ -9,58 +10,79 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_fbgkp")
 script = ExtResource("1_script")
-EmailInput = NodePath("VBoxContainer/EmailInput")
-PasswordInput = NodePath("VBoxContainer/PasswordInput")
-ConfirmPasswordInput = NodePath("VBoxContainer/ConfirmPasswordInput")
-ErrorLabel = NodePath("VBoxContainer/ErrorLabel")
-RegisterButton = NodePath("VBoxContainer/RegisterButton")
+EmailInput = NodePath("ScrollContainer/VBoxContainer/EmailInput")
+PasswordInput = NodePath("ScrollContainer/VBoxContainer/PasswordInput")
+ConfirmPasswordInput = NodePath("ScrollContainer/VBoxContainer/ConfirmPasswordInput")
+ErrorLabel = NodePath("ScrollContainer/VBoxContainer/ErrorLabel")
+RegisterButton = NodePath("ScrollContainer/VBoxContainer/HBoxContainer/RegisterButton")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -150.0
-offset_right = 150.0
-offset_bottom = 150.0
+offset_left = -88.5
+offset_top = -65.0
+offset_right = 80.5
+offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_fbgkp")
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
 alignment = 1
 
-[node name="Title" type="Label" parent="VBoxContainer"]
+[node name="VBoxContainer#Title" type="Label" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_fbgkp")
+theme_override_font_sizes/font_size = 36
 text = "Register"
 horizontal_alignment = 1
 
-[node name="EmailInput" type="LineEdit" parent="VBoxContainer"]
+[node name="EmailInput" type="LineEdit" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_fbgkp")
 placeholder_text = "Email"
 
-[node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
+[node name="PasswordInput" type="LineEdit" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_fbgkp")
 placeholder_text = "Password"
 secret = true
 
-[node name="ConfirmPasswordInput" type="LineEdit" parent="VBoxContainer"]
+[node name="ConfirmPasswordInput" type="LineEdit" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_fbgkp")
 placeholder_text = "Confirm Password"
 secret = true
 
-[node name="RegisterButton" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RegisterButton" type="Button" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_fbgkp")
 text = "Register"
 
-[node name="BackToLoginButton" type="Button" parent="VBoxContainer"]
+[node name="BackToLoginButton" type="Button" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_fbgkp")
 text = "Back to Login"
 
-[node name="ErrorLabel" type="Label" parent="VBoxContainer"]
+[node name="ErrorLabel" type="Label" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_fbgkp")
 horizontal_alignment = 1
 
-[connection signal="pressed" from="VBoxContainer/RegisterButton" to="." method="OnRegisterPressed"]
-[connection signal="pressed" from="VBoxContainer/BackToLoginButton" to="." method="OnBackToLoginPressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxContainer/RegisterButton" to="." method="OnRegisterPressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxContainer/BackToLoginButton" to="." method="OnBackToLoginPressed"]
