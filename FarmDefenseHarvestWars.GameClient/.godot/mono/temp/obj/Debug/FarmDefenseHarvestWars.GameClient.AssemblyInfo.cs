@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FarmDefenseHarvestWars.GameClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04ec1c5b84da6ddf4f598382ce544a72e9870669")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cbf5e2816e8e898b65d4b19c5e5fa4d72415d85")]
 [assembly: System.Reflection.AssemblyProductAttribute("FarmDefenseHarvestWars.GameClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FarmDefenseHarvestWars.GameClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
