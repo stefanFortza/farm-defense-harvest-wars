@@ -14,11 +14,15 @@ public partial class TabButton : TextureButton
 	public delegate void AnimationFinishedEventHandler(TabButton buttonChanged, TabButtonState finalState);
 
 	[Export] public NinePatchRect BackgroundNode = null!;
-	[Export] public Control IconNode = null!;
+	[Export] public TextureRect IconNode = null!;
 
 	[ExportGroup("Textures")]
 	[Export] public Texture2D NormalTexture = null!;
 	[Export] public Texture2D ActiveTexture = null!;
+	[Export] public Texture2D IconTexture = null!;
+
+	[ExportGroup("Identity")]
+	[Export] public string TabKey = "";
 
 	[ExportGroup("Settings")]
 	[Export] public float LiftAmount = -2.0f;
@@ -31,10 +35,16 @@ public partial class TabButton : TextureButton
 	public override void _Ready()
 	{
 		BackgroundNode ??= GetNodeOrNull<NinePatchRect>("NinePatchRect");
-		IconNode ??= GetNodeOrNull<Control>("NinePatchRect/Icon");
+		IconNode ??= GetNodeOrNull<TextureRect>("NinePatchRect/Icon");
 
 		_bgOriginalPos = BackgroundNode.Position;
 		IconNode.PivotOffset = IconNode.Size / 2;
+
+		// Apply custom icon if provided
+		if (IconNode != null && IconTexture != null)
+		{
+			IconNode.Texture = IconTexture;
+		}
 
 		// Connect event handlers - using separate methods for better debuggability and testability
 		Toggled += OnToggled;
@@ -43,6 +53,15 @@ public partial class TabButton : TextureButton
 
 		// Initialize visual state
 		UpdateVisualState();
+	}
+
+	public void SetIconTexture(Texture2D texture)
+	{
+		IconTexture = texture;
+		if (IconNode != null)
+		{
+			IconNode.Texture = IconTexture;
+		}
 	}
 
 	public override void _ExitTree()

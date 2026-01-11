@@ -1,9 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://hmlfj1sythl0"]
+[gd_scene load_steps=7 format=3 uid="uid://hmlfj1sythl0"]
 
 [ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="1_0okjo"]
 [ext_resource type="Script" uid="uid://c4m8g5uopi6yl" path="res://Scenes/UI/Components/TabsManager.cs" id="2_3q2n0"]
 [ext_resource type="PackedScene" uid="uid://d2pbrn4oof35o" path="res://Scenes/UI/Components/TabButton.tscn" id="2_a8ep5"]
 [ext_resource type="ButtonGroup" uid="uid://dylcgpek81sf8" path="res://Scenes/Menus/MainMenu/MainMenuButtonGroup.tres" id="3_0vkk7"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3q2n0"]
+load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_luq8n"]
+atlas = SubResource("CompressedTexture2D_3q2n0")
+region = Rect2(144, 32, 16, 16)
 
 [node name="MainMenuBookUI" instance=ExtResource("1_0okjo")]
 offset_top = 10.0
@@ -34,6 +41,8 @@ offset_bottom = 21.0
 grow_horizontal = 2
 theme_override_constants/separation = 4
 script = ExtResource("2_3q2n0")
+LeftZonePath = NodePath("../ContentOverlay/LeftZone")
+RightZonePath = NodePath("../ContentOverlay/RightZone")
 
 [node name="Background" parent="TabsLayer" index="0" instance=ExtResource("2_a8ep5")]
 layout_mode = 2
@@ -42,6 +51,7 @@ button_group = ExtResource("3_0vkk7")
 [node name="Background2" parent="TabsLayer" index="1" instance=ExtResource("2_a8ep5")]
 layout_mode = 2
 button_group = ExtResource("3_0vkk7")
+IconTexture = SubResource("AtlasTexture_luq8n")
 
 [node name="ContentOverlay" type="HBoxContainer" parent="." index="2"]
 layout_mode = 0

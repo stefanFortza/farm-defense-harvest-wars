@@ -20,7 +20,7 @@ region = Rect2(590, 78, 20, 18)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0vkk7"]
 atlas = ExtResource("1_ilrgx")
-region = Rect2(590, 30, 20, 18)
+region = Rect2(590, 30, 20, 20)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8paob"]
 atlas = ExtResource("2_nglnj")
@@ -47,9 +47,8 @@ grow_vertical = 2
 texture = SubResource("AtlasTexture_0vkk7")
 region_rect = Rect2(0, 0, 20, 18)
 patch_margin_left = 4
-patch_margin_top = 18
+patch_margin_top = 17
 patch_margin_right = 4
-patch_margin_bottom = 1
 
 [node name="Icon" type="TextureRect" parent="Background"]
 layout_mode = 1
