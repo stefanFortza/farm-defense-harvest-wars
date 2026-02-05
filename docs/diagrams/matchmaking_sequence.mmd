@@ -12,9 +12,9 @@ sequenceDiagram
     API-->>P2: Return JWT Token
 
     Note over P1, P2: Phase 2: Match Request
-    P1->>API: SignalR: JoinQueue(JWT)
+    P1->>API: SignalR JoinQueue(JWT)
     API->>API: Add P1 to Queue
-    P2->>API: SignalR: JoinQueue(JWT)
+    P2->>API: SignalR JoinQueue(JWT)
     API->>API: Queue.Count >= 2? YES!
 
     Note over API, GS: Phase 3: Spinning up Server
@@ -23,11 +23,11 @@ sequenceDiagram
     GS-->>API: HTTP POST /api/match/ready (I am open!)
 
     Note over P1, GS: Phase 4: Connection
-    API->>P1: SignalR: MatchFound(IP: 127.0.0.1, Port: 8910, Role: DEFENDER)
-    API->>P2: SignalR: MatchFound(IP: 127.0.0.1, Port: 8910, Role: ATTACKER)
+    API->>P1: SignalR MatchFound(IP: 127.0.0.1, Port: 8910, Role: DEFENDER)
+    API->>P2: SignalR MatchFound(IP: 127.0.0.1, Port: 8910, Role: ATTACKER)
 
     P1->>GS: ENet Connect()
     P2->>GS: ENet Connect()
     
-    GS->>P1: RPC: GameStart()
-    GS->>P2: RPC: GameStart()
+    GS->>P1: RPC GameStart()
+    GS->>P2: RPC GameStart()

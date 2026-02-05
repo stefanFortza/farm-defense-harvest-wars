@@ -10,13 +10,13 @@ stateDiagram-v2
     WaitingForPlayers --> PreparationPhase: Both Players Ready
     
     state PreparationPhase {
-        note right of PreparationPhase
-            30 de secunde pentru a 
-            construi fermele inițiale
-        end note
         [*] --> TimerStart
         TimerStart --> SpawningAllowed
     }
+    note right of PreparationPhase
+        30 de secunde pentru a 
+        construi fermele initiale
+    end note
 
     PreparationPhase --> BattlePhase: Timer == 0
 

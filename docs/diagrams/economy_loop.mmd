@@ -1,0 +1,16 @@
+graph TD
+    subgraph DefenderLoop ["Defender Loop"]
+        D_Action["D. Build Wheat"] -->|"Costs Gold"| D_Eco["D. Passive Income UP"]
+        D_Action2["D. Build Chicken"] -->|"Costs Gold"| D_Def["D. Defense UP"]
+        D_Eco -->|Wait| D_Money["$$$"]
+    end
+
+    subgraph AttackerLoop ["Attacker Loop"]
+        A_Action["A. Build Mine/Tent"] -->|"Costs Gold"| A_Eco["A. Income Rate UP"]
+        A_Action2["A. Spawn Wolf"] -->|"Costs Gold"| A_Atk["A. Offense UP"]
+        A_Eco -->|Wait| A_Money["$$$"]
+    end
+
+    A_Atk -->|Attacks| D_Def
+    D_Def -->|"Kills Wolf"| D_Money
+    A_Atk -->|"Destroys Wheat"| D_Eco_Down["D. Income DOWN"]
