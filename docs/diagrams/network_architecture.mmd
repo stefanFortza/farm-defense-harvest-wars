@@ -1,0 +1,40 @@
+graph TD
+    subgraph "Clients (Players)"
+        P1[Player 1: Defender]
+        P2[Player 2: Attacker]
+    end
+
+    subgraph "Management Layer (ASP.NET Core)"
+        API[Web API Server]
+        DB[(PostgreSQL/SQL DB)]
+        Redis[Redis / In-Memory Queue]
+    end
+
+    subgraph "Game Layer (Godot Headless)"
+        GS[Game Server Instance]
+    end
+
+    %% Login Flow
+    P1 -- 1. Login (HTTP POST) --> API
+    P2 -- 1. Login (HTTP POST) --> API
+    API -- Read/Write User Data --> DB
+
+    %% Matchmaking Flow
+    P1 -- 2. Request Match --> API
+    P2 -- 2. Request Match --> API
+    API -- Add to Queue --> Redis
+    
+    %% Server Spawning
+    API -- 3. Match Found! Spawn Process --> GS
+    GS -.->|4. Report Ready (Port 8910)| API
+    
+    %% Game Connection
+    API -- 5. Send IP:Port to Clients --> P1
+    API -- 5. Send IP:Port to Clients --> P2
+    
+    %% Realtime Gameplay (ENet)
+    P1 == 6. Connect (ENet) ==> GS
+    P2 == 6. Connect (ENet) ==> GS
+    
+    style GS fill:#f96,stroke:#333,stroke-width:2px
+    style API fill:#69f,stroke:#333,stroke-width:2px

@@ -1,0 +1,58 @@
+classDiagram
+    %% Base Node class from Godot
+    class Node2D {
+        +GlobalPosition Vector2
+        +QueueFree()
+    }
+
+    class BaseUnit {
+        +int Health
+        +int MaxHealth
+        +int Cost
+        +UnitType Type
+        +int OwnerId
+        +TakeDamage(int amount)
+        +Die()
+        #SyncPosition()
+    }
+
+    %% Defender Branch
+    class DefenderUnit {
+        +float AttackRange
+        +float AttackCooldown
+        +DetectEnemy()
+        +Shoot()
+    }
+
+    class CowUnit {
+        +SpawnMilkProjectile()
+    }
+    
+    class ChickenUnit {
+        +SpawnEggProjectile()
+    }
+
+    %% Attacker Branch
+    class AttackerUnit {
+        +float MoveSpeed
+        +int DamageToStructure
+        +MoveForward(delta)
+        +AttackStructure()
+    }
+
+    class WolfEnemy {
+        +HowlAbility()
+    }
+    
+    class SkeletonEnemy {
+        +ReviveAbility()
+    }
+
+    %% Relationships
+    Node2D <|-- BaseUnit
+    BaseUnit <|-- DefenderUnit
+    BaseUnit <|-- AttackerUnit
+    DefenderUnit <|-- CowUnit
+    DefenderUnit <|-- ChickenUnit
+    AttackerUnit <|-- WolfEnemy
+    AttackerUnit <|-- SkeletonEnemy

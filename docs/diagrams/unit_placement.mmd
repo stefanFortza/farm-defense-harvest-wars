@@ -1,0 +1,30 @@
+sequenceDiagram
+    actor P as Player (Client)
+    participant UI as Game UI
+    participant GC as GameplayController (Client)
+    participant SV as Godot Server (Host)
+    
+    Note over P, GC: FAZA 1: GHOSTING (Local)
+    P->>UI: Select "Cow Card"
+    UI->>GC: Set SelectedUnit = COW
+    P->>GC: Move Mouse over Grid (3, 3)
+    GC->>GC: Show Transparent Cow at (3, 3)
+    GC->>GC: Show Green Square Highlight
+    
+    Note over P, SV: FAZA 2 & 3: REQUEST & VALIDATION
+    P->>GC: Click Left Mouse
+    GC->>SV: RPC: RequestSpawn(Unit: COW, Pos: 3,3)
+    
+    activate SV
+    SV->>SV: Check: Is (3,3) Empty? YES
+    SV->>SV: Check: Has 5 Gold? YES
+    SV->>SV: Deduct 5 Gold
+    SV->>SV: Mark (3,3) as Occupied
+    
+    Note over SV: FAZA 4: REPLICATION
+    SV->>GC: RPC: SpawnUnitOnClient(ID: 101, Type: COW, Pos: 3,3)
+    deactivate SV
+    
+    GC->>GC: Instantiate "Cow.tscn" at (3,3)
+    GC->>GC: Play Animation "Idle"
+    GC->>GC: Remove Transparent Ghost
