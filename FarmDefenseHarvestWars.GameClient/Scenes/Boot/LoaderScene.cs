@@ -39,6 +39,6 @@ public partial class LoaderScene : Node
 	{
 		GD.Print(">>> STARTING IN CLIENT MODE <<<");
 		// Clientul merge la Login
-		GetTree().ChangeSceneToPacked(AuthScene);
+		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToPacked, AuthScene);
 	}
 }

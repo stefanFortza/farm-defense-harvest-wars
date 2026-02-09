@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="FarmDefenseHarvestWars.GameClient"
-run/main_scene="res://Scenes/Authentication/AuthScene.tscn"
+run/main_scene="uid://dvoo3488wfrwr"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
