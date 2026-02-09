@@ -34,7 +34,7 @@ public partial class LoginUI : Control
         try
         {
             // 2. Network Request
-            bool success = await NetworkManager.Instance.AuthenticateAsync(EmailInput.Text, PasswordInput.Text);
+            bool success = await NetworkBootstrap.Instance.Auth.LoginAsync(EmailInput.Text, PasswordInput.Text);
 
             if (success)
             {

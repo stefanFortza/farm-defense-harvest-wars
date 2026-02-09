@@ -10,17 +10,7 @@ public partial class AuthUI : Node
 
 	public override void _Ready()
 	{
-		// Check for server mode to bypass auth
-		if (OS.GetCmdlineArgs().Contains("--server"))
-		{
-			// Use CallDeferred to avoid "Parent node is busy" error during _Ready
-			GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, "res://Scenes/Menus/MainMenu.tscn");
-			return;
-		}
-
-		// Connect signals
 		LoginPanel?.LoginSuccess += OnLoginSuccess;
-
 		RegisterPanel?.RegisterSuccess += OnLoginSuccess;
 
 	}
@@ -28,6 +18,7 @@ public partial class AuthUI : Node
 	// Placeholder for actual auth logic
 	public void OnLoginSuccess()
 	{
+		GD.Print("Authentication successful! Transitioning to Main Menu...");
 		GetTree().ChangeSceneToPacked(MainMenuScene);
 	}
 }

@@ -16,8 +16,8 @@ public partial class RegisterUI : Control
 
     public override void _Ready()
     {
-        if (ErrorLabel != null) ErrorLabel.Text = "";
-        if (RegisterButton != null) RegisterButton.Pressed += OnRegisterPressed;
+        ErrorLabel?.Text = "";
+        RegisterButton?.Pressed += OnRegisterPressed;
     }
 
     public async void OnRegisterPressed()
@@ -35,20 +35,13 @@ public partial class RegisterUI : Control
             return;
         }
 
-        if (RegisterButton != null) RegisterButton.Disabled = true;
+        RegisterButton?.Disabled = true;
         ShowMessage("Creating account...", Colors.Yellow);
 
         try
         {
-            // 2. Prepare Data
-            var request = new RegisterRequestDto
-            {
-                Email = EmailInput.Text,
-                Password = PasswordInput.Text
-            };
-
             // 3. Call API
-            await NetworkManager.Instance.Api.RegisterAsync(request);
+            await NetworkBootstrap.Instance.Auth.RegisterAsync(EmailInput.Text, PasswordInput.Text);
 
             // 4. Success
             ShowMessage("Account created successfully!", Colors.Green);
@@ -71,7 +64,7 @@ public partial class RegisterUI : Control
         }
         finally
         {
-            if (RegisterButton != null) RegisterButton.Disabled = false;
+            RegisterButton?.Disabled = false;
         }
     }
 

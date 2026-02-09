@@ -17,7 +17,7 @@ public partial class GameUI : CanvasLayer
     {
         if (RoleLabel != null)
         {
-            var role = NetworkManager.Instance.GetCurrentRole();
+            var role = NetworkBootstrap.Instance.Gameplay.MyRole;
             RoleLabel.Text = $"Role: {role}";
         }
     }

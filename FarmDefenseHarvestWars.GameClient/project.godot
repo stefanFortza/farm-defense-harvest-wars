@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-NetworkManager="*res://_Autoload/NetworkManager.cs"
+NetworkBootstrap="*res://_Autoload/Networking/NetworkBootstrap.cs"
 GameState="*res://_Autoload/GameState.cs"
 
 [display]
