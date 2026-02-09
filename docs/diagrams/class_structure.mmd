@@ -56,3 +56,43 @@ classDiagram
     DefenderUnit <|-- ChickenUnit
     AttackerUnit <|-- WolfEnemy
     AttackerUnit <|-- SkeletonEnemy
+
+    class NetworkBootstrap {
+        +IGameApi ApiClient
+        +string JwtToken
+        +AuthService Auth
+        +MatchmakingService Matchmaking
+        +GameplayNetwork Gameplay
+        +_Ready()
+    }
+
+    class AuthService {
+        -IGameApi _api
+        +Login(email, pass)
+        +Register(email, pass)
+    }
+
+    class ShopService {
+        -IGameApi _api
+        +BuyItem(itemId)
+        +GetInventory()
+    }
+
+    class MatchmakingService {
+        -IGameApi _api
+        +FindMatch()
+        +CancelMatch()
+    }
+
+    class GameplayNetwork {
+        -ENetMultiplayerPeer _peer
+        +StartHost()
+        +JoinClient()
+        +RequestPlaceUnit(gridPos, type)
+        +Server_ValidatePlacement()
+    }
+
+    NetworkBootstrap --> AuthService : Instantiates
+    NetworkBootstrap --> ShopService : Instantiates
+    NetworkBootstrap --> MatchmakingService : Instantiates
+    NetworkBootstrap --> GameplayNetwork : Instantiates

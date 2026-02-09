@@ -44,7 +44,7 @@ build-docs:
     #!/usr/bin/env bash
     for file in {{doc_dir}}/*.mmd; do \
         echo "Generating png for $file..."; \
-        mmdc -i "$file" -o "${file%.mmd}.png"; \
+        mmdc -p {{doc_dir}}/puppeteer-config.json -i "$file" -o "${file%.mmd}.png"; \
     done
 
 # Curăță proiectul (șterge bin/obj)
