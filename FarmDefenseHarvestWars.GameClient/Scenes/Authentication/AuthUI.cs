@@ -4,6 +4,7 @@ using System.Linq;
 
 public partial class AuthUI : Node
 {
+	[Export] public PackedScene MainMenuScene { get; set; } = null!;
 	[Export] public LoginUI LoginPanel { get; set; } = null!;
 	[Export] public RegisterUI RegisterPanel { get; set; } = null!;
 
@@ -27,6 +28,6 @@ public partial class AuthUI : Node
 	// Placeholder for actual auth logic
 	public void OnLoginSuccess()
 	{
-		GetTree().ChangeSceneToFile("res://Scenes/Menus/MainMenu.tscn");
+		GetTree().ChangeSceneToPacked(MainMenuScene);
 	}
 }
