@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
 public partial class UnitManager : Node
 {

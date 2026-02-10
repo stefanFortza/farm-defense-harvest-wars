@@ -1,5 +1,6 @@
 using Godot;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
 public partial class WolfUnit : AttackerUnit
 {

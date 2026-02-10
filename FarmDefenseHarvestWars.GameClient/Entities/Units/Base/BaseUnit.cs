@@ -1,9 +1,17 @@
 using Godot;
 using System;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
+using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
+using System.Runtime.CompilerServices;
+
+namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+
 
 public abstract partial class BaseUnit : CharacterBody2D
 {
+    [Export] protected StateMachine StateMachine { get; set; } = null!;
+
     [Export] public int MaxHealth { get; set; } = 100;
 
     // Synced via MultiplayerSynchronizer in the future
@@ -18,6 +26,9 @@ public abstract partial class BaseUnit : CharacterBody2D
     {
         CurrentHealth = MaxHealth;
         AddToGroup("Units");
+
+        // Register states
+        StateMachine.RegisterState(UnitStateEnum.Idle, new IdleState(this));
     }
 
     // Server-side logic

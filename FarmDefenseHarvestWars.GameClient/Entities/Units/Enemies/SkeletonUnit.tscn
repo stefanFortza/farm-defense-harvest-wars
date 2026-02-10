@@ -1,0 +1,54 @@
+[gd_scene load_steps=9 format=3 uid="uid://cnapywfs7vvi7"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit.tscn" id="1_xj8l3"]
+[ext_resource type="Script" uid="uid://t04aymm6gwl" path="res://Entities/Units/Enemies/SkeletonUnit.cs" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://bhptn433nuxyt" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Goblins/Goblin_Spearman.png" id="3_bdg1m"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pbiwv"]
+atlas = ExtResource("3_bdg1m")
+region = Rect2(0, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_snfe0"]
+atlas = ExtResource("3_bdg1m")
+region = Rect2(48, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dvpqg"]
+atlas = ExtResource("3_bdg1m")
+region = Rect2(96, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_we2uf"]
+atlas = ExtResource("3_bdg1m")
+region = Rect2(144, 48, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wb4uc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pbiwv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_snfe0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dvpqg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_we2uf")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="SkeletonUnit" instance=ExtResource("1_xj8l3")]
+script = ExtResource("2_script")
+
+[node name="AnimatedSprite2D" parent="." index="2"]
+position = Vector2(0, -15)
+sprite_frames = SubResource("SpriteFrames_wb4uc")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.1391394
+
+[node name="StateMachine" parent="." index="4"]
+script = null

@@ -1,11 +1,12 @@
 using Godot;
 
+namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+
 public abstract partial class AttackerUnit : BaseUnit
 {
     [Export] public float Speed { get; set; } = 100.0f;
     [Export] public int Damage { get; set; } = 10;
-
-    [Export] public float AttackSpeed { get; set; } = 1.0f; // Attacks per second
+    [Export] public float AttackSpeed { get; set; } = 1.0f;
     private double _attackCooldown = 0.0;
     private DefenderUnit? _currentTarget = null;
 

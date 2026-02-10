@@ -3,3 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://cag1tn1qrlacf" path="res://Entities/Units/Base/BaseUnit.tscn" id="1_b03p5"]
 
 [node name="AttackerUnit" instance=ExtResource("1_b03p5")]
+
+[node name="StateMachine" parent="." index="4"]
+script = null

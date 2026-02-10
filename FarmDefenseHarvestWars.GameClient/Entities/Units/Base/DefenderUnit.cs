@@ -1,3 +1,4 @@
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using Godot;
 
 public abstract partial class DefenderUnit : BaseUnit

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=4 format=3 uid="uid://cag1tn1qrlacf"]
 
 [ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Base/UnitVisuals.cs" id="1_visuals"]
+[ext_resource type="Script" uid="uid://ctgohpts1i2la" path="res://Scripts/Core/StateMachine/StateMachine.cs" id="2_btydi"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
 properties/0/path = NodePath(".:position")
@@ -22,6 +23,9 @@ offset_top = -40.0
 offset_right = 20.0
 offset_bottom = -35.0
 show_percentage = false
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("2_btydi")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_r1xd3")
