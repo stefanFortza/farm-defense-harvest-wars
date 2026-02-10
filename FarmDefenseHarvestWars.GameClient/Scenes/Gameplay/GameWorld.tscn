@@ -1,14 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3eudmxt181c6"]
+[gd_scene load_steps=6 format=3 uid="uid://b3eudmxt181c6"]
 
-[ext_resource type="PackedScene" uid="uid://cu12uic4kd4ek" path="res://Scenes/Gameplay/GameplayManagers/GameplayManagers.tscn" id="2_cs20h"]
+[ext_resource type="Script" uid="uid://crnjqc17jbmcd" path="res://Scenes/Gameplay/GameWorld.cs" id="1_vhl2x"]
+[ext_resource type="PackedScene" uid="uid://cu12uic4kd4ek" path="res://Scenes/Gameplay/GameplayManager/GameplayManager.tscn" id="2_cs20h"]
 [ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/Map/Map.tscn" id="2_vhl2x"]
+[ext_resource type="Script" uid="uid://i5qavmfqfft5" path="res://Scenes/Gameplay/Map/Map.cs" id="4_cs20h"]
 [ext_resource type="Script" uid="uid://dbcv5oydmri8p" path="res://Scenes/Gameplay/GameUI.cs" id="5_ui"]
 
 [node name="GameWorld" type="Node2D"]
+script = ExtResource("1_vhl2x")
 
 [node name="GameplayManagers" parent="." instance=ExtResource("2_cs20h")]
 
-[node name="FarmMap" parent="." instance=ExtResource("2_vhl2x")]
+[node name="Map" parent="." instance=ExtResource("2_vhl2x")]
+script = ExtResource("4_cs20h")
 
 [node name="UnitContainer" type="Node2D" parent="."]
 
@@ -99,5 +103,3 @@ text = "Back to Menu"
 
 [connection signal="pressed" from="GameUI/HUD/DebugWinButton" to="GameUI" method="OnDebugWinPressed"]
 [connection signal="pressed" from="GameUI/GameOverPanel/VBoxContainer/BackToMenuButton" to="GameUI" method="OnBackToMenuPressed"]
-
-[editable path="FarmMap"]

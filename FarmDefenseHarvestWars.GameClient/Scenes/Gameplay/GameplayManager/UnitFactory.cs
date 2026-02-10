@@ -1,15 +1,27 @@
 using System.Collections.Generic;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using FarmDefenseHarvestWars.Shared.Enums;
 using Godot;
 
-public partial class UnitFactory : Node
+namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
+
+public partial class UnitFactory : Node, IInitializable<GameplayContext>
 {
 	// Acest nod trebuie să fie setat ca "Spawn Path" în MultiplayerSpawner-ul din editor
-	[Export] public Node2D UnitContainer { get; private set; } = null!;
 
+	public bool IsInitialized { get; private set; } = false;
 	private readonly Dictionary<UnitType, PackedScene> _scenes = [];
+	private Node2D _unitContainer = null!;
+
+	public void Initialize(GameplayContext data)
+	{
+		if (IsInitialized) return;
+		_unitContainer = data.UnitContainer;
+		IsInitialized = true;
+	}
+
 	public override void _Ready()
 	{
 		// Load unit scenes (Hardcoded for now, could be dynamic)
@@ -44,7 +56,7 @@ public partial class UnitFactory : Node
 
 		// 3. Adăugăm în container
 		// MAGIC: MultiplayerSpawner va detecta asta și va spawna unitatea la toți clienții
-		UnitContainer.AddChild(unit, true);
+		_unitContainer.AddChild(unit);
 
 		// 4. Înregistrăm în grid-ul logic
 		grid.RegisterUnit(gridPos, unit);

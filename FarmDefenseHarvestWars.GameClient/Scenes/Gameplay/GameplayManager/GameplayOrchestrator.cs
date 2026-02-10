@@ -1,14 +1,27 @@
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using Godot;
-using System;
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
-public partial class GameplayOrchestrator : Node
+namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
+
+public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext>
 {
-	[Export] public UnitFactory UnitFactory;
-	[Export] public GridSystem GridSystem;
-	[Export] public MatchManager MatchManager;
+	private GridSystem _gridSystem = null!;
+	private UnitFactory _unitFactory = null!;
+	private MatchManager _matchManager = null!;
+
+	public bool IsInitialized { get; private set; } = false;
+
+	public void Initialize(GameplayContext data)
+	{
+		if (IsInitialized) return;
+		_gridSystem = data.Grid;
+		_unitFactory = data.Factory;
+		_matchManager = data.Match;
+		IsInitialized = true;
+	}
 
 	// --- CLIENT SIDE ---
 	// Apelat din InputController când dai click
@@ -28,17 +41,17 @@ public partial class GameplayOrchestrator : Node
 		var stats = UnitStatsRegistry.Get(type);
 
 		// 1. Validare Logică (Grid)
-		if (GridSystem.IsCellOccupied(gridPos)) return;
+		if (_gridSystem.IsCellOccupied(gridPos)) return;
 
 		// 2. Validare Economică (MatchManager)
-		if (!MatchManager.CanAfford(senderId, stats.Cost))
+		if (!_matchManager.CanAfford(senderId, stats.Cost))
 		{
 			GD.Print($"Player {senderId} is broke! Needs {stats.Cost} Gold.");
 			return;
 		}
 
 		// 3. Execuție
-		MatchManager.DeductMoney(senderId, stats.Cost);
-		UnitFactory.Server_SpawnUnit(type, gridPos, GridSystem);
+		_matchManager.DeductMoney(senderId, stats.Cost);
+		_unitFactory.Server_SpawnUnit(type, gridPos, _gridSystem);
 	}
 }
