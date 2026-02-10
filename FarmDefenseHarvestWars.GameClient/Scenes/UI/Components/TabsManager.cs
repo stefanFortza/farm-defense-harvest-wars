@@ -43,6 +43,9 @@ public partial class TabsManager : HBoxContainer
         // Discover pre-placed pages by key (node name == TabKey) and hide all
         BuildPagesFromZones();
 
+        var debugChildren = GetChildren().OfType<TabButton>().Select(t => t.Name).ToArray();
+        GD.Print($"[TabsManager] Found TabButtons: {string.Join(", ", debugChildren)}");
+
         // Initialize visibility based on the currently active tab (if any)
         var activeTab = GetChildren().OfType<TabButton>().FirstOrDefault(t => t.ButtonPressed);
         if (activeTab != null)
@@ -56,10 +59,6 @@ public partial class TabsManager : HBoxContainer
         }
     }
 
-    /// <summary>
-    /// Called INSTANTLY when a tab is toggled (before animation starts).
-    /// Sets up immediate visual changes like Z-Index to prevent overlap issues.
-    /// </summary>
     private void OnTabToggled(TabButton btn, bool pressed)
     {
         if (pressed)
@@ -79,24 +78,15 @@ public partial class TabsManager : HBoxContainer
         switch (finalState)
         {
             case TabButton.TabButtonState.Active:
-                GD.Print($"Tab animation finished: {btn.Name} → ACTIVE");
                 btn.ZIndex = 10;
-                // Optional: Apply scale or other effects specific to active state
-                // btn.BackgroundNode.Scale = new Vector2(1.05f, 1.05f);
-                // Ensure content reflects the active tab after animation
                 ShowTabByKey(btn.TabKey);
                 break;
 
             case TabButton.TabButtonState.Hovered:
-                GD.Print($"Tab animation finished: {btn.Name} → HOVERED");
-                // Hover animations don't typically need special handling after completion
                 break;
 
             case TabButton.TabButtonState.Inactive:
-                GD.Print($"Tab animation finished: {btn.Name} → INACTIVE");
                 btn.ZIndex = 0;
-                // Optional: Reset any effects
-                // btn.BackgroundNode.Scale = Vector2.One;
                 break;
         }
     }
@@ -144,6 +134,8 @@ public partial class TabsManager : HBoxContainer
 
     private void ShowTabByKey(string key)
     {
+        GD.Print($"[TabsManager] Showing pages for key: {key}");
+
         if (string.IsNullOrEmpty(key))
         {
             HideAllPages();

@@ -32,7 +32,7 @@ public partial class GameplayNetwork : Node
         GD.Print("Server Started. Waiting for players...");
     }
 
-    public void JoinGameServer(string ip)
+    public void JoinGameServer(string ip = "127.0.0.1")
     {
         _peer = new ENetMultiplayerPeer();
         _peer.CreateClient(ip, Port);

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Data/UnitData.cs" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+Type = 1
+Cost = 50
+MaxHealth = 200
+Damage = 10
+AttackRange = 4.0
+AttackSpeed = 1.5

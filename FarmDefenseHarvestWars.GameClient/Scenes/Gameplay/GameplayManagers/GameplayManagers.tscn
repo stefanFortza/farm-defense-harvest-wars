@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://cu12uic4kd4ek"]
+
+[ext_resource type="Script" uid="uid://whp16mk38v6" path="res://Scenes/Gameplay/GameplayManagers/MatchManager.cs" id="1_1tddo"]
+[ext_resource type="Script" uid="uid://c6xqoepbvs2wt" path="res://Scenes/Gameplay/GameplayManagers/UnitFactory.cs" id="2_biik6"]
+[ext_resource type="Script" uid="uid://c577dgypidqax" path="res://Scenes/Gameplay/GameplayManagers/GameplayOrchestrator.cs" id="3_m405e"]
+[ext_resource type="Script" uid="uid://nml33xh7yufg" path="res://Scenes/Gameplay/GameplayManagers/InputController.cs" id="4_pwkeu"]
+
+[node name="GameplayManagers" type="Node"]
+
+[node name="MatchManager" type="Node" parent="."]
+script = ExtResource("1_1tddo")
+
+[node name="UnitFactory" type="Node" parent="."]
+script = ExtResource("2_biik6")
+
+[node name="GameplayOrchestrator" type="Node" parent="."]
+script = ExtResource("3_m405e")
+
+[node name="InputController" type="Node" parent="."]
+script = ExtResource("4_pwkeu")

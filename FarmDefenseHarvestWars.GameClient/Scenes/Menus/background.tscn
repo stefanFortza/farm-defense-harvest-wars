@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bydgh6pxqwaqg"]
 
-[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/FarmMap.tscn" id="1_ht41h"]
+[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/Map/Map.tscn" id="1_ht41h"]
 
 [node name="Background" type="Node2D"]
 
