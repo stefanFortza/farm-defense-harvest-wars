@@ -14,7 +14,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private GridSystem _gridSystem = null!;
 	private GameplayOrchestrator _orchestrator = null!;
-	[Export] private Sprite2D _ghostCursor = null!;
+	[Export] private AnimatedSprite2D _ghostCursor = null!;
 
 	private LocalInputState _currentState = LocalInputState.Idle;
 	private UnitType _pendingUnitType = UnitType.None;
@@ -63,7 +63,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 	// --- STATE MANAGEMENT ---
 
 	// Metoda asta o apelezi din UI (Butonul de "Cumpără Vacă")
-	public void StartPlacingUnit(UnitType type, Texture2D unitSprite)
+	public void StartPlacingUnit(UnitType type)
 	{
 		var stats = UnitStatsRegistry.Get(type);
 
@@ -74,9 +74,8 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 		// Configurare Ghost
 		if (_ghostCursor != null)
 		{
-			// _ghostCursor.Texture = unitSprite;
-			_ghostCursor.Modulate = new Color(1, 1, 1, 0.5f); // Transparent
 			_ghostCursor.Visible = true;
+			_ghostCursor.Play("default");
 		}
 	}
 
@@ -93,9 +92,10 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 		{
 			_ghostCursor.GlobalPosition = snappedPos;
 
-			// 2. Validare vizuală (Roșu dacă nu poți construi, Verde dacă poți)
+			// 2. Validare vizuală (Modulate pe culoare)
 			bool isValid = IsPlacementValid(gridPos);
-			_ghostCursor.Modulate = isValid ? new Color(0.5f, 1, 0.5f, 0.6f) : new Color(1, 0.5f, 0.5f, 0.6f);
+			_ghostCursor.Play("default");
+			_ghostCursor.SelfModulate = isValid ? new Color(0, 1, 0, 0.7f) : new Color(1, 0, 0, 0.7f);
 		}
 	}
 
@@ -106,7 +106,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 			case LocalInputState.Idle:
 				// Logică de selecție (Viitor: Select unit/building)
 				// Momentan schimbă starea pentru testare rapidă
-				StartPlacingUnit(UnitType.Cow, GD.Load<Texture2D>("res://Assets/Units/Cow.png"));
+				StartPlacingUnit(UnitType.Cow);
 				break;
 
 			case LocalInputState.PlacingUnit:
