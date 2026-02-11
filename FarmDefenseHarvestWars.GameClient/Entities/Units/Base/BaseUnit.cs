@@ -27,6 +27,7 @@ public abstract partial class BaseUnit : CharacterBody2D
         CurrentHealth = MaxHealth;
         AddToGroup("Units");
 
+        StateMachine ??= GetNode<StateMachine>("StateMachine");
         // Register states
         StateMachine.RegisterState(UnitStateEnum.Idle, new IdleState(this));
     }

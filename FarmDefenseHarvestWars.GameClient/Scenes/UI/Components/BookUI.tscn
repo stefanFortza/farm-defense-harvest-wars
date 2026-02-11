@@ -63,6 +63,7 @@ grow_vertical = 2
 theme_override_constants/margin_left = 15
 
 [node name="Spine" type="NinePatchRect" parent="BookUI/BookBinder"]
+z_index = -1
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 texture = SubResource("AtlasTexture_vuoyj")

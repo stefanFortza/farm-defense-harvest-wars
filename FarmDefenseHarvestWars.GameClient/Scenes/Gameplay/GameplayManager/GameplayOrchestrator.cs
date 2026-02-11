@@ -11,6 +11,7 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 	private GridSystem _gridSystem = null!;
 	private UnitFactory _unitFactory = null!;
 	private MatchManager _matchManager = null!;
+	private UnitRegistry _unitRegistry = null!;
 
 	public bool IsInitialized { get; private set; } = false;
 
@@ -20,6 +21,7 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 		_gridSystem = data.Grid;
 		_unitFactory = data.Factory;
 		_matchManager = data.Match;
+		_unitRegistry = data.UnitRegistry;
 		IsInitialized = true;
 	}
 
@@ -38,7 +40,7 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 		UnitType type = (UnitType)typeInt;
 
 		// 0. Luăm datele din Registry
-		var stats = UnitStatsRegistry.Get(type);
+		var stats = _unitRegistry.GetUnitData(type);
 
 		// 1. Validare Logică (Grid)
 		if (_gridSystem.IsCellOccupied(gridPos)) return;

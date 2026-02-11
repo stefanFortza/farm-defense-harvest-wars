@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://br1h4ekewulnp"]
+
+[ext_resource type="PackedScene" uid="uid://cnapywfs7vvi7" path="res://Entities/Units/Enemies/SkeletonUnit.tscn" id="1_q2cpv"]
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="2_ajajn"]
+
+[resource]
+script = ExtResource("2_ajajn")
+Type = 5
+Name = "Skeleton"
+UnitScene = ExtResource("1_q2cpv")
+Cost = 40
+MaxHealth = 120
+Damage = 15
+AttackRange = 1.0
+AttackSpeed = 1.0

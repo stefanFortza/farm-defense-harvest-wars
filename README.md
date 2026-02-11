@@ -21,12 +21,12 @@ Un joc funcțional 1v1 (MVP), unde jucătorii se loghează prin .NET API, iar me
 
 *Scop: Să conectăm 2 clienți la un server Godot, stabilind rolurile.*
 
-* [ ] **Server Bootstrapper:** Script care pornește Godot cu argumentul `--headless` și ascultă pe portul `7777`.
-* [ ] **Direct Connect:** Implementare buton "Debug Join" în meniu pentru conectare directă la IP (`127.0.0.1`).
-* [ ] **Role Assignment:** Serverul identifică ordinea conectării:
+* [x] **Server Bootstrapper:** Script care pornește Godot cu argumentul `--headless` și ascultă pe portul `7777`.
+* [x] **Direct Connect:** Implementare buton "Debug Join" în meniu pentru conectare directă la IP (`127.0.0.1`).
+* [x] **Role Assignment:** Serverul identifică ordinea conectării:
 * Client 1 -> **Defender** (Stânga).
 * Client 2 -> **Attacker** (Dreapta).
-* [ ] **Lobby Sync:** Meciul începe automat când ambii jucători sunt conectați.
+* [x] **Lobby Sync:** Meciul începe automat când ambii jucători sunt conectați.
 
 ---
 
@@ -34,8 +34,8 @@ Un joc funcțional 1v1 (MVP), unde jucătorii se loghează prin .NET API, iar me
 
 *Scop: Mecanica de joc funcțională, sincronizată prin ENet (UDP).*
 
-* [ ] **Unit Architecture:** Implementare ierarhie clase: `BaseUnit`, `DefenderUnit`, `AttackerUnit` (cu State Machine simplu).
-* [ ] **Grid & Spawning:**
+* [x] **Unit Architecture:** Implementare ierarhie clase: `BaseUnit`, `DefenderUnit`, `AttackerUnit` (cu State Machine simplu).
+* [x] **Grid & Spawning:**
 * Implementare `MultiplayerSpawner` pentru instanțiere dinamică.
 * Validare Server-side: Jucătorul poate plasa doar în zona lui.
 

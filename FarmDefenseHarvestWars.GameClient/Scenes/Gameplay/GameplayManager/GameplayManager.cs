@@ -1,4 +1,5 @@
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
+using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using Godot;
 using System;
@@ -10,6 +11,7 @@ public record GameplayContext(
 	GridSystem Grid,
 	UnitFactory Factory,
 	MatchManager Match,
+	UnitRegistry UnitRegistry,
 	Node2D UnitContainer
 );
 
@@ -17,6 +19,7 @@ public record GameplayContext(
 public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 
 {
+	[Export] private UnitRegistry UnitRegistry = null!;
 	private MatchManager _matchManager = null!;
 	private UnitFactory _unitFactory = null!;
 	private GameplayOrchestrator _orchestrator = null!;
@@ -33,11 +36,22 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 		_orchestrator = GetNode<GameplayOrchestrator>("GameplayOrchestrator");
 		_inputController = GetNode<InputController>("InputController");
 
+		if (UnitRegistry == null)
+		{
+			UnitRegistry = GD.Load<UnitRegistry>("res://Resources/Units/UnitRegistry.tres");
+			if (UnitRegistry == null)
+			{
+				GD.PrintErr("CRITICAL: UnitRegistry resource not found! Please assign it in the editor or ensure the path is correct.");
+				return;
+			}
+		}
+
 		var gameplayContext = new GameplayContext(
 			Orchestrator: _orchestrator,
 			Grid: data.Grid,
 			Factory: _unitFactory,
 			Match: _matchManager,
+			UnitRegistry: UnitRegistry,
 			UnitContainer: data.UnitContainer
 		);
 

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UnitRegistry" load_steps=4 format=3 uid="uid://c86tn06s55780"]
+
+[ext_resource type="Script" uid="uid://dc48lco13ubq2" path="res://Scripts/Data/UnitRegistry.cs" id="1_ras7f"]
+[ext_resource type="Resource" uid="uid://b8wybv5au1sf0" path="res://Resources/Units/UnitStats/CowData.tres" id="1_sslj3"]
+[ext_resource type="Resource" path="res://Resources/Units/UnitStats/SkeletonData.tres" id="2_qaqhf"]
+
+[resource]
+script = ExtResource("1_ras7f")
+AllUnits = Array[Object]([ExtResource("1_sslj3"), ExtResource("2_qaqhf")])
+metadata/_custom_type_script = "uid://dc48lco13ubq2"

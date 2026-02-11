@@ -14,6 +14,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private GridSystem _gridSystem = null!;
 	private GameplayOrchestrator _orchestrator = null!;
+	private UnitRegistry _unitRegistry = null!;
 	[Export] private AnimatedSprite2D _ghostCursor = null!;
 
 	private LocalInputState _currentState = LocalInputState.Idle;
@@ -28,6 +29,8 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 		if (IsInitialized) return;
 		_gridSystem = data.Grid;
 		_orchestrator = data.Orchestrator;
+		_unitRegistry = data.UnitRegistry;
+		IsInitialized = true;
 	}
 
 	public override void _Ready()
@@ -65,7 +68,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 	// Metoda asta o apelezi din UI (Butonul de "Cumpără Vacă")
 	public void StartPlacingUnit(UnitType type)
 	{
-		var stats = UnitStatsRegistry.Get(type);
+		var stats = _unitRegistry.GetUnitData(type);
 
 		_currentState = LocalInputState.PlacingUnit;
 		_pendingUnitType = type;
