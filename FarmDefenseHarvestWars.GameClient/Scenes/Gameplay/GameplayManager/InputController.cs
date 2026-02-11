@@ -19,7 +19,6 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private LocalInputState _currentState = LocalInputState.Idle;
 	private UnitType _pendingUnitType = UnitType.None;
-	private int _pendingUnitCost;
 
 	public bool IsInitialized { get; private set; } = false;
 
@@ -72,7 +71,6 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 		_currentState = LocalInputState.PlacingUnit;
 		_pendingUnitType = type;
-		_pendingUnitCost = stats.Cost;
 
 		// Configurare Ghost
 		if (_ghostCursor != null)
@@ -84,7 +82,6 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private void UpdateGhostPosition()
 	{
-		GD.Print("Updating ghost position...");
 		Vector2 mousePos = GetViewport().GetMousePosition();
 
 		// 1. Snap la Grid

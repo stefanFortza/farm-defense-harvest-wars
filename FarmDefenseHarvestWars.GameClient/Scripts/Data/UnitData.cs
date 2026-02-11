@@ -10,13 +10,19 @@ public partial class UnitData : Resource
     [Export] public string Name { get; set; } = "Unit";
     [Export] public Texture2D Icon { get; set; } = null!;
 
+    [ExportGroup("In-Game Economy (Match)")]
+    [Export] public int MatchCost { get; set; } = 25;
+
+    [ExportGroup("Meta Economy (Backend Shop)")]
+    [Export] public int UnlockCost { get; set; } = 100; // Pietre prețioase/Bani reali
+    [Export] public bool IsDefaultUnlocked { get; set; } = true; // Unitățile de bază
+
     [ExportGroup("Visuals")]
     [Export] public PackedScene UnitScene { get; set; } = null!;
 
     [ExportGroup("Stats")]
-    [Export] public int Cost { get; set; }
-    [Export] public int MaxHealth { get; set; }
-    [Export] public int Damage { get; set; }
-    [Export] public float AttackRange { get; set; }
-    [Export] public float AttackSpeed { get; set; }
+    [Export] public int MaxHealth { get; set; } = 100;
+    [Export] public int Damage { get; set; } = 10;
+    [Export] public float AttackRange { get; set; } = 64f;
+    [Export] public float AttackSpeed { get; set; } = 1.0f;
 }

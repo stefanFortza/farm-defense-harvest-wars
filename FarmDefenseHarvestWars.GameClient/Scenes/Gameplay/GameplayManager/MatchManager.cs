@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 
 public partial class MatchManager : Node
 {
@@ -53,14 +54,14 @@ public partial class MatchManager : Node
             _playerMoney[id] = StartingMoney;
             EmitSignal(SignalName.MoneyChanged, id, StartingMoney);
         }
-        
+
         // Serverul poate fi și el un jucător (Peer 1)
         _playerMoney[1] = StartingMoney;
         EmitSignal(SignalName.MoneyChanged, 1L, StartingMoney);
 
         EmitSignal(SignalName.BaseHealthChanged, _baseHealth, MaxBaseHealth);
         EmitSignal(SignalName.MatchStateChanged, (int)_currentState);
-        
+
         Logger.Info("MatchManager: Match Reset and Started.");
     }
 
@@ -103,10 +104,6 @@ public partial class MatchManager : Node
         }
     }
 
-    public bool CanAfford(long peerId, int cost)
-    {
-        return GetMoney(peerId) >= cost;
-    }
 
     public void AddMoney(long peerId, int amount)
     {
@@ -129,13 +126,32 @@ public partial class MatchManager : Node
         return _playerMoney.GetValueOrDefault(peerId, 0);
     }
 
+    public bool CanAfford(long peerId, int cost)
+    {
+        return GetMoney(peerId) >= cost;
+    }
+
+    public bool TrySpend(long playerId, int amount)
+    {
+        if (!CanAfford(playerId, amount)) return false;
+
+        DeductMoney(playerId, amount);
+        return true;
+    }
+
+    public bool TryBuyUnit(long playerId, UnitData unit)
+    {
+        int finalCost = unit.MatchCost;
+        return TrySpend(playerId, finalCost);
+    }
+
     public void TakeBaseDamage(int amount)
     {
         if (_currentState != MatchState.Playing) return;
 
         _baseHealth -= amount;
         _baseHealth = Math.Max(0, _baseHealth);
-        
+
         EmitSignal(SignalName.BaseHealthChanged, _baseHealth, MaxBaseHealth);
         Logger.Info($"MatchManager: Base HP changed: {_baseHealth}/{MaxBaseHealth}");
 
@@ -150,10 +166,10 @@ public partial class MatchManager : Node
         _currentState = MatchState.Ended;
         EmitSignal(SignalName.MatchStateChanged, (int)_currentState);
         EmitSignal(SignalName.MatchEnded, (int)winner);
-        
+
         Logger.Info($"MatchManager: Match Ended! Winner: {winner}");
     }
-    
+
     public MatchState GetCurrentState() => _currentState;
     public float GetTimeRemaining() => _timeRemaining;
     public int GetBaseHealth() => _baseHealth;
