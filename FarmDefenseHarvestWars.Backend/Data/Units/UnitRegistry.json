@@ -1,0 +1,26 @@
+{
+  "Units": [
+    {
+      "Type": "Cow",
+      "Name": "Cow",
+      "MatchCost": 25,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 200,
+      "Damage": 10,
+      "AttackRange": 4,
+      "AttackSpeed": 1.5
+    },
+    {
+      "Type": "Wolf",
+      "Name": "Skeleton",
+      "MatchCost": 25,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "AttackRange": 64,
+      "AttackSpeed": 1
+    }
+  ]
+}

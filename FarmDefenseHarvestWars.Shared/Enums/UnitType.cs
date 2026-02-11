@@ -15,5 +15,6 @@ public enum UnitType
     // Attackers
     Wolf,
     Fox,
-    Bear
+    Bear,
+    Skeleton
 }

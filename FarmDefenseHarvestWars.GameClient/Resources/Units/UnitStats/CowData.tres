@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://b8wybv5au1sf0"]
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://b8wybv5au1sf0"]
 
 [ext_resource type="PackedScene" uid="uid://cnl2b6psuuhba" path="res://Entities/Units/Defenders/CowUnit.tscn" id="1_d7t7q"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="2_xkykw"]
@@ -7,8 +7,10 @@
 script = ExtResource("2_xkykw")
 Type = 1
 Name = "Cow"
+MatchCost = 25
+UnlockCost = 100
+IsDefaultUnlocked = true
 UnitScene = ExtResource("1_d7t7q")
-Cost = 50
 MaxHealth = 200
 Damage = 10
 AttackRange = 4.0

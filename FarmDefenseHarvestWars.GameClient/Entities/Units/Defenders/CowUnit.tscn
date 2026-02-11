@@ -664,5 +664,5 @@ position = Vector2(0, -9)
 sprite_frames = SubResource("SpriteFrames_xq5pq")
 animation = &"IdleSide"
 autoplay = "IdleSide"
-frame_progress = 0.8517641
+frame_progress = 0.70690584
 flip_h = true
