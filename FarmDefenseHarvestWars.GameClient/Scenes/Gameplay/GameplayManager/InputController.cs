@@ -106,7 +106,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 			case LocalInputState.Idle:
 				// Logică de selecție (Viitor: Select unit/building)
 				// Momentan schimbă starea pentru testare rapidă
-				StartPlacingUnit(UnitType.Cow);
+				StartPlacingUnit(UnitType.Skeleton);
 				break;
 
 			case LocalInputState.PlacingUnit:

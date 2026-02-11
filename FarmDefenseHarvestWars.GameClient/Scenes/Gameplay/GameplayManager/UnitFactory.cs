@@ -27,14 +27,24 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 
 		// 1. Luăm datele din Registry
 		var unitData = _unitRegistry.GetUnitData(type);
-		if (unitData.UnitScene == null)
+		if (string.IsNullOrEmpty(unitData.UnitScenePath))
 		{
-			GD.PrintErr($"[UnitFactory] UnitScene is null for unit type: {type}");
+			GD.PrintErr($"[UnitFactory] UnitScenePath is empty for unit type: {type}");
 			return;
 		}
 
 		// 2. Instanțiem
-		var unit = unitData.UnitScene.Instantiate<BaseUnit>();
+		var scene = GD.Load<PackedScene>(unitData.UnitScenePath);
+		if (scene == null)
+		{
+			GD.PrintErr($"[UnitFactory] Failed to load scene at: {unitData.UnitScenePath}");
+			return;
+		}
+		
+		var unit = scene.Instantiate<BaseUnit>();
+		
+		// Setăm referința la date în instanță
+		unit.Data = unitData;
 
 		// 3. Setăm datele critice
 		unit.Position = grid.GetWorldPosition(gridPos);

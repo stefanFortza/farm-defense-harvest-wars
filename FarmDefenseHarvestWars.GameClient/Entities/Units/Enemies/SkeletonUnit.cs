@@ -2,16 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
-public partial class WolfUnit : AttackerUnit
+public partial class SkeletonUnit : AttackerUnit
 {
-    public override UnitType Type => UnitType.Wolf;
-
-    public override void _Ready()
-    {
-        base._Ready();
-        MaxHealth = 100;
-        CurrentHealth = MaxHealth;
-        Speed = 150.0f;
-        Damage = 15;
-    }
+    // Type and stats are now automatically handled by BaseUnit/AttackerUnit using the 'Data' resource.
 }

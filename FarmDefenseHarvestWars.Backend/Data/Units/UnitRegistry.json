@@ -6,7 +6,7 @@
       "MatchCost": 25,
       "UnlockCost": 100,
       "IsDefaultUnlocked": true,
-      "MaxHealth": 200,
+      "MaxHealth": 500,
       "Damage": 10,
       "AttackRange": 4,
       "AttackSpeed": 1.5

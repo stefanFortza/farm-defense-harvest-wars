@@ -4,9 +4,11 @@ namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
 public abstract partial class AttackerUnit : BaseUnit
 {
-    [Export] public float Speed { get; set; } = 100.0f;
-    [Export] public int Damage { get; set; } = 10;
-    [Export] public float AttackSpeed { get; set; } = 1.0f;
+    // These now pull from Data if available, or use defaults
+    public float Speed => Data != null ? 150.0f : 100.0f; // Could be added to UnitData if needed
+    public int Damage => Data?.Damage ?? 10;
+    public float AttackSpeed => Data?.AttackSpeed ?? 1.0f;
+
     private double _attackCooldown = 0.0;
     private DefenderUnit? _currentTarget = null;
 

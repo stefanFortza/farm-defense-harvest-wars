@@ -23,7 +23,7 @@ public partial class UnitData : Resource
     [Export] public bool IsDefaultUnlocked { get; set; } = true;
 
     [ExportGroup("Visuals")]
-    [Export] public PackedScene UnitScene { get; set; }
+    [Export(PropertyHint.File, "*.tscn")] public string UnitScenePath { get; set; } = string.Empty;
 
     [ExportGroup("Stats")]
     [Export] public int MaxHealth { get; set; } = 100;

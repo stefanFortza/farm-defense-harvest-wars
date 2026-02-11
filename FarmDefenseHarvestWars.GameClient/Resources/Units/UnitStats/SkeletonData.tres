@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://br1h4ekewulnp"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3 uid="uid://b34saaikrumva"]
 
-[ext_resource type="PackedScene" uid="uid://cnapywfs7vvi7" path="res://Entities/Units/Enemies/SkeletonUnit.tscn" id="1_q2cpv"]
-[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="2_ajajn"]
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_ajajn"]
 
 [resource]
-script = ExtResource("2_ajajn")
-Type = 5
+script = ExtResource("1_ajajn")
+Type = 8
 Name = "Skeleton"
-UnitScene = ExtResource("1_q2cpv")
+UnitScenePath = "uid://cnapywfs7vvi7"
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

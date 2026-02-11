@@ -3,27 +3,33 @@ using System;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
-using System.Runtime.CompilerServices;
+using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
 
 public abstract partial class BaseUnit : CharacterBody2D
 {
+    [Export] public UnitData Data { get; set; } = null!;
     [Export] protected StateMachine StateMachine { get; set; } = null!;
 
-    [Export] public int MaxHealth { get; set; } = 100;
-
-    // Synced via MultiplayerSynchronizer in the future
+    // Dynamic stats (change during gameplay)
     public int CurrentHealth { get; protected set; }
 
-    public abstract UnitType Type { get; }
+    // Read-only properties fetching data from the shared Resource
+    public virtual UnitType Type => Data?.Type ?? UnitType.None;
+    public int MaxHealth => Data?.MaxHealth ?? 100;
 
     [Signal] public delegate void HealthChangedEventHandler(int newHealth, int maxHealth);
     [Signal] public delegate void DiedEventHandler();
 
     public override void _Ready()
     {
+        if (Data == null)
+        {
+            GD.PrintErr($"[BaseUnit] {Name} is missing UnitData!");
+        }
+
         CurrentHealth = MaxHealth;
         AddToGroup("Units");
 
