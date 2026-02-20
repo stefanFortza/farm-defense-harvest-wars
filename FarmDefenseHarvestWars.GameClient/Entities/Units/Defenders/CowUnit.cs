@@ -1,5 +1,9 @@
 using Godot;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+
+
+namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Defenders;
 
 public partial class CowUnit : DefenderUnit
 {

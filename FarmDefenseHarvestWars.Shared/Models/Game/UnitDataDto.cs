@@ -11,6 +11,7 @@ public class UnitDataDto
     public bool IsDefaultUnlocked { get; set; }
     public int MaxHealth { get; set; }
     public int Damage { get; set; }
+    public float Speed { get; set; }
     public float AttackRange { get; set; }
     public float AttackSpeed { get; set; }
 }

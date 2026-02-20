@@ -28,6 +28,7 @@ public partial class UnitData : Resource
     [ExportGroup("Stats")]
     [Export] public int MaxHealth { get; set; } = 100;
     [Export] public int Damage { get; set; } = 10;
+    [Export] public float Speed { get; set; } = 10.0f;
     [Export] public float AttackRange { get; set; } = 64f;
     [Export] public float AttackSpeed { get; set; } = 1.0f;
 
@@ -42,6 +43,7 @@ public partial class UnitData : Resource
             IsDefaultUnlocked = IsDefaultUnlocked,
             MaxHealth = MaxHealth,
             Damage = Damage,
+            Speed = Speed,
             AttackRange = AttackRange,
             AttackSpeed = AttackSpeed
         };

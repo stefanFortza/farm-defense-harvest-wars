@@ -1,6 +1,6 @@
-using Godot;
-using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+
+namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Enemies;
 
 public partial class SkeletonUnit : AttackerUnit
 {

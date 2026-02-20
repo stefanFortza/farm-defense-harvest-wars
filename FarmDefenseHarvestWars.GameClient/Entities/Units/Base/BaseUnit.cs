@@ -8,7 +8,7 @@ using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
 
-public abstract partial class BaseUnit : CharacterBody2D
+public partial class BaseUnit : CharacterBody2D
 {
     [Export] public UnitData Data { get; set; } = null!;
     [Export] protected StateMachine StateMachine { get; set; } = null!;
@@ -22,7 +22,6 @@ public abstract partial class BaseUnit : CharacterBody2D
 
     [Signal] public delegate void HealthChangedEventHandler(int newHealth, int maxHealth);
     [Signal] public delegate void DiedEventHandler();
-
     public override void _Ready()
     {
         if (Data == null)
@@ -34,8 +33,24 @@ public abstract partial class BaseUnit : CharacterBody2D
         AddToGroup("Units");
 
         StateMachine ??= GetNode<StateMachine>("StateMachine");
-        // Register states
+
+        RegisterStates();
+
+        if (IsMultiplayerAuthority())
+        {
+            StateMachine.Start(GetInitialState());
+        }
+    }
+
+
+    protected virtual void RegisterStates()
+    {
         StateMachine.RegisterState(UnitStateEnum.Idle, new IdleState(this));
+    }
+
+    protected virtual UnitStateEnum GetInitialState()
+    {
+        return UnitStateEnum.Idle;
     }
 
     // Server-side logic

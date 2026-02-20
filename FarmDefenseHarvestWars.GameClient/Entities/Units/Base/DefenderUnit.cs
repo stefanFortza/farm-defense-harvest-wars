@@ -1,7 +1,9 @@
-using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
 using Godot;
 
-public abstract partial class DefenderUnit : BaseUnit
+namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+
+public partial class DefenderUnit : BaseUnit
 {
     // Defender units are static, so no movement logic here.
     // They might have an action timer for shooting or producing resources.
@@ -19,6 +21,17 @@ public abstract partial class DefenderUnit : BaseUnit
         _actionTimer.OneShot = false;
         _actionTimer.Timeout += OnActionTimerTimeout;
         _actionTimer.Start();
+    }
+
+    protected override void RegisterStates()
+    {
+        base.RegisterStates();
+        // We can add Defender-specific states here if needed (e.g., ShootingState), but for now, we'll just use Idle.
+    }
+
+    protected override UnitStateEnum GetInitialState()
+    {
+        return UnitStateEnum.Idle; // Defenders start idle and perform actions via timer
     }
 
     protected override void Die()

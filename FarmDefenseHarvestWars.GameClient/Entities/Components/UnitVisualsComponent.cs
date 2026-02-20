@@ -2,19 +2,16 @@ using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using Godot;
 using System;
 
-public partial class UnitVisuals : Node
+public partial class UnitVisualsComponent : Node
 {
-    [Export] public ProgressBar HealthBar { get; set; }
-    private BaseUnit _unit;
+    [Export] public ProgressBar HealthBar { get; set; } = null!;
+    private BaseUnit _unit = null!;
 
     public override void _Ready()
     {
         _unit = GetParent<BaseUnit>();
 
-        if (HealthBar == null)
-        {
-            HealthBar = _unit.GetNodeOrNull<ProgressBar>("HealthBar");
-        }
+        HealthBar ??= _unit.GetNodeOrNull<ProgressBar>("HealthBar");
 
         if (_unit != null)
         {

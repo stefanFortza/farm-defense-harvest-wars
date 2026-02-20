@@ -1,17 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=5 format=3 uid="uid://cag1tn1qrlacf"]
 
-[ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Base/UnitVisuals.cs" id="1_visuals"]
+[ext_resource type="Script" uid="uid://ooy0frnw8g0t" path="res://Entities/Units/Base/BaseUnit.cs" id="1_sqjxt"]
+[ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Components/UnitVisualsComponent.cs" id="1_visuals"]
 [ext_resource type="Script" uid="uid://ctgohpts1i2la" path="res://Scripts/Core/StateMachine/StateMachine.cs" id="2_btydi"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
-properties/0/replication_mode = 0
+properties/0/replication_mode = 2
 
-[node name="BaseUnit" type="CharacterBody2D"]
+[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine")]
+script = ExtResource("1_sqjxt")
+StateMachine = NodePath("StateMachine")
 
-[node name="UnitVisuals" type="Node" parent="."]
+[node name="UnitVisualsComponent" type="Node" parent="." node_paths=PackedStringArray("HealthBar")]
 script = ExtResource("1_visuals")
+HealthBar = NodePath("../HealthBar")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
