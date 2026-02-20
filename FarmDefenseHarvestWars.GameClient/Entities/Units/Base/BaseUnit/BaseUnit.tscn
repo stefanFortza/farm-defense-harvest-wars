@@ -12,9 +12,12 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine")]
+[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "HitboxComponent", "HurtboxComponent")]
 script = ExtResource("1_sqjxt")
 StateMachine = NodePath("LogicComponents/StateMachine")
+HealthComponent = NodePath("LogicComponents/HealthComponent")
+HitboxComponent = NodePath("SpatialComponents/HitboxComponent")
+HurtboxComponent = NodePath("SpatialComponents/HurtboxComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
@@ -25,13 +28,15 @@ script = ExtResource("2_btydi")
 
 [node name="HealthComponent" parent="LogicComponents" instance=ExtResource("4_o6myl")]
 
-[node name="UnitVisualsComponent" parent="LogicComponents" instance=ExtResource("4_4cha2")]
+[node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar") instance=ExtResource("4_4cha2")]
+HealthBar = NodePath("../../HealthBar")
 
 [node name="SpatialComponents" type="Node2D" parent="."]
 
 [node name="HitboxComponent" parent="SpatialComponents" instance=ExtResource("5_j2i82")]
 
-[node name="HurtboxComponent" parent="SpatialComponents" instance=ExtResource("6_0cqh2")]
+[node name="HurtboxComponent" parent="SpatialComponents" node_paths=PackedStringArray("HealthComponent") instance=ExtResource("6_0cqh2")]
+HealthComponent = NodePath("../../LogicComponents/HealthComponent")
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -20.0
