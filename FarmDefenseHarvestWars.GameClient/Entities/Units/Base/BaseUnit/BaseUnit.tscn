@@ -1,17 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=6 format=3 uid="uid://cag1tn1qrlacf"]
 
 [ext_resource type="Script" uid="uid://ooy0frnw8g0t" path="res://Entities/Units/Base/BaseUnit/BaseUnit.cs" id="1_sqjxt"]
 [ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Components/UnitVisualsComponent.cs" id="1_visuals"]
 [ext_resource type="Script" uid="uid://ctgohpts1i2la" path="res://Scripts/Core/StateMachine/StateMachine.cs" id="2_btydi"]
+[ext_resource type="Script" uid="uid://grst44ftngqi" path="res://Entities/Components/HealthComponent.cs" id="4_o6myl"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine")]
+[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent")]
 script = ExtResource("1_sqjxt")
-StateMachine = NodePath("StateMachine")
+StateMachine = NodePath("Components/StateMachine")
+HealthComponent = NodePath("Components/HealthComponent")
 
 [node name="UnitVisualsComponent" type="Node" parent="." node_paths=PackedStringArray("HealthBar")]
 script = ExtResource("1_visuals")
@@ -21,15 +23,20 @@ HealthBar = NodePath("../HealthBar")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
+[node name="Components" type="Node" parent="."]
+
+[node name="StateMachine" type="Node" parent="Components"]
+script = ExtResource("2_btydi")
+
+[node name="HealthComponent" type="Node" parent="Components"]
+script = ExtResource("4_o6myl")
+
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -20.0
 offset_top = -40.0
 offset_right = 20.0
 offset_bottom = -35.0
 show_percentage = false
-
-[node name="StateMachine" type="Node" parent="."]
-script = ExtResource("2_btydi")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_r1xd3")

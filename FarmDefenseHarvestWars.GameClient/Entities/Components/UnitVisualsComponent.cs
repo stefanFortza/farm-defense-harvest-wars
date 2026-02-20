@@ -1,6 +1,5 @@
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using Godot;
-using System;
 
 public partial class UnitVisualsComponent : Node
 {
@@ -9,15 +8,26 @@ public partial class UnitVisualsComponent : Node
 
     public override void _Ready()
     {
-        _unit = GetParent<BaseUnit>();
+        _unit = GetParentOrNull<BaseUnit>();
 
+        // TODO HEALTBAR is not working
         HealthBar ??= _unit.GetNodeOrNull<ProgressBar>("HealthBar");
 
         if (_unit != null)
         {
-            _unit.HealthChanged += OnHealthChanged;
-            // Initialize bar
-            OnHealthChanged(_unit.MaxHealth, _unit.MaxHealth);
+            // Prefer listening to HealthComponent directly
+            if (_unit.HealthComponent != null)
+            {
+                _unit.HealthComponent.HealthChanged += OnHealthChanged;
+                // Initialize bar
+                OnHealthChanged(_unit.HealthComponent.CurrentHealth, _unit.HealthComponent.MaxHealth);
+            }
+            else
+            {
+                // Fallback to BaseUnit signals
+                _unit.HealthChanged += OnHealthChanged;
+                OnHealthChanged(_unit.MaxHealth, _unit.MaxHealth);
+            }
         }
     }
 
@@ -27,7 +37,7 @@ public partial class UnitVisualsComponent : Node
         {
             HealthBar.MaxValue = maxHealth;
             HealthBar.Value = newHealth;
-            HealthBar.Visible = newHealth < maxHealth; // Hide if full? Or always show?
+            HealthBar.Visible = newHealth < maxHealth; // Hide if full
         }
     }
 }
