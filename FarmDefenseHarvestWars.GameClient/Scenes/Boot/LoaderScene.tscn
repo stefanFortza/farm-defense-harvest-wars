@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dvoo3488wfrwr"]
 
 [ext_resource type="Script" uid="uid://dik052cnseqek" path="res://Scenes/Boot/LoaderScene.cs" id="1_qfdt0"]
-[ext_resource type="PackedScene" uid="uid://13xs638acrl2" path="res://Scenes/Authentication/AuthScene.tscn" id="2_ep1br"]
+[ext_resource type="PackedScene" uid="uid://13xs638acrl2" path="res://Scenes/Authentication/AuthUI/AuthScene.tscn" id="2_ep1br"]
 
 [node name="LoaderScene" type="Node"]
 script = ExtResource("1_qfdt0")

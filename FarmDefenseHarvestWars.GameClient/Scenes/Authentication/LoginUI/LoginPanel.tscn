@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddrjliaojkv2y"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_e0aq5"]
-[ext_resource type="Script" uid="uid://bl3j3enefymlc" path="res://Scenes/Authentication/LoginUI.cs" id="1_qwl4c"]
+[ext_resource type="Script" uid="uid://bl3j3enefymlc" path="res://Scenes/Authentication/LoginUI/LoginUI.cs" id="1_qwl4c"]
 
 [node name="LoginPanel" type="CenterContainer" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ErrorLabel", "LoginButton")]
 anchors_preset = 15

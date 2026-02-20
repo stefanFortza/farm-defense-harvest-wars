@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bydgh6pxqwaqg" path="res://Scenes/Menus/background.tscn" id="1_b42ut"]
 [ext_resource type="Script" uid="uid://dxt8pg6wyixd8" path="res://Scenes/Menus/MainMenu/MainMenuUI.cs" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://hmlfj1sythl0" path="res://MainMenuBookUI.tscn" id="3_hqtmt"]
+[ext_resource type="PackedScene" uid="uid://hmlfj1sythl0" path="res://Scenes/UI/Components/MainMenuBookUI.tscn" id="3_hqtmt"]
 
 [node name="MainMenu" type="Node2D"]
 

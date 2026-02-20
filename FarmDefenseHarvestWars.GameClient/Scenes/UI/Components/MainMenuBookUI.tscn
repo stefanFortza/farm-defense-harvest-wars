@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="1_0okjo"]
 [ext_resource type="Script" uid="uid://c4m8g5uopi6yl" path="res://Scenes/UI/Components/TabsManager.cs" id="2_3q2n0"]
-[ext_resource type="PackedScene" uid="uid://d2pbrn4oof35o" path="res://Scenes/UI/Components/TabButton.tscn" id="2_a8ep5"]
+[ext_resource type="PackedScene" uid="uid://d2pbrn4oof35o" path="res://Scenes/UI/Components/TabButton/TabButton.tscn" id="2_a8ep5"]
 [ext_resource type="ButtonGroup" uid="uid://dylcgpek81sf8" path="res://Scenes/Menus/MainMenu/MainMenuButtonGroup.tres" id="3_0vkk7"]
 [ext_resource type="PackedScene" uid="uid://jexdnjfq6irb" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchMakingPageLeft.tscn" id="5_luq8n"]
 

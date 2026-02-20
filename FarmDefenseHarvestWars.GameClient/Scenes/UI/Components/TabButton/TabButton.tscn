@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://d2pbrn4oof35o"]
 
 [ext_resource type="Texture2D" uid="uid://dkaacttteavom" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/Book_UI.png" id="1_ilrgx"]
-[ext_resource type="Script" uid="uid://cybrmvvjxif7h" path="res://Scenes/UI/Components/TabButton.cs" id="2_8paob"]
+[ext_resource type="Script" uid="uid://cybrmvvjxif7h" path="res://Scenes/UI/Components/TabButton/TabButton.cs" id="2_8paob"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_nglnj"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8paob"]

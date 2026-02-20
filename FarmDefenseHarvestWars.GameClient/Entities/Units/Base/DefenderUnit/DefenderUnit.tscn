@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cel1v1h1yao6q"]
+
+[ext_resource type="PackedScene" uid="uid://cag1tn1qrlacf" path="res://Entities/Units/Base/BaseUnit/BaseUnit.tscn" id="1_bfqt0"]
+[ext_resource type="Script" uid="uid://cgrtpbllfgm3p" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.cs" id="2_ckw0r"]
+
+[node name="DefenderUnit" instance=ExtResource("1_bfqt0")]
+script = ExtResource("2_ckw0r")
+ActionInterval = 1.0
+
+[node name="ActionTimer" type="Timer" parent="." index="4"]

@@ -95,6 +95,6 @@ public partial class GameplayNetwork : Node
     private void StartGameScene()
     {
         GD.Print("Loading Game World...");
-        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
     }
 }

@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
