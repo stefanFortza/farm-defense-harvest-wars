@@ -40,11 +40,8 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 			GD.PrintErr($"[UnitFactory] Failed to load scene at: {unitData.UnitScenePath}");
 			return;
 		}
-		
+
 		var unit = scene.Instantiate<BaseUnit>();
-		
-		// Setăm referința la date în instanță
-		unit.Data = unitData;
 
 		// 3. Setăm datele critice
 		unit.Position = grid.GetWorldPosition(gridPos);

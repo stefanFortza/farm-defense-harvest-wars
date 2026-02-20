@@ -7,6 +7,11 @@ public partial class HurtboxComponent : Area2D
 {
     [Export] public HealthComponent HealthComponent { get; set; } = null!;
 
+    public void Initialize(HealthComponent healthComponent)
+    {
+        HealthComponent = healthComponent;
+    }
+
     public void ReceiveHit(int damage)
     {
         if (HealthComponent == null)
