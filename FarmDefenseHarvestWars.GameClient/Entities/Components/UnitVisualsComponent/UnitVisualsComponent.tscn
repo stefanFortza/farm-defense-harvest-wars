@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://clqpdwjw2y41h"]
+
+[ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Components/UnitVisualsComponent/UnitVisualsComponent.cs" id="1_q3vew"]
+
+[node name="UnitVisualsComponent" type="Node" node_paths=PackedStringArray("HealthBar")]
+script = ExtResource("1_q3vew")
+HealthBar = NodePath("")

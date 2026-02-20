@@ -84,15 +84,6 @@ public partial class BaseUnit : CharacterBody2D
         return UnitStateEnum.Idle;
     }
 
-    // Server-side logic
-    public virtual void TakeDamage(int amount)
-    {
-        // Logic is now delegated to the component
-        HealthComponent.TakeDamage(amount);
-
-        GD.Print($"{Type} took {amount} damage. HP: {CurrentHealth}/{MaxHealth}");
-    }
-
     protected virtual void Die()
     {
         EmitSignal(SignalName.Died);

@@ -1,10 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://cnapywfs7vvi7"]
+[gd_scene load_steps=18 format=3 uid="uid://cnapywfs7vvi7"]
 
 [ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_xj8l3"]
 [ext_resource type="Script" uid="uid://t04aymm6gwl" path="res://Entities/Units/Enemies/SkeletonUnit.cs" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://cukciypkewdvu" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Enemies/Skeleton/Skeleton_Swordman.png" id="3_bdg1m"]
 [ext_resource type="Resource" uid="uid://b34saaikrumva" path="res://Resources/Units/UnitStats/SkeletonData.tres" id="3_pbiwv"]
-[ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Components/UnitVisualsComponent.cs" id="4_snfe0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbiwv"]
 atlas = ExtResource("3_bdg1m")
@@ -107,10 +106,7 @@ animations = [{
 script = ExtResource("2_script")
 Data = ExtResource("3_pbiwv")
 
-[node name="UnitVisuals" type="Node" parent="." index="0"]
-script = ExtResource("4_snfe0")
-
-[node name="AnimatedSprite2D" parent="." index="3"]
+[node name="AnimatedSprite2D" parent="." index="2"]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_wb4uc")
 animation = &"walk"
