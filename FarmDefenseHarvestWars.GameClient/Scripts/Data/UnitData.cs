@@ -24,6 +24,7 @@ public partial class UnitData : Resource
 
     [ExportGroup("Visuals")]
     [Export(PropertyHint.File, "*.tscn")] public string UnitScenePath { get; set; } = string.Empty;
+    [Export] public PackedScene ProjectileScene { get; set; } = null!;
 
     [ExportGroup("Stats")]
     [Export] public int MaxHealth { get; set; } = 100;

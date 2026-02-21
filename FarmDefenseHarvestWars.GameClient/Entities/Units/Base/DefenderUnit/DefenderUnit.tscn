@@ -7,4 +7,7 @@
 script = ExtResource("2_ckw0r")
 ActionInterval = 1.0
 
+[node name="VisionComponent" parent="SpatialComponents" index="1"]
+target_position = Vector2(50, 0)
+
 [node name="ActionTimer" type="Timer" parent="." index="4"]

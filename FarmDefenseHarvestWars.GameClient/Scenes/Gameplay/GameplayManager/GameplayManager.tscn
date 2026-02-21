@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://cu12uic4kd4ek"]
+[gd_scene load_steps=13 format=3 uid="uid://cu12uic4kd4ek"]
 
 [ext_resource type="Script" uid="uid://whp16mk38v6" path="res://Scenes/Gameplay/GameplayManager/MatchManager.cs" id="1_1tddo"]
 [ext_resource type="Script" uid="uid://do0ad3s0bxeg2" path="res://Scenes/Gameplay/GameplayManager/GameplayManager.cs" id="1_biik6"]
+[ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="2_b847x"]
 [ext_resource type="Script" uid="uid://c6xqoepbvs2wt" path="res://Scenes/Gameplay/GameplayManager/UnitFactory.cs" id="2_biik6"]
 [ext_resource type="Script" uid="uid://c577dgypidqax" path="res://Scenes/Gameplay/GameplayManager/GameplayOrchestrator.cs" id="3_m405e"]
 [ext_resource type="Script" uid="uid://nml33xh7yufg" path="res://Scenes/Gameplay/GameplayManager/InputController.cs" id="4_pwkeu"]
@@ -43,8 +44,13 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="GameplayManager" type="Node"]
+[node name="GameplayManager" type="Node" node_paths=PackedStringArray("_matchManager", "_unitFactory", "_orchestrator", "_inputController")]
 script = ExtResource("1_biik6")
+UnitRegistry = ExtResource("2_b847x")
+_matchManager = NodePath("MatchManager")
+_unitFactory = NodePath("UnitFactory")
+_orchestrator = NodePath("GameplayOrchestrator")
+_inputController = NodePath("InputController")
 
 [node name="MatchManager" type="Node" parent="."]
 script = ExtResource("1_1tddo")

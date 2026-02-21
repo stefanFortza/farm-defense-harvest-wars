@@ -1,4 +1,5 @@
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 using Godot;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
@@ -15,6 +16,8 @@ public partial class DefenderUnit : BaseUnit
     {
         base._Ready();
 
+        VisionComponent.Initialize((Data.AttackRange, Vector2.Right)); // Defenders look to the right by default
+
         // Get Timer from Scene
         _actionTimer = GetNode<Timer>("ActionTimer");
         _actionTimer.WaitTime = ActionInterval;
@@ -23,10 +26,19 @@ public partial class DefenderUnit : BaseUnit
         _actionTimer.Start();
     }
 
+    // This is called by the base class's _Ready after validating dependencies
     protected override void RegisterStates()
     {
         base.RegisterStates();
         // We can add Defender-specific states here if needed (e.g., ShootingState), but for now, we'll just use Idle.
+        if (Data?.ProjectileScene != null)
+        {
+            StateMachine.RegisterState(UnitStateEnum.Attacking, new RangedAttackState(this));
+        }
+        else
+        {
+            StateMachine.RegisterState(UnitStateEnum.Attacking, new MeleeAttackState(this));
+        }
     }
 
     protected override UnitStateEnum GetInitialState()

@@ -18,10 +18,11 @@ public partial class BaseUnit : CharacterBody2D
     [Signal] public delegate void DiedEventHandler();
 
     [Export] public UnitData Data { get; private set; } = null!;
-    [Export] protected StateMachine StateMachine { get; private set; } = null!;
+    [Export] public StateMachine StateMachine { get; private set; } = null!;
     [Export] public HealthComponent HealthComponent { get; private set; } = null!;
-    [Export] public HitboxComponent HitboxComponent { get; private set; } = null!;
+    [Export] public MovementComponent MovementComponent { get; private set; } = null!;
     [Export] public HurtboxComponent HurtboxComponent { get; private set; } = null!;
+    [Export] public VisionComponent VisionComponent { get; private set; } = null!;
 
     public int CurrentHealth => HealthComponent?.CurrentHealth ?? 0;
     public virtual UnitType Type => Data?.Type ?? UnitType.None;
@@ -36,10 +37,7 @@ public partial class BaseUnit : CharacterBody2D
         _eventsBound = true;
 
         HealthComponent.Initialize(MaxHealth);
-        HitboxComponent.Initialize(Data.Damage);
         HurtboxComponent.Initialize(HealthComponent);
-
-
 
         AddToGroup("Units");
         RegisterStates();
@@ -65,8 +63,9 @@ public partial class BaseUnit : CharacterBody2D
         this.EnsureNotNull(Data, nameof(Data));
         this.EnsureNotNull(StateMachine, nameof(StateMachine));
         this.EnsureNotNull(HealthComponent, nameof(HealthComponent));
-        this.EnsureNotNull(HitboxComponent, nameof(HitboxComponent));
+        this.EnsureNotNull(MovementComponent, nameof(MovementComponent));
         this.EnsureNotNull(HurtboxComponent, nameof(HurtboxComponent));
+        this.EnsureNotNull(VisionComponent, nameof(VisionComponent));
     }
 
     private void OnHealthChanged(int current, int max)
@@ -74,6 +73,12 @@ public partial class BaseUnit : CharacterBody2D
         EmitSignal(SignalName.HealthChanged, current, max);
     }
 
+
+    /// <summary>
+    /// Registers the available states for this unit's state machine. This method can be overridden
+    /// by derived classes to define custom states. It is called during the unit's initialization
+    /// to set up the base idle state and any additional states required by the unit.
+    /// </summary>
     protected virtual void RegisterStates()
     {
         StateMachine.RegisterState(UnitStateEnum.Idle, new IdleState(this));

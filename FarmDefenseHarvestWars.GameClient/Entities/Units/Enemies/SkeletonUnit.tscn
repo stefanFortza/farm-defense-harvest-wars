@@ -106,8 +106,6 @@ animations = [{
 script = ExtResource("2_script")
 Data = ExtResource("3_pbiwv")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
-
 [node name="AnimatedSprite2D" parent="." index="1"]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_wb4uc")

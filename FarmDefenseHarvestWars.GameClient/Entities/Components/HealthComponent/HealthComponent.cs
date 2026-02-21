@@ -1,9 +1,10 @@
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using Godot;
 using System;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Components;
 
-public partial class HealthComponent : Node
+public partial class HealthComponent : Node, IInitializable<int>
 {
     [Signal] public delegate void HealthChangedEventHandler(int currentHealth, int maxHealth);
     [Signal] public delegate void DiedEventHandler();
@@ -11,16 +12,14 @@ public partial class HealthComponent : Node
     public int MaxHealth { get; set; }
     public int CurrentHealth { get; private set; }
 
+    public bool IsInitialized { get; private set; } = false;
+
     public void Initialize(int maxHealth)
     {
         MaxHealth = maxHealth;
         CurrentHealth = MaxHealth;
         EmitSignal(SignalName.HealthChanged, CurrentHealth, MaxHealth);
-    }
-
-    public override void _Ready()
-    {
-        CurrentHealth = MaxHealth;
+        IsInitialized = true;
     }
 
     public void TakeDamage(int amount)

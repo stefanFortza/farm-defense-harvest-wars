@@ -1,11 +1,9 @@
-[gd_scene load_steps=91 format=3 uid="uid://cnl2b6psuuhba"]
+[gd_scene load_steps=89 format=3 uid="uid://cnl2b6psuuhba"]
 
 [ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.tscn" id="1_xq5pq"]
 [ext_resource type="Script" uid="uid://csudtws27rhvk" path="res://Entities/Units/Defenders/CowUnit.cs" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://drckoutuh7k5i" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Cow/Cow_03.png" id="2_xcv4c"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="3_2kvwq"]
-[ext_resource type="Script" uid="uid://cxcmgny0o277n" path="res://Entities/Components/UnitVisualsComponent/UnitVisualsComponent.cs" id="4_0h4dl"]
-[ext_resource type="Script" uid="uid://ctgohpts1i2la" path="res://Scripts/Core/StateMachine/StateMachine.cs" id="6_ynowx"]
 
 [sub_resource type="Resource" id="Resource_0h4dl"]
 script = ExtResource("3_2kvwq")
@@ -668,27 +666,14 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="CowUnit" node_paths=PackedStringArray("StateMachine") instance=ExtResource("1_xq5pq")]
+[node name="CowUnit" instance=ExtResource("1_xq5pq")]
 script = ExtResource("2_script")
 Data = SubResource("Resource_0h4dl")
-StateMachine = NodePath("StateMachine")
 
-[node name="UnitVisuals" type="Node" parent="." index="0"]
-script = ExtResource("4_0h4dl")
-
-[node name="UnitVisualsComponent" type="Node" parent="." index="1" node_paths=PackedStringArray("HealthBar")]
-script = ExtResource("4_0h4dl")
-HealthBar = NodePath("../HealthBar")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="2"]
-
-[node name="AnimatedSprite2D" parent="." index="3"]
+[node name="AnimatedSprite2D" parent="." index="1"]
 position = Vector2(0, -9)
 sprite_frames = SubResource("SpriteFrames_xq5pq")
 animation = &"IdleSide"
 autoplay = "IdleSide"
 frame_progress = 0.70690584
 flip_h = true
-
-[node name="StateMachine" type="Node" parent="." index="6"]
-script = ExtResource("6_ynowx")

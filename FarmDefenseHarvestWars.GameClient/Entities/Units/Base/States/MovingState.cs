@@ -1,43 +1,47 @@
-
 using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
-using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+using FarmDefenseHarvestWars.GameClient.Entities.Components;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 
-
 public class MovingState : IState
 {
-    private readonly AttackerUnit _unit;
+    private readonly BaseUnit _unit;
+    private readonly MovementComponent _movement = null!;
+    private readonly VisionComponent _vision = null!;
 
-    public MovingState(AttackerUnit unit)
+    public MovingState(BaseUnit unit)
     {
         _unit = unit;
+        _movement = _unit.MovementComponent;
+        _vision = _unit.VisionComponent;
     }
 
     public void Enter()
     {
         GD.Print($"{_unit.Name} entered WalkState.");
-        // Set animation, direction, etc. here
+        _movement.IsMoving = true;
     }
 
     public void Exit()
     {
         GD.Print($"{_unit.Name} exited WalkState.");
-        // Clean up if necessary
+        _movement.Stop();
     }
 
     public void PhysicsUpdate(double delta)
     {
-        GD.Print($"{_unit.Name} is walking with speed {_unit.Speed}.");
-        // throw new System.NotImplementedException();
-        _unit.Velocity = Vector2.Left * _unit.Speed;
-        _unit.MoveAndSlide();
+        // Check for targets first
+        if (_vision.GetFirstValidEnemy() != null)
+        {
+            _unit.StateMachine.RequestStateChange(UnitStateEnum.Attacking);
+            return;
+        }
+
+        _movement.MoveLeft(delta);
     }
 
     public void Update(double delta)
     {
-        // Movement logic can be handled in the unit's _PhysicsProcess
-        // This state just indicates that the unit should be moving
     }
 }

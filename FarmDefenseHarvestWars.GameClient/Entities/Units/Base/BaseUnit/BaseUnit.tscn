@@ -1,23 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=9 format=3 uid="uid://cag1tn1qrlacf"]
 
 [ext_resource type="Script" uid="uid://ooy0frnw8g0t" path="res://Entities/Units/Base/BaseUnit/BaseUnit.cs" id="1_sqjxt"]
 [ext_resource type="Script" uid="uid://ctgohpts1i2la" path="res://Scripts/Core/StateMachine/StateMachine.cs" id="2_btydi"]
 [ext_resource type="PackedScene" uid="uid://clqpdwjw2y41h" path="res://Entities/Components/UnitVisualsComponent/UnitVisualsComponent.tscn" id="4_4cha2"]
 [ext_resource type="PackedScene" uid="uid://d0iuf8cgjhjxn" path="res://Entities/Components/HealthComponent/HealthComponent.tscn" id="4_o6myl"]
-[ext_resource type="PackedScene" uid="uid://bbtnc3o3yvxby" path="res://Entities/Components/HitboxComponent/HitboxComponent.tscn" id="5_j2i82"]
+[ext_resource type="PackedScene" uid="uid://bhq0pc1om5070" path="res://Entities/Components/MovementComponent/MovementComponent.tscn" id="5_0cqh2"]
 [ext_resource type="PackedScene" uid="uid://ycst6x1wgv7e" path="res://Entities/Components/HurtboxComponent/HurtboxComponent.tscn" id="6_0cqh2"]
+[ext_resource type="PackedScene" uid="uid://cu6ab578n8aqy" path="res://Entities/Components/VisionComponent/VisionComponent.tscn" id="8_0cqh2"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "HitboxComponent", "HurtboxComponent")]
+[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent")]
 script = ExtResource("1_sqjxt")
 StateMachine = NodePath("LogicComponents/StateMachine")
 HealthComponent = NodePath("LogicComponents/HealthComponent")
-HitboxComponent = NodePath("SpatialComponents/HitboxComponent")
+MovementComponent = NodePath("LogicComponents/MovementComponent")
 HurtboxComponent = NodePath("SpatialComponents/HurtboxComponent")
+VisionComponent = NodePath("SpatialComponents/VisionComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
@@ -28,15 +32,20 @@ script = ExtResource("2_btydi")
 
 [node name="HealthComponent" parent="LogicComponents" instance=ExtResource("4_o6myl")]
 
-[node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar") instance=ExtResource("4_4cha2")]
+[node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar", "_unit") instance=ExtResource("4_4cha2")]
 HealthBar = NodePath("../../HealthBar")
+_unit = NodePath("../..")
+
+[node name="MovementComponent" parent="LogicComponents" node_paths=PackedStringArray("_parent") instance=ExtResource("5_0cqh2")]
+_parent = NodePath("../..")
 
 [node name="SpatialComponents" type="Node2D" parent="."]
 
-[node name="HitboxComponent" parent="SpatialComponents" instance=ExtResource("5_j2i82")]
-
 [node name="HurtboxComponent" parent="SpatialComponents" node_paths=PackedStringArray("HealthComponent") instance=ExtResource("6_0cqh2")]
 HealthComponent = NodePath("../../LogicComponents/HealthComponent")
+
+[node name="VisionComponent" parent="SpatialComponents" instance=ExtResource("8_0cqh2")]
+position = Vector2(0, -7)
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -20.0

@@ -1,28 +1,37 @@
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using Godot;
 using System;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Components;
 
-public partial class LinearVisionComponent : RayCast2D
+public partial class VisionComponent : RayCast2D, IInitializable<(float range, Vector2 direction)>
 {
-    [Export] public float Range { get; set; } = 50.0f;
-    [Export] public Vector2 Direction { get; set; } = Vector2.Left;
+    public float Range { get; set; }
+    public Vector2 Direction { get; set; }
+
+    public bool IsInitialized { get; private set; } = false;
+
+    public void Initialize((float range, Vector2 direction) data)
+    {
+        if (IsInitialized) return;
+
+        Range = data.range;
+        Direction = data.direction;
+
+        TargetPosition = Direction.Normalized() * Range;
+
+        IsInitialized = true;
+    }
 
     public override void _Ready()
     {
-        // Ensure RayCast2D properties are set properly
-        TargetPosition = Direction.Normalized() * Range;
         Enabled = true; // Always on, can be toggled by states if needed
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        // Dynamic target update if Range or Direction change during runtime
-        TargetPosition = Direction.Normalized() * Range;
     }
 
     public HurtboxComponent? GetFirstValidEnemy()
     {
+        ForceRaycastUpdate();
+
         if (!IsColliding()) return null;
 
         var collider = GetCollider();

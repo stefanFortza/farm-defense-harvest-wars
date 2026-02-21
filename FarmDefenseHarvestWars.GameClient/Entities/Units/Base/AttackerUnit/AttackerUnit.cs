@@ -1,5 +1,6 @@
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
+using Godot;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
@@ -14,16 +15,29 @@ public partial class AttackerUnit : BaseUnit
     {
         base._Ready();
 
-        if (IsMultiplayerAuthority())
-        {
-            StateMachine.Start(UnitStateEnum.Moving);
-        }
+        VisionComponent.Initialize((Data.AttackRange, Vector2.Left)); // Attackers look to the left by default
+
+        // if (IsMultiplayerAuthority())
+        // {
+        //     StateMachine.Start(UnitStateEnum.Moving);
+        // }
     }
 
+    // This is called by the base class's _Ready after validating dependencies
     protected override void RegisterStates()
     {
         base.RegisterStates();
         StateMachine.RegisterState(UnitStateEnum.Moving, new MovingState(this));
+
+        // Register attack state based on data
+        if (Data?.ProjectileScene != null)
+        {
+            StateMachine.RegisterState(UnitStateEnum.Attacking, new RangedAttackState(this));
+        }
+        else
+        {
+            StateMachine.RegisterState(UnitStateEnum.Attacking, new MeleeAttackState(this));
+        }
     }
 
     protected override UnitStateEnum GetInitialState()
