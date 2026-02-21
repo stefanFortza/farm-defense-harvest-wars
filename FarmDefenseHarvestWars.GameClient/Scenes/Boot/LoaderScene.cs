@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 
 public partial class LoaderScene : Node
@@ -7,18 +8,8 @@ public partial class LoaderScene : Node
 	{
 		// Verificăm argumentele de lansare
 		string[] args = OS.GetCmdlineArgs();
-		bool isServer = false;
 
-		foreach (var arg in args)
-		{
-			if (arg == "--server")
-			{
-				isServer = true;
-				break;
-			}
-		}
-
-		if (isServer)
+		if (args.Contains("--server"))
 		{
 			StartServerMode();
 		}

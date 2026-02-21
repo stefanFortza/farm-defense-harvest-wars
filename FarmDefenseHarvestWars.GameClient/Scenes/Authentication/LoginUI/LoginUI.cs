@@ -39,7 +39,7 @@ public partial class LoginUI : Control
             if (success)
             {
                 ShowMessage("Success! Loading...", Colors.Green);
-                await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
+                // await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
                 EmitSignal(SignalName.LoginSuccess);
             }
             else

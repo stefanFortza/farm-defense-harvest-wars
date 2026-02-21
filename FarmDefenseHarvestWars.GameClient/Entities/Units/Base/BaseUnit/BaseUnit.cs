@@ -38,6 +38,7 @@ public partial class BaseUnit : CharacterBody2D
 
         HealthComponent.Initialize(MaxHealth);
         HurtboxComponent.Initialize(HealthComponent);
+        MovementComponent.Initialize((this, Data.Speed));
 
         AddToGroup("Units");
         RegisterStates();
