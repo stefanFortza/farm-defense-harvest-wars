@@ -7,4 +7,5 @@ script = ExtResource("1_ajajn")
 Type = 8
 Name = "Skeleton"
 UnitScenePath = "uid://cnapywfs7vvi7"
+AttackRange = 15.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

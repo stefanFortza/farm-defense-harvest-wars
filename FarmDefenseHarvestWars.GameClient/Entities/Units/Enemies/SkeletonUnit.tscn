@@ -113,3 +113,6 @@ animation = &"walk"
 autoplay = "walk"
 frame_progress = 0.7018378
 flip_h = true
+
+[node name="VisionComponent" parent="SpatialComponents" index="1"]
+collide_with_areas = true
