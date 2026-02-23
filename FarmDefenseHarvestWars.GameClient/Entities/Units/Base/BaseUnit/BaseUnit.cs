@@ -83,6 +83,16 @@ public partial class BaseUnit : CharacterBody2D
     protected virtual void RegisterStates()
     {
         StateMachine.RegisterState(UnitStateEnum.Idle, new IdleState(this));
+
+        // Register attack state based on data
+        if (Data?.ProjectileScene != null)
+        {
+            StateMachine.RegisterState(UnitStateEnum.Attacking, new RangedAttackState(this));
+        }
+        else
+        {
+            StateMachine.RegisterState(UnitStateEnum.Attacking, new MeleeAttackState(this));
+        }
     }
 
     protected virtual UnitStateEnum GetInitialState()

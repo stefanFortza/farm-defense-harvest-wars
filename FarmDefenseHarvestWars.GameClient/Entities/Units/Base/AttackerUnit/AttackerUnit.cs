@@ -29,15 +29,7 @@ public partial class AttackerUnit : BaseUnit
         base.RegisterStates();
         StateMachine.RegisterState(UnitStateEnum.Moving, new MovingState(this));
 
-        // Register attack state based on data
-        if (Data?.ProjectileScene != null)
-        {
-            StateMachine.RegisterState(UnitStateEnum.Attacking, new RangedAttackState(this));
-        }
-        else
-        {
-            StateMachine.RegisterState(UnitStateEnum.Attacking, new MeleeAttackState(this));
-        }
+
     }
 
     protected override UnitStateEnum GetInitialState()

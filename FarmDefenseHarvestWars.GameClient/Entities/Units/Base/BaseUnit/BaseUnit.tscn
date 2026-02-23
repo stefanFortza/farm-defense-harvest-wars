@@ -12,6 +12,9 @@
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+properties/1/path = NodePath("LogicComponents/HealthComponent:CurrentHealth")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent")]
 script = ExtResource("1_sqjxt")
@@ -46,6 +49,7 @@ HealthComponent = NodePath("../../LogicComponents/HealthComponent")
 
 [node name="VisionComponent" parent="SpatialComponents" instance=ExtResource("8_0cqh2")]
 position = Vector2(0, -7)
+collide_with_areas = true
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -20.0

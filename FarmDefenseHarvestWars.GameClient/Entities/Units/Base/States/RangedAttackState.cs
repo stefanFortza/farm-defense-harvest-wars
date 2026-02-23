@@ -31,9 +31,13 @@ public class RangedAttackState : IState
     public void PhysicsUpdate(double delta)
     {
         var target = _vision.GetFirstValidEnemy();
+
         if (target == null)
         {
-            _unit.StateMachine.RequestStateChange(UnitStateEnum.Moving);
+            // O unitate fără viteză de deplasare (Defender static) intră obligatoriu în Idle.
+            // Celelalte își reiau ciclul de patrulare/avansare (Moving).
+            UnitStateEnum fallbackState = _unit.Data.Speed > 0f ? UnitStateEnum.Moving : UnitStateEnum.Idle;
+            _unit.StateMachine.RequestStateChange(fallbackState);
             return;
         }
 
@@ -44,7 +48,17 @@ public class RangedAttackState : IState
         }
 
         Attack();
-        _attackTimer = 1.0 / _unit.Data.AttackSpeed;
+
+        // Protecție la diviziunea prin 0 în cazul în care datele sunt configurate greșit
+        if (_unit.Data.AttackSpeed <= 0)
+        {
+            GD.PrintErr($"{_unit.Name}: AttackSpeed este 0 sau negativ!");
+            _attackTimer = 1.0; // Valoare fallback de siguranță
+        }
+        else
+        {
+            _attackTimer = 1.0 / _unit.Data.AttackSpeed;
+        }
     }
 
     public void Update(double delta)

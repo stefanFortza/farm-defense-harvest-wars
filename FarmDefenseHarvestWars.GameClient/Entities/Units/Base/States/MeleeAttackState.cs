@@ -35,7 +35,8 @@ public class MeleeAttackState : IState
         var target = _vision.GetFirstValidEnemy();
         if (target == null)
         {
-            _unit.StateMachine.RequestStateChange(UnitStateEnum.Moving);
+            UnitStateEnum fallbackState = _unit.Data.Speed > 0f ? UnitStateEnum.Moving : UnitStateEnum.Idle;
+            _unit.StateMachine.RequestStateChange(fallbackState);
             return;
         }
 

@@ -1,4 +1,5 @@
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
+using FarmDefenseHarvestWars.GameClient.Entities.Components;
 using Godot;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
@@ -6,10 +7,12 @@ namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 public class IdleState : IState
 {
 	private readonly BaseUnit _unit;
+	private readonly VisionComponent _vision;
 
 	public IdleState(BaseUnit unit)
 	{
 		_unit = unit;
+		_vision = _unit.VisionComponent;
 	}
 
 	public void Enter()
@@ -31,6 +34,11 @@ public class IdleState : IState
 
 	public void PhysicsUpdate(double delta)
 	{
-		// No physics updates needed in idle.
+		// Check for targets first
+		if (_vision.GetFirstValidEnemy() != null)
+		{
+			_unit.StateMachine.RequestStateChange(UnitStateEnum.Attacking);
+			return;
+		}
 	}
 }

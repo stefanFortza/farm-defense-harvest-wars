@@ -9,9 +9,9 @@
 script = ExtResource("3_2kvwq")
 Type = 1
 Name = "Cow"
-MaxHealth = 200
-Speed = 100.0
-AttackRange = 4.0
+UnitScenePath = "uid://cnl2b6psuuhba"
+MaxHealth = 300
+Speed = 0.0
 AttackSpeed = 1.5
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jpwfv"]
@@ -687,3 +687,6 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -7)
 shape = SubResource("CircleShape2D_2kvwq")
+
+[node name="VisionComponent" parent="SpatialComponents" index="1"]
+collision_mask = 2

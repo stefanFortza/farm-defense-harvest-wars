@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cnapywfs7vvi7"]
+[gd_scene load_steps=19 format=3 uid="uid://cnapywfs7vvi7"]
 
 [ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_xj8l3"]
 [ext_resource type="Script" uid="uid://t04aymm6gwl" path="res://Entities/Units/Enemies/SkeletonUnit.cs" id="2_script"]
@@ -102,6 +102,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbiwv"]
+radius = 7.0
+
 [node name="SkeletonUnit" instance=ExtResource("1_xj8l3")]
 script = ExtResource("2_script")
 Data = ExtResource("3_pbiwv")
@@ -114,5 +117,15 @@ autoplay = "walk"
 frame_progress = 0.7018378
 flip_h = true
 
-[node name="VisionComponent" parent="SpatialComponents" index="1"]
-collide_with_areas = true
+[node name="HurtboxComponent" parent="SpatialComponents" index="0"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -10)
+shape = SubResource("CircleShape2D_pbiwv")
+
+[node name="HealthBar" parent="." index="4"]
+offset_left = -13.0
+offset_top = -26.5
+offset_right = 13.0
+offset_bottom = -22.5

@@ -30,15 +30,6 @@ public partial class DefenderUnit : BaseUnit
     protected override void RegisterStates()
     {
         base.RegisterStates();
-        // We can add Defender-specific states here if needed (e.g., ShootingState), but for now, we'll just use Idle.
-        if (Data?.ProjectileScene != null)
-        {
-            StateMachine.RegisterState(UnitStateEnum.Attacking, new RangedAttackState(this));
-        }
-        else
-        {
-            StateMachine.RegisterState(UnitStateEnum.Attacking, new MeleeAttackState(this));
-        }
     }
 
     protected override UnitStateEnum GetInitialState()

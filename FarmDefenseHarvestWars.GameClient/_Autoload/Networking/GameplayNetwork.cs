@@ -78,7 +78,8 @@ public partial class GameplayNetwork : Node
         if (_connectedPlayers.Count == MaxPlayers)
         {
             GD.Print("Match Ready! Starting in 1s...");
-            GetTree().CreateTimer(1.0).Timeout += () => Rpc(nameof(StartGameScene));
+            // GetTree().CreateTimer(1.0).Timeout += () => Rpc(nameof(StartGameScene));
+            Rpc(nameof(StartGameScene));
         }
     }
 

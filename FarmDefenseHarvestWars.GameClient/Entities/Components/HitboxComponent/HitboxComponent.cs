@@ -18,6 +18,7 @@ public partial class HitboxComponent : Area2D, IInitializable<int>
 
     public override void _Ready()
     {
+        if (!IsMultiplayerAuthority()) return;
         AreaEntered += OnAreaEntered;
     }
 

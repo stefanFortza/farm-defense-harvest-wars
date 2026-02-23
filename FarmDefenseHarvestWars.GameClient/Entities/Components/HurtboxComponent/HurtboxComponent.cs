@@ -18,6 +18,8 @@ public partial class HurtboxComponent : Area2D, IInitializable<HealthComponent>
 
     public void ReceiveHit(int damage)
     {
+        if (!IsMultiplayerAuthority()) return;
+
         if (HealthComponent == null)
         {
             GD.PrintErr($"{Name}: HurtboxComponent lacks a HealthComponent reference!");

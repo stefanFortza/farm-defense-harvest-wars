@@ -16,6 +16,14 @@ public partial class LoginUI : Control
         EmailInput?.Text = "fermier@joc.com";
         PasswordInput?.Text = "Password123!";
         ErrorLabel?.Text = "";
+
+        // Only for development: we auto-login if credentials are already set (and we're not in release mode)
+#if !RELEASE
+        if (!string.IsNullOrWhiteSpace(EmailInput.Text) && !string.IsNullOrWhiteSpace(PasswordInput.Text))
+        {
+            OnLoginPressed();
+        }
+#endif
     }
 
     public async void OnLoginPressed()

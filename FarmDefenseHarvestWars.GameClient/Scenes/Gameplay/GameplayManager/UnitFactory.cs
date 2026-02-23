@@ -51,7 +51,17 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 		// MAGIC: MultiplayerSpawner va detecta asta și va spawna unitatea la toți clienții
 		_unitContainer.AddChild(unit, true);
 
+		bool occupiesGrid = unitData.Speed <= 0f;
+
 		// 5. Înregistrăm în grid-ul logic
-		grid.RegisterUnit(gridPos, unit);
+		if (occupiesGrid)
+		{
+			grid.RegisterUnit(gridPos, unit);
+			GD.Print($"[UnitFactory] Static unit {type} registered at grid {gridPos}.");
+		}
+		else
+		{
+			GD.Print($"[UnitFactory] Dynamic unit {type} spawned at {gridPos}. Grid occupancy bypassed.");
+		}
 	}
 }
