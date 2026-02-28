@@ -1,5 +1,10 @@
 using Godot;
 using System;
+using Refit;
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
+
+namespace FarmDefenseHarvestWars.GameClient.Scenes.Authentication.LoginUI;
 
 public partial class LoginUI : Control
 {
@@ -12,48 +17,50 @@ public partial class LoginUI : Control
 
     public override void _Ready()
     {
-        // Pre-fill for development convenience
-        EmailInput?.Text = "fermier@joc.com";
-        PasswordInput?.Text = "Password123!";
-        ErrorLabel?.Text = "";
+        // Fail fast if any export is missing
+        this.EnsureNotNull(EmailInput, nameof(EmailInput));
+        this.EnsureNotNull(PasswordInput, nameof(PasswordInput));
+        this.EnsureNotNull(ErrorLabel, nameof(ErrorLabel));
+        this.EnsureNotNull(LoginButton, nameof(LoginButton));
 
-        // Only for development: we auto-login if credentials are already set (and we're not in release mode)
-#if !RELEASE
-        if (!string.IsNullOrWhiteSpace(EmailInput.Text) && !string.IsNullOrWhiteSpace(PasswordInput.Text))
+        ErrorLabel.Text = "";
+
+        // Check command line arguments for auto-login
+        if (!string.IsNullOrEmpty(CmdArgs.Email) && !string.IsNullOrEmpty(CmdArgs.Password))
         {
+            EmailInput.Text = CmdArgs.Email;
+            PasswordInput.Text = CmdArgs.Password;
+
+            GD.Print($">>> AUTO-LOGIN DETECTED: {CmdArgs.Email} <<<");
             OnLoginPressed();
         }
-#endif
     }
 
     public async void OnLoginPressed()
     {
-        LoginButton?.Disabled = true;
+        LoginButton.Disabled = true;
         ShowMessage("Connecting...", Colors.Yellow);
 
         // 1. Local Validation
         if (string.IsNullOrWhiteSpace(EmailInput.Text) || string.IsNullOrWhiteSpace(PasswordInput.Text))
         {
             ShowMessage("Please enter email and password!", Colors.Red);
-            if (LoginButton != null) LoginButton.Disabled = false;
+            LoginButton.Disabled = false;
             return;
         }
 
         try
         {
             // 2. Network Request
-            bool success = await NetworkBootstrap.Instance.Auth.LoginAsync(EmailInput.Text, PasswordInput.Text);
+            await NetworkBootstrap.Instance.Auth.LoginAsync(EmailInput.Text, PasswordInput.Text);
 
-            if (success)
-            {
-                ShowMessage("Success! Loading...", Colors.Green);
-                // await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
-                EmitSignal(SignalName.LoginSuccess);
-            }
-            else
-            {
-                ShowMessage("Invalid email or password!", Colors.Red);
-            }
+            ShowMessage("Success! Loading...", Colors.Green);
+            EmitSignal(SignalName.LoginSuccess);
+        }
+        catch (ApiException ex)
+        {
+            ShowMessage("Invalid email or password!", Colors.Red);
+            GD.PrintErr(ex.Content);
         }
         catch (Exception ex)
         {
@@ -68,10 +75,7 @@ public partial class LoginUI : Control
 
     private void ShowMessage(string message, Color color)
     {
-        if (ErrorLabel != null)
-        {
-            ErrorLabel.Text = message;
-            ErrorLabel.Modulate = color;
-        }
+        ErrorLabel.Text = message;
+        ErrorLabel.Modulate = color;
     }
 }

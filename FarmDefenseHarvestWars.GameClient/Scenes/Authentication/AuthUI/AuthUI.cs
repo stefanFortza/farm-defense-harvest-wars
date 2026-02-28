@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using FarmDefenseHarvestWars.GameClient.Scenes.Authentication.LoginUI;
 
 public partial class AuthUI : Node
 {

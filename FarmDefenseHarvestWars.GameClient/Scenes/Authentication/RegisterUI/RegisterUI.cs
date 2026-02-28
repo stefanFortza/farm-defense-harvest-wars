@@ -2,11 +2,11 @@ using Godot;
 using Refit;
 using System;
 using FarmDefenseHarvestWars.Shared.Models.Auth;
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
 
 public partial class RegisterUI : Control
 {
     [Signal] public delegate void RegisterSuccessEventHandler();
-    [Signal] public delegate void BackToLoginEventHandler();
 
     [Export] public LineEdit EmailInput { get; set; } = null!;
     [Export] public LineEdit PasswordInput { get; set; } = null!;
@@ -16,8 +16,14 @@ public partial class RegisterUI : Control
 
     public override void _Ready()
     {
-        ErrorLabel?.Text = "";
-        RegisterButton?.Pressed += OnRegisterPressed;
+        this.EnsureNotNull(EmailInput, nameof(EmailInput));
+        this.EnsureNotNull(PasswordInput, nameof(PasswordInput));
+        this.EnsureNotNull(ConfirmPasswordInput, nameof(ConfirmPasswordInput));
+        this.EnsureNotNull(ErrorLabel, nameof(ErrorLabel));
+        this.EnsureNotNull(RegisterButton, nameof(RegisterButton));
+
+        ErrorLabel.Text = "";
+        RegisterButton.Pressed += OnRegisterPressed;
     }
 
     public async void OnRegisterPressed()
@@ -35,7 +41,7 @@ public partial class RegisterUI : Control
             return;
         }
 
-        RegisterButton?.Disabled = true;
+        RegisterButton.Disabled = true;
         ShowMessage("Creating account...", Colors.Yellow);
 
         try
@@ -47,10 +53,8 @@ public partial class RegisterUI : Control
             ShowMessage("Account created successfully!", Colors.Green);
             GD.Print("User registered.");
 
-            await ToSignal(GetTree().CreateTimer(1.5f), SceneTreeTimer.SignalName.Timeout);
-
             // Navigate back to login
-            EmitSignal(SignalName.BackToLogin);
+            EmitSignal(SignalName.RegisterSuccess);
         }
         catch (ApiException ex)
         {
@@ -68,17 +72,9 @@ public partial class RegisterUI : Control
         }
     }
 
-    public void OnBackToLoginPressed()
-    {
-        EmitSignal(SignalName.BackToLogin);
-    }
-
     private void ShowMessage(string message, Color color)
     {
-        if (ErrorLabel != null)
-        {
-            ErrorLabel.Text = message;
-            ErrorLabel.Modulate = color;
-        }
+        ErrorLabel.Text = message;
+        ErrorLabel.Modulate = color;
     }
 }

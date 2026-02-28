@@ -1,15 +1,12 @@
-using System.Linq;
 using Godot;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
 public partial class LoaderScene : Node
 {
 	[Export] public PackedScene AuthScene { get; set; } = null!;
 	public override void _Ready()
 	{
-		// Verificăm argumentele de lansare
-		string[] args = OS.GetCmdlineArgs();
-
-		if (args.Contains("--server"))
+		if (CmdArgs.IsServer)
 		{
 			StartServerMode();
 		}
