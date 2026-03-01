@@ -27,9 +27,10 @@ public partial class UnitData : Resource
     [Export] public PackedScene ProjectileScene { get; set; } = null!;
 
     [ExportGroup("Stats")]
+    public bool IsStatic => Speed == 0f;
     [Export] public int MaxHealth { get; set; } = 100;
     [Export] public int Damage { get; set; } = 10;
-    [Export] public float Speed { get; set; } = 10.0f;
+    [Export] public float Speed { get; set; } = 0;
     [Export] public float AttackRange { get; set; } = 64f;
     [Export] public float AttackSpeed { get; set; } = 0.4f;
 

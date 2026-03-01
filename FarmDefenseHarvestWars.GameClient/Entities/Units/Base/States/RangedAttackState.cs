@@ -38,7 +38,7 @@ public class RangedAttackState : IState
         {
             // O unitate fără viteză de deplasare (Defender static) intră obligatoriu în Idle.
             // Celelalte își reiau ciclul de patrulare/avansare (Moving).
-            UnitStateEnum fallbackState = _unit.Data.Speed > 0f ? UnitStateEnum.Moving : UnitStateEnum.Idle;
+            UnitStateEnum fallbackState = _unit.Data.IsStatic ? UnitStateEnum.Idle : UnitStateEnum.Moving;
             _unit.StateMachine.RequestStateChange(fallbackState);
             return;
         }

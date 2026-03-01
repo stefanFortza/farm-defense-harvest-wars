@@ -117,9 +117,6 @@ autoplay = "walk"
 frame_progress = 0.7018378
 flip_h = true
 
-[node name="HurtboxComponent" parent="SpatialComponents" index="0"]
-collision_layer = 2
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_pbiwv")
