@@ -73,30 +73,26 @@ public class RangedAttackState : IState
             return;
         }
 
+        // Only the server/authority spawns projectiles; MultiplayerSpawner replicates to clients.
+        if (!_unit.Multiplayer.IsServer()) return;
+
         var projectile = _unit.Data.ProjectileScene.Instantiate<Node2D>();
 
-        // TODO - we might want a more robust way to manage projectiles, but for now we'll just add them to a "ProjectileContainer" node in the scene if it exists, or directly to the unit's parent as a fallback.
-        // Find ProjectileContainer in GameWorld
-        var gameWorld = _unit.GetTree().Root.FindChild("GameWorld", true, false) as Node2D;
-        var container = gameWorld?.GetNodeOrNull<Node2D>("ProjectileContainer");
+        // Use the pre-resolved ProjectileContainer injected by UnitFactory — no tree search needed.
+        var container = _unit.ProjectileContainer ?? _unit.GetParent();
+        container.AddChild(projectile, true);
 
-        if (container != null)
-        {
-            container.AddChild(projectile);
-        }
-        else
-        {
-            _unit.GetParent().AddChild(projectile);
-        }
-
-        // Set position and initialize if it's a BaseProjectile
+        // Position must be set before Initialize so the projectile starts at the unit's location.
         projectile.GlobalPosition = _unit.GlobalPosition;
 
+        // Use Initialize() so HitboxComponent.DamageAmount is set after _Ready() has resolved
+        // the hitbox node — avoids the stale-default timing issue.
         if (projectile is BaseProjectile baseProj)
         {
-            baseProj.Damage = _unit.Data.Damage;
-            baseProj.Direction = (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right;
-            // Optionally set speed from Data if we add it there later
+            baseProj.Initialize((
+                Damage: _unit.Data.Damage,
+                Direction: (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right
+            ));
         }
 
         GD.Print($"{_unit.Name} fired a projectile.");

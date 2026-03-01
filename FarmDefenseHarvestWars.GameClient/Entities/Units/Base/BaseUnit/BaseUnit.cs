@@ -28,6 +28,12 @@ public partial class BaseUnit : CharacterBody2D
     public virtual UnitType Type => Data?.Type ?? UnitType.None;
     public int MaxHealth => Data?.MaxHealth ?? 0;
 
+    /// <summary>
+    /// The container node where spawned projectiles are added. Injected by UnitFactory
+    /// after instantiation so RangedAttackState can add projectiles without searching the tree.
+    /// </summary>
+    public Node2D? ProjectileContainer { get; set; }
+
     public override void _Ready()
     {
         ValidateDependencies();

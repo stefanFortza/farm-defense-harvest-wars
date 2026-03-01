@@ -14,7 +14,8 @@ public record GameplayContext(
 	UnitFactory Factory,
 	MatchManager Match,
 	UnitRegistry UnitRegistry,
-	Node2D UnitContainer
+	Node2D UnitContainer,
+	Node2D ProjectileContainer
 );
 
 
@@ -42,7 +43,8 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 			Factory: _unitFactory,
 			Match: _matchManager,
 			UnitRegistry: UnitRegistry,
-			UnitContainer: data.UnitContainer
+			UnitContainer: data.UnitContainer,
+			ProjectileContainer: data.ProjectileContainer
 		);
 
 

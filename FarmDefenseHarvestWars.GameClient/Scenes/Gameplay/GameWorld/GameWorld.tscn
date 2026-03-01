@@ -6,8 +6,12 @@
 [ext_resource type="Script" uid="uid://i5qavmfqfft5" path="res://Scenes/Gameplay/Map/Map.cs" id="4_cs20h"]
 [ext_resource type="Script" uid="uid://dbcv5oydmri8p" path="res://Scenes/Gameplay/GameWorld/GameUI.cs" id="5_ui"]
 
-[node name="GameWorld" type="Node2D"]
+[node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_gridSystem", "_unitContainer", "_projectileContainer")]
 script = ExtResource("1_vhl2x")
+_managers = NodePath("GameplayManagers")
+_gridSystem = NodePath("Map/GridSystem")
+_unitContainer = NodePath("UnitContainer")
+_projectileContainer = NodePath("ProjectileContainer")
 
 [node name="GameplayManagers" parent="." instance=ExtResource("2_cs20h")]
 
@@ -23,6 +27,8 @@ _spawnable_scenes = PackedStringArray("uid://cnl2b6psuuhba", "uid://cnapywfs7vvi
 spawn_path = NodePath("../UnitContainer")
 
 [node name="ProjectileSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://cbv885ok08a2e")
+spawn_path = NodePath("../ProjectileContainer")
 
 [node name="GameUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("GameOverPanel", "WinnerLabel", "RoleLabel")]
 visible = false

@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://du8ko4ocrwacs"]
+
+[ext_resource type="Script" uid="uid://d5fo211w4sbj" path="res://Entities/Projectiles/BaseProjectile.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://bbtnc3o3yvxby" path="res://Entities/Components/HitboxComponent/HitboxComponent.tscn" id="2_hitbox"]
+
+[sub_resource type="SceneReplicationConfig" id="2_sync"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="BaseProjectile" type="Node2D" node_paths=PackedStringArray("HitboxComponent")]
+script = ExtResource("1_script")
+HitboxComponent = NodePath("HitboxComponent")
+
+[node name="HitboxComponent" parent="." instance=ExtResource("2_hitbox")]
+collision_layer = 16
+collision_mask = 4
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("2_sync")

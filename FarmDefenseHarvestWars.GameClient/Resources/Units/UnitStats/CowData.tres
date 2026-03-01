@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3 uid="uid://b8wybv5au1sf0"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://b8wybv5au1sf0"]
 
+[ext_resource type="PackedScene" uid="uid://cbv885ok08a2e" path="res://Entities/Projectiles/EggProjectile.tscn" id="1_d7t7q"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_xkykw"]
 
 [resource]
@@ -7,7 +8,7 @@ script = ExtResource("1_xkykw")
 Type = 1
 Name = "Cow"
 UnitScenePath = "uid://cnl2b6psuuhba"
+ProjectileScene = ExtResource("1_d7t7q")
 MaxHealth = 500
-AttackRange = 4.0
 AttackSpeed = 1.5
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

@@ -41,6 +41,8 @@ enabled=PackedStringArray("res://addons/AutoKey_SpriteFrames/plugin.cfg", "res:/
 
 2d_physics/layer_1="DefenderUnits"
 2d_physics/layer_2="AttackerUnits"
+2d_physics/layer_3="ProjAttacker"
+2d_physics/layer_4="ProjDefender"
 
 [rendering]
 

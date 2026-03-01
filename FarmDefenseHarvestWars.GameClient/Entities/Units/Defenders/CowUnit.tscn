@@ -1,18 +1,9 @@
-[gd_scene load_steps=90 format=3 uid="uid://cnl2b6psuuhba"]
+[gd_scene load_steps=89 format=3 uid="uid://cnl2b6psuuhba"]
 
 [ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.tscn" id="1_xq5pq"]
 [ext_resource type="Script" uid="uid://csudtws27rhvk" path="res://Entities/Units/Defenders/CowUnit.cs" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://drckoutuh7k5i" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Cow/Cow_03.png" id="2_xcv4c"]
-[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="3_2kvwq"]
-
-[sub_resource type="Resource" id="Resource_0h4dl"]
-script = ExtResource("3_2kvwq")
-Type = 1
-Name = "Cow"
-UnitScenePath = "uid://cnl2b6psuuhba"
-MaxHealth = 300
-Speed = 0.0
-AttackSpeed = 1.5
+[ext_resource type="Resource" uid="uid://b8wybv5au1sf0" path="res://Resources/Units/UnitStats/CowData.tres" id="3_2kvwq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jpwfv"]
 atlas = ExtResource("2_xcv4c")
@@ -671,7 +662,7 @@ radius = 7.0
 
 [node name="CowUnit" instance=ExtResource("1_xq5pq")]
 script = ExtResource("2_script")
-Data = SubResource("Resource_0h4dl")
+Data = ExtResource("3_2kvwq")
 
 [node name="AnimatedSprite2D" parent="." index="1"]
 position = Vector2(0, -9)
