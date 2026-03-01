@@ -8,7 +8,7 @@ namespace FarmDefenseHarvestWars.GameClient.Entities.Projectiles;
 public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector2 Direction)>
 {
     [Export] public HitboxComponent HitboxComponent { get; set; } = null!;
-    [Export] public float Speed { get; set; } = 10f;
+    [Export] public float Speed { get; set; } = 100f;
     [Export] public Vector2 Direction { get; set; } = Vector2.Left;
     [Export] public int Damage { get; set; } = 10;
     [Export] public float MaxLifetime { get; set; } = 5.0f;
@@ -19,6 +19,10 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     public override void _Ready()
     {
         this.EnsureNotNull(HitboxComponent, nameof(HitboxComponent));
+
+        if (!IsMultiplayerAuthority())
+            return;
+
         // Wire up the signal; damage is applied via Initialize() after AddChild.
         HitboxComponent.AreaEntered += OnHitboxAreaEntered;
 

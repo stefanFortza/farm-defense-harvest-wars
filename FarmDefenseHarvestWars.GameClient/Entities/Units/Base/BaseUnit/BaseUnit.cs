@@ -34,6 +34,12 @@ public partial class BaseUnit : CharacterBody2D
     /// </summary>
     public Node2D? ProjectileContainer { get; set; }
 
+    /// <summary>
+    /// The Y world-coordinate of the center of the lane this unit was spawned in.
+    /// Set by UnitFactory at spawn time so projectiles fly along the lane center.
+    /// </summary>
+    public float LaneCenterY { get; set; }
+
     public override void _Ready()
     {
         ValidateDependencies();

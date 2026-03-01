@@ -31,7 +31,7 @@ public partial class UnitData : Resource
     [Export] public int Damage { get; set; } = 10;
     [Export] public float Speed { get; set; } = 10.0f;
     [Export] public float AttackRange { get; set; } = 64f;
-    [Export] public float AttackSpeed { get; set; } = 1.0f;
+    [Export] public float AttackSpeed { get; set; } = 0.4f;
 
     public UnitDataDto ToDto()
     {

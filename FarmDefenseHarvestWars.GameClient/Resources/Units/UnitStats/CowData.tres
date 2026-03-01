@@ -10,5 +10,5 @@ Name = "Cow"
 UnitScenePath = "uid://cnl2b6psuuhba"
 ProjectileScene = ExtResource("1_d7t7q")
 MaxHealth = 500
-AttackSpeed = 1.5
+AttackRange = 160.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

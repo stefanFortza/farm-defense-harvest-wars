@@ -20,7 +20,9 @@ public class RangedAttackState : IState
     public void Enter()
     {
         GD.Print($"{_unit.Name} entered RangedAttackState.");
-        _attackTimer = 0.0;
+        _attackTimer = _unit.Data.AttackSpeed > 0
+            ? 1.0 / _unit.Data.AttackSpeed
+            : 1.0;
     }
 
     public void Exit()
@@ -82,8 +84,9 @@ public class RangedAttackState : IState
         var container = _unit.ProjectileContainer ?? _unit.GetParent();
         container.AddChild(projectile, true);
 
-        // Position must be set before Initialize so the projectile starts at the unit's location.
-        projectile.GlobalPosition = _unit.GlobalPosition;
+        // Snap the projectile to the unit's X but use the lane center Y so it flies
+        // along the middle of the row regardless of any vertical drift the unit may have.
+        projectile.GlobalPosition = new Vector2(_unit.GlobalPosition.X, _unit.LaneCenterY);
 
         // Use Initialize() so HitboxComponent.DamageAmount is set after _Ready() has resolved
         // the hitbox node — avoids the stale-default timing issue.

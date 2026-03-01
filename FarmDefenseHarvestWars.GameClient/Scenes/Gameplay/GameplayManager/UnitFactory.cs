@@ -47,7 +47,9 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 		unit.ProjectileContainer = _projectileContainer;
 
 		// 3. Setăm datele critice
-		unit.Position = grid.GetWorldPosition(gridPos);
+		var worldPos = grid.GetWorldPosition(gridPos);
+		unit.Position = worldPos;
+		unit.LaneCenterY = worldPos.Y - 8;
 		// unit.GridPosition = gridPos; // Unitatea știe unde e
 
 		// 4. Adăugăm în container
