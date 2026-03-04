@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="UnitRegistry" load_steps=5 format=3 uid="uid://c86tn06s55780"]
+[gd_resource type="Resource" script_class="UnitRegistry" load_steps=6 format=3 uid="uid://c86tn06s55780"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_qaqhf"]
 [ext_resource type="Script" uid="uid://dc48lco13ubq2" path="res://Scripts/Data/UnitRegistry.cs" id="1_ras7f"]
 [ext_resource type="Resource" uid="uid://b8wybv5au1sf0" path="res://Resources/Units/UnitStats/CowData.tres" id="1_sslj3"]
 [ext_resource type="Resource" uid="uid://b34saaikrumva" path="res://Resources/Units/UnitStats/SkeletonData.tres" id="2_qaqhf"]
+[ext_resource type="Resource" uid="uid://bykob4e8cb0we" path="res://Resources/Units/UnitStats/ChickenData.tres" id="4_tca02"]
 
 [resource]
 script = ExtResource("1_ras7f")
-AllUnits = Array[ExtResource("1_qaqhf")]([ExtResource("1_sslj3"), ExtResource("2_qaqhf")])
+AllUnits = Array[ExtResource("1_qaqhf")]([ExtResource("1_sslj3"), ExtResource("2_qaqhf"), ExtResource("4_tca02")])
 metadata/_custom_type_script = "uid://dc48lco13ubq2"

@@ -23,7 +23,7 @@ script = ExtResource("4_cs20h")
 [node name="ProjectileContainer" type="Node2D" parent="."]
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://cnl2b6psuuhba", "uid://cnapywfs7vvi7")
+_spawnable_scenes = PackedStringArray("uid://cnapywfs7vvi7", "uid://7paoe53gsnp3", "uid://cnl2b6psuuhba")
 spawn_path = NodePath("../UnitContainer")
 
 [node name="ProjectileSpawner" type="MultiplayerSpawner" parent="."]

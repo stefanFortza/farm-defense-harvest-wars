@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbv885ok08a2e"]
+
+[ext_resource type="PackedScene" uid="uid://du8ko4ocrwacs" path="res://Entities/Projectiles/BaseProjectile/BaseProjectile.tscn" id="1_base"]
+[ext_resource type="Texture2D" uid="uid://o0kpsennffd7" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png" id="2_hghkp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_m3rf4"]
+radius = 3.1622777
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ocy62"]
+atlas = ExtResource("2_hghkp")
+region = Rect2(96, 16, 16, 16)
+
+[node name="EggProjectile" instance=ExtResource("1_base")]
+
+[node name="HitboxComponent" parent="." index="0"]
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent" index="0"]
+shape = SubResource("CircleShape2D_m3rf4")
+
+[node name="Sprite2D" parent="Visuals" index="0"]
+scale = Vector2(0.5, 0.5)
+texture = SubResource("AtlasTexture_ocy62")

@@ -52,7 +52,10 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 		_orchestrator.Initialize(gameplayContext);
 		_inputController.Initialize(gameplayContext);
 
-		_unitFactory.Server_SpawnUnit(UnitType.Cow, new Vector2I(3, 3), data.Grid);
+		if (Multiplayer.IsServer())
+		{
+			_unitFactory.Server_SpawnUnit(UnitType.Chicken, new Vector2I(3, 3), data.Grid);
+		}
 
 		IsInitialized = true;
 	}

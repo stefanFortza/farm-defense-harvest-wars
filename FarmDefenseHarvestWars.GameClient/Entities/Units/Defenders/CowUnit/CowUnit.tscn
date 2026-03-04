@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://cnl2b6psuuhba"]
+
+[ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.tscn" id="1_xq5pq"]
+[ext_resource type="Script" uid="uid://csudtws27rhvk" path="res://Entities/Units/Defenders/CowUnit/CowUnit.cs" id="2_script"]
+[ext_resource type="Resource" uid="uid://b8wybv5au1sf0" path="res://Resources/Units/UnitStats/CowData.tres" id="3_2kvwq"]
+[ext_resource type="SpriteFrames" uid="uid://o0tajo0rxdx8" path="res://Entities/Units/Defenders/CowUnit/CowUnitSpriteFrames.tres" id="4_ywnpo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2kvwq"]
+radius = 7.0
+
+[node name="CowUnit" instance=ExtResource("1_xq5pq")]
+script = ExtResource("2_script")
+Data = ExtResource("3_2kvwq")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -9)
+sprite_frames = ExtResource("4_ywnpo")
+animation = &"IdleSide"
+autoplay = "IdleSide"
+frame_progress = 0.70690584
+flip_h = true
+
+[node name="HurtboxComponent" parent="SpatialComponents" index="0"]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_2kvwq")
+
+[node name="VisionComponent" parent="SpatialComponents" index="1"]
+target_position = Vector2(20, 0)

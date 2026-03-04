@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="AnimConfig" load_steps=3 format=3 uid="uid://cuh7ulykvblxh"]
 
 [ext_resource type="Script" uid="uid://b3ougceg6lmya" path="res://addons/sprite_anim_importer/ani_config.gd" id="1_vog6h"]
-[ext_resource type="Texture2D" uid="uid://drckoutuh7k5i" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Cow/Cow_03.png" id="2_xts20"]
+[ext_resource type="Texture2D" uid="uid://dxmp64qpekiyk" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Chicken/Chicken_01.png" id="2_xts20"]
 
 [resource]
 script = ExtResource("1_vog6h")

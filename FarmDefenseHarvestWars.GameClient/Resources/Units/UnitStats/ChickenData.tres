@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://bykob4e8cb0we"]
+
+[ext_resource type="PackedScene" uid="uid://cbv885ok08a2e" path="res://Entities/Projectiles/EggProjetile/EggProjectile.tscn" id="1_ojja2"]
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="2_8vb8k"]
+
+[resource]
+script = ExtResource("2_8vb8k")
+Type = 2
+Name = "Chicken"
+UnitScenePath = "uid://7paoe53gsnp3"
+ProjectileScene = ExtResource("1_ojja2")
+AttackRange = 180.0
+AttackSpeed = 0.7
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"
