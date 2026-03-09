@@ -1,16 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbv885ok08a2e"]
+[gd_scene load_steps=6 format=3 uid="uid://cbv885ok08a2e"]
 
-[ext_resource type="PackedScene" uid="uid://du8ko4ocrwacs" path="res://Entities/Projectiles/BaseProjectile/BaseProjectile.tscn" id="1_base"]
-[ext_resource type="Texture2D" uid="uid://o0kpsennffd7" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png" id="2_hghkp"]
+[ext_resource type="PackedScene" uid="uid://du8ko4ocrwacs" path="res://Entities/Projectiles/BaseProjectile/BaseProjectile.tscn" id="1_ies67"]
+[ext_resource type="Script" uid="uid://dxtixhcajc2k1" path="res://Entities/Projectiles/EggProjetile/EggProjectile.cs" id="2_5tu21"]
+[ext_resource type="Texture2D" uid="uid://o0kpsennffd7" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Icons/No Outline/Food_Icons_NO_Outline.png" id="3_01vmp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m3rf4"]
 radius = 3.1622777
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ocy62"]
-atlas = ExtResource("2_hghkp")
+atlas = ExtResource("3_01vmp")
 region = Rect2(96, 16, 16, 16)
 
-[node name="EggProjectile" instance=ExtResource("1_base")]
+[node name="EggProjectile" instance=ExtResource("1_ies67")]
+script = ExtResource("2_5tu21")
 
 [node name="HitboxComponent" parent="." index="0"]
 collision_layer = 8

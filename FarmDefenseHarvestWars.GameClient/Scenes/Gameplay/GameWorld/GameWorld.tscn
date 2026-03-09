@@ -1,10 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://b3eudmxt181c6"]
+[gd_scene load_steps=7 format=3 uid="uid://b3eudmxt181c6"]
 
 [ext_resource type="Script" uid="uid://crnjqc17jbmcd" path="res://Scenes/Gameplay/GameWorld/GameWorld.cs" id="1_vhl2x"]
 [ext_resource type="PackedScene" uid="uid://cu12uic4kd4ek" path="res://Scenes/Gameplay/GameplayManager/GameplayManager.tscn" id="2_cs20h"]
 [ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/Map/Map.tscn" id="2_vhl2x"]
-[ext_resource type="Script" uid="uid://i5qavmfqfft5" path="res://Scenes/Gameplay/Map/Map.cs" id="4_cs20h"]
+[ext_resource type="PackedScene" uid="uid://by43f2iyitjl7" path="res://Scenes/Gameplay/MapTest/MapTest.tscn" id="4_l6n4v"]
 [ext_resource type="Script" uid="uid://dbcv5oydmri8p" path="res://Scenes/Gameplay/GameWorld/GameUI.cs" id="5_ui"]
+
+[sub_resource type="Environment" id="Environment_l6n4v"]
+background_mode = 3
+tonemap_mode = 2
+glow_enabled = true
+adjustment_enabled = true
+adjustment_saturation = 1.1
 
 [node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_gridSystem", "_unitContainer", "_projectileContainer")]
 script = ExtResource("1_vhl2x")
@@ -13,10 +20,18 @@ _gridSystem = NodePath("Map/GridSystem")
 _unitContainer = NodePath("UnitContainer")
 _projectileContainer = NodePath("ProjectileContainer")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_l6n4v")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(1, 0.89411765, 0.70980394, 1)
+
 [node name="GameplayManagers" parent="." instance=ExtResource("2_cs20h")]
 
 [node name="Map" parent="." instance=ExtResource("2_vhl2x")]
-script = ExtResource("4_cs20h")
+visible = false
+
+[node name="MapTest" parent="." instance=ExtResource("4_l6n4v")]
 
 [node name="UnitContainer" type="Node2D" parent="."]
 
@@ -30,14 +45,17 @@ spawn_path = NodePath("../UnitContainer")
 _spawnable_scenes = PackedStringArray("uid://cbv885ok08a2e")
 spawn_path = NodePath("../ProjectileContainer")
 
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(160, 90)
+
 [node name="GameUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("GameOverPanel", "WinnerLabel", "RoleLabel")]
-visible = false
 script = ExtResource("5_ui")
 GameOverPanel = NodePath("GameOverPanel")
 WinnerLabel = NodePath("GameOverPanel/VBoxContainer/WinnerLabel")
 RoleLabel = NodePath("HUD/RoleLabel")
 
 [node name="HUD" type="Control" parent="GameUI"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

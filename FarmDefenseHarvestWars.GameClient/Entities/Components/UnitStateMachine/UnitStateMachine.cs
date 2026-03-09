@@ -1,5 +1,5 @@
+using FarmDefenseHarvestWars.GameClient.Scripts.Core.StateMachine;
 using Godot;
-using System;
 using System.Collections.Generic;
 
 namespace FarmDefenseHarvestWars.GameClient.Core.StateMachine;
@@ -12,32 +12,36 @@ public enum UnitStateEnum
     Dying
 }
 
-// Definim TState ca fiind obligatoriu un Enum
-public partial class StateMachine : Node
+public partial class UnitStateMachine : Node
 {
     private readonly Dictionary<UnitStateEnum, IState> _states = [];
 
     private IState _currentState = null!;
     private UnitStateEnum _currentStateEnum;
 
-    // Proprietatea expusă pentru MultiplayerSynchronizer.
-    // Godot nu poate exporta TState generic, așa că serializăm ca int.
+    private bool _isActive = false;
+
     [Export]
     public int SyncedStateIndex
     {
         get => (int)_currentStateEnum;
         set
         {
-            // Conversie eficientă din int în Enum
             var newState = (UnitStateEnum)value;
 
-            // Evităm tranziția dacă starea e deja activă
-            if (_currentStateEnum == newState) return;
+            if (_currentStateEnum == newState && _currentState != null)
+                return;
 
-            // Trigger tranziție (venită de pe server)
-            TransitionTo(newState);
+            _currentStateEnum = newState;
+
+            if (_isActive)
+            {
+                TransitionTo(_currentStateEnum);
+            }
         }
     }
+
+
 
     public override void _Ready()
     {
@@ -52,7 +56,8 @@ public partial class StateMachine : Node
 
     public void Start(UnitStateEnum startStateId)
     {
-        _currentStateEnum = startStateId;
+        _isActive = true;
+
         TransitionTo(startStateId);
 
         SetProcess(true);
@@ -61,14 +66,15 @@ public partial class StateMachine : Node
 
     public override void _Process(double delta)
     {
-        if (IsMultiplayerAuthority())
-        {
-            _currentState?.Update(delta);
-        }
+        // Rulează pe toate instanțele (Server + Clienți).
+        // Aici se execută vizualurile, interfața, animațiile.
+        _currentState?.Update(delta);
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        // Rulează STRICT pe server (Autoritate).
+        // Aici se calculează viteza, coliziunile, raycast-urile.
         if (IsMultiplayerAuthority())
         {
             _currentState?.PhysicsUpdate(delta);
@@ -77,9 +83,9 @@ public partial class StateMachine : Node
 
     private void TransitionTo(UnitStateEnum stateId)
     {
-        if (!_states.TryGetValue(stateId, out IState? newStateInstance))
+        if (!_states.TryGetValue(stateId, out IState newStateInstance))
         {
-            GD.PrintErr($"[StateMachine] State {stateId} not registered in {Name}!");
+            GD.PrintErr($"[UnitStateMachine] State {stateId} not registered in {Name}!");
             return;
         }
 
@@ -95,9 +101,12 @@ public partial class StateMachine : Node
     {
         if (Multiplayer.IsServer())
         {
-            // Setarea proprietății va declanșa replicarea prin MultiplayerSynchronizer
-            // datorită setter-ului care face conversia.
+            // Modificarea declanșează automat setter-ul și trimite valoarea prin rețea.
             SyncedStateIndex = (int)newStateId;
+        }
+        else
+        {
+            GD.PushWarning($"[UnitStateMachine] Client attempted to change state to {newStateId} directly.");
         }
     }
 }

@@ -2,6 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
 using FarmDefenseHarvestWars.GameClient.Entities.Components;
 using FarmDefenseHarvestWars.GameClient.Entities.Projectiles;
+using FarmDefenseHarvestWars.GameClient.Scripts.Core.StateMachine;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 

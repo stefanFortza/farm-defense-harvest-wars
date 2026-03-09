@@ -8,9 +8,10 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="BaseProjectile" type="Node2D" node_paths=PackedStringArray("HitboxComponent")]
+[node name="BaseProjectile" type="Node2D" node_paths=PackedStringArray("HitboxComponent", "Sprite2D")]
 script = ExtResource("1_script")
 HitboxComponent = NodePath("HitboxComponent")
+Sprite2D = NodePath("Visuals/Sprite2D")
 
 [node name="HitboxComponent" parent="." instance=ExtResource("2_hitbox")]
 collision_layer = 16

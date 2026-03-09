@@ -73,7 +73,6 @@ grow_vertical = 2
 [node name="LeftZone" type="MarginContainer" parent="ContentOverlay" index="0"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 15
 
 [node name="MatchMakingPage" parent="ContentOverlay/LeftZone" index="0" instance=ExtResource("5_luq8n")]
 layout_mode = 2
@@ -81,7 +80,7 @@ layout_mode = 2
 [node name="RightZone" type="MarginContainer" parent="ContentOverlay" index="1"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 15
 
-[node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("5_luq8n")]
+[node name="MatchMakingPage2" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("5_luq8n")]
+visible = false
 layout_mode = 2
