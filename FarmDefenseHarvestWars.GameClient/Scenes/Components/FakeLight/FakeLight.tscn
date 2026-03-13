@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://bbnlu4vbkcbtu"]
+
+[ext_resource type="Script" uid="uid://droubfujjrjwf" path="res://Scenes/Components/FakeLight/FakeLight.cs" id="1_vrfqk"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_lyetj"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_lyetj"]
+offsets = PackedFloat32Array(0, 0.6943231)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vrfqk"]
+gradient = SubResource("Gradient_lyetj")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+
+[node name="FakeLight" type="Sprite2D"]
+modulate = Color(1, 1, 1, 0.39215687)
+texture_filter = 2
+material = SubResource("CanvasItemMaterial_lyetj")
+texture = SubResource("GradientTexture2D_vrfqk")
+script = ExtResource("1_vrfqk")
