@@ -16,7 +16,7 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0, 0)
 
 [node name="FakeLight" type="Sprite2D"]
-modulate = Color(1, 1, 1, 0.39215687)
+modulate = Color(1, 1, 0.8, 0.4)
 texture_filter = 2
 material = SubResource("CanvasItemMaterial_lyetj")
 texture = SubResource("GradientTexture2D_vrfqk")

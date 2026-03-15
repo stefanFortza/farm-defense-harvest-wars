@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://cno8ai6uhb5qw"]
+
+[ext_resource type="PackedScene" uid="uid://b2g8ej6fu3j7e" path="res://Scenes/Environment/AnimatedDecoration/AnimatedDecoration.tscn" id="1_2om4w"]
+[ext_resource type="Texture2D" uid="uid://bt8wik6msrkgw" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Duck/Duck_02.png" id="2_5bdwi"]
+[ext_resource type="PackedScene" uid="uid://bbnlu4vbkcbtu" path="res://Scenes/Components/FakeLight/FakeLight.tscn" id="3_xlxh8"]
+
+[sub_resource type="Gradient" id="Gradient_xlxh8"]
+offsets = PackedFloat32Array(0, 0.6870588)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0.33333334)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6qln4"]
+gradient = SubResource("Gradient_xlxh8")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xlxh8"]
+atlas = ExtResource("2_5bdwi")
+region = Rect2(0, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6qln4"]
+atlas = ExtResource("2_5bdwi")
+region = Rect2(32, 224, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5bdwi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xlxh8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6qln4")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="Duck" instance=ExtResource("1_2om4w")]
+
+[node name="FakeLight" parent="." index="0" instance=ExtResource("3_xlxh8")]
+position = Vector2(0, -4)
+scale = Vector2(0.3, 0.3)
+texture = SubResource("GradientTexture2D_6qln4")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -5)
+sprite_frames = SubResource("SpriteFrames_5bdwi")
+animation = &"idle"
+autoplay = "idle"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://by43f2iyitjl7"]
+[gd_scene load_steps=15 format=4 uid="uid://by43f2iyitjl7"]
 
 [ext_resource type="TileSet" uid="uid://d328k3ewg0nay" path="res://Resources/DefaultTileset.tres" id="1_hdriw"]
 [ext_resource type="Script" uid="uid://i5qavmfqfft5" path="res://Scenes/Gameplay/Map/Map.cs" id="1_kspip"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cpxeio65cp0pn" path="res://Scenes/Environment/Torch/Torch.tscn" id="8_lcrm0"]
 [ext_resource type="PackedScene" uid="uid://btot2av0c6jes" path="res://Scenes/Environment/Swan/Swan.tscn" id="9_i2f6i"]
 [ext_resource type="PackedScene" uid="uid://b3fbachdbj8s4" path="res://Scenes/Environment/BigTorch/BigTorch.tscn" id="10_roe8g"]
+[ext_resource type="PackedScene" uid="uid://cno8ai6uhb5qw" path="res://Scenes/Environment/Duck/Duck.tscn" id="11_iv0cc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4srud"]
 shader = ExtResource("5_omu8v")
@@ -118,3 +119,6 @@ position = Vector2(246, 152)
 
 [node name="BigTorch2" parent="Environment" instance=ExtResource("10_roe8g")]
 position = Vector2(246, 34)
+
+[node name="Duck" parent="Environment" instance=ExtResource("11_iv0cc")]
+position = Vector2(319, 165)

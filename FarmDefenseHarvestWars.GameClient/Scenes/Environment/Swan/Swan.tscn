@@ -28,12 +28,12 @@ animations = [{
 
 [node name="Swan" instance=ExtResource("1_wh6io")]
 
-[node name="AnimatedSprite2D" parent="." index="0"]
+[node name="FakeLight" parent="." index="0" instance=ExtResource("3_0oc3u")]
+position = Vector2(0, -5)
+scale = Vector2(0.5, 0.5)
+
+[node name="AnimatedSprite2D" parent="." index="1"]
 position = Vector2(0, -5)
 sprite_frames = SubResource("SpriteFrames_jua41")
 animation = &"idle"
 frame_progress = 0.19734336
-
-[node name="FakeLight" parent="." index="1" instance=ExtResource("3_0oc3u")]
-position = Vector2(0, -3)
-scale = Vector2(0.5, 0.5)

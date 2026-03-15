@@ -5,7 +5,7 @@ namespace FarmDefenseHarvestWars.GameClient.Scenes.Environment;
 public partial class FakeLight : Sprite2D
 {
 	[ExportCategory("Light Settings")]
-	[Export] public Color BaseColor { get; set; } = new Color(1.0f, 1.0f, 0.8f, 0.2f); // Galben pal, foarte transparent
+	[Export] public Color BaseColor { get; set; } = new Color(1.0f, 1.0f, 0.8f, 0.4f); // Galben pal, foarte transparent
 
 	// În jocurile top-down/izometrice, baza e de obicei un oval, nu un cerc perfect.
 	[Export(PropertyHint.Range, "0.1, 5.0, 0.1")]

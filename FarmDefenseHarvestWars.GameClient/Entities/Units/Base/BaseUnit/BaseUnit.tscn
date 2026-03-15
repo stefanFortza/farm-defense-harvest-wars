@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=10 format=3 uid="uid://cag1tn1qrlacf"]
 
 [ext_resource type="Script" uid="uid://ooy0frnw8g0t" path="res://Entities/Units/Base/BaseUnit/BaseUnit.cs" id="1_sqjxt"]
+[ext_resource type="PackedScene" uid="uid://bbnlu4vbkcbtu" path="res://Scenes/Components/FakeLight/FakeLight.tscn" id="2_0cqh2"]
 [ext_resource type="PackedScene" uid="uid://bwa11j2h8wpwm" path="res://Entities/Components/UnitStateMachine/UnitStateMachine.tscn" id="2_j2i82"]
 [ext_resource type="PackedScene" uid="uid://clqpdwjw2y41h" path="res://Entities/Components/UnitVisualsComponent/UnitVisualsComponent.tscn" id="4_4cha2"]
 [ext_resource type="PackedScene" uid="uid://d0iuf8cgjhjxn" path="res://Entities/Components/HealthComponent/HealthComponent.tscn" id="4_o6myl"]
@@ -27,6 +28,9 @@ VisionComponent = NodePath("SpatialComponents/VisionComponent")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="FakeLight" parent="." instance=ExtResource("2_0cqh2")]
+scale = Vector2(0.5, 0.5)
 
 [node name="LogicComponents" type="Node" parent="."]
 
