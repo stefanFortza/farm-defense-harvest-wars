@@ -142,12 +142,9 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private bool IsPlacementValid(Vector2I gridPos)
 	{
-		// 1. Verifică limitele și dacă tile-ul e construibil
-		if (!_gridSystem.IsInsideBounds(gridPos) || !_gridSystem.IsTileBuildable(gridPos))
-			return false;
-
-		// 2. Verifică dacă tile-ul e liber
-		if (_gridSystem.IsCellOccupied(gridPos))
+		// verificam daca este in zona de plasare a rolului nostru
+		PlayerRole localRole = GameState.Instance.Role;
+		if (!_gridSystem.IsValidPlacement(gridPos, localRole))
 			return false;
 
 		// 3. Verifică economia (Client-side validation for UX)

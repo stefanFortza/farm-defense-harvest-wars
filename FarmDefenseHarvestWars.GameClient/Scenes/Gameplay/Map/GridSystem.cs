@@ -1,60 +1,77 @@
-using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using Godot;
+using System.Collections.Generic;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+using FarmDefenseHarvestWars.Shared.Enums; // Asumând că ai PlayerRole aici
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
 
 public partial class GridSystem : Node
 {
-	[Export] public TileMapLayer GroundLayer { get; set; } = null!;
+	[Export] private TileMapLayer PlacementGrid = null!;
 
-	// Matricea LOGICĂ - Aici stă adevărul, nu în TileMap
-	private BaseUnit?[,] _gridOccupancy = null!;
-	private Vector2I _gridSize = new(20, 10);
+	// 1. Definim zonele de plasare separat
+	// Defender: de la coloana 6, rândul 3, pe o zonă de 14x5
+	private readonly Rect2I _defenderPlacementArea = new Rect2I(6, 3, 10, 5);
 
-	public override void _Ready()
+	// Attacker: Ex - de la coloana 22, rândul 3, pe o zonă de 5x5 (modifică după designul hărții tale)
+	private readonly Rect2I _attackerPlacementArea = new Rect2I(16, 3, 4, 5);
+
+	// 2. Folosim un Dictionary în loc de Array 2D. 
+	// Elimină complet erorile de IndexOutOfBounds și nu consumă memorie pe celulele goale.
+	private readonly Dictionary<Vector2I, BaseUnit> _gridOccupancy = new();
+
+	// 3. Validarea primește acum Rolul celui care plasează
+	public bool IsValidPlacement(Vector2I cell, PlayerRole role)
 	{
-		_gridOccupancy = new BaseUnit[_gridSize.X, _gridSize.Y];
+		bool isInsideFactionArea = role == PlayerRole.Defender
+			? _defenderPlacementArea.HasPoint(cell)
+			: _attackerPlacementArea.HasPoint(cell);
+
+		return isInsideFactionArea && !IsCellOccupied(cell);
 	}
 
 	public bool IsCellOccupied(Vector2I pos)
 	{
-		if (!IsInsideBounds(pos)) return true; // Nu poți construi în afara hărții
-		return _gridOccupancy[pos.X, pos.Y] != null;
-	}
-
-	public bool IsInsideBounds(Vector2I pos)
-	{
-		return pos.X >= 0 && pos.X < _gridSize.X && pos.Y >= 0 && pos.Y < _gridSize.Y;
+		return _gridOccupancy.ContainsKey(pos);
 	}
 
 	public void RegisterUnit(Vector2I pos, BaseUnit unit)
 	{
-		_gridOccupancy[pos.X, pos.Y] = unit;
+		// Când folosim Dictionary, pur și simplu asociem cheia (coordonata) cu valoarea (unitatea)
+		_gridOccupancy[pos] = unit;
 	}
 
 	public void UnregisterUnit(Vector2I pos)
 	{
-		_gridOccupancy[pos.X, pos.Y] = null;
+		if (_gridOccupancy.ContainsKey(pos))
+		{
+			_gridOccupancy.Remove(pos);
+		}
 	}
 
-	// Convert World Position (Mouse) -> Grid Coordinates
+	// Funcțiile de conversie rămân neschimbate
 	public Vector2I GetGridPosition(Vector2 globalPosition)
 	{
-		if (GroundLayer == null) return Vector2I.Zero;
-		return GroundLayer.LocalToMap(GroundLayer.ToLocal(globalPosition));
+		if (PlacementGrid == null) return Vector2I.Zero;
+		return PlacementGrid.LocalToMap(PlacementGrid.ToLocal(globalPosition));
 	}
 
-	// Convert Grid Coordinates -> World Position (Center of tile)
 	public Vector2 GetWorldPosition(Vector2I gridPosition)
 	{
-		if (GroundLayer == null) return Vector2.Zero;
-		return GroundLayer.ToGlobal(GroundLayer.MapToLocal(gridPosition));
+		if (PlacementGrid == null) return Vector2.Zero;
+		return PlacementGrid.ToGlobal(PlacementGrid.MapToLocal(gridPosition));
 	}
 
 	public bool IsTileBuildable(Vector2I gridPosition)
 	{
-		// Logic: Check if tile exists and is not occupied
-		// For now, return true if the cell is not empty
-		return GroundLayer.GetCellSourceId(gridPosition) != -1;
+		if (PlacementGrid == null) return false;
+		return PlacementGrid.GetCellSourceId(gridPosition) != -1;
+	}
+
+	public bool IsInsideBounds(Vector2I gridPosition)
+	{
+		if (PlacementGrid == null) return false;
+		var mapSize = PlacementGrid.GetUsedRect().Size;
+		return gridPosition.X >= 0 && gridPosition.Y >= 0 && gridPosition.X < mapSize.X && gridPosition.Y < mapSize.Y;
 	}
 }

@@ -21,6 +21,6 @@ position = Vector2(40, 80)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_ah6x4")
 
-[node name="GridSystem" type="Node" parent="." node_paths=PackedStringArray("GroundLayer")]
+[node name="GridSystem" type="Node" parent="." node_paths=PackedStringArray("PlacementGrid")]
 script = ExtResource("4_c7de8")
-GroundLayer = NodePath("../Ground")
+PlacementGrid = NodePath("../Ground")

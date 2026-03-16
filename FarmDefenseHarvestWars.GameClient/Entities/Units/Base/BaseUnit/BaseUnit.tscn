@@ -30,6 +30,7 @@ VisionComponent = NodePath("SpatialComponents/VisionComponent")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
 [node name="FakeLight" parent="." instance=ExtResource("2_0cqh2")]
+visible = false
 scale = Vector2(0.5, 0.5)
 
 [node name="LogicComponents" type="Node" parent="."]

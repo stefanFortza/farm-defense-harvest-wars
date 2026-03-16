@@ -54,7 +54,7 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 
 		if (Multiplayer.IsServer())
 		{
-			_unitFactory.Server_SpawnUnit(UnitType.Chicken, new Vector2I(3, 3), data.Grid);
+			_unitFactory.Server_SpawnUnit(UnitType.Chicken, new Vector2I(6, 5), data.Grid);
 		}
 
 		IsInitialized = true;
