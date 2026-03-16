@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant Client
+    participant Network (Godot)
+    participant Server (GameController)
+    participant Spawner (Server)
+
+    Note over Client: Player clicks Grid (3,3)
+    Client->>Server: RPC: RequestPlaceUnit(Cow, 3,3)
+    
+    Note over Server: Server_HandleSpawnRequest() runs
+    Server->>Server: Validate Logic (Money/Grid)
+    
+    alt Valid Move
+        Server->>Spawner: _unitsContainer.AddChild(NewCow)
+        Note over Spawner: Detected new child!
+        Spawner-->>Network (Godot): Serialize & Replicate
+        Network (Godot)-->>Client: Instantiate 'Cow.tscn' at (3,3)
+    else Invalid Move
+        Server-->>Client: (Optional) RPC: ShowError("Not enough minerals")
+    end

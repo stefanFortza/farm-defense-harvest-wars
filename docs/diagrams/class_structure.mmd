@@ -1,0 +1,98 @@
+classDiagram
+    %% Base Node class from Godot
+    class Node2D {
+        +Vector2 GlobalPosition
+        +QueueFree()
+    }
+
+    class BaseUnit {
+        +int Health
+        +int MaxHealth
+        +int Cost
+        +UnitType Type
+        +int OwnerId
+        +TakeDamage(int amount)
+        +Die()
+        #SyncPosition()
+    }
+
+    %% Defender Branch
+    class DefenderUnit {
+        +float AttackRange
+        +float AttackCooldown
+        +DetectEnemy()
+        +Shoot()
+    }
+
+    class CowUnit {
+        +SpawnMilkProjectile()
+    }
+    
+    class ChickenUnit {
+        +SpawnEggProjectile()
+    }
+
+    %% Attacker Branch
+    class AttackerUnit {
+        +float MoveSpeed
+        +int DamageToStructure
+        +MoveForward(delta)
+        +AttackStructure()
+    }
+
+    class WolfEnemy {
+        +HowlAbility()
+    }
+    
+    class SkeletonEnemy {
+        +ReviveAbility()
+    }
+
+    %% Relationships
+    Node2D <|-- BaseUnit
+    BaseUnit <|-- DefenderUnit
+    BaseUnit <|-- AttackerUnit
+    DefenderUnit <|-- CowUnit
+    DefenderUnit <|-- ChickenUnit
+    AttackerUnit <|-- WolfEnemy
+    AttackerUnit <|-- SkeletonEnemy
+
+    class NetworkBootstrap {
+        +IGameApi ApiClient
+        +string JwtToken
+        +AuthService Auth
+        +MatchmakingService Matchmaking
+        +GameplayNetwork Gameplay
+        +_Ready()
+    }
+
+    class AuthService {
+        -IGameApi _api
+        +Login(email, pass)
+        +Register(email, pass)
+    }
+
+    class ShopService {
+        -IGameApi _api
+        +BuyItem(itemId)
+        +GetInventory()
+    }
+
+    class MatchmakingService {
+        -IGameApi _api
+        +FindMatch()
+        +CancelMatch()
+    }
+
+    class GameplayNetwork {
+        -ENetMultiplayerPeer _peer
+        +StartHost()
+        +JoinClient()
+        +RequestPlaceUnit(gridPos, type)
+        +Server_ValidatePlacement()
+    }
+
+    NetworkBootstrap --> AuthService : Instantiates
+    NetworkBootstrap --> ShopService : Instantiates
+    NetworkBootstrap --> MatchmakingService : Instantiates
+    NetworkBootstrap --> GameplayNetwork : Instantiates

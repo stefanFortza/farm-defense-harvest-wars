@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://farmmap1"]
-
-[ext_resource type="Script" uid="uid://c57xgqkp7rovg" path="res://Scripts/Gameplay/GridManager.cs" id="1_gridmanager"]
-
-[node name="FarmMap" type="Node2D" node_paths=PackedStringArray("GroundLayer")]
-script = ExtResource("1_gridmanager")
-GroundLayer = NodePath("TileMapLayer")
-
-[node name="TileMapLayer" type="TileMapLayer" parent="."]

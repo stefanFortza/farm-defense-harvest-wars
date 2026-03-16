@@ -1,0 +1,28 @@
+[gd_scene load_steps=7 format=3 uid="uid://13xs638acrl2"]
+
+[ext_resource type="PackedScene" uid="uid://bydgh6pxqwaqg" path="res://Scenes/Menus/background.tscn" id="1_0oroa"]
+[ext_resource type="Script" uid="uid://c3a8b6k8tt5e2" path="res://Scenes/Authentication/AuthUI/AuthUI.cs" id="1_lrxoj"]
+[ext_resource type="PackedScene" uid="uid://ddrjliaojkv2y" path="res://Scenes/Authentication/LoginUI/LoginPanel.tscn" id="2_login"]
+[ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="3_0oroa"]
+[ext_resource type="PackedScene" uid="uid://ch22hr1lpt8t0" path="res://Scenes/Authentication/RegisterUI/RegisterUI.tscn" id="3_register"]
+[ext_resource type="PackedScene" uid="uid://b7230yfgel0k2" path="res://Scenes/Menus/MainMenu/MainMenu.tscn" id="3_x4lyl"]
+
+[node name="AuthScene" type="Node2D"]
+
+[node name="Background" parent="." instance=ExtResource("1_0oroa")]
+
+[node name="AuthUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("LoginPanel", "RegisterPanel")]
+script = ExtResource("1_lrxoj")
+MainMenuScene = ExtResource("3_x4lyl")
+LoginPanel = NodePath("BookCenter/BookUI/BookBinder/PageLeft/MarginContainer/LoginPanel")
+RegisterPanel = NodePath("BookCenter/BookUI/BookBinder/PageRight/MarginContainer/RegisterPanel")
+
+[node name="BookCenter" parent="AuthUI" instance=ExtResource("3_0oroa")]
+
+[node name="LoginPanel" parent="AuthUI/BookCenter/BookUI/BookBinder/PageLeft/MarginContainer" index="0" instance=ExtResource("2_login")]
+layout_mode = 2
+
+[node name="RegisterPanel" parent="AuthUI/BookCenter/BookUI/BookBinder/PageRight/MarginContainer" index="0" instance=ExtResource("3_register")]
+layout_mode = 2
+
+[editable path="AuthUI/BookCenter"]

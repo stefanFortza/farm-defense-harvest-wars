@@ -1,71 +1,66 @@
-# .gitignore for FarmDefenseHarvestWars
+# -------------------------
+# Godot 4+
+# -------------------------
+.godot/
+.import/
+export_presets.cfg
+*.translation
 
-# Build / output
-bin/
-obj/
-**/bin/
-**/obj/
+# Mono-specific (Godot 3.x/4.x .NET)
+.mono/
+data_*/
+mono_crash.*
 
-# Visual Studio, VS Code, Rider
+# -------------------------
+# .NET / C# / Visual Studio
+# -------------------------
+[Bb]in/
+[Oo]bj/
 .vs/
 .vscode/
 .idea/
-*.suo
 *.user
 *.userosscache
 *.sln.docstates
-*.sln.iml
+*.suo
+packages/
+*_Backup*/
+*_UpgradeReport_*/
 
-# OS files
+# -------------------------
+# OS Generated
+# -------------------------
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
+# -------------------------
+# Logs & Temporary
+# -------------------------
+*.log
+*.tmp
+*.bak
+
+# -------------------------
 # NuGet
+# -------------------------
 *.nupkg
 .packages/
 .nuget/
 
-# Logs
-*.log
-
-# Dotnet tools
-.dotnet/tools/
-
-# Database files
+# -------------------------
+# Database
+# -------------------------
 *.db
 *.sqlite
 *.db-shm
 *.db-wal
 
-# User secrets / env
+# -------------------------
+# Secrets & Environment
+# -------------------------
 secrets.json
 .env
 .env.*
-
-# Docker overrides (local)
 docker-compose.override.yml
-
-# Godot
-.import/
-.export_presets.cfg
-.godot/
-.mono/
-mono_crash.*
-
-# Ignore JetBrains project files
-*.ipr
-*.iws
-
-# Ignore temporary files
-*.tmp
-*~
-
-# Ignore compiled Native/VS artifacts
-*.obj
-*.pch
-
-# Ignore generated files
-**/*.generated.cs
-
-# Keep migrations and source files tracked intentionally
-# (do not ignore Migrations/ or other source files)

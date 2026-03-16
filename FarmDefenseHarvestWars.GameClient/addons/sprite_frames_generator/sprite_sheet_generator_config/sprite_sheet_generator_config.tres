@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="SpriteSheetGeneratorConfig" load_steps=6 format=3 uid="uid://cp6ylmqh8a12"]
+
+[ext_resource type="SpriteFrames" uid="uid://o0tajo0rxdx8" path="res://Entities/Units/Defenders/CowUnit/CowUnitSpriteFrames.tres" id="1_e72b1"]
+[ext_resource type="Script" uid="uid://lhjwx6on360b" path="res://addons/sprite_frames_generator/sprite_sheet_generator_config/sprite_sheet_generator_config.gd" id="2_swoar"]
+[ext_resource type="Script" uid="uid://day2vxmnlqaxp" path="res://addons/sprite_frames_generator/sprite_sheet_generator_config/sprite_sheet_entry.gd" id="3_6y45l"]
+[ext_resource type="Texture2D" uid="uid://dxmp64qpekiyk" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Chicken/Chicken_01.png" id="4_swoar"]
+
+[sub_resource type="Resource" id="Resource_6y45l"]
+script = ExtResource("3_6y45l")
+texture = ExtResource("4_swoar")
+file_name = "Chicken01.tres"
+naming_convention = 1
+
+[resource]
+script = ExtResource("2_swoar")
+base_sprite_frames = ExtResource("1_e72b1")
+directory = "res://scenes/characters/player/assets/Player/Legs/Farmer_Pants/"
+naming_convention = 1
+sprite_sheets = Array[ExtResource("3_6y45l")]([SubResource("Resource_6y45l")])
+animations_names = Array[String](["Chew", "Eat", "HurtDown", "HurtSide", "HurtUp", "IdleDown", "IdleSide", "IdleUp", "SitDown", "SleepLoop", "SleepStart", "StandUp", "WalkDown", "WalkSide", "WalkUp"])
+output_directory = "res://Entities/Units/Defenders/ChickenUnit/"
+metadata/_custom_type_script = "uid://lhjwx6on360b"

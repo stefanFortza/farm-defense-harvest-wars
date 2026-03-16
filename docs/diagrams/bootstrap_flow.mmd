@@ -1,0 +1,32 @@
+flowchart TD
+    Start((Start Application)) --> Init[Load <b>LoaderScene.tscn</b><br>Script: <i>Bootstrap.cs</i>]
+    
+    Init --> CheckArgs{Args contain<br>'--server'?}
+    
+    %% --- SERVER BRANCH ---
+    CheckArgs -- YES Server Mode --> S_Init[Server Initialization]
+    subgraph SERVER_LOGIC [Dedicated Server Flow]
+        direction TB
+        S_Init --> S_Net[Start ENet Server<br>Port 7777]
+        S_Net --> S_Wait[Wait for 2 Players]
+        S_Wait -- Connection Event --> S_CheckConn{Players == 2?}
+        S_CheckConn -- NO --> S_Wait
+        S_CheckConn -- YES --> S_LoadGame[<b>Load 'GameWorld.tscn'</b>]
+        S_LoadGame --> S_Spawn[Spawn Units & Logic]
+        S_Spawn --> S_RPC[RPC: StartGame]
+    end
+
+    %% --- CLIENT BRANCH ---
+    CheckArgs -- NO Client Mode --> C_Init[Client Initialization]
+    subgraph CLIENT_LOGIC [Player Flow]
+        direction TB
+        C_Init --> C_UI[Load <b>LoginScreen.tscn</b>]
+        C_UI -- Auth Success --> C_Menu[Load <b>MainMenu.tscn</b>]
+        C_Menu -- Click Play --> C_Match[Request Match API]
+        C_Match -- SignalR: Match Found --> C_Join[<b>Load 'GameWorld.tscn'</b>]
+        C_Join --> C_Connect[Connect ENet Client]
+        C_Connect -- OnReady --> C_Sync[Receive World State]
+    end
+
+    %% Sincronizarea
+    S_LoadGame -.->|Identical Scene Path| C_Join

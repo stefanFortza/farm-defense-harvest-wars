@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cu6ab578n8aqy"]
+
+[ext_resource type="Script" uid="uid://ciy5sq0qea85" path="res://Entities/Components/VisionComponent/VisionComponent.cs" id="1_jhrtr"]
+
+[node name="VisionComponent" type="RayCast2D"]
+script = ExtResource("1_jhrtr")

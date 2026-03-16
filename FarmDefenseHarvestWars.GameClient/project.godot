@@ -11,20 +11,43 @@ config_version=5
 [application]
 
 config/name="FarmDefenseHarvestWars.GameClient"
-run/main_scene="uid://cspvoo0mf44pv"
+run/main_scene="uid://dvoo3488wfrwr"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-NetworkManager="*res://_Autoload/NetworkManager.cs"
+NetworkBootstrap="*res://_Autoload/Networking/NetworkBootstrap.cs"
 GameState="*res://_Autoload/GameState.cs"
+
+[display]
+
+window/size/viewport_width=320
+window/size/viewport_height=180
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/scale_mode="integer"
 
 [dotnet]
 
 project/assembly_name="FarmDefenseHarvestWars.GameClient"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/AutoKey_SpriteFrames/plugin.cfg", "res://addons/sprite_anim_importer/plugin.cfg", "res://addons/sprite_frames_generator/plugin.cfg")
+
+[layer_names]
+
+2d_physics/layer_1="DefenderUnits"
+2d_physics/layer_2="AttackerUnits"
+2d_physics/layer_3="ProjAttacker"
+2d_physics/layer_4="ProjDefender"
+
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true

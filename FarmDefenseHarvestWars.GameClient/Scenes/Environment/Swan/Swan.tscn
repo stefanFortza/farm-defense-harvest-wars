@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://btot2av0c6jes"]
+
+[ext_resource type="PackedScene" uid="uid://b2g8ej6fu3j7e" path="res://Scenes/Environment/AnimatedDecoration/AnimatedDecoration.tscn" id="1_wh6io"]
+[ext_resource type="PackedScene" uid="uid://bbnlu4vbkcbtu" path="res://Scenes/Components/FakeLight/FakeLight.tscn" id="3_0oc3u"]
+[ext_resource type="Texture2D" uid="uid://bft4d0tgec6s6" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Swan/Swan_01.png" id="3_wr78g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ao251"]
+atlas = ExtResource("3_wr78g")
+region = Rect2(0, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_37gxr"]
+atlas = ExtResource("3_wr78g")
+region = Rect2(32, 224, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jua41"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ao251")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_37gxr")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}]
+
+[node name="Swan" instance=ExtResource("1_wh6io")]
+
+[node name="FakeLight" parent="." index="0" instance=ExtResource("3_0oc3u")]
+position = Vector2(0, -5)
+scale = Vector2(0.5, 0.5)
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -5)
+sprite_frames = SubResource("SpriteFrames_jua41")
+animation = &"idle"
+frame_progress = 0.19734336

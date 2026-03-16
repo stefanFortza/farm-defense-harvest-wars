@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddrjliaojkv2y"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_e0aq5"]
+[ext_resource type="Script" uid="uid://bl3j3enefymlc" path="res://Scenes/Authentication/LoginUI/LoginUI.cs" id="1_qwl4c"]
+
+[node name="LoginPanel" type="CenterContainer" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ErrorLabel", "LoginButton")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_e0aq5")
+script = ExtResource("1_qwl4c")
+EmailInput = NodePath("VBoxContainer/EmailInput")
+PasswordInput = NodePath("VBoxContainer/PasswordInput")
+ErrorLabel = NodePath("VBoxContainer/ErrorLabel")
+LoginButton = NodePath("VBoxContainer/LoginButton")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_e0aq5")
+alignment = 1
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 18
+text = "Login"
+horizontal_alignment = 1
+
+[node name="EmailInput" type="LineEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_e0aq5")
+theme_type_variation = &"AuthEditInput"
+theme_override_font_sizes/font_size = 9
+placeholder_text = "Email"
+
+[node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("1_e0aq5")
+theme_type_variation = &"AuthEditInput"
+theme_override_font_sizes/font_size = 9
+placeholder_text = "Password"
+secret = true
+
+[node name="LoginButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_e0aq5")
+text = "Login"
+
+[node name="ErrorLabel" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_e0aq5")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/LoginButton" to="." method="OnLoginPressed"]

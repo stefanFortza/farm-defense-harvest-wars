@@ -1,9 +1,20 @@
+using System.Text.Json.Serialization;
+
 namespace FarmDefenseHarvestWars.Shared.Enums;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum UnitType
 {
     None,
+    // Defenders
     Cow,
     Chicken,
-    Pig
+    Sheep,
+    Pig,
+
+    // Attackers
+    Wolf,
+    Fox,
+    Bear,
+    Skeleton
 }

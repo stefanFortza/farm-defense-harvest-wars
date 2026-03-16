@@ -1,0 +1,40 @@
+stateDiagram-v2
+    [*] --> WaitingForPlayers
+    
+    state WaitingForPlayers {
+        [*] --> CheckConnections
+        CheckConnections --> CheckConnections: connected_peers < 2
+        CheckConnections --> SetupGame: connected_peers == 2
+    }
+
+    WaitingForPlayers --> PreparationPhase: Both Players Ready
+    
+    state PreparationPhase {
+        [*] --> TimerStart
+        TimerStart --> SpawningAllowed
+    }
+    note right of PreparationPhase
+        30 de secunde pentru a 
+        construi fermele initiale
+    end note
+
+    PreparationPhase --> BattlePhase: Timer == 0
+
+    state BattlePhase {
+        [*] --> MainLoop
+        
+        state MainLoop {
+            UpdateEconomy --> MoveUnits
+            MoveUnits --> CheckCollisions
+            CheckCollisions --> ResolveDamage
+        }
+    }
+
+    BattlePhase --> GameEnd: BaseHealth <= 0 OR MaxTime Reached
+    
+    state GameEnd {
+        DetermineWinner --> SendResultsToAPI
+        SendResultsToAPI --> KickPlayers
+    }
+
+    GameEnd --> [*]

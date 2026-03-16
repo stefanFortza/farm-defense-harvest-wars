@@ -1,0 +1,69 @@
+[gd_scene load_steps=3 format=3 uid="uid://ch22hr1lpt8t0"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_fbgkp"]
+[ext_resource type="Script" uid="uid://m7ccd1ln571s" path="res://Scenes/Authentication/RegisterUI/RegisterUI.cs" id="1_script"]
+
+[node name="RegisterUI" type="CenterContainer" node_paths=PackedStringArray("EmailInput", "PasswordInput", "ConfirmPasswordInput", "ErrorLabel", "RegisterButton")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_fbgkp")
+script = ExtResource("1_script")
+EmailInput = NodePath("VBoxContainer/EmailInput")
+PasswordInput = NodePath("VBoxContainer/PasswordInput")
+ConfirmPasswordInput = NodePath("VBoxContainer/ConfirmPasswordInput")
+ErrorLabel = NodePath("VBoxContainer/ErrorLabel")
+RegisterButton = NodePath("VBoxContainer/RegisterButton")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
+alignment = 1
+
+[node name="VBoxContainer#Title" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
+theme_override_font_sizes/font_size = 18
+text = "Register"
+horizontal_alignment = 1
+
+[node name="EmailInput" type="LineEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
+theme_type_variation = &"AuthEditInput"
+placeholder_text = "Email"
+
+[node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
+theme_type_variation = &"AuthEditInput"
+placeholder_text = "Password"
+secret = true
+
+[node name="ConfirmPasswordInput" type="LineEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
+theme_type_variation = &"AuthEditInput"
+placeholder_text = "Confirm Password"
+secret = true
+
+[node name="RegisterButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_fbgkp")
+text = "Register"
+
+[node name="ErrorLabel" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(90, 16)
+layout_mode = 2
+theme = ExtResource("1_fbgkp")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/RegisterButton" to="." method="OnRegisterPressed"]

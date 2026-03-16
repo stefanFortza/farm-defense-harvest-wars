@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dwotrnbx0vnyo"]
+
+[ext_resource type="Texture2D" uid="uid://c6cmff4stp10d" path="res://Resources/Textures/DefaultLight.tres" id="1_wo88r"]
+[ext_resource type="Script" uid="uid://b8fujdyh4cks" path="res://Scenes/Environment/FlickeringLight/FlickeringLight.cs" id="2_6hqs6"]
+
+[node name="FlickeringLight" type="PointLight2D"]
+texture = ExtResource("1_wo88r")
+script = ExtResource("2_6hqs6")

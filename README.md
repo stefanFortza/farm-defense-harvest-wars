@@ -1,78 +1,81 @@
-# 🚜 Farm Defense: Harvest Wars - Development Roadmap
+# 🚜 Farm Defense: Harvest Wars - The "30-Day MVP" Roadmap
 
-Acest document urmărește progresul dezvoltării jocului **Farm Defense**, un joc de strategie 1v1 construit pe arhitectură modernă .NET.
+## 🎯 Obiectiv
 
-## 🛠 Tech Stack
-
-* **Game Engine:** Godot 4.3+ (.NET Module)
-* **Backend:** ASP.NET Core Web API (.NET 10 Preview)
-* **Database:** PostgreSQL (Production) / SQLite (Dev)
-* **ORM:** Entity Framework Core
-* **Networking:** Refit (REST) + SignalR (Real-time)
-* **Auth:** JWT (JSON Web Tokens) + ASP.NET Identity
+Un joc funcțional 1v1 (MVP), unde jucătorii se loghează prin .NET API, iar meciul rulează pe un Godot Dedicated Server autoritar.
 
 ---
 
-## 📅 Phase 1: Infrastructure & Authentication (Backend Core)
+## 📅 Phase 1: Infrastructure (Backend & Auth) - ✅ DONE
 
-Focus pe securitate, baza de date și comunicarea Client-Server.
+_Fundația proiectului este finalizată._
 
-* [x] **Project Setup**: Inițializare Soluție .NET (Monorepo: Client, Backend, Shared).
-* [x] **Database Architecture**: Configurare EF Core și Migrări (User table).
-* [x] **Authentication API**: Endpoint-uri pentru `/register` și `/login` (Identity).
-* [x] **Security**: Implementare JWT Bearer Tokens și Swagger Auth.
-* [x] **Networking Client**: Configurare `HttpClient` și `Refit` în Godot.
-* [x] **State Management**: Implementare `GameState` și `NetworkManager` (Singleton/Autoload).
-
-## 🎮 Phase 2: Core Gameplay Loop (Frontend)
-
-Construirea scenei de joc și a mecanicilor de bază (fără server momentan).
-
-* [x] **Game Scene**: Creare scenă `Gameplay.tscn` (1v1 Arena).
-* [x] **Grid System**: Implementare TileMap și logică de plasare pe grid.
-* [x] **Unit Spawning**: Sistem de instanțiere dinamică a unităților (Vaci, Găini).
-* [ ] **Basic AI**: Pathfinding simplu (NavigationServer2D) către baza inamică.
-* [ ] **Combat Logic**: Sistem de Health, Damage și Attack Range.
-* [ ] **Economy**: Generare pasivă de resurse (Aur) și costuri de unități.
-
-## 📡 Phase 3: Multiplayer Synchronization
-
-Sincronizarea stării jocului între server și client pentru modul 1v1.
-
-* [ ] **Matchmaking**: Endpoint simplu pentru a găsi un oponent.
-* [ ] **Real-time Comms**: Integrare **SignalR** pentru evenimente live.
-* [ ] **Action Sync**: Trimiterea acțiunilor (Spawn Unit) către server via RPC.
-* [ ] **State Validation**: Serverul validează dacă jucătorul are bani pentru unitatea cerută.
-* [ ] **Game Loop**: Gestionare Start Meci -> Luptă -> Game Over.
-
-## 💾 Phase 4: Persistence & Meta-Game
-
-Salvarea progresului și elemente RPG.
-
-* [ ] **Profile API**: Endpoint pentru încărcarea/salvarea XP-ului și nivelului.
-* [ ] **Inventory System**: Structură DB pentru unități deblocate.
-* [ ] **Shop UI**: Interfață pentru deblocarea unităților noi cu banii câștigați.
-* [ ] **Scoreboard**: Listă cu cei mai buni jucători (Leaderboard).
-
-## ✨ Phase 5: Polish & UI/UX
-
-Finisarea experienței vizuale.
-
-* [ ] **Feedback Vizual**: Animații de atac, particule la moartea unităților.
-* [ ] **Responsive UI**: Meniuri funcționale (Main Menu, Settings, GameOver).
-* [ ] **Sound**: Adăugare efecte sonore și muzică de fundal.
-* [ ] **Deployment**: Dockerizare Backend și Export Client (Windows/Linux).
+- [x] **Project Setup**: Soluție .NET Monorepo (Client, Backend, Shared).
+- [x] **Auth API**: Login/Register via ASP.NET Identity & JWT.
+- [x] **Database**: EF Core Configurat.
+- [x] **Client Networking**: Godot Client cu Refit și NetworkManager.
 
 ---
 
-### 📝 Note de Dezvoltare
+## 📅 Phase 2: The "Handshake" (Networking Core)
 
-* *Versiunea actuală rulează pe .NET 10 (Experimental) pentru Backend.*
-* *Comunicarea HTTP este strict tipizată folosind DTO-uri partajate.*
+_Scop: Să conectăm 2 clienți la un server Godot, stabilind rolurile._
+
+- [x] **Server Bootstrapper:** Script care pornește Godot cu argumentul `--headless` și ascultă pe portul `7777`.
+- [x] **Direct Connect:** Implementare buton "Debug Join" în meniu pentru conectare directă la IP (`127.0.0.1`).
+- [x] **Role Assignment:** Serverul identifică ordinea conectării:
+- Client 1 -> **Defender** (Stânga).
+- Client 2 -> **Attacker** (Dreapta).
+- [x] **Lobby Sync:** Meciul începe automat când ambii jucători sunt conectați.
 
 ---
 
-### Sfat pentru Licență:
+## 📅 Phase 3: Gameplay Loop (Multiplayer First)
 
-Pe măsură ce lucrezi, intră în acest fișier pe GitHub și bifează căsuțele (schimbă `[ ]` în `[x]`).
-Profesorilor le place enorm să vadă "activitate" și un plan care devine verde treptat. Arată că ești organizat!
+_Scop: Mecanica de joc funcțională, sincronizată prin ENet (UDP)._
+
+- [x] **Unit Architecture:** Implementare ierarhie clase: `BaseUnit`, `DefenderUnit`, `AttackerUnit` (cu State Machine simplu).
+- [x] **Grid & Spawning:**
+- Implementare `MultiplayerSpawner` pentru instanțiere dinamică.
+- Validare Server-side: Jucătorul poate plasa doar în zona lui.
+
+- [x] **Movement Logic:**
+- Unitățile se mișcă pe Server (`_PhysicsProcess`).
+- `MultiplayerSynchronizer` actualizează poziția pe Client.
+- [ ] **Combat System:**
+- Detectare coliziune (Server).
+- Scădere HP și RPC pentru moarte (`QueueFree`).
+- [ ] **Win Condition:**
+- Hambar HP == 0 -> Attacker Wins.
+- Timer == 0 -> Defender Wins.
+
+---
+
+## 📅 Phase 4: Integration & Economy (Matchmaking is Here!)
+
+_Scop: Transformăm demo-ul tehnic într-un produs finit și îl legăm de Backend._
+
+- [ ] **Economy System:**
+- Implementare resurse distincte: `Milk` (Defender) vs `Meat` (Attacker).
+- Logică pasivă de generare pe Server.
+- [ ] **HUD Final:** Afișare resurse și timer în UI (sincronizate).
+- [ ] **Matchmaking Simplificat (.NET API):**
+- Backend: Endpoint `POST /match/find` (Queue in-memory).
+- Logic: Returnează IP-ul serverului (`127.0.0.1` pt demo) când găsește pereche.
+- Frontend: Butonul "Find Match" face tranziția automată în joc.
+- [ ] **Game Reporting:** La finalul meciului, Godot Server trimite `POST /api/match/result` către .NET (Cine a câștigat/XP).
+
+---
+
+## 📅 Phase 5: Persistence & Polish (The "Wow" Factor)
+
+_Scop: Finisaje vizuale și sistem de progresie._
+
+- [ ] **Shop System (UI & API):**
+- Tab-uri în Meniu: Deck / Shop.
+- Endpoint `POST /shop/buy` pentru deblocare unități.
+- [ ] **Visuals:**
+  - Înlocuire cuburi cu Sprite-uri (Pixel Art).
+  - Animații (Idle, Walk, Attack) folosind State Machine.
+- [ ] **Audio:** Sunete de fundal și efecte (Attack, Spawn).
+- [ ] **Export & Test:** Build final Windows/Linux și testare Local LAN.

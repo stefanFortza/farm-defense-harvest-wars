@@ -1,0 +1,69 @@
+[gd_scene load_steps=13 format=3 uid="uid://cu12uic4kd4ek"]
+
+[ext_resource type="Script" uid="uid://whp16mk38v6" path="res://Scenes/Gameplay/GameplayManager/MatchManager.cs" id="1_1tddo"]
+[ext_resource type="Script" uid="uid://do0ad3s0bxeg2" path="res://Scenes/Gameplay/GameplayManager/GameplayManager.cs" id="1_biik6"]
+[ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="2_b847x"]
+[ext_resource type="Script" uid="uid://c6xqoepbvs2wt" path="res://Scenes/Gameplay/GameplayManager/UnitFactory.cs" id="2_biik6"]
+[ext_resource type="Script" uid="uid://c577dgypidqax" path="res://Scenes/Gameplay/GameplayManager/GameplayOrchestrator.cs" id="3_m405e"]
+[ext_resource type="Script" uid="uid://nml33xh7yufg" path="res://Scenes/Gameplay/GameplayManager/InputController.cs" id="4_pwkeu"]
+[ext_resource type="Texture2D" uid="uid://dilff0vxm3o6v" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Selectors.png" id="6_b5o5q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5o5q"]
+atlas = ExtResource("6_b5o5q")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b847x"]
+atlas = ExtResource("6_b5o5q")
+region = Rect2(96, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3n877"]
+atlas = ExtResource("6_b5o5q")
+region = Rect2(96, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cjuj"]
+atlas = ExtResource("6_b5o5q")
+region = Rect2(96, 144, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1dmrh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b5o5q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b847x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3n877")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2cjuj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="GameplayManager" type="Node" node_paths=PackedStringArray("_matchManager", "_unitFactory", "_orchestrator", "_inputController")]
+script = ExtResource("1_biik6")
+UnitRegistry = ExtResource("2_b847x")
+_matchManager = NodePath("MatchManager")
+_unitFactory = NodePath("UnitFactory")
+_orchestrator = NodePath("GameplayOrchestrator")
+_inputController = NodePath("InputController")
+
+[node name="MatchManager" type="Node" parent="."]
+script = ExtResource("1_1tddo")
+
+[node name="UnitFactory" type="Node" parent="."]
+script = ExtResource("2_biik6")
+
+[node name="GameplayOrchestrator" type="Node" parent="."]
+script = ExtResource("3_m405e")
+
+[node name="InputController" type="Node" parent="." node_paths=PackedStringArray("_ghostCursor")]
+script = ExtResource("4_pwkeu")
+_ghostCursor = NodePath("AnimatedSprite2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="InputController"]
+sprite_frames = SubResource("SpriteFrames_1dmrh")

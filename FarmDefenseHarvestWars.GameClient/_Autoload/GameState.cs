@@ -1,5 +1,6 @@
 using Godot;
 using FarmDefenseHarvestWars.Shared.Models.Game;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 public partial class GameState : Node
 {
@@ -11,6 +12,8 @@ public partial class GameState : Node
 
     // Computed Property - Ești logat dacă ai un profil încărcat
     public bool IsLoggedIn => CurrentProfile != null;
+
+    public PlayerRole Role => NetworkBootstrap.Instance.Gameplay.MyRole;
 
     // Semnale pentru UI (Observer Pattern)
     [Signal] public delegate void ProfileUpdatedEventHandler();

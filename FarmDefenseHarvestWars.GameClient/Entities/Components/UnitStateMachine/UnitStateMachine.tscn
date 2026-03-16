@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwa11j2h8wpwm"]
+
+[ext_resource type="Script" uid="uid://ctgohpts1i2la" path="res://Entities/Components/UnitStateMachine/UnitStateMachine.cs" id="1_ntld5"]
+
+[node name="UnitStateMachine" type="Node"]
+script = ExtResource("1_ntld5")
+SyncedStateIndex = null
