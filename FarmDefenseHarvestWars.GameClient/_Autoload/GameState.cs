@@ -1,6 +1,7 @@
 using Godot;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 
 public partial class GameState : Node
 {
@@ -9,6 +10,7 @@ public partial class GameState : Node
 
     // Datele jucătorului
     public PlayerProfileDto? CurrentProfile { get; private set; }
+    public SelectedDeckData? CurrentDeck { get; private set; }
 
     // Computed Property - Ești logat dacă ai un profil încărcat
     public bool IsLoggedIn => CurrentProfile != null;
@@ -32,9 +34,15 @@ public partial class GameState : Node
         GD.Print($"GameState Actualizat: {CurrentProfile.Email}, Gold: {CurrentProfile.Gold}");
     }
 
+    public void SetCurrentDeck(SelectedDeckData deck)
+    {
+        CurrentDeck = deck;
+    }
+
     public void ClearState()
     {
         CurrentProfile = null;
+        CurrentDeck = null;
         EmitSignal(SignalName.LoggedOut);
     }
 }

@@ -62,6 +62,12 @@ public partial class UnitRegistry : Resource
     // Metoda de inițializare a dicționarului (o apelăm o singură dată la startul jocului)
     public void InitializeLookup()
     {
+        if (_lookupTable != null)
+        {
+            GD.Print("[UnitRegistry] Lookup deja inițializat, sărim peste re-initializare.");
+            return;
+        }
+
         _lookupTable = [];
 
         foreach (var unit in AllUnits)

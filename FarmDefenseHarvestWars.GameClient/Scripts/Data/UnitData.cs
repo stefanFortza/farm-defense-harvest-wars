@@ -17,6 +17,7 @@ public partial class UnitData : Resource
 
     [ExportGroup("In-Game Economy (Match)")]
     [Export] public int MatchCost { get; set; } = 25;
+    [Export] public float CardCooldownSeconds { get; set; } = 3.0f;
 
     [ExportGroup("Meta Economy (Backend Shop)")]
     [Export] public int UnlockCost { get; set; } = 100;

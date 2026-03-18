@@ -95,8 +95,7 @@ public partial class GameplayNetwork : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void StartGameScene()
     {
-        GD.Print("Loading Game World...");
-        // TODO - Don't hardcode the path, but for now it's fine
-        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
+        GD.Print("Loading Deck Selection...");
+        GetTree().ChangeSceneToFile("res://Scenes/Menus/DeckSelection/DeckSelection.tscn");
     }
 }

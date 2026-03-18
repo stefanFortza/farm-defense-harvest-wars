@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://d13blbcgf2quy"]
+
+[ext_resource type="Script" uid="uid://dkv6bdatx2vmm" path="res://Scenes/Menus/DeckSelection/DeckSelectionUI.cs" id="1_deck_script"]
+[ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="2_pelo4"]
+
+[node name="DeckSelection" type="Control" node_paths=PackedStringArray("_titleLabel", "_cardList", "_counterLabel", "_confirmButton")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_deck_script")
+_titleLabel = NodePath("Center/Panel/Margin/VBox/Title")
+_cardList = NodePath("Center/Panel/Margin/VBox/CardScroll/CardList")
+_counterLabel = NodePath("Center/Panel/Margin/VBox/Counter")
+_confirmButton = NodePath("Center/Panel/Margin/VBox/ConfirmButton")
+_unitRegistry = ExtResource("2_pelo4")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = -94.5
+offset_right = 78.0
+offset_bottom = 94.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Selecteaza Deck"
+horizontal_alignment = 1
+
+[node name="CardScroll" type="ScrollContainer" parent="Center/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardList" type="VBoxContainer" parent="Center/Panel/Margin/VBox/CardScroll"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Counter" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Selected: 0/5"
+
+[node name="ConfirmButton" type="Button" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+text = "Confirm Deck"

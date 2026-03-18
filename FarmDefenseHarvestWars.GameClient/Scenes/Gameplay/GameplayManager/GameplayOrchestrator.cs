@@ -11,6 +11,9 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 {
 	public bool IsInitialized { get; private set; } = false;
 	private long CurrentSender => Multiplayer.GetRemoteSenderId();
+	private long _nextRequestId = 1;
+
+	[Signal] public delegate void PlacementRequestResolvedEventHandler(long requestId, int unitType, bool success, string reason, Vector2I gridPos);
 
 	private GridSystem _gridSystem = null!;
 	private UnitFactory _unitFactory = null!;
@@ -29,14 +32,16 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 
 	// --- CLIENT SIDE ---
 	// Apelat din InputController când dai click
-	public void RequestPlaceUnit(UnitType type, Vector2I gridPos)
+	public long RequestPlaceUnit(UnitType type, Vector2I gridPos)
 	{
-		RpcId(1, nameof(HandlePlaceRequest), (int)type, gridPos);
+		long requestId = _nextRequestId++;
+		RpcId(1, nameof(HandlePlaceRequest), requestId, (int)type, gridPos);
+		return requestId;
 	}
 
 	// --- SERVER SIDE ---
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
-	private void HandlePlaceRequest(int typeInt, Vector2I gridPos)
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	private void HandlePlaceRequest(long requestId, int typeInt, Vector2I gridPos)
 	{
 		UnitType type = (UnitType)typeInt;
 
@@ -44,16 +49,38 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 		var stats = _unitRegistry.GetUnitData(type);
 
 		// 1. Validare Logică (Grid)
-		if (_gridSystem.IsCellOccupied(gridPos)) return;
+		if (_gridSystem.IsCellOccupied(gridPos))
+		{
+			ResolvePlacementForSender(requestId, type, false, "CELL_OCCUPIED", gridPos);
+			return;
+		}
 
 		// 2. Validare Economică (MatchManager)
 		if (!_matchManager.TryBuyUnit(CurrentSender, stats))
 		{
 			GD.Print($"Player {CurrentSender} is broke! Needs {stats.MatchCost} Gold.");
+			ResolvePlacementForSender(requestId, type, false, "INSUFFICIENT_GOLD", gridPos);
 			return;
 		}
 
 		// 3. Execuție
 		_unitFactory.Server_SpawnUnit(type, gridPos, _gridSystem);
+		ResolvePlacementForSender(requestId, type, true, "OK", gridPos);
+	}
+
+	private void ResolvePlacementForSender(long requestId, UnitType type, bool success, string reason, Vector2I gridPos)
+	{
+		RpcId(CurrentSender, nameof(ClientResolvePlacementRequest), requestId, (int)type, success, reason, gridPos);
+
+		if (CurrentSender == Multiplayer.GetUniqueId())
+		{
+			ClientResolvePlacementRequest(requestId, (int)type, success, reason, gridPos);
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	private void ClientResolvePlacementRequest(long requestId, int unitType, bool success, string reason, Vector2I gridPos)
+	{
+		EmitSignal(SignalName.PlacementRequestResolved, requestId, unitType, success, reason, gridPos);
 	}
 }
