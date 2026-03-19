@@ -1,7 +1,4 @@
 using Godot;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 public partial class MainMenuUI : Control
 {
@@ -73,7 +70,7 @@ public partial class MainMenuUI : Control
         NetworkBootstrap.Instance.Gameplay.JoinGameServer("127.0.0.1");
 
         // 2. Change scene immediately
-        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
 
         /* 
         // OLD SIMULATION CODE (Commented out for Phase 2)
@@ -112,6 +109,6 @@ public partial class MainMenuUI : Control
     // Placeholder for when match is found
     public void OnMatchFound()
     {
-        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
     }
 }

@@ -1,8 +1,10 @@
 using FarmDefenseHarvestWars.Backend.Data;
 using FarmDefenseHarvestWars.Backend.Models;
+using FarmDefenseHarvestWars.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +31,14 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 // 3. Controllere
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<IMatchServerOrchestrator, ProcessMatchServerOrchestrator>();
+builder.Services.AddSingleton<IUnitRegistryProvider, UnitRegistryProvider>();
 
 // 4. Configurare SWAGGER (Versiunea NOUĂ pentru .NET 10 / Swashbuckle v10+)
 builder.Services.AddSwaggerGen(options =>

@@ -1,6 +1,7 @@
 using Godot;
 using System.Threading.Tasks;
 using FarmDefenseHarvestWars.Shared.Models.Auth;
+using FarmDefenseHarvestWars.Shared.Enums;
 using Refit;
 using System;
 
@@ -23,6 +24,8 @@ public partial class AuthService : Node
         // Update global game state
         GameState.Instance.SetProfile(profile);
 
+        await LoadPersistedDecksAsync();
+
         GD.Print("User authenticated and profile loaded.");
         return true;
     }
@@ -35,6 +38,24 @@ public partial class AuthService : Node
         GD.Print("User registered successfully.");
         await LoginAsync(email, password); // Auto-login after registration
         return true;
+    }
+
+    public async Task LoadPersistedDecksAsync()
+    {
+        var api = NetworkBootstrap.Instance.ApiClient;
+
+        try
+        {
+            var defenderDeck = await api.GetDeckAsync(PlayerRole.Defender);
+            GameState.Instance.SetDeckForRole(PlayerRole.Defender, defenderDeck.Units);
+
+            var attackerDeck = await api.GetDeckAsync(PlayerRole.Attacker);
+            GameState.Instance.SetDeckForRole(PlayerRole.Attacker, attackerDeck.Units);
+        }
+        catch (ApiException ex)
+        {
+            GD.PrintErr($"Failed to load persisted decks: {ex.Message}");
+        }
     }
 
     // Funcție de Logout (ștergem tokenul și starea jocului)

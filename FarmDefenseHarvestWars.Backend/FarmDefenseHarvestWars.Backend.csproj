@@ -18,7 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FarmDefenseHarvestWars.Shared\FarmDefenseHarvestWars.Shared.csproj" />
+    <ProjectReference
+      Include="..\FarmDefenseHarvestWars.Shared\FarmDefenseHarvestWars.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Data/Units/UnitRegistry.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

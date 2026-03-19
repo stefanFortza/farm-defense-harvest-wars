@@ -2,6 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
+using System.Collections.Generic;
 
 public partial class GameState : Node
 {
@@ -37,6 +38,22 @@ public partial class GameState : Node
     public void SetCurrentDeck(SelectedDeckData deck)
     {
         CurrentDeck = deck;
+    }
+
+    public void SetDeckForRole(PlayerRole role, IReadOnlyCollection<UnitType> units)
+    {
+        CurrentDeck ??= new SelectedDeckData();
+
+        if (role == PlayerRole.Defender)
+        {
+            CurrentDeck.DefenderDeck = [.. units];
+            return;
+        }
+
+        if (role == PlayerRole.Attacker)
+        {
+            CurrentDeck.AttackerDeck = [.. units];
+        }
     }
 
     public void ClearState()

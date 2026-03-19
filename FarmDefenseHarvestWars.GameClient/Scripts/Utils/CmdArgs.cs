@@ -9,6 +9,7 @@ public static class CmdArgs
     public static string? Email { get; private set; }
     public static string? Password { get; private set; }
     public static bool IsServer { get; private set; }
+    public static int? Port { get; private set; }
 
     static CmdArgs()
     {
@@ -32,6 +33,10 @@ public static class CmdArgs
             else if (arg.StartsWith("--password="))
             {
                 Password = arg.Substring("--password=".Length);
+            }
+            else if (arg.StartsWith("--port=") && int.TryParse(arg.Substring("--port=".Length), out int parsedPort))
+            {
+                Port = parsedPort;
             }
         }
     }

@@ -1,11 +1,12 @@
 using Godot;
 using FarmDefenseHarvestWars.Shared.Enums;
 using System.Collections.Generic;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
 public partial class GameplayNetwork : Node
 {
     private ENetMultiplayerPeer _peer = null!;
-    private const int Port = 7777;
+    private const int DefaultPort = 7777;
     private const int MaxPlayers = 2; // Constanta e sfanta
 
     // Stocăm ID -> Role
@@ -17,7 +18,8 @@ public partial class GameplayNetwork : Node
     public void StartDedicatedServer()
     {
         _peer = new ENetMultiplayerPeer();
-        var error = _peer.CreateServer(Port, MaxPlayers); // Limitam direct din ENet la 2
+        int port = CmdArgs.Port ?? DefaultPort;
+        var error = _peer.CreateServer(port, MaxPlayers); // Limitam direct din ENet la 2
 
         if (error != Error.Ok)
         {
@@ -32,10 +34,10 @@ public partial class GameplayNetwork : Node
         GD.Print("Server Started. Waiting for players...");
     }
 
-    public void JoinGameServer(string ip = "127.0.0.1")
+    public void JoinGameServer(string ip = "127.0.0.1", int port = DefaultPort)
     {
         _peer = new ENetMultiplayerPeer();
-        _peer.CreateClient(ip, Port);
+        _peer.CreateClient(ip, port);
         Multiplayer.MultiplayerPeer = _peer;
     }
 
@@ -95,7 +97,7 @@ public partial class GameplayNetwork : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void StartGameScene()
     {
-        GD.Print("Loading Deck Selection...");
-        GetTree().ChangeSceneToFile("res://Scenes/Menus/DeckSelection/DeckSelection.tscn");
+        GD.Print("Loading Game World...");
+        GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
     }
 }
