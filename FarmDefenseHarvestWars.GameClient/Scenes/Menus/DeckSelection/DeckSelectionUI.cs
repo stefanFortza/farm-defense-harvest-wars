@@ -43,7 +43,15 @@ public partial class DeckSelectionUI : Control
             child.QueueFree();
         }
 
-        PlayerRole role = GameState.Instance?.Role ?? PlayerRole.Spectator;
+        var state = GameState.Instance;
+        if (state == null || !state.HasAssignedRole)
+        {
+            _titleLabel.Text = "Selecteaza Deck (Waiting role assignment)";
+            _confirmButton.Disabled = true;
+            return;
+        }
+
+        PlayerRole role = state.AssignedRole!.Value;
         _titleLabel.Text = $"Selecteaza Deck ({role})";
 
         foreach (var unit in _unitRegistry.AllUnits)
@@ -101,9 +109,15 @@ public partial class DeckSelectionUI : Control
 
     private void OnConfirmPressed()
     {
-        PlayerRole role = GameState.Instance?.Role ?? PlayerRole.Spectator;
+        var state = GameState.Instance;
+        if (state == null || !state.HasAssignedRole)
+        {
+            return;
+        }
 
-        var deck = GameState.Instance?.CurrentDeck ?? new SelectedDeckData();
+        PlayerRole role = state.AssignedRole!.Value;
+
+        var deck = state.CurrentDeck ?? new SelectedDeckData();
 
         if (role == PlayerRole.Attacker)
         {
@@ -122,7 +136,7 @@ public partial class DeckSelectionUI : Control
             }
         }
 
-        GameState.Instance?.SetCurrentDeck(deck);
+        state.SetCurrentDeck(deck);
         GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
     }
 
@@ -164,6 +178,6 @@ public partial class DeckSelectionUI : Control
             return unitType != UnitType.Skeleton;
         }
 
-        return true;
+        return false;
     }
 }

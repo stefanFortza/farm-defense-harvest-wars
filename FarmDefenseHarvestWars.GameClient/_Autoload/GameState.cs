@@ -2,6 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using System.Collections.Generic;
 
 public partial class GameState : Node
@@ -16,11 +17,15 @@ public partial class GameState : Node
     // Computed Property - Ești logat dacă ai un profil încărcat
     public bool IsLoggedIn => CurrentProfile != null;
 
-    public PlayerRole Role => NetworkBootstrap.Instance.Gameplay.MyRole;
+    public PlayerRole? AssignedRole { get; private set; }
+    public bool HasAssignedRole => AssignedRole.HasValue;
+    public bool IsDedicatedServerProcess => CmdArgs.IsServer;
+    public bool IsNetworkServer => Multiplayer.MultiplayerPeer != null && Multiplayer.IsServer();
 
     // Semnale pentru UI (Observer Pattern)
     [Signal] public delegate void ProfileUpdatedEventHandler();
     [Signal] public delegate void LoggedOutEventHandler();
+    [Signal] public delegate void RoleAssignedEventHandler(int role);
 
     public override void _Ready()
     {
@@ -56,10 +61,17 @@ public partial class GameState : Node
         }
     }
 
+    public void SetAssignedRole(PlayerRole role)
+    {
+        AssignedRole = role;
+        EmitSignal(SignalName.RoleAssigned, (int)role);
+    }
+
     public void ClearState()
     {
         CurrentProfile = null;
         CurrentDeck = null;
+        AssignedRole = null;
         EmitSignal(SignalName.LoggedOut);
     }
 }

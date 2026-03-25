@@ -167,9 +167,15 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     private Array<UnitData> BuildDeckDataForRole()
     {
         var result = new Array<UnitData>();
-        PlayerRole role = GameState.Instance?.Role ?? PlayerRole.Spectator;
+        var state = GameState.Instance;
+        if (state == null || !state.HasAssignedRole)
+        {
+            return result;
+        }
 
-        var selectedDeck = GameState.Instance?.CurrentDeck;
+        PlayerRole role = state.AssignedRole!.Value;
+
+        var selectedDeck = state.CurrentDeck;
         if (selectedDeck != null)
         {
             Array<UnitType> selectedUnits = role == PlayerRole.Attacker
@@ -210,12 +216,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
             return unitType == UnitType.Skeleton;
         }
 
-        if (role == PlayerRole.Defender)
-        {
-            return unitType != UnitType.Skeleton;
-        }
-
-        return true;
+        return unitType != UnitType.Skeleton;
     }
 
     private void OnCardPressed(int unitTypeValue)

@@ -13,7 +13,8 @@ public partial class GameplayNetwork : Node
     private readonly Dictionary<long, PlayerRole> _connectedPlayers = [];
 
     // Proprietate helper pentru a afla rolul meu curent rapid
-    public PlayerRole MyRole => _connectedPlayers.GetValueOrDefault(Multiplayer.GetUniqueId(), PlayerRole.Spectator);
+    public PlayerRole? MyRole =>
+        _connectedPlayers.TryGetValue(Multiplayer.GetUniqueId(), out var role) ? role : null;
 
     public void StartDedicatedServer()
     {
@@ -90,8 +91,15 @@ public partial class GameplayNetwork : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncRoleToClient(long id, int roleInt)
     {
-        _connectedPlayers[id] = (PlayerRole)roleInt;
-        GD.Print($"[Sync] Player {id} is assigned {(PlayerRole)roleInt}");
+        var role = (PlayerRole)roleInt;
+        _connectedPlayers[id] = role;
+
+        if (id == Multiplayer.GetUniqueId())
+        {
+            GameState.Instance?.SetAssignedRole(role);
+        }
+
+        GD.Print($"[Sync] Player {id} is assigned {role}");
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

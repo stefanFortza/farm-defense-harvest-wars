@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_ajajn")
 Type = 8
+Role = 1
 Name = "Skeleton"
 UnitScenePath = "uid://cnapywfs7vvi7"
 Speed = 10.0

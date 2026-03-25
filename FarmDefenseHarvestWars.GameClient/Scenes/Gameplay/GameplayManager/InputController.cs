@@ -180,7 +180,10 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 	private bool IsPlacementValid(Vector2I gridPos)
 	{
 		// verificam daca este in zona de plasare a rolului nostru
-		PlayerRole localRole = GameState.Instance.Role;
+		if (GameState.Instance == null || !GameState.Instance.HasAssignedRole)
+			return false;
+
+		PlayerRole localRole = GameState.Instance.AssignedRole!.Value;
 		if (!_gridSystem.IsValidPlacement(gridPos, localRole))
 			return false;
 

@@ -7,6 +7,7 @@
 [node name="MainMenu" type="Node2D"]
 
 [node name="Background" parent="." instance=ExtResource("1_b42ut")]
+visible = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -18,84 +19,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
-MatchmakingPanel = NodePath("MatchmakingPanel")
-SettingsPanel = NodePath("SettingsPanel")
+MatchmakingPanel = NodePath("")
+SettingsPanel = NodePath("")
 
 [node name="MainMenuBookUI" parent="CanvasLayer/MainMenuUI" instance=ExtResource("3_hqtmt")]
 layout_mode = 1
-
-[node name="MatchmakingPanel" type="Panel" parent="CanvasLayer/MainMenuUI"]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenuUI/MatchmakingPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="Label" type="Label" parent="CanvasLayer/MainMenuUI/MatchmakingPanel/VBoxContainer"]
-layout_mode = 2
-text = "Searching for opponent..."
-horizontal_alignment = 1
-
-[node name="CancelButton" type="Button" parent="CanvasLayer/MainMenuUI/MatchmakingPanel/VBoxContainer"]
-layout_mode = 2
-text = "Cancel"
-
-[node name="SettingsPanel" type="Panel" parent="CanvasLayer/MainMenuUI"]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenuUI/SettingsPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="Label" type="Label" parent="CanvasLayer/MainMenuUI/SettingsPanel/VBoxContainer"]
-layout_mode = 2
-text = "Settings"
-horizontal_alignment = 1
-
-[node name="VolumeLabel" type="Label" parent="CanvasLayer/MainMenuUI/SettingsPanel/VBoxContainer"]
-layout_mode = 2
-text = "Volume"
-
-[node name="HSlider" type="HSlider" parent="CanvasLayer/MainMenuUI/SettingsPanel/VBoxContainer"]
-layout_mode = 2
-
-[node name="CloseButton" type="Button" parent="CanvasLayer/MainMenuUI/SettingsPanel/VBoxContainer"]
-layout_mode = 2
-text = "Close"
-
-[connection signal="pressed" from="CanvasLayer/MainMenuUI/MatchmakingPanel/VBoxContainer/CancelButton" to="CanvasLayer/MainMenuUI" method="OnCancelMatchmakingPressed"]
-[connection signal="pressed" from="CanvasLayer/MainMenuUI/SettingsPanel/VBoxContainer/CloseButton" to="CanvasLayer/MainMenuUI" method="OnCloseSettingsPressed"]

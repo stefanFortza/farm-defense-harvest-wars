@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource("1_xkykw")
 Type = 1
+Role = 1
 Name = "Cow"
 UnitScenePath = "uid://cnl2b6psuuhba"
 ProjectileScene = ExtResource("1_d7t7q")
