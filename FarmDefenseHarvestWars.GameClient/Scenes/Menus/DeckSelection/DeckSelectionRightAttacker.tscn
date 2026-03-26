@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://gux7ki5aptms"]
 
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/DeckSelectionRightBase.tscn" id="1_base"]
-[ext_resource type="Script" path="res://Scenes/Menus/DeckSelection/DeckSelectionRightAttacker.cs" id="2_script"]
+[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/_Bases/DeckSelectionRightBase.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://dui6tu4o3vu3f" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionRightAttacker.cs" id="2_script"]
 [ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="3_registry"]
 [ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.tscn" id="4_libraryitem"]
 

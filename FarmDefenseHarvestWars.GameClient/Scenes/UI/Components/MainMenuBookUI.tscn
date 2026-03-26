@@ -1,15 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://hmlfj1sythl0"]
+[gd_scene load_steps=16 format=3 uid="uid://hmlfj1sythl0"]
 
 [ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="1_0okjo"]
 [ext_resource type="Script" uid="uid://c4m8g5uopi6yl" path="res://Scenes/UI/Components/TabsManager.cs" id="2_3q2n0"]
 [ext_resource type="PackedScene" uid="uid://d2pbrn4oof35o" path="res://Scenes/UI/Components/TabButton/TabButton.tscn" id="2_a8ep5"]
 [ext_resource type="ButtonGroup" uid="uid://dylcgpek81sf8" path="res://Scenes/Menus/MainMenu/MainMenuButtonGroup.tres" id="3_0vkk7"]
 [ext_resource type="PackedScene" uid="uid://jexdnjfq6irb" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchMakingPageLeft.tscn" id="5_luq8n"]
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/DeckSelectionLeftAttacker.tscn" id="6_left_attacker"]
-[ext_resource type="Script" uid="uid://caddiqrv3dvog" path="res://Scenes/UI/Components/DeckSelectionRoleSwitcher.cs" id="6_role_switcher_script"]
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/DeckSelectionLeftDefender.tscn" id="7_left_defender"]
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/DeckSelectionRightAttacker.tscn" id="8_right_attacker"]
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/DeckSelectionRightDefender.tscn" id="9_right_defender"]
+[ext_resource type="PackedScene" uid="uid://cjn2iv0rl573k" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionLeftAttacker.tscn" id="6_left_attacker"]
+[ext_resource type="PackedScene" uid="uid://cqolh2mxdo31g" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionLeftDefender.tscn" id="7_left_defender"]
+[ext_resource type="PackedScene" uid="uid://bciae1s8yqpfv" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionRightAttacker.tscn" id="8_right_attacker"]
+[ext_resource type="PackedScene" uid="uid://b0y6o272xk1jg" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionRightDefender.tscn" id="9_right_defender"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0opko"]
 load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
@@ -32,10 +31,7 @@ load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0
 atlas = SubResource("CompressedTexture2D_p32bp")
 region = Rect2(192, 0, 16, 16)
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_deck_roles"]
-
 [node name="MainMenuBookUI" instance=ExtResource("1_0okjo")]
-script = ExtResource("6_role_switcher_script")
 metadata/_edit_lock_ = true
 
 [node name="BookUI" parent="." index="0"]
@@ -76,43 +72,15 @@ TabKey = "MatchMakingPage"
 layout_mode = 2
 button_group = ExtResource("3_0vkk7")
 IconTexture = SubResource("AtlasTexture_luq8n")
+TabKey = "DeckSelectionAttacker"
 
 [node name="Background3" parent="TabsLayer" index="2" instance=ExtResource("2_a8ep5")]
 layout_mode = 2
 button_group = ExtResource("3_0vkk7")
 IconTexture = SubResource("AtlasTexture_va5ld")
-TabKey = "DeckSelection"
+TabKey = "DeckSelectionDefender"
 
-[node name="DeckRoleTabs" type="HBoxContainer" parent="." index="2"]
-visible = false
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -72.0
-offset_top = 44.0
-offset_right = 72.0
-offset_bottom = 68.0
-grow_horizontal = 2
-theme_override_constants/separation = 6
-
-[node name="Attacker" type="Button" parent="DeckRoleTabs" index="0"]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_pressed = true
-button_group = SubResource("ButtonGroup_deck_roles")
-text = "Attacker"
-
-[node name="Defender" type="Button" parent="DeckRoleTabs" index="1"]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("ButtonGroup_deck_roles")
-text = "Defender"
-
-[node name="ContentOverlay" type="HBoxContainer" parent="." index="3"]
+[node name="ContentOverlay" type="HBoxContainer" parent="." index="2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -134,12 +102,13 @@ size_flags_horizontal = 3
 visible = false
 layout_mode = 2
 
-[node name="DeckSelectionLeftAttacker" parent="ContentOverlay/LeftZone" index="1" instance=ExtResource("6_left_attacker")]
+[node name="DeckSelectionAttacker" parent="ContentOverlay/LeftZone" index="1" instance=ExtResource("6_left_attacker")]
 layout_mode = 2
 
-[node name="DeckSelectionLeftDefender" parent="ContentOverlay/LeftZone" index="2" instance=ExtResource("7_left_defender")]
+[node name="DeckSelectionDefender" parent="ContentOverlay/LeftZone" index="2" instance=ExtResource("7_left_defender")]
 visible = false
 layout_mode = 2
+theme = null
 
 [node name="RightZone" type="MarginContainer" parent="ContentOverlay" index="1"]
 layout_mode = 2
@@ -149,9 +118,11 @@ size_flags_horizontal = 3
 visible = false
 layout_mode = 2
 
-[node name="DeckSelectionRightAttacker" parent="ContentOverlay/RightZone" index="1" instance=ExtResource("8_right_attacker")]
+[node name="DeckSelectionAttacker" parent="ContentOverlay/RightZone" index="1" instance=ExtResource("8_right_attacker")]
 layout_mode = 2
 
-[node name="DeckSelectionRightDefender" parent="ContentOverlay/RightZone" index="2" instance=ExtResource("9_right_defender")]
+[node name="DeckSelectionDefender" parent="ContentOverlay/RightZone" index="2" instance=ExtResource("9_right_defender")]
 visible = false
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
+theme = null

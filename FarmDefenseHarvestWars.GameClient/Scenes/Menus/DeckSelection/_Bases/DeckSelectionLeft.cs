@@ -7,7 +7,7 @@ using FarmDefenseHarvestWars.Shared.Enums;
 public abstract partial class DeckSelectionLeft : Control
 {
     [Export] protected Label _titleLabel = null!;
-    [Export] protected VBoxContainer _slotsContainer = null!;
+    [Export] protected GridContainer _slotsContainer = null!;
     [Export] protected UnitRegistry _unitRegistry = null!;
     [Export] protected PackedScene _slotScene = null!;
 

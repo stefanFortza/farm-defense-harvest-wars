@@ -1,48 +1,91 @@
-[gd_scene format=3]
+[gd_scene load_steps=3 format=3 uid="uid://dwm1bludfkgf7"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_pyety"]
+[ext_resource type="PackedScene" uid="uid://c6ybv7pnl1wvj" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.tscn" id="2_dr1kt"]
 
 [node name="DeckSelectionRightBase" type="Control"]
+custom_minimum_size = Vector2(118, 150)
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -59.0
+offset_top = -75.0
+offset_right = 59.0
+offset_bottom = 75.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_pyety")
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_pyety")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
 [node name="VBox" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
+theme = ExtResource("1_pyety")
 theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="Margin/VBox"]
 layout_mode = 2
+theme = ExtResource("1_pyety")
 text = "Library"
 
 [node name="Hint" type="Label" parent="Margin/VBox"]
+visible = false
 layout_mode = 2
+theme = ExtResource("1_pyety")
 text = "Drag cardurile aici in deck-ul din stanga pentru remove."
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="Margin/VBox"]
 layout_mode = 2
-text = ""
+theme = ExtResource("1_pyety")
 autowrap_mode = 2
 
 [node name="LibraryScroll" type="ScrollContainer" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_pyety")
+horizontal_scroll_mode = 0
 
-[node name="Library" type="VBoxContainer" parent="Margin/VBox/LibraryScroll"]
+[node name="Library" type="GridContainer" parent="Margin/VBox/LibraryScroll"]
 layout_mode = 2
-size_flags_horizontal = 2
-theme_override_constants/separation = 6
+size_flags_horizontal = 6
+theme = ExtResource("1_pyety")
+columns = 4
+
+[node name="DeckLibraryItemControl" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl2" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl3" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl4" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl5" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl6" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl7" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2
+
+[node name="DeckLibraryItemControl8" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
+layout_mode = 2

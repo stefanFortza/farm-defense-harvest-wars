@@ -1,40 +1,58 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://c6ybv7pnl1wvj"]
 
-[ext_resource type="Script" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_ct1rl"]
+[ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.cs" id="1_script"]
 
-[node name="DeckLibraryItemControl" type="PanelContainer"]
-custom_minimum_size = Vector2(0, 34)
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ct1rl"]
+load_path = "res://.godot/imported/Chicken_01.png-2686fe9f026944d2abf46b6b98b02051.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6o8nk"]
+atlas = SubResource("CompressedTexture2D_ct1rl")
+region = Rect2(10, 10, 13, 12)
+
+[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label", "_costLabel", "_dragPreviewTemplate")]
+custom_minimum_size = Vector2(16, 16)
+offset_right = 16.0
+offset_bottom = 16.0
 mouse_filter = 1
+theme = ExtResource("1_ct1rl")
 script = ExtResource("1_script")
-_icon = NodePath("Row/Icon")
-_label = NodePath("Row/Name")
-_costLabel = NodePath("Row/Cost")
+_icon = NodePath("Icon")
+_label = NodePath("Icon/Name")
+_costLabel = NodePath("Icon/Cost")
 _dragPreviewTemplate = NodePath("DragPreviewTemplate")
 
-[node name="Row" type="HBoxContainer" parent="."]
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="Icon" type="TextureRect" parent="Row"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
+theme = ExtResource("1_ct1rl")
+texture = SubResource("AtlasTexture_6o8nk")
 stretch_mode = 5
 
-[node name="Name" type="Label" parent="Row"]
-layout_mode = 2
+[node name="Name" type="Label" parent="Icon"]
+visible = false
+layout_mode = 0
+offset_left = 24.0
+offset_right = 25.0
+offset_bottom = 16.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-horizontal_alignment = 0
+theme = ExtResource("1_ct1rl")
 vertical_alignment = 1
 
-[node name="Cost" type="Label" parent="Row"]
+[node name="Cost" type="Label" parent="Icon"]
+visible = false
 custom_minimum_size = Vector2(46, 0)
-layout_mode = 2
+layout_mode = 0
+offset_left = 24.0
+offset_top = 3.0
+offset_right = 70.0
+offset_bottom = 12.0
+theme = ExtResource("1_ct1rl")
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="DragPreviewTemplate" type="Label" parent="."]
 visible = false
-layout_mode = 0
+layout_mode = 2
+theme = ExtResource("1_ct1rl")

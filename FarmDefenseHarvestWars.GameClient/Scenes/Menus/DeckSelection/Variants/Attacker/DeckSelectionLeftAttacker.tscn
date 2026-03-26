@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://cjn2iv0rl573k"]
 
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/_Bases/DeckSelectionLeftBase.tscn" id="1_base"]
-[ext_resource type="Script" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionLeftAttacker.cs" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://c4j1j2asmp8mq" path="res://Scenes/Menus/DeckSelection/_Bases/DeckSelectionLeftBase.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://bgkyvisnhb2j1" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionLeftAttacker.cs" id="2_script"]
 [ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="3_registry"]
-[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.tscn" id="4_slot"]
+[ext_resource type="PackedScene" uid="uid://c4fsd5ricrid8" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.tscn" id="4_slot"]
 
-[node name="DeckSelectionLeftAttacker" instance=ExtResource("1_base")]
+[node name="DeckSelectionLeftAttacker" node_paths=PackedStringArray("_titleLabel", "_slotsContainer") instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 _titleLabel = NodePath("Margin/VBox/Title")
 _slotsContainer = NodePath("Margin/VBox/Slots")

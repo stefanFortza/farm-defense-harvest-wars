@@ -11,7 +11,7 @@ public abstract partial class DeckSelectionRight : Control
 {
     [Export] protected Label _titleLabel = null!;
     [Export] protected Label _statusLabel = null!;
-    [Export] protected VBoxContainer _libraryContainer = null!;
+    [Export] protected GridContainer _libraryContainer = null!;
     [Export] protected UnitRegistry _unitRegistry = null!;
     [Export] protected PackedScene _libraryItemScene = null!;
 
