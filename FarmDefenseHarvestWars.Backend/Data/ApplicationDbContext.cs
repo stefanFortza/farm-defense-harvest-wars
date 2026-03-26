@@ -14,12 +14,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<Deck> Decks => Set<Deck>();
+    public DbSet<UnitUnlock> UnitUnlocks => Set<UnitUnlock>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         ConfigureDeck(builder.Entity<Deck>());
+        ConfigureUnitUnlock(builder.Entity<UnitUnlock>());
     }
 
     private static void ConfigureDeck(EntityTypeBuilder<Deck> deck)
@@ -38,6 +40,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         deck.HasOne(x => x.User)
             .WithMany(x => x.Decks)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private static void ConfigureUnitUnlock(EntityTypeBuilder<UnitUnlock> unitUnlock)
+    {
+        unitUnlock.HasKey(x => x.Id);
+
+        unitUnlock.HasIndex(x => new { x.UserId, x.Role, x.UnitType })
+            .IsUnique();
+
+        unitUnlock.HasIndex(x => new { x.UserId, x.Role });
+
+        unitUnlock.HasOne(x => x.User)
+            .WithMany(x => x.UnitUnlocks)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }

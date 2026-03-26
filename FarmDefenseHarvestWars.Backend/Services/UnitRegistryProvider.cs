@@ -33,12 +33,23 @@ public sealed class UnitRegistryProvider : IUnitRegistryProvider
 
     public IReadOnlyList<UnitType> GetDefaultUnitsForRole(PlayerRole role, int maxCards)
     {
+        return GetDefaultUnlockedUnitsForRole(role)
+            .Take(maxCards)
+            .ToList();
+    }
+
+    public IReadOnlyList<UnitType> GetDefaultUnlockedUnitsForRole(PlayerRole role)
+    {
         return _registry.Value.Units
             .Where(unit => unit.IsDefaultUnlocked && IsRoleCompatible(unit.Type, role))
             .Select(unit => unit.Type)
             .Distinct()
-            .Take(maxCards)
             .ToList();
+    }
+
+    public UnitDataDto? GetUnit(UnitType unitType)
+    {
+        return _registry.Value.Units.FirstOrDefault(unit => unit.Type == unitType);
     }
 
     public bool IsRoleCompatible(UnitType unitType, PlayerRole role)

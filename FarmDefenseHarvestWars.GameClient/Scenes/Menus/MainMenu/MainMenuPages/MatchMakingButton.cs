@@ -1,6 +1,7 @@
 using Godot;
 using System.Threading.Tasks;
 using Refit;
+using System;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MainMenuPages;
 
@@ -29,28 +30,26 @@ public partial class MatchMakingButton : Button
 
 		try
 		{
-			var api = NetworkBootstrap.Instance.ApiClient;
-			await api.QueueForMatchAsync();
+			var status = await NetworkBootstrap.Instance.Menu.StartMatchmakingUntilFoundAsync();
 
-			while (IsInsideTree())
+			if (status == null || !status.MatchFound)
 			{
-				var status = await api.GetMatchmakingStatusAsync();
-				if (status.MatchFound)
-				{
-					string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
-					int port = status.ServerPort ?? 7777;
-
-					NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
-					GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
-					return;
-				}
-
-				await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
+				return;
 			}
+
+			string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
+			int port = status.ServerPort ?? 7777;
+
+			NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
+			GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
 		}
 		catch (ApiException ex)
 		{
 			GD.PrintErr($"Matchmaking failed: {ex.Message}");
+		}
+		catch (InvalidOperationException ex)
+		{
+			GD.PrintErr($"Matchmaking state error: {ex.Message}");
 		}
 		finally
 		{

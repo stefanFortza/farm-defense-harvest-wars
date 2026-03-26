@@ -31,6 +31,10 @@ public interface IGameApi
     [Headers("Authorization: Bearer")]
     Task<DeckDto> UpdateDeckAsync([AliasAs("role")] PlayerRole role, [Body] UpdateDeckDto request);
 
+    [Post(ApiRoutes.UnlockUnit)]
+    [Headers("Authorization: Bearer")]
+    Task<PlayerProfileDto> UnlockUnitAsync([AliasAs("unitType")] UnitType unitType);
+
     [Post(ApiRoutes.MatchmakingQueue)]
     [Headers("Authorization: Bearer")]
     Task<MatchmakingStatusDto> QueueForMatchAsync();

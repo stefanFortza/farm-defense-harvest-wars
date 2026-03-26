@@ -49,25 +49,16 @@ public class GameController : ControllerBase
     }
 
     [HttpGet("profile")]
-    public async Task<ActionResult<PlayerProfileDto>> GetProfile()
+    public async Task<ActionResult<PlayerProfileDto>> GetProfile(CancellationToken cancellationToken)
     {
-        // 1. Identificăm cine a făcut cererea pe baza Token-ului
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
             return Unauthorized("User not found.");
         }
 
-        // 2. Creăm pachetul de date (DTO)
-        var profile = new PlayerProfileDto
-        {
-            Email = user.Email!,
-            Gold = user.Gold,
-            Level = user.Level,
-            Xp = user.Xp
-        };
-
-        // 3. Trimitem datele înapoi
+        await EnsureDefaultUnlocksAsync(user.Id, cancellationToken);
+        var profile = await BuildPlayerProfileAsync(user, cancellationToken);
         return Ok(profile);
     }
 
@@ -129,6 +120,12 @@ public class GameController : ControllerBase
             return Unauthorized("User not found.");
         }
 
+        HashSet<UnitType> unlockedUnits = await GetUnlockedUnitTypesForRoleAsync(user.Id, role, cancellationToken);
+        if (request.Units.Any(unit => !unlockedUnits.Contains(unit)))
+        {
+            return BadRequest($"Deck contains units that are not unlocked for role {role}.");
+        }
+
         Deck deck = await GetOrCreateDeckAsync(user.Id, role, cancellationToken);
         deck.Name = string.IsNullOrWhiteSpace(request.Name) ? $"{role} Deck" : request.Name.Trim();
         deck.UnitCompositionJson = SerializeUnits(request.Units);
@@ -136,6 +133,67 @@ public class GameController : ControllerBase
         await _db.SaveChangesAsync(cancellationToken);
 
         return Ok(ToDeckDto(deck));
+    }
+
+    [HttpPost("unit/{unitType}/unlock")]
+    public async Task<ActionResult<PlayerProfileDto>> UnlockUnit(UnitType unitType, CancellationToken cancellationToken)
+    {
+        if (unitType == UnitType.None)
+        {
+            return BadRequest("Unit type is invalid.");
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized("User not found.");
+        }
+
+        await EnsureDefaultUnlocksAsync(user.Id, cancellationToken);
+
+        UnitDataDto? unitData = _unitRegistryProvider.GetUnit(unitType);
+        if (unitData == null)
+        {
+            return BadRequest("Unknown unit.");
+        }
+
+        if (unitData.IsDefaultUnlocked)
+        {
+            return BadRequest("Unit is unlocked by default.");
+        }
+
+        PlayerRole? role = ResolveRoleForUnit(unitType, unitData.Role);
+        if (!role.HasValue)
+        {
+            return BadRequest("Could not resolve unit role.");
+        }
+
+        bool alreadyUnlocked = await _db.UnitUnlocks.AnyAsync(
+            unlock => unlock.UserId == user.Id && unlock.Role == role.Value && unlock.UnitType == unitType,
+            cancellationToken);
+        if (alreadyUnlocked)
+        {
+            return BadRequest("Unit already unlocked.");
+        }
+
+        if (user.Gold < unitData.UnlockCost)
+        {
+            return BadRequest($"Not enough gold. Required: {unitData.UnlockCost}, available: {user.Gold}.");
+        }
+
+        user.Gold -= unitData.UnlockCost;
+        _db.UnitUnlocks.Add(new UnitUnlock
+        {
+            UserId = user.Id,
+            Role = role.Value,
+            UnitType = unitType,
+            UnlockedAt = DateTime.UtcNow
+        });
+
+        await _db.SaveChangesAsync(cancellationToken);
+
+        PlayerProfileDto profile = await BuildPlayerProfileAsync(user, cancellationToken);
+        return Ok(profile);
     }
 
     [HttpPost("matchmaking/queue")]
@@ -259,6 +317,8 @@ public class GameController : ControllerBase
 
     private async Task<Deck> GetOrCreateDeckAsync(string userId, PlayerRole role, CancellationToken cancellationToken)
     {
+        await EnsureDefaultUnlocksAsync(userId, cancellationToken);
+
         Deck? existingDeck = await _db.Decks
             .FirstOrDefaultAsync(d => d.UserId == userId && d.Role == role, cancellationToken);
 
@@ -267,12 +327,14 @@ public class GameController : ControllerBase
             return existingDeck;
         }
 
+        HashSet<UnitType> unlockedUnits = await GetUnlockedUnitTypesForRoleAsync(userId, role, cancellationToken);
+
         var deck = new Deck
         {
             UserId = userId,
             Role = role,
             Name = $"{role} Starter",
-            UnitCompositionJson = SerializeUnits(_unitRegistryProvider.GetDefaultUnitsForRole(role, MaxDeckCards))
+            UnitCompositionJson = SerializeUnits(unlockedUnits.Take(MaxDeckCards).ToArray())
         };
 
         _db.Decks.Add(deck);
@@ -403,5 +465,146 @@ public class GameController : ControllerBase
         {
             MatchQueue.Enqueue(remaining.Dequeue());
         }
+    }
+
+    private async Task<PlayerProfileDto> BuildPlayerProfileAsync(ApplicationUser user, CancellationToken cancellationToken)
+    {
+        PlayerUnlockedUnitsDto unlockedUnits = await GetUnlockedUnitsDtoAsync(user.Id, cancellationToken);
+
+        return new PlayerProfileDto
+        {
+            Email = user.Email!,
+            Gold = user.Gold,
+            Level = user.Level,
+            Xp = user.Xp,
+            UnlockedUnits = unlockedUnits
+        };
+    }
+
+    private async Task<PlayerUnlockedUnitsDto> GetUnlockedUnitsDtoAsync(string userId, CancellationToken cancellationToken)
+    {
+        List<UnitUnlock> unlocks = await _db.UnitUnlocks
+            .AsNoTracking()
+            .Where(unlock => unlock.UserId == userId)
+            .ToListAsync(cancellationToken);
+
+        return new PlayerUnlockedUnitsDto
+        {
+            DefenderUnits = unlocks
+                .Where(unlock => unlock.Role == PlayerRole.Defender)
+                .Select(unlock => unlock.UnitType)
+                .Distinct()
+                .OrderBy(unit => unit)
+                .ToArray(),
+            AttackerUnits = unlocks
+                .Where(unlock => unlock.Role == PlayerRole.Attacker)
+                .Select(unlock => unlock.UnitType)
+                .Distinct()
+                .OrderBy(unit => unit)
+                .ToArray()
+        };
+    }
+
+    private async Task<HashSet<UnitType>> GetUnlockedUnitTypesForRoleAsync(
+        string userId,
+        PlayerRole role,
+        CancellationToken cancellationToken)
+    {
+        await EnsureDefaultUnlocksAsync(userId, cancellationToken);
+
+        List<UnitType> unlockedUnits = await _db.UnitUnlocks
+            .AsNoTracking()
+            .Where(unlock => unlock.UserId == userId && unlock.Role == role)
+            .Select(unlock => unlock.UnitType)
+            .ToListAsync(cancellationToken);
+
+        return unlockedUnits.ToHashSet();
+    }
+
+    private async Task EnsureDefaultUnlocksAsync(string userId, CancellationToken cancellationToken)
+    {
+        IReadOnlyList<UnitType> requiredDefender = _unitRegistryProvider.GetDefaultUnlockedUnitsForRole(PlayerRole.Defender);
+        IReadOnlyList<UnitType> requiredAttacker = _unitRegistryProvider.GetDefaultUnlockedUnitsForRole(PlayerRole.Attacker);
+
+        HashSet<string> requiredKeys =
+        [
+            .. requiredDefender.Select(unit => $"{PlayerRole.Defender}:{unit}"),
+            .. requiredAttacker.Select(unit => $"{PlayerRole.Attacker}:{unit}")
+        ];
+
+        if (requiredKeys.Count == 0)
+        {
+            return;
+        }
+
+        List<UnitUnlock> existingUnlocks = await _db.UnitUnlocks
+            .Where(unlock => unlock.UserId == userId)
+            .ToListAsync(cancellationToken);
+
+        HashSet<string> existingKeys =
+        [
+            .. existingUnlocks.Select(unlock => $"{unlock.Role}:{unlock.UnitType}")
+        ];
+
+        List<UnitUnlock> missingUnlocks = [];
+
+        foreach (UnitType unit in requiredDefender)
+        {
+            if (!existingKeys.Contains($"{PlayerRole.Defender}:{unit}"))
+            {
+                missingUnlocks.Add(new UnitUnlock
+                {
+                    UserId = userId,
+                    Role = PlayerRole.Defender,
+                    UnitType = unit,
+                    UnlockedAt = DateTime.UtcNow
+                });
+            }
+        }
+
+        foreach (UnitType unit in requiredAttacker)
+        {
+            if (!existingKeys.Contains($"{PlayerRole.Attacker}:{unit}"))
+            {
+                missingUnlocks.Add(new UnitUnlock
+                {
+                    UserId = userId,
+                    Role = PlayerRole.Attacker,
+                    UnitType = unit,
+                    UnlockedAt = DateTime.UtcNow
+                });
+            }
+        }
+
+        if (missingUnlocks.Count == 0)
+        {
+            return;
+        }
+
+        _db.UnitUnlocks.AddRange(missingUnlocks);
+        await _db.SaveChangesAsync(cancellationToken);
+    }
+
+    private PlayerRole? ResolveRoleForUnit(UnitType unitType, PlayerRole? unitRole)
+    {
+        if (unitRole.HasValue)
+        {
+            return unitRole.Value;
+        }
+
+        bool compatibleWithDefender = _unitRegistryProvider.IsRoleCompatible(unitType, PlayerRole.Defender);
+        bool compatibleWithAttacker = _unitRegistryProvider.IsRoleCompatible(unitType, PlayerRole.Attacker);
+
+        if (compatibleWithDefender && !compatibleWithAttacker)
+        {
+            return PlayerRole.Defender;
+        }
+
+        if (compatibleWithAttacker && !compatibleWithDefender)
+        {
+            return PlayerRole.Attacker;
+        }
+
+        return null;
     }
 }

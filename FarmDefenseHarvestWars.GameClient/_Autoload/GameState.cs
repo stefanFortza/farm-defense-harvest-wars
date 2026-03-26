@@ -4,6 +4,7 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class GameState : Node
 {
@@ -26,6 +27,7 @@ public partial class GameState : Node
     [Signal] public delegate void ProfileUpdatedEventHandler();
     [Signal] public delegate void LoggedOutEventHandler();
     [Signal] public delegate void RoleAssignedEventHandler(int role);
+    [Signal] public delegate void DeckUpdatedEventHandler(int role);
 
     public override void _Ready()
     {
@@ -43,6 +45,26 @@ public partial class GameState : Node
     public void SetCurrentDeck(SelectedDeckData deck)
     {
         CurrentDeck = deck;
+
+        if (HasAssignedRole)
+        {
+            EmitSignal(SignalName.DeckUpdated, (int)AssignedRole!.Value);
+        }
+    }
+
+    public bool IsUnitUnlocked(PlayerRole role, UnitType unitType)
+    {
+        if (CurrentProfile?.UnlockedUnits == null)
+        {
+            return false;
+        }
+
+        return role switch
+        {
+            PlayerRole.Defender => CurrentProfile.UnlockedUnits.DefenderUnits.Contains(unitType),
+            PlayerRole.Attacker => CurrentProfile.UnlockedUnits.AttackerUnits.Contains(unitType),
+            _ => false
+        };
     }
 
     public void SetDeckForRole(PlayerRole role, IReadOnlyCollection<UnitType> units)
@@ -52,12 +74,14 @@ public partial class GameState : Node
         if (role == PlayerRole.Defender)
         {
             CurrentDeck.DefenderDeck = [.. units];
+            EmitSignal(SignalName.DeckUpdated, (int)role);
             return;
         }
 
         if (role == PlayerRole.Attacker)
         {
             CurrentDeck.AttackerDeck = [.. units];
+            EmitSignal(SignalName.DeckUpdated, (int)role);
         }
     }
 

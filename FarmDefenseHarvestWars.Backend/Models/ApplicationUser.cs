@@ -14,4 +14,5 @@ public class ApplicationUser : IdentityUser
     public string UnlockedUnits { get; set; } = "[]";
 
     public ICollection<Deck> Decks { get; set; } = [];
+    public ICollection<UnitUnlock> UnitUnlocks { get; set; } = [];
 }

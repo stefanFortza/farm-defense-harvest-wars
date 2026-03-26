@@ -1,17 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://b7230yfgel0k2"]
+[gd_scene load_steps=6 format=3 uid="uid://b7230yfgel0k2"]
 
-[ext_resource type="PackedScene" uid="uid://bydgh6pxqwaqg" path="res://Scenes/Menus/background.tscn" id="1_b42ut"]
+[ext_resource type="Shader" uid="uid://bnlybmflqsmol" path="res://Scenes/Menus/Background/background.gdshader" id="1_445kf"]
 [ext_resource type="Script" uid="uid://dxt8pg6wyixd8" path="res://Scenes/Menus/MainMenu/MainMenuUI.cs" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c8ggqd2i4lrmh" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Houses_Interiors/Wood_Stairs.png" id="2_mggrh"]
 [ext_resource type="PackedScene" uid="uid://hmlfj1sythl0" path="res://Scenes/UI/Components/MainMenuBookUI.tscn" id="3_hqtmt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bq65x"]
+shader = ExtResource("1_445kf")
+shader_parameter/warm_light_color = Color(1, 0.8, 0.5, 1)
+shader_parameter/light_intensity = 0.4
+shader_parameter/light_radius = 0.7
+shader_parameter/vignette_color = Color(0.05, 0.02, 0, 1)
+shader_parameter/vignette_radius = 0.9
+shader_parameter/vignette_intensity = 0.85
+shader_parameter/contrast = 1.15
 
 [node name="MainMenu" type="Node2D"]
 
-[node name="Background" parent="." instance=ExtResource("1_b42ut")]
-visible = false
+[node name="Background" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_bq65x")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 320.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_mggrh")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="MainMenuUI" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("MatchmakingPanel", "SettingsPanel")]
+[node name="MainMenuUI" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,8 +38,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
-MatchmakingPanel = NodePath("")
-SettingsPanel = NodePath("")
 
 [node name="MainMenuBookUI" parent="CanvasLayer/MainMenuUI" instance=ExtResource("3_hqtmt")]
 layout_mode = 1
+script = null
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(160, 90)

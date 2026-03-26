@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.cs" id="1_script"]
+
+[node name="DeckSlotControl" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 34)
+mouse_filter = 1
+script = ExtResource("1_script")
+_icon = NodePath("Row/Icon")
+_nameLabel = NodePath("Row/Name")
+_costLabel = NodePath("Row/Cost")
+_dragPreviewTemplate = NodePath("DragPreviewTemplate")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="Row"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_alignment = 0
+vertical_alignment = 1
+
+[node name="Cost" type="Label" parent="Row"]
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="DragPreviewTemplate" type="Label" parent="."]
+visible = false
+layout_mode = 0
