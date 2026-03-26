@@ -4,11 +4,11 @@
 [ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.cs" id="1_script"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ct1rl"]
-load_path = "res://.godot/imported/Chicken_01.png-2686fe9f026944d2abf46b6b98b02051.ctex"
+load_path = "res://.godot/imported/ChickenIcon.png-4fd7873d6d38a2905945b19e86c9be65.ctex"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6o8nk"]
 atlas = SubResource("CompressedTexture2D_ct1rl")
-region = Rect2(10, 10, 13, 12)
+region = Rect2(11, 10, 13, 12)
 
 [node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label", "_costLabel", "_dragPreviewTemplate")]
 custom_minimum_size = Vector2(16, 16)

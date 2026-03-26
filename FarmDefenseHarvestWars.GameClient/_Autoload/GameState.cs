@@ -28,6 +28,9 @@ public partial class GameState : Node
     [Signal] public delegate void LoggedOutEventHandler();
     [Signal] public delegate void RoleAssignedEventHandler(int role);
     [Signal] public delegate void DeckUpdatedEventHandler(int role);
+    [Signal] public delegate void DeckSaveStatusChangedEventHandler(int role, bool isSaving, bool isSuccess, string message);
+
+    private readonly HashSet<PlayerRole> _deckSavesInFlight = [];
 
     public override void _Ready()
     {
@@ -85,6 +88,30 @@ public partial class GameState : Node
         }
     }
 
+    public bool IsDeckSaveInProgress(PlayerRole role)
+    {
+        return _deckSavesInFlight.Contains(role);
+    }
+
+    public void SetDeckSaveInProgress(PlayerRole role, bool isSaving)
+    {
+        if (isSaving)
+        {
+            _deckSavesInFlight.Add(role);
+        }
+        else
+        {
+            _deckSavesInFlight.Remove(role);
+        }
+
+        EmitSignal(SignalName.DeckSaveStatusChanged, (int)role, isSaving, true, string.Empty);
+    }
+
+    public void NotifyDeckSaveResult(PlayerRole role, bool isSuccess, string message)
+    {
+        EmitSignal(SignalName.DeckSaveStatusChanged, (int)role, false, isSuccess, message);
+    }
+
     public void SetAssignedRole(PlayerRole role)
     {
         AssignedRole = role;
@@ -96,6 +123,7 @@ public partial class GameState : Node
         CurrentProfile = null;
         CurrentDeck = null;
         AssignedRole = null;
+        _deckSavesInFlight.Clear();
         EmitSignal(SignalName.LoggedOut);
     }
 }

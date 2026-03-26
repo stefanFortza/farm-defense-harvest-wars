@@ -4,12 +4,8 @@ using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 
 public partial class DeckLibraryItemControl : PanelContainer
 {
-    [Signal]
-    public delegate void UnlockRequestedEventHandler(int unitTypeValue);
-
     [Export] private TextureRect _icon = null!;
     [Export] private Label _label = null!;
-    [Export] private Label _costLabel = null!;
     [Export] private Label _dragPreviewTemplate = null!;
     private int _unitTypeValue;
     private bool _canDrag;
@@ -21,23 +17,21 @@ public partial class DeckLibraryItemControl : PanelContainer
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_label, nameof(_label));
-        this.EnsureNotNull(_costLabel, nameof(_costLabel));
         this.EnsureNotNull(_dragPreviewTemplate, nameof(_dragPreviewTemplate));
     }
 
-    public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking)
+    public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
     {
         _unitTypeValue = (int)unitData.Type;
         _isUnlocked = isUnlocked;
         _isUnlocking = isUnlocking;
-        _canDrag = !alreadyInDeck && isUnlocked && !isUnlocking;
+        _canDrag = !alreadyInDeck && isUnlocked && !isUnlocking && !isDeckSaving;
 
         _icon.Texture = unitData.Icon;
         string deckTag = alreadyInDeck ? " [IN DECK]" : "";
         string lockTag = isUnlocked ? "" : " [LOCKED]";
         string pendingTag = isUnlocking ? " [UNLOCKING...]" : "";
         _label.Text = $"{unitData.Name}{deckTag}{lockTag}{pendingTag}";
-        _costLabel.Text = isUnlocked ? unitData.MatchCost.ToString() : $"U:{unitData.UnlockCost}";
         TooltipText = isUnlocked
             ? unitData.Name
             : isUnlocking
@@ -51,11 +45,15 @@ public partial class DeckLibraryItemControl : PanelContainer
 
         MouseDefaultCursorShape = _canDrag
             ? CursorShape.Drag
+            : isDeckSaving
+                ? CursorShape.Busy
             : isUnlocking
                 ? CursorShape.Busy
                 : isUnlocked
                 ? CursorShape.Forbidden
                 : CursorShape.PointingHand;
+
+        GD.Print($"Setup library item: {unitData.Name}, Unlocked: {isUnlocked}, Unlocking: {isUnlocking}, InDeck: {alreadyInDeck}, CanDrag: {_canDrag}");
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -75,7 +73,6 @@ public partial class DeckLibraryItemControl : PanelContainer
             return;
         }
 
-        EmitSignal(SignalName.UnlockRequested, _unitTypeValue);
         AcceptEvent();
     }
 
@@ -92,8 +89,7 @@ public partial class DeckLibraryItemControl : PanelContainer
             ["fromSlot"] = -1
         };
 
-        var preview = _dragPreviewTemplate.Duplicate() as Label;
-        if (preview == null)
+        if (_dragPreviewTemplate.Duplicate() is not Label preview)
         {
             return default;
         }

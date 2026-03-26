@@ -17,6 +17,7 @@ public abstract partial class DeckSelectionRight : Control
 
     protected readonly List<DeckLibraryItemControl> _libraryItems = new();
     private readonly HashSet<UnitType> _unlockInFlight = [];
+    private bool _isSavingDeck;
     private int _statusMessageVersion;
 
     /// <summary>
@@ -56,6 +57,9 @@ public abstract partial class DeckSelectionRight : Control
 
         state.DeckUpdated += OnDeckUpdated;
         state.ProfileUpdated += OnProfileUpdated;
+        state.DeckSaveStatusChanged += OnDeckSaveStatusChanged;
+
+        _isSavingDeck = state.IsDeckSaveInProgress(GetRole());
     }
 
     protected virtual void DisconnectStateSignals()
@@ -68,11 +72,45 @@ public abstract partial class DeckSelectionRight : Control
 
         state.DeckUpdated -= OnDeckUpdated;
         state.ProfileUpdated -= OnProfileUpdated;
+        state.DeckSaveStatusChanged -= OnDeckSaveStatusChanged;
     }
 
-    protected virtual void OnDeckUpdated(int _roleValue)
+    protected virtual void OnDeckUpdated(int roleValue)
     {
+        if (roleValue != (int)GetRole())
+        {
+            return;
+        }
+
         Refresh();
+    }
+
+    protected virtual void OnDeckSaveStatusChanged(int roleValue, bool isSaving, bool isSuccess, string message)
+    {
+        if (roleValue != (int)GetRole())
+        {
+            return;
+        }
+
+        _isSavingDeck = isSaving;
+
+        if (isSaving)
+        {
+            _statusLabel.Text = "Saving deck...";
+            _statusLabel.Modulate = Colors.Goldenrod;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(message) && isSuccess)
+        {
+            ShowTransientStatus("Deck saved", Colors.LightGreen, 0.9);
+            return;
+        }
+
+        if (!isSuccess)
+        {
+            ShowTransientStatus($"Save failed: {message}", Colors.IndianRed, 2.2);
+        }
     }
 
     protected virtual void OnProfileUpdated()
@@ -82,6 +120,11 @@ public abstract partial class DeckSelectionRight : Control
 
     public override bool _CanDropData(Vector2 atPosition, Variant data)
     {
+        if (_isSavingDeck)
+        {
+            return false;
+        }
+
         if (data.Obj is not Dictionary<string, Variant> dict)
         {
             return false;
@@ -93,6 +136,11 @@ public abstract partial class DeckSelectionRight : Control
 
     public override void _DropData(Vector2 atPosition, Variant data)
     {
+        if (_isSavingDeck)
+        {
+            return;
+        }
+
         if (data.Obj is not Dictionary<string, Variant> dict)
         {
             return;
@@ -118,7 +166,7 @@ public abstract partial class DeckSelectionRight : Control
         if (fromSlot < deck.Count)
         {
             deck.RemoveAt(fromSlot);
-            _ = DeckSelectionLogic.SaveDeckForRole(role, deck);
+            DeckSelectionLogic.SubmitDeckSaveForRole(role, deck);
         }
 
         GetTree().Root.SetInputAsHandled();
@@ -154,65 +202,9 @@ public abstract partial class DeckSelectionRight : Control
                 continue;
             }
 
-            item.Setup(unitData, alreadyInDeck, isUnlocked, isUnlocking);
-            item.UnlockRequested += OnUnlockRequested;
+            item.Setup(unitData, alreadyInDeck, isUnlocked, isUnlocking, _isSavingDeck);
             _libraryContainer.AddChild(item);
             _libraryItems.Add(item);
-        }
-    }
-
-    protected virtual async void OnUnlockRequested(int unitTypeValue)
-    {
-        var role = GetRole();
-        if (!Enum.IsDefined(typeof(UnitType), unitTypeValue))
-        {
-            return;
-        }
-
-        if (GameState.Instance.HasAssignedRole)
-        {
-            return;
-        }
-
-        UnitType unitType = (UnitType)unitTypeValue;
-        if (GameState.Instance.IsUnitUnlocked(role, unitType))
-        {
-            return;
-        }
-
-        if (!_unlockInFlight.Add(unitType))
-        {
-            return;
-        }
-
-        Refresh();
-        ShowTransientStatus($"Unlocking {unitType}...", Colors.Yellow, 1.5);
-
-        try
-        {
-            await NetworkBootstrap.Instance.Menu.UnlockUnitAsync(unitType);
-            ShowTransientStatus($"Unlocked {unitType}.", Colors.Green, 2.0);
-        }
-        catch (ApiException ex)
-        {
-            string message = string.IsNullOrWhiteSpace(ex.Content) ? ex.Message : ex.Content;
-            ShowTransientStatus($"Unlock failed: {message}", Colors.Red, 3.5);
-            GD.PrintErr($"Failed to unlock unit {unitType}: {ex.Message}");
-        }
-        catch (TaskCanceledException)
-        {
-            ShowTransientStatus($"Unlock canceled for {unitType}.", Colors.Red, 2.5);
-            GD.PrintErr($"Unlock request canceled for unit {unitType}.");
-        }
-        catch (Exception ex)
-        {
-            ShowTransientStatus($"Unexpected unlock error.", Colors.Red, 3.0);
-            GD.PrintErr($"Unexpected unlock error for unit {unitType}: {ex.Message}");
-        }
-        finally
-        {
-            _unlockInFlight.Remove(unitType);
-            Refresh();
         }
     }
 

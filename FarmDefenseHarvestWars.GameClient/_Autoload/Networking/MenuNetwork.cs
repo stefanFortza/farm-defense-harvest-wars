@@ -22,9 +22,7 @@ public partial class MenuNetwork : Node
             Units = [.. units]
         };
 
-        var updatedDeck = await NetworkBootstrap.Instance.ApiClient.UpdateDeckAsync(role, request);
-        GameState.Instance.SetDeckForRole(role, updatedDeck.Units);
-        return updatedDeck;
+        return await NetworkBootstrap.Instance.ApiClient.UpdateDeckAsync(role, request);
     }
 
     public async Task<PlayerProfileDto> UnlockUnitAsync(UnitType unitType)

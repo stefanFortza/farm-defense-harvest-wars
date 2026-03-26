@@ -126,7 +126,7 @@ public partial class TabsManager : Control
 
 	private void ShowTabByKey(string key)
 	{
-		GD.Print($"[TabsManager] Showing pages for key: {key}");
+		// GD.Print($"[TabsManager] Showing pages for key: {key}");
 
 		if (string.IsNullOrEmpty(key))
 		{

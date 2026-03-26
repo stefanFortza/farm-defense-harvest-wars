@@ -12,6 +12,7 @@ public abstract partial class DeckSelectionLeft : Control
     [Export] protected PackedScene _slotScene = null!;
 
     protected readonly List<DeckSlotControl> _slots = new();
+    protected bool _isSavingDeck;
 
     /// <summary>
     /// Returns the role this page is responsible for.
@@ -71,6 +72,9 @@ public abstract partial class DeckSelectionLeft : Control
         }
 
         state.DeckUpdated += OnDeckUpdated;
+        state.DeckSaveStatusChanged += OnDeckSaveStatusChanged;
+
+        _isSavingDeck = state.IsDeckSaveInProgress(GetRole());
     }
 
     protected virtual void DisconnectStateSignals()
@@ -82,17 +86,33 @@ public abstract partial class DeckSelectionLeft : Control
         }
 
         state.DeckUpdated -= OnDeckUpdated;
+        state.DeckSaveStatusChanged -= OnDeckSaveStatusChanged;
     }
 
-    protected virtual void OnDeckUpdated(int _roleValue)
+    protected virtual void OnDeckUpdated(int roleValue)
     {
+        if (roleValue != (int)GetRole())
+        {
+            return;
+        }
+
         Refresh();
+    }
+
+    protected virtual void OnDeckSaveStatusChanged(int roleValue, bool isSaving, bool _isSuccess, string _message)
+    {
+        if (roleValue != (int)GetRole())
+        {
+            return;
+        }
+
+        _isSavingDeck = isSaving;
     }
 
     protected virtual void OnSlotDropRequested(int targetIndex, int unitTypeValue, int fromSlotIndex)
     {
         // Guard: deck editing only allowed in menu (no assigned role)
-        if (GameState.Instance.HasAssignedRole)
+        if (GameState.Instance.HasAssignedRole || _isSavingDeck)
         {
             return;
         }
@@ -115,7 +135,7 @@ public abstract partial class DeckSelectionLeft : Control
             InsertFromLibrary(deck, unitType, targetIndex);
         }
 
-        _ = DeckSelectionLogic.SaveDeckForRole(role, deck);
+        DeckSelectionLogic.SubmitDeckSaveForRole(role, deck);
     }
 
     protected virtual void MoveDeckEntry(List<UnitType> deck, int fromIndex, int targetIndex)

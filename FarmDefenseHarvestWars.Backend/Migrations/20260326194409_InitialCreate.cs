@@ -160,6 +160,50 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Decks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
+                    UnitCompositionJson = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Decks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Decks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnitUnlocks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false),
+                    UnitType = table.Column<int>(type: "INTEGER", nullable: false),
+                    UnlockedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitUnlocks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UnitUnlocks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -196,6 +240,23 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decks_UserId_Role",
+                table: "Decks",
+                columns: new[] { "UserId", "Role" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnitUnlocks_UserId_Role",
+                table: "UnitUnlocks",
+                columns: new[] { "UserId", "Role" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnitUnlocks_UserId_Role_UnitType",
+                table: "UnitUnlocks",
+                columns: new[] { "UserId", "Role", "UnitType" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -215,6 +276,12 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Decks");
+
+            migrationBuilder.DropTable(
+                name: "UnitUnlocks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

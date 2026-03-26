@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmDefenseHarvestWars.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260326100225_AddUnitUnlocks")]
-    partial class AddUnitUnlocks
+    [Migration("20260326194409_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
