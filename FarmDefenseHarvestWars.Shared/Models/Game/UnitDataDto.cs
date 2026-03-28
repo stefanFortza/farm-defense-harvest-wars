@@ -5,6 +5,7 @@ namespace FarmDefenseHarvestWars.Shared.Models.Game;
 public class UnitDataDto
 {
     public UnitType Type { get; set; }
+    public PlayerRole? Role { get; set; }
     public string Name { get; set; } = string.Empty;
     public int MatchCost { get; set; }
     public int UnlockCost { get; set; }

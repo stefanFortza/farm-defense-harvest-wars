@@ -1,12 +1,19 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://bykob4e8cb0we"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://bykob4e8cb0we"]
 
+[ext_resource type="Texture2D" uid="uid://k0rnhhd3jpm" path="res://Assets/Icons/ChickenIcon.png" id="1_8vb8k"]
 [ext_resource type="PackedScene" uid="uid://cbv885ok08a2e" path="res://Entities/Projectiles/EggProjetile/EggProjectile.tscn" id="1_ojja2"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="2_8vb8k"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ojja2"]
+atlas = ExtResource("1_8vb8k")
+region = Rect2(11, 10, 13, 12)
 
 [resource]
 script = ExtResource("2_8vb8k")
 Type = 2
+Role = 1
 Name = "Chicken"
+Icon = SubResource("AtlasTexture_ojja2")
 UnitScenePath = "uid://7paoe53gsnp3"
 ProjectileScene = ExtResource("1_ojja2")
 AttackRange = 180.0

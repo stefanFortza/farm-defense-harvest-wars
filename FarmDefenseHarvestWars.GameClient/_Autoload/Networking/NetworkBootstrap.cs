@@ -15,6 +15,7 @@ public partial class NetworkBootstrap : Node
     // Referințe către serviciile copil
     public AuthService Auth { get; private set; } = null!;
     public GameplayNetwork Gameplay { get; private set; } = null!;
+    public MenuNetwork Menu { get; private set; } = null!;
     // public ShopService Shop { get; private set; } // De implementat ulterior
 
     public override void _Ready()
@@ -39,6 +40,12 @@ public partial class NetworkBootstrap : Node
             Name = "GameplayNetwork"
         };
         AddChild(Gameplay);
+
+        Menu = new MenuNetwork
+        {
+            Name = "MenuNetwork"
+        };
+        AddChild(Menu);
 
         GD.Print("Network Services Initialized.");
     }

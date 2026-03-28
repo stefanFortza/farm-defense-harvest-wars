@@ -1,63 +1,106 @@
-[gd_scene load_steps=10 format=3 uid="uid://d2pbrn4oof35o"]
+[gd_scene load_steps=8 format=3 uid="uid://d2pbrn4oof35o"]
 
 [ext_resource type="Texture2D" uid="uid://dkaacttteavom" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/Book_UI.png" id="1_ilrgx"]
 [ext_resource type="Script" uid="uid://cybrmvvjxif7h" path="res://Scenes/UI/Components/TabButton/TabButton.cs" id="2_8paob"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_nglnj"]
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8paob"]
-load_path = "res://.godot/imported/Book_UI.png-ea919fcb508ac880269eae8899c709b5.ctex"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_itb4g"]
-atlas = SubResource("CompressedTexture2D_8paob")
-region = Rect2(590, 30, 20, 18)
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_itb4g"]
-load_path = "res://.godot/imported/Book_UI.png-ea919fcb508ac880269eae8899c709b5.ctex"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6q8yr"]
-atlas = SubResource("CompressedTexture2D_itb4g")
-region = Rect2(590, 78, 20, 18)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_0vkk7"]
 atlas = ExtResource("1_ilrgx")
-region = Rect2(590, 30, 20, 20)
+region = Rect2(752, 31, 22, 18)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3ajin"]
+load_path = "res://.godot/imported/Book_UI.png-ea919fcb508ac880269eae8899c709b5.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pq28t"]
+atlas = SubResource("CompressedTexture2D_3ajin")
+region = Rect2(750, 79, 28, 18)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8paob"]
 atlas = ExtResource("2_nglnj")
 region = Rect2(112, 16, 16, 16)
 
-[node name="TabButton" type="TextureButton" node_paths=PackedStringArray("BackgroundNode", "IconNode")]
-custom_minimum_size = Vector2(20, 18)
-offset_right = 20.0
-offset_bottom = 18.0
+[node name="TabButton" type="TextureButton" node_paths=PackedStringArray("ContentRootNode", "BackgroundNormalNode", "BackgroundActiveNode", "IconNode")]
+custom_minimum_size = Vector2(32, 20)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -9.0
+offset_right = 22.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
 toggle_mode = true
 script = ExtResource("2_8paob")
-BackgroundNode = NodePath("Background")
-IconNode = NodePath("Background/Icon")
-NormalTexture = SubResource("AtlasTexture_itb4g")
-ActiveTexture = SubResource("AtlasTexture_6q8yr")
+ContentRootNode = NodePath("ContentRoot")
+BackgroundNormalNode = NodePath("ContentRoot/BackgroundNormal")
+BackgroundActiveNode = NodePath("ContentRoot/BackgroundActive")
+IconNode = NodePath("ContentRoot/Icon")
 
-[node name="Background" type="NinePatchRect" parent="."]
+[node name="ContentRoot" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackgroundNormal" type="NinePatchRect" parent="ContentRoot"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -10.0
+offset_right = 16.0
+offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_0vkk7")
-region_rect = Rect2(0, 0, 20, 18)
-patch_margin_left = 4
-patch_margin_top = 17
-patch_margin_right = 4
+region_rect = Rect2(0, 0, 22, 18)
+patch_margin_top = 2
+patch_margin_right = 6
+patch_margin_bottom = 2
 
-[node name="Icon" type="TextureRect" parent="Background"]
+[node name="BackgroundActive" type="NinePatchRect" parent="ContentRoot"]
+visible = false
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 8
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
-offset_left = -8.0
-offset_top = 3.0
-offset_right = 8.0
-offset_bottom = 19.0
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -10.0
+offset_right = 16.0
+offset_bottom = 10.0
 grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_pq28t")
+region_rect = Rect2(0, 0, 28, 18)
+patch_margin_top = 2
+patch_margin_right = 6
+patch_margin_bottom = 2
+
+[node name="Icon" type="TextureRect" parent="ContentRoot"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -8.0
+offset_right = 10.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 texture = SubResource("AtlasTexture_8paob")

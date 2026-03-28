@@ -1,11 +1,18 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3 uid="uid://b34saaikrumva"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://b34saaikrumva"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_ajajn"]
+[ext_resource type="Texture2D" uid="uid://btd2r8is1tuvq" path="res://Assets/Icons/SkeletonSwordmanIcon.png" id="1_q2cpv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ajajn"]
+atlas = ExtResource("1_q2cpv")
+region = Rect2(11, 4, 15, 19)
 
 [resource]
 script = ExtResource("1_ajajn")
 Type = 8
+Role = 1
 Name = "Skeleton"
+Icon = SubResource("AtlasTexture_ajajn")
 UnitScenePath = "uid://cnapywfs7vvi7"
 Speed = 10.0
 AttackRange = 15.0

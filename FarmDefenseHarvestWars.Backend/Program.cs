@@ -1,15 +1,20 @@
 using FarmDefenseHarvestWars.Backend.Data;
 using FarmDefenseHarvestWars.Backend.Models;
+using FarmDefenseHarvestWars.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configurare SQLite
 // Asigură-te că ai pachetul: Microsoft.EntityFrameworkCore.Sqlite
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=game_dev.db"));
+builder.Services.AddScoped<IDefaultUnitUnlockService, DefaultUnitUnlockService>();
+builder.Services.AddScoped<DevelopmentTestUserSeeder>();
+builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+    options
+    .UseSqlite("Data Source=game_dev.db"));
 
 // 2. Configurare Identity (Login/Register)
 builder.Services.AddAuthorization();
@@ -29,8 +34,14 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 // 3. Controllere
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<IMatchServerOrchestrator, ProcessMatchServerOrchestrator>();
+builder.Services.AddSingleton<IUnitRegistryProvider, UnitRegistryProvider>();
 
 // 4. Configurare SWAGGER (Versiunea NOUĂ pentru .NET 10 / Swashbuckle v10+)
 builder.Services.AddSwaggerGen(options =>
@@ -59,6 +70,12 @@ var app = builder.Build();
 // 5. Pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
+    using (IServiceScope scope = app.Services.CreateScope())
+    {
+        DevelopmentTestUserSeeder testUserSeeder = scope.ServiceProvider.GetRequiredService<DevelopmentTestUserSeeder>();
+        await testUserSeeder.SeedAsync();
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -74,4 +91,4 @@ app.MapIdentityApi<ApplicationUser>();
 // Mapăm controllerele tale (Joc, Inventar, etc.)
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

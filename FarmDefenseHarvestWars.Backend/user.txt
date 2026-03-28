@@ -1,4 +1,8 @@
-{
-  "email": "fermier@joc.com",
+[{
+  "email": "fermier1@joc.com",
   "password": "Password123!"
-}
+},
+{
+  "email": "fermier2@joc.com",
+  "password": "Password123!"
+}]

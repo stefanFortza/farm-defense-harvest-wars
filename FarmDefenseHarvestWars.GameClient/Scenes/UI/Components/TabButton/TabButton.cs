@@ -1,3 +1,4 @@
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using Godot;
 
 public partial class TabButton : TextureButton
@@ -13,12 +14,12 @@ public partial class TabButton : TextureButton
 	[Signal]
 	public delegate void AnimationFinishedEventHandler(TabButton buttonChanged, TabButtonState finalState);
 
-	[Export] public NinePatchRect BackgroundNode = null!;
+	[Export] public Control ContentRootNode = null!;
+	[Export] public NinePatchRect BackgroundNormalNode = null!;
+	[Export] public NinePatchRect BackgroundActiveNode = null!;
 	[Export] public TextureRect IconNode = null!;
 
 	[ExportGroup("Textures")]
-	[Export] public Texture2D NormalTexture = null!;
-	[Export] public Texture2D ActiveTexture = null!;
 	[Export] public Texture2D IconTexture = null!;
 
 	[ExportGroup("Identity")]
@@ -26,25 +27,26 @@ public partial class TabButton : TextureButton
 
 	[ExportGroup("Settings")]
 	[Export] public float LiftAmount = -2.0f;
-	[Export] public float ActiveLiftAmount = -4.0f; // Tab-ul activ stă și mai sus?
+	[Export] public float ActiveLiftAmount = -4.0f;
 
-	private Vector2 _bgOriginalPos;
+	private const float AnimationDuration = 0.2f;
+
+	private Vector2 _contentOriginalPos;
 	private bool _isHovered = false;
 	private TabButtonState _currentState = TabButtonState.Inactive;
 
 	public override void _Ready()
 	{
-		BackgroundNode ??= GetNodeOrNull<NinePatchRect>("NinePatchRect");
-		IconNode ??= GetNodeOrNull<TextureRect>("NinePatchRect/Icon");
+		this.EnsureNotNull(ContentRootNode, nameof(ContentRootNode));
+		this.EnsureNotNull(BackgroundNormalNode, nameof(BackgroundNormalNode));
+		this.EnsureNotNull(BackgroundActiveNode, nameof(BackgroundActiveNode));
+		this.EnsureNotNull(IconNode, nameof(IconNode));
 
-		_bgOriginalPos = BackgroundNode.Position;
+		_contentOriginalPos = ContentRootNode.Position;
 		IconNode.PivotOffset = IconNode.Size / 2;
 
 		// Apply custom icon if provided
-		if (IconNode != null && IconTexture != null)
-		{
-			IconNode.Texture = IconTexture;
-		}
+		IconNode.Texture = IconTexture;
 
 		// Connect event handlers - using separate methods for better debuggability and testability
 		Toggled += OnToggled;
@@ -58,10 +60,7 @@ public partial class TabButton : TextureButton
 	public void SetIconTexture(Texture2D texture)
 	{
 		IconTexture = texture;
-		if (IconNode != null)
-		{
-			IconNode.Texture = IconTexture;
-		}
+		IconNode.Texture = IconTexture;
 	}
 
 	public override void _ExitTree()
@@ -72,7 +71,7 @@ public partial class TabButton : TextureButton
 		MouseExited -= OnMouseExited;
 	}
 
-	private void OnToggled(bool pressed)
+	private void OnToggled(bool _)
 	{
 		UpdateVisualState();
 	}
@@ -92,13 +91,9 @@ public partial class TabButton : TextureButton
 	private void UpdateVisualState()
 	{
 		_currentState = DetermineCurrentState();
-		Tween? activeTween = ApplyStateVisuals(_currentState);
+		Tween activeTween = ApplyStateVisuals(_currentState);
 
-		// If we have an active tween, connect to its Finished signal
-		if (activeTween != null)
-		{
-			activeTween.Finished += OnAnimationFinished;
-		}
+		activeTween.Finished += OnAnimationFinished;
 	}
 
 	private TabButtonState DetermineCurrentState()
@@ -112,61 +107,47 @@ public partial class TabButton : TextureButton
 		return TabButtonState.Inactive;
 	}
 
-	private Tween? ApplyStateVisuals(TabButtonState state)
+	private Tween ApplyStateVisuals(TabButtonState state)
 	{
-		switch (state)
+		return state switch
 		{
-			case TabButtonState.Active:
-				return ApplyActiveState();
-
-			case TabButtonState.Hovered:
-				return ApplyHoveredState();
-
-			case TabButtonState.Inactive:
-			default:
-				return ApplyInactiveState();
-		}
+			TabButtonState.Active => ApplyActiveState(),
+			TabButtonState.Hovered => ApplyHoveredState(),
+			_ => ApplyInactiveState(),
+		};
 	}
 
 	private Tween ApplyActiveState()
 	{
-		var tween = MoveToOffset(ActiveLiftAmount, 0.2f);
+		SetActiveBackgroundVisible(true);
+		var tween = MoveToHorizontalOffset(ActiveLiftAmount, AnimationDuration);
 
-		if (BackgroundNode != null && ActiveTexture != null)
-		{
-			BackgroundNode.Texture = ActiveTexture;
-			BackgroundNode.Modulate = Colors.White;
-		}
-
-		IconNode?.ResetShake();
+		IconNode.ResetShake();
 		return tween;
 	}
 
 	private Tween ApplyHoveredState()
 	{
-		var tween = MoveToOffset(LiftAmount, 0.2f);
+		SetActiveBackgroundVisible(false);
+		var tween = MoveToHorizontalOffset(LiftAmount, AnimationDuration);
 
-		if (BackgroundNode != null && NormalTexture != null)
-		{
-			BackgroundNode.Texture = NormalTexture;
-		}
-
-		IconNode?.Shake();
+		IconNode.Shake();
 		return tween;
 	}
 
 	private Tween ApplyInactiveState()
 	{
-		var tween = MoveToOffset(0, 0.2f);
+		SetActiveBackgroundVisible(false);
+		var tween = MoveToHorizontalOffset(0, AnimationDuration);
 
-		if (BackgroundNode != null && NormalTexture != null)
-		{
-			BackgroundNode.Texture = NormalTexture;
-			BackgroundNode.Modulate = Colors.White;
-		}
-
-		IconNode?.ResetShake();
+		IconNode.ResetShake();
 		return tween;
+	}
+
+	private void SetActiveBackgroundVisible(bool isActive)
+	{
+		BackgroundActiveNode.Visible = isActive;
+		BackgroundNormalNode.Visible = !isActive;
 	}
 
 	private void OnAnimationFinished()
@@ -175,13 +156,9 @@ public partial class TabButton : TextureButton
 		EmitSignal(SignalName.AnimationFinished, this, Variant.From(_currentState));
 	}
 
-	private Tween MoveToOffset(float offsetY, float duration)
+	private Tween MoveToHorizontalOffset(float offsetX, float duration)
 	{
-		if (BackgroundNode != null)
-		{
-			Vector2 targetPos = _bgOriginalPos + new Vector2(0, offsetY);
-			return BackgroundNode.AnimatePosition(targetPos, duration);
-		}
-		return null;
+		Vector2 targetPos = _contentOriginalPos + new Vector2(offsetX, 0);
+		return ContentRootNode.AnimatePosition(targetPos, duration);
 	}
 }

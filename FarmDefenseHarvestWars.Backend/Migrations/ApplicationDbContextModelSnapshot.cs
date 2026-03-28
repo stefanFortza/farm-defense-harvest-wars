@@ -94,6 +94,65 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.Deck", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UnitCompositionJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Role")
+                        .IsUnique();
+
+                    b.ToTable("Decks");
+                });
+
+            modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.UnitUnlock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UnitType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UnlockedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Role");
+
+                    b.HasIndex("UserId", "Role", "UnitType")
+                        .IsUnique();
+
+                    b.ToTable("UnitUnlocks");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -222,6 +281,28 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.Deck", b =>
+                {
+                    b.HasOne("FarmDefenseHarvestWars.Backend.Models.ApplicationUser", "User")
+                        .WithMany("Decks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.UnitUnlock", b =>
+                {
+                    b.HasOne("FarmDefenseHarvestWars.Backend.Models.ApplicationUser", "User")
+                        .WithMany("UnitUnlocks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -271,6 +352,13 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Decks");
+
+                    b.Navigation("UnitUnlocks");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,11 +12,14 @@ public partial class UnitData : Resource
 {
     [ExportGroup("Identity")]
     [Export] public UnitType Type { get; set; }
+
+    [Export] public PlayerRole Role { get; set; }
     [Export] public string Name { get; set; } = "Unit";
     [Export] public Texture2D Icon { get; set; }
 
     [ExportGroup("In-Game Economy (Match)")]
     [Export] public int MatchCost { get; set; } = 25;
+    [Export] public float CardCooldownSeconds { get; set; } = 3.0f;
 
     [ExportGroup("Meta Economy (Backend Shop)")]
     [Export] public int UnlockCost { get; set; } = 100;

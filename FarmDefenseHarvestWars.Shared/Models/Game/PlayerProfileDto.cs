@@ -6,5 +6,5 @@ public class PlayerProfileDto
     public int Gold { get; set; }
     public int Level { get; set; }
     public int Xp { get; set; }
-    // Vom adăuga unitățile mai târziu
+    public PlayerUnlockedUnitsDto UnlockedUnits { get; set; } = new();
 }

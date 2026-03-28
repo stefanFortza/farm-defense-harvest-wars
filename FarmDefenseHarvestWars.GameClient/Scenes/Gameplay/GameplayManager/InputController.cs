@@ -11,6 +11,7 @@ namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
 public partial class InputController : Node, IInitializable<GameplayContext>
 {
 	public enum LocalInputState { Idle, PlacingUnit }
+	[Signal] public delegate void PlacementResolvedEventHandler(long requestId, int unitType, bool success, string reason);
 
 	private GridSystem _gridSystem = null!;
 	private GameplayOrchestrator _orchestrator = null!;
@@ -19,6 +20,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private LocalInputState _currentState = LocalInputState.Idle;
 	private UnitType _pendingUnitType = UnitType.None;
+	private long _pendingRequestId = -1;
 
 	public bool IsInitialized { get; private set; } = false;
 
@@ -29,7 +31,16 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 		_gridSystem = data.Grid;
 		_orchestrator = data.Orchestrator;
 		_unitRegistry = data.UnitRegistry;
+		_orchestrator.PlacementRequestResolved += OnPlacementRequestResolved;
 		IsInitialized = true;
+	}
+
+	public override void _ExitTree()
+	{
+		if (_orchestrator != null)
+		{
+			_orchestrator.PlacementRequestResolved -= OnPlacementRequestResolved;
+		}
 	}
 
 	public override void _Ready()
@@ -67,7 +78,12 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 	// Metoda asta o apelezi din UI (Butonul de "Cumpără Vacă")
 	public void StartPlacingUnit(UnitType type)
 	{
-		var stats = _unitRegistry.GetUnitData(type);
+		if (_pendingRequestId > 0)
+		{
+			return;
+		}
+
+		_ = _unitRegistry.GetUnitData(type);
 
 		_currentState = LocalInputState.PlacingUnit;
 		_pendingUnitType = type;
@@ -104,9 +120,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 		switch (_currentState)
 		{
 			case LocalInputState.Idle:
-				// Logică de selecție (Viitor: Select unit/building)
-				// Momentan schimbă starea pentru testare rapidă
-				StartPlacingUnit(UnitType.Skeleton);
+				// no-op; plasarea pornește din HUD
 				break;
 
 			case LocalInputState.PlacingUnit:
@@ -117,19 +131,20 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private void TryPlaceUnit()
 	{
+		if (_pendingRequestId > 0)
+		{
+			return;
+		}
+
 		Vector2 mousePos = GetViewport().GetMousePosition();
 		Vector2I gridPos = _gridSystem.GetGridPosition(mousePos);
 
 		if (IsPlacementValid(gridPos))
 		{
 			// Trimitem cererea către Orchestrator (Server)
-			_orchestrator.RequestPlaceUnit(_pendingUnitType, gridPos);
+			_pendingRequestId = _orchestrator.RequestPlaceUnit(_pendingUnitType, gridPos);
 
-			GD.Print($"InputController: Requesting placement of {_pendingUnitType} at {gridPos}");
-
-			// Dacă vrei să poți pune mai multe la rând, nu reseta starea.
-			// Pentru moment resetăm după o plasare reușită.
-			CancelPlacement();
+			GD.Print($"InputController: Requesting placement of {_pendingUnitType} at {gridPos} (req={_pendingRequestId})");
 		}
 	}
 
@@ -137,13 +152,38 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 	{
 		_currentState = LocalInputState.Idle;
 		_pendingUnitType = UnitType.None;
+		_pendingRequestId = -1;
 		_ghostCursor.Visible = false;
+	}
+
+	private void OnPlacementRequestResolved(long requestId, int unitType, bool success, string reason, Vector2I _gridPos)
+	{
+		EmitSignal(SignalName.PlacementResolved, requestId, unitType, success, reason);
+
+		if (requestId != _pendingRequestId)
+		{
+			return;
+		}
+
+		_pendingRequestId = -1;
+
+		if (success)
+		{
+			CancelPlacement();
+		}
+		else
+		{
+			GD.Print($"Placement rejected: {reason}");
+		}
 	}
 
 	private bool IsPlacementValid(Vector2I gridPos)
 	{
 		// verificam daca este in zona de plasare a rolului nostru
-		PlayerRole localRole = GameState.Instance.Role;
+		if (GameState.Instance == null || !GameState.Instance.HasAssignedRole)
+			return false;
+
+		PlayerRole localRole = GameState.Instance.AssignedRole!.Value;
 		if (!_gridSystem.IsValidPlacement(gridPos, localRole))
 			return false;
 

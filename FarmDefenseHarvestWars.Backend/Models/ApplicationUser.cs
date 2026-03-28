@@ -12,4 +12,7 @@ public class ApplicationUser : IdentityUser
     // Putem salva deck-ul ca un string JSON simplu pentru început
     // Ex: "['cow_unit', 'chicken_unit']"
     public string UnlockedUnits { get; set; } = "[]";
+
+    public ICollection<Deck> Decks { get; set; } = [];
+    public ICollection<UnitUnlock> UnitUnlocks { get; set; } = [];
 }
