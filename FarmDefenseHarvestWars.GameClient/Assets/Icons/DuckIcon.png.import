@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btd2r8is1tuvq"
-path="res://.godot/imported/Skeleton_Swordman.png-70e174788d258afc6cde19c0afbaad84.ctex"
+uid="uid://08yw8t3h5o5i"
+path="res://.godot/imported/DuckIcon.png-6cc96c3449e78ae3cfe2400f5c1ed8df.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Icons/Skeleton_Swordman.png"
-dest_files=["res://.godot/imported/Skeleton_Swordman.png-70e174788d258afc6cde19c0afbaad84.ctex"]
+source_file="res://Assets/Icons/DuckIcon.png"
+dest_files=["res://.godot/imported/DuckIcon.png-6cc96c3449e78ae3cfe2400f5c1ed8df.ctex"]
 
 [params]
 

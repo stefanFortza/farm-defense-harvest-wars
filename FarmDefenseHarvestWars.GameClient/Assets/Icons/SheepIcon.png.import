@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b02y6jrw0mxtw"
-path="res://.godot/imported/Cow_01.png-c112dd73fe5a208a1fb5b8aec207204c.ctex"
+uid="uid://bbm8pffdn7sal"
+path="res://.godot/imported/SheepIcon.png-d367eda706fa220cb78cee233921cc33.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Icons/Cow_01.png"
-dest_files=["res://.godot/imported/Cow_01.png-c112dd73fe5a208a1fb5b8aec207204c.ctex"]
+source_file="res://Assets/Icons/SheepIcon.png"
+dest_files=["res://.godot/imported/SheepIcon.png-d367eda706fa220cb78cee233921cc33.ctex"]
 
 [params]
 

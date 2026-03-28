@@ -12,6 +12,7 @@ public partial class UnitData : Resource
 {
     [ExportGroup("Identity")]
     [Export] public UnitType Type { get; set; }
+
     [Export] public PlayerRole Role { get; set; }
     [Export] public string Name { get; set; } = "Unit";
     [Export] public Texture2D Icon { get; set; }

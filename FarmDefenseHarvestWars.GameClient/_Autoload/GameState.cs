@@ -15,6 +15,11 @@ public partial class GameState : Node
     public PlayerProfileDto? CurrentProfile { get; private set; }
     public SelectedDeckData? CurrentDeck { get; private set; }
 
+    // Match Configuration (Server mode only)
+    public string? MatchId { get; private set; }
+    public IReadOnlyList<UnitType>? DefenderDeck { get; private set; }
+    public IReadOnlyList<UnitType>? AttackerDeck { get; private set; }
+
     // Computed Property - Ești logat dacă ai un profil încărcat
     public bool IsLoggedIn => CurrentProfile != null;
 
@@ -22,6 +27,7 @@ public partial class GameState : Node
     public bool HasAssignedRole => AssignedRole.HasValue;
     public bool IsDedicatedServerProcess => CmdArgs.IsServer;
     public bool IsNetworkServer => Multiplayer.MultiplayerPeer != null && Multiplayer.IsServer();
+    public bool IsMatchConfigured => !string.IsNullOrEmpty(MatchId) && DefenderDeck != null && AttackerDeck != null;
 
     // Semnale pentru UI (Observer Pattern)
     [Signal] public delegate void ProfileUpdatedEventHandler();
@@ -29,12 +35,31 @@ public partial class GameState : Node
     [Signal] public delegate void RoleAssignedEventHandler(int role);
     [Signal] public delegate void DeckUpdatedEventHandler(int role);
     [Signal] public delegate void DeckSaveStatusChangedEventHandler(int role, bool isSaving, bool isSuccess, string message);
+    [Signal] public delegate void MatchConfigurationLoadedEventHandler();
 
     private readonly HashSet<PlayerRole> _deckSavesInFlight = [];
 
     public override void _Ready()
     {
         Instance = this;
+
+        // Load match configuration from CmdArgs in server mode
+        if (CmdArgs.IsServer)
+        {
+            MatchId = CmdArgs.MatchId;
+            DefenderDeck = CmdArgs.DefenderDeck;
+            AttackerDeck = CmdArgs.AttackerDeck;
+
+            if (IsMatchConfigured)
+            {
+                GD.Print($"[GameState] Match configured | MatchId: {MatchId} | Defender deck: {string.Join(", ", DefenderDeck!)} | Attacker deck: {string.Join(", ", AttackerDeck!)}");
+                EmitSignal(SignalName.MatchConfigurationLoaded);
+            }
+            else if (!string.IsNullOrEmpty(MatchId) || CmdArgs.DefenderDeck != null || CmdArgs.AttackerDeck != null)
+            {
+                GD.PrintErr($"[GameState] Incomplete match configuration | MatchId: {MatchId} | DefenderDeck: {(CmdArgs.DefenderDeck != null ? "set" : "null")} | AttackerDeck: {(CmdArgs.AttackerDeck != null ? "set" : "null")}");
+            }
+        }
     }
 
     // Funcție apelată când primim date noi de la server

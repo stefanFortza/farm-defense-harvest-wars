@@ -87,7 +87,12 @@ public partial class MatchManager : Node
         BroadcastSnapshot();
         BroadcastAllMoney();
 
-        Logger.Info("MatchManager: Match Reset and Started.");
+        string matchLog = $"MatchManager: Match Reset and Started";
+        if (GameState.Instance.IsMatchConfigured)
+        {
+            matchLog += $" | Match ID: {GameState.Instance.MatchId} | Defender deck: {string.Join(", ", GameState.Instance.DefenderDeck!)} | Attacker deck: {string.Join(", ", GameState.Instance.AttackerDeck!)}";
+        }
+        Logger.Info(matchLog);
     }
 
     public override void _Process(double delta)
