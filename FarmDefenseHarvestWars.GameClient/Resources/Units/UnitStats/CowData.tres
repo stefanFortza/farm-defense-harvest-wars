@@ -1,13 +1,19 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://b8wybv5au1sf0"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://b8wybv5au1sf0"]
 
 [ext_resource type="PackedScene" uid="uid://cbv885ok08a2e" path="res://Entities/Projectiles/EggProjetile/EggProjectile.tscn" id="1_d7t7q"]
+[ext_resource type="Texture2D" uid="uid://b02y6jrw0mxtw" path="res://Assets/Icons/Cow_01.png" id="1_uihsf"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_xkykw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u46yd"]
+atlas = ExtResource("1_uihsf")
+region = Rect2(5, 6, 14, 13)
 
 [resource]
 script = ExtResource("1_xkykw")
 Type = 1
 Role = 1
 Name = "Cow"
+Icon = SubResource("AtlasTexture_u46yd")
 UnitScenePath = "uid://cnl2b6psuuhba"
 ProjectileScene = ExtResource("1_d7t7q")
 MaxHealth = 500
