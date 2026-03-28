@@ -1,5 +1,4 @@
 using Godot;
-using System.Threading.Tasks;
 using Refit;
 using System;
 
@@ -8,11 +7,21 @@ namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MainMenuPages;
 public partial class MatchMakingButton : Button
 {
 	private bool _isSearching;
+	private GameplayNetwork Gameplay => NetworkBootstrap.Instance.Gameplay;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		Pressed += OnPressed;
+		Gameplay.ClientJoinStateChanged += OnClientJoinStateChanged;
+	}
+
+	public override void _ExitTree()
+	{
+		if (NetworkBootstrap.Instance?.Gameplay != null)
+		{
+			NetworkBootstrap.Instance.Gameplay.ClientJoinStateChanged -= OnClientJoinStateChanged;
+		}
 	}
 
 	private async void OnPressed()
@@ -25,6 +34,7 @@ public partial class MatchMakingButton : Button
 		_isSearching = true;
 		Disabled = true;
 		Text = "Searching...";
+		bool waitingForServerStart = false;
 
 		GD.Print("MatchMakingButton was pressed! Starting matchmaking...");
 
@@ -40,8 +50,10 @@ public partial class MatchMakingButton : Button
 			string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
 			int port = status.ServerPort ?? 7777;
 
-			NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
-			GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
+			Text = "Connecting...";
+			Gameplay.JoinGameServer(host, port);
+			waitingForServerStart = true;
+			return;
 		}
 		catch (ApiException ex)
 		{
@@ -53,15 +65,42 @@ public partial class MatchMakingButton : Button
 		}
 		finally
 		{
-			if (IsInsideTree())
+			if (!waitingForServerStart)
 			{
-				Disabled = false;
-				Text = "Play";
-			}
+				_isSearching = false;
 
-			_isSearching = false;
+				if (IsInsideTree())
+				{
+					Disabled = false;
+					Text = "Play";
+				}
+			}
 		}
 
+	}
+
+	private void OnClientJoinStateChanged(bool isConnecting, string message)
+	{
+		if (!IsInsideTree())
+		{
+			return;
+		}
+
+		if (isConnecting)
+		{
+			Disabled = true;
+			Text = string.IsNullOrWhiteSpace(message) ? "Connecting..." : message;
+			return;
+		}
+
+		if (!string.IsNullOrWhiteSpace(message))
+		{
+			GD.PrintErr($"Match join failed: {message}");
+		}
+
+		_isSearching = false;
+		Disabled = false;
+		Text = "Play";
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

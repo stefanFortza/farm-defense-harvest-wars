@@ -37,8 +37,10 @@ public static class CmdArgs
 
         IsServer = engineArgs.Contains("--server") || userArgs.Contains("--server");
 
-        foreach (string arg in userArgs)
+        for (int i = 0; i < userArgs.Length; i++)
         {
+            string arg = userArgs[i];
+
             if (arg.StartsWith("--email="))
             {
                 Email = arg.Substring("--email=".Length);
@@ -47,15 +49,42 @@ public static class CmdArgs
             {
                 Password = arg.Substring("--password=".Length);
             }
-            else if (arg.StartsWith("--port=") && int.TryParse(arg.Substring("--port=".Length), out int parsedPort))
+            else if (arg.StartsWith("--port="))
             {
-                Port = parsedPort;
+                SetPort(arg.Substring("--port=".Length));
+            }
+            else if (arg == "--port" && i + 1 < userArgs.Length)
+            {
+                i++;
+                SetPort(userArgs[i]);
             }
             else if (arg.StartsWith("--match-id="))
             {
                 MatchId = arg.Substring("--match-id=".Length);
             }
+            else if (arg == "--match-id" && i + 1 < userArgs.Length)
+            {
+                i++;
+                MatchId = userArgs[i];
+            }
         }
+    }
+
+    private static void SetPort(string rawPort)
+    {
+        if (!int.TryParse(rawPort, out int parsedPort))
+        {
+            GD.PrintErr($"Invalid port argument '{rawPort}'. Expected an integer.");
+            return;
+        }
+
+        if (parsedPort is < 1 or > 65535)
+        {
+            GD.PrintErr($"Port argument out of range '{parsedPort}'. Expected 1..65535.");
+            return;
+        }
+
+        Port = parsedPort;
     }
 
     private static void ReadEnvironmentVariables()

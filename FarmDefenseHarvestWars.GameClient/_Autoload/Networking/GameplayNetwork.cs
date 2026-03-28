@@ -2,29 +2,54 @@ using Godot;
 using FarmDefenseHarvestWars.Shared.Enums;
 using System.Collections.Generic;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
+using System.Threading.Tasks;
 
 public partial class GameplayNetwork : Node
 {
-    private ENetMultiplayerPeer _peer = null!;
+    private ENetMultiplayerPeer? _peer;
     private const int DefaultPort = 7777;
     private const int MaxPlayers = 2; // Constanta e sfanta
+    private const double ClientJoinTimeoutSeconds = 10.0;
 
     // Stocăm ID -> Role
     private readonly Dictionary<long, PlayerRole> _connectedPlayers = [];
+    private ulong _clientConnectAttemptId;
+    private bool _awaitingServerStart;
+    private bool _gameSceneLoadRequested;
+
+    [Signal] public delegate void ClientJoinStateChangedEventHandler(bool isConnecting, string message);
 
     // Proprietate helper pentru a afla rolul meu curent rapid
     public PlayerRole? MyRole =>
         _connectedPlayers.TryGetValue(Multiplayer.GetUniqueId(), out var role) ? role : null;
 
+    public override void _Ready()
+    {
+        Multiplayer.ConnectedToServer += OnConnectedToServer;
+        Multiplayer.ConnectionFailed += OnConnectionFailed;
+        Multiplayer.ServerDisconnected += OnServerDisconnected;
+    }
+
+    public override void _ExitTree()
+    {
+        Multiplayer.ConnectedToServer -= OnConnectedToServer;
+        Multiplayer.ConnectionFailed -= OnConnectionFailed;
+        Multiplayer.ServerDisconnected -= OnServerDisconnected;
+    }
+
     public void StartDedicatedServer()
     {
         _peer = new ENetMultiplayerPeer();
         int port = CmdArgs.Port ?? DefaultPort;
+
+        GD.Print(
+            $"[GameplayNetwork] Dedicated server startup | IsServer={CmdArgs.IsServer} | Port={port} | MatchId={CmdArgs.MatchId ?? "<null>"} | DefenderDeckSet={CmdArgs.DefenderDeck != null} | AttackerDeckSet={CmdArgs.AttackerDeck != null}");
+
         var error = _peer.CreateServer(port, MaxPlayers); // Limitam direct din ENet la 2
 
         if (error != Error.Ok)
         {
-            GD.PrintErr($"Server Fail: {error}");
+            GD.PrintErr($"Server Fail: {error} | attemptedPort={port} | hint=port may already be in use or command-line port parsing failed");
             return;
         }
 
@@ -37,9 +62,21 @@ public partial class GameplayNetwork : Node
 
     public void JoinGameServer(string ip = "127.0.0.1", int port = DefaultPort)
     {
+        ResetClientJoinState();
         _peer = new ENetMultiplayerPeer();
-        _peer.CreateClient(ip, port);
+        var error = _peer.CreateClient(ip, port);
+        if (error != Error.Ok)
+        {
+            FailClientJoin($"Failed to start client peer: {error}");
+            return;
+        }
+
+        _awaitingServerStart = true;
+        _clientConnectAttemptId++;
+
         Multiplayer.MultiplayerPeer = _peer;
+        EmitSignal(SignalName.ClientJoinStateChanged, true, $"Connecting to {ip}:{port}...");
+        _ = WatchClientJoinTimeoutAsync(_clientConnectAttemptId);
     }
 
     // --- SERVER LOGIC ---
@@ -97,6 +134,7 @@ public partial class GameplayNetwork : Node
         if (id == Multiplayer.GetUniqueId())
         {
             GameState.Instance?.SetAssignedRole(role);
+            EmitSignal(SignalName.ClientJoinStateChanged, true, "Connected. Waiting for match start...");
         }
 
         GD.Print($"[Sync] Player {id} is assigned {role}");
@@ -105,7 +143,80 @@ public partial class GameplayNetwork : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void StartGameScene()
     {
+        if (_gameSceneLoadRequested)
+        {
+            return;
+        }
+
+        _gameSceneLoadRequested = true;
+        _awaitingServerStart = false;
+        EmitSignal(SignalName.ClientJoinStateChanged, false, "");
+
         GD.Print("Loading Game World...");
         GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
+    }
+
+    private void OnConnectedToServer()
+    {
+        if (!_awaitingServerStart)
+        {
+            return;
+        }
+
+        EmitSignal(SignalName.ClientJoinStateChanged, true, "Connected. Waiting for role sync...");
+    }
+
+    private void OnConnectionFailed()
+    {
+        if (!_awaitingServerStart)
+        {
+            return;
+        }
+
+        FailClientJoin("Failed to connect to match server.");
+    }
+
+    private void OnServerDisconnected()
+    {
+        if (!_awaitingServerStart)
+        {
+            return;
+        }
+
+        FailClientJoin("Disconnected while waiting for match start.");
+    }
+
+    private async Task WatchClientJoinTimeoutAsync(ulong attemptId)
+    {
+        await ToSignal(GetTree().CreateTimer(ClientJoinTimeoutSeconds), SceneTreeTimer.SignalName.Timeout);
+
+        if (attemptId != _clientConnectAttemptId || !_awaitingServerStart)
+        {
+            return;
+        }
+
+        FailClientJoin("Timed out waiting for match server response.");
+    }
+
+    private void FailClientJoin(string reason)
+    {
+        GD.PrintErr($"[GameplayNetwork] {reason}");
+        ResetClientJoinState();
+        EmitSignal(SignalName.ClientJoinStateChanged, false, reason);
+    }
+
+    private void ResetClientJoinState()
+    {
+        _awaitingServerStart = false;
+        _gameSceneLoadRequested = false;
+        _connectedPlayers.Clear();
+
+        if (Multiplayer.MultiplayerPeer == _peer)
+        {
+            Multiplayer.MultiplayerPeer = null;
+        }
+
+        _peer?.Close();
+        _peer = null;
     }
 }
