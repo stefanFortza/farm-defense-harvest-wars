@@ -43,6 +43,7 @@ public partial class UnitData : Resource
         {
             Type = Type,
             Name = Name,
+            Role = Role,
             MatchCost = MatchCost,
             UnlockCost = UnlockCost,
             IsDefaultUnlocked = IsDefaultUnlocked,

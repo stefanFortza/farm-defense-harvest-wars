@@ -236,6 +236,8 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         var result = new Array<UnitData>();
         var selectedUnits = GameState.Instance?.GetMyMatchDeck();
 
+        GD.Print($"Rebuilding deck for role {role} with selected units: {string.Join(", ", selectedUnits ?? [])}");
+
         if (selectedUnits != null)
         {
             foreach (var unitType in selectedUnits)

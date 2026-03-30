@@ -9,7 +9,7 @@ region = Rect2(11, 4, 15, 19)
 
 [resource]
 script = ExtResource("1_ajajn")
-Type = 8
+Type = 6
 Role = 1
 Name = "Skeleton"
 Icon = SubResource("AtlasTexture_ajajn")

@@ -53,7 +53,7 @@ public partial class DeckLibraryItemControl : PanelContainer
                 ? CursorShape.Forbidden
                 : CursorShape.PointingHand;
 
-        GD.Print($"Setup library item: {unitData.Name}, Unlocked: {isUnlocked}, Unlocking: {isUnlocking}, InDeck: {alreadyInDeck}, CanDrag: {_canDrag}");
+        // GD.Print($"Setup library item: {unitData.Name}, Unlocked: {isUnlocked}, Unlocking: {isUnlocking}, InDeck: {alreadyInDeck}, CanDrag: {_canDrag}");
     }
 
     public override void _GuiInput(InputEvent @event)

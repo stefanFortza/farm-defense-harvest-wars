@@ -16,9 +16,10 @@ public sealed class UnitRegistryProvider : IUnitRegistryProvider
 
     private static readonly HashSet<UnitType> AttackerUnits =
     [
-        UnitType.Wolf,
-        UnitType.Fox,
-        UnitType.Bear,
+        UnitType.GoblinSpearman,
+        UnitType.Orc,
+        UnitType.SkeletonMage,
+        UnitType.Spearman,
         UnitType.Skeleton
     ];
 
@@ -54,7 +55,7 @@ public sealed class UnitRegistryProvider : IUnitRegistryProvider
 
     public bool IsRoleCompatible(UnitType unitType, PlayerRole role)
     {
-        UnitDataDto? unit = _registry.Value.Units.FirstOrDefault(x => x.Type == unitType);
+        UnitDataDto? unit = GetUnit(unitType);
         if (unit?.Role is PlayerRole unitRole)
         {
             return unitRole == role;

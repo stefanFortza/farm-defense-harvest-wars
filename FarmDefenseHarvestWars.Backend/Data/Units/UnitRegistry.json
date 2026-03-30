@@ -2,7 +2,7 @@
   "Units": [
     {
       "Type": "Cow",
-      "Role": null,
+      "Role": "Defender",
       "Name": "Cow",
       "MatchCost": 25,
       "UnlockCost": 100,
@@ -15,7 +15,7 @@
     },
     {
       "Type": "Skeleton",
-      "Role": null,
+      "Role": "Attacker",
       "Name": "Skeleton",
       "MatchCost": 25,
       "UnlockCost": 100,
@@ -28,7 +28,7 @@
     },
     {
       "Type": "Chicken",
-      "Role": null,
+      "Role": "Defender",
       "Name": "Chicken",
       "MatchCost": 25,
       "UnlockCost": 100,
@@ -38,6 +38,32 @@
       "Speed": 0,
       "AttackRange": 180,
       "AttackSpeed": 0.7
+    },
+    {
+      "Type": "Pig",
+      "Role": "Defender",
+      "Name": "Unit",
+      "MatchCost": 25,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "Speed": 0,
+      "AttackRange": 64,
+      "AttackSpeed": 0.4
+    },
+    {
+      "Type": "SkeletonMage",
+      "Role": "Attacker",
+      "Name": "Unit",
+      "MatchCost": 25,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "Speed": 0,
+      "AttackRange": 64,
+      "AttackSpeed": 0.4
     }
   ]
 }

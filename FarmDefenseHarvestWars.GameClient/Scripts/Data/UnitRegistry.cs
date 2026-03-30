@@ -64,7 +64,7 @@ public partial class UnitRegistry : Resource
     {
         if (_lookupTable != null)
         {
-            GD.Print("[UnitRegistry] Lookup deja inițializat, sărim peste re-initializare.");
+            // GD.Print("[UnitRegistry] Lookup deja inițializat, sărim peste re-initializare.");
             return;
         }
 
@@ -83,7 +83,7 @@ public partial class UnitRegistry : Resource
             _lookupTable.Add(unit.Type, unit);
         }
 
-        GD.Print($"[UnitRegistry] Indexat {_lookupTable.Count} unități.");
+        // GD.Print($"[UnitRegistry] Indexat {_lookupTable.Count} unități.");
     }
 
     // Metoda rapidă de acces

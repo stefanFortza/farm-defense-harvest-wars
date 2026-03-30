@@ -11,10 +11,12 @@ public enum UnitType
     Chicken,
     Sheep,
     Pig,
+    Duck,
 
     // Attackers
-    Wolf,
-    Fox,
-    Bear,
-    Skeleton
+    Skeleton,
+    GoblinSpearman,
+    Orc,
+    SkeletonMage,
+    Spearman,
 }

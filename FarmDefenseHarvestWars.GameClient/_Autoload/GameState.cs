@@ -91,10 +91,13 @@ public partial class GameState : Node
 
     public IReadOnlyList<UnitType> GetMatchDeckForRole(PlayerRole role)
     {
-        if (!IsMatchConfigured)
-        {
-            return EmptyDeck;
-        }
+
+        GD.Print($"Retrieving match deck for role {role} | DefenderDeck: {(DefenderDeck != null ? string.Join(", ", DefenderDeck) : "null")} | AttackerDeck: {(AttackerDeck != null ? string.Join(", ", AttackerDeck) : "null")}");
+        // if (!IsMatchConfigured)
+        // {
+        //     return EmptyDeck;
+        // }
+
 
         return role == PlayerRole.Defender
             ? DefenderDeck ?? EmptyDeck
