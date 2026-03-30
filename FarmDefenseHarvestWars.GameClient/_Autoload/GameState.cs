@@ -8,6 +8,8 @@ using System.Linq;
 
 public partial class GameState : Node
 {
+    private static readonly IReadOnlyList<UnitType> EmptyDeck = [];
+
     // Singleton
     public static GameState Instance { get; private set; } = null!;
 
@@ -15,7 +17,7 @@ public partial class GameState : Node
     public PlayerProfileDto? CurrentProfile { get; private set; }
     public SelectedDeckData? CurrentDeck { get; private set; }
 
-    // Match Configuration (Server mode only)
+    // Match configuration for active game (server loads it from cmd args, clients receive it via RPC)
     public string? MatchId { get; private set; }
     public IReadOnlyList<UnitType>? DefenderDeck { get; private set; }
     public IReadOnlyList<UnitType>? AttackerDeck { get; private set; }
@@ -78,6 +80,35 @@ public partial class GameState : Node
         {
             EmitSignal(SignalName.DeckUpdated, (int)AssignedRole!.Value);
         }
+    }
+
+    public void SetMatchDecks(IReadOnlyList<UnitType> defenderDeck, IReadOnlyList<UnitType> attackerDeck)
+    {
+        DefenderDeck = [.. defenderDeck];
+        AttackerDeck = [.. attackerDeck];
+        EmitSignal(SignalName.MatchConfigurationLoaded);
+    }
+
+    public IReadOnlyList<UnitType> GetMatchDeckForRole(PlayerRole role)
+    {
+        if (!IsMatchConfigured)
+        {
+            return EmptyDeck;
+        }
+
+        return role == PlayerRole.Defender
+            ? DefenderDeck ?? EmptyDeck
+            : AttackerDeck ?? EmptyDeck;
+    }
+
+    public IReadOnlyList<UnitType> GetMyMatchDeck()
+    {
+        if (!AssignedRole.HasValue)
+        {
+            return EmptyDeck;
+        }
+
+        return GetMatchDeckForRole(AssignedRole.Value);
     }
 
     public bool IsUnitUnlocked(PlayerRole role, UnitType unitType)
@@ -147,6 +178,9 @@ public partial class GameState : Node
     {
         CurrentProfile = null;
         CurrentDeck = null;
+        MatchId = null;
+        DefenderDeck = null;
+        AttackerDeck = null;
         AssignedRole = null;
         _deckSavesInFlight.Clear();
         EmitSignal(SignalName.LoggedOut);

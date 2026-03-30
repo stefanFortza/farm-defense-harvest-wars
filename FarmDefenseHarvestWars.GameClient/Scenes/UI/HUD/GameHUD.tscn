@@ -16,10 +16,8 @@ _cardScene = ExtResource("3_card_scene")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 15.0
-offset_top = 15.0
-offset_right = -15.0
-offset_bottom = -15.0
+offset_right = -320.0
+offset_bottom = -180.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -31,8 +29,8 @@ mouse_filter = 2
 [node name="TopBar" type="HBoxContainer" parent="Margin/Root"]
 layout_mode = 0
 anchor_right = 1.0
-offset_right = 602.0
-offset_bottom = 120.0
+offset_right = 132.0
+offset_bottom = 36.0
 size_flags_horizontal = 3
 mouse_filter = 2
 
@@ -42,10 +40,11 @@ mouse_filter = 2
 theme_override_constants/separation = 10
 
 [node name="ResourcePanel" parent="Margin/Root/TopBar/LeftGroup" instance=ExtResource("2_resource_panel")]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
 [node name="DeckContainer" type="HBoxContainer" parent="Margin/Root/TopBar/LeftGroup"]
-custom_minimum_size = Vector2(420, 120)
+custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
@@ -63,10 +62,10 @@ theme_override_constants/separation = 8
 alignment = 2
 
 [node name="MatchTimerBar" type="ProgressBar" parent="Margin/Root/TopBar/RightGroup"]
-custom_minimum_size = Vector2(220, 36)
+custom_minimum_size = Vector2(40, 30)
 layout_mode = 2
 
 [node name="PauseButton" type="TextureButton" parent="Margin/Root/TopBar/RightGroup"]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 tooltip_text = "Pause"

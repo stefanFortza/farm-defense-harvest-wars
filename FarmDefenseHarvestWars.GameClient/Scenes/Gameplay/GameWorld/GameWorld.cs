@@ -2,6 +2,7 @@ using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
+using FarmDefenseHarvestWars.Shared.Enums;
 using Godot;
 using System;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
@@ -17,7 +18,8 @@ public record GameWorldContext(
 public record GameHudContext(
 	MatchManager Match,
 	InputController Input,
-	UnitRegistry UnitRegistry
+	UnitRegistry UnitRegistry,
+	PlayerRole? AssignedRole
 );
 
 public partial class GameWorld : Node2D

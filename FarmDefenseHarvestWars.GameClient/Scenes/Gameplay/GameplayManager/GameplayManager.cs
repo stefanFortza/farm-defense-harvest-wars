@@ -39,7 +39,8 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 		return new GameHudContext(
 			Match: _matchManager,
 			Input: _inputController,
-			UnitRegistry: _unitRegistry
+			UnitRegistry: _unitRegistry,
+			AssignedRole: GameState.Instance?.AssignedRole
 		);
 	}
 

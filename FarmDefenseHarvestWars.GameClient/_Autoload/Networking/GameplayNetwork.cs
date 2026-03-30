@@ -12,7 +12,7 @@ public partial class GameplayNetwork : Node
     private const double ClientJoinTimeoutSeconds = 10.0;
 
     // Stocăm ID -> Role
-    private readonly Dictionary<long, PlayerRole> _connectedPlayers = [];
+    private readonly System.Collections.Generic.Dictionary<long, PlayerRole> _connectedPlayers = [];
     private ulong _clientConnectAttemptId;
     private bool _awaitingServerStart;
     private bool _gameSceneLoadRequested;
@@ -119,6 +119,7 @@ public partial class GameplayNetwork : Node
         {
             GD.Print("Match Ready! Starting in 1s...");
             // GetTree().CreateTimer(1.0).Timeout += () => Rpc(nameof(StartGameScene));
+            Rpc(nameof(SyncMatchDecksToClient), BuildDeckPayload(CmdArgs.DefenderDeck), BuildDeckPayload(CmdArgs.AttackerDeck));
             Rpc(nameof(StartGameScene));
         }
     }
@@ -138,6 +139,25 @@ public partial class GameplayNetwork : Node
         }
 
         GD.Print($"[Sync] Player {id} is assigned {role}");
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncMatchDecksToClient(Godot.Collections.Array<int> defenderDeck, Godot.Collections.Array<int> attackerDeck)
+    {
+        List<UnitType> defenderUnits = [];
+        List<UnitType> attackerUnits = [];
+
+        foreach (int unitType in defenderDeck)
+        {
+            defenderUnits.Add((UnitType)unitType);
+        }
+
+        foreach (int unitType in attackerDeck)
+        {
+            attackerUnits.Add((UnitType)unitType);
+        }
+
+        GameState.Instance?.SetMatchDecks(defenderUnits, attackerUnits);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -196,6 +216,23 @@ public partial class GameplayNetwork : Node
         }
 
         FailClientJoin("Timed out waiting for match server response.");
+    }
+
+    private static Godot.Collections.Array<int> BuildDeckPayload(IReadOnlyList<UnitType>? units)
+    {
+        Godot.Collections.Array<int> payload = [];
+
+        if (units == null)
+        {
+            return payload;
+        }
+
+        foreach (UnitType unitType in units)
+        {
+            payload.Add((int)unitType);
+        }
+
+        return payload;
     }
 
     private void FailClientJoin(string reason)
