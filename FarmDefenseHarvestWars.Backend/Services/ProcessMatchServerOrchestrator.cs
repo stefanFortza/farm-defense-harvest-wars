@@ -68,6 +68,8 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         startInfo.Environment["MATCH_ID"] = matchId;
         startInfo.Environment["DEFENDER_DECK_JSON"] = JsonSerializer.Serialize(defenderDeck, DeckSerializerOptions);
         startInfo.Environment["ATTACKER_DECK_JSON"] = JsonSerializer.Serialize(attackerDeck, DeckSerializerOptions);
+        startInfo.Environment["BACKEND_BASE_URL"] = _configuration["GodotServer:BackendBaseUrl"] ?? "http://localhost:5177";
+        startInfo.Environment["MATCH_SERVER_CALLBACK_KEY"] = _configuration["GodotServer:CallbackKey"] ?? string.Empty;
 
         var process = Process.Start(startInfo);
         if (process == null)

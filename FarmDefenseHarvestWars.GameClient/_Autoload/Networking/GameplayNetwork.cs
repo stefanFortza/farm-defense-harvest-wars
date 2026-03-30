@@ -13,6 +13,7 @@ public partial class GameplayNetwork : Node
 
     // Stocăm ID -> Role
     private readonly System.Collections.Generic.Dictionary<long, PlayerRole> _connectedPlayers = [];
+    private readonly System.Collections.Generic.Dictionary<long, PlayerRole> _recentlyDisconnectedPlayers = [];
     private ulong _clientConnectAttemptId;
     private bool _awaitingServerStart;
     private bool _gameSceneLoadRequested;
@@ -22,6 +23,18 @@ public partial class GameplayNetwork : Node
     // Proprietate helper pentru a afla rolul meu curent rapid
     public PlayerRole? MyRole =>
         _connectedPlayers.TryGetValue(Multiplayer.GetUniqueId(), out var role) ? role : null;
+
+    public int ConnectedPlayerCount => _connectedPlayers.Count;
+
+    public bool TryGetRoleForPeer(long id, out PlayerRole role)
+    {
+        if (_connectedPlayers.TryGetValue(id, out role))
+        {
+            return true;
+        }
+
+        return _recentlyDisconnectedPlayers.TryGetValue(id, out role);
+    }
 
     public override void _Ready()
     {
@@ -89,6 +102,7 @@ public partial class GameplayNetwork : Node
 
         PlayerRole newRole = _connectedPlayers.Count == 0 ? PlayerRole.Defender : PlayerRole.Attacker;
 
+        _recentlyDisconnectedPlayers.Remove(id);
         _connectedPlayers[id] = newRole;
 
         // 3. Trimitem noului jucător lista cu TOȚI jucătorii existenți (ca să știe cine e cine)
@@ -106,6 +120,11 @@ public partial class GameplayNetwork : Node
 
     private void OnPlayerDisconnected(long id)
     {
+        if (_connectedPlayers.TryGetValue(id, out PlayerRole role))
+        {
+            _recentlyDisconnectedPlayers[id] = role;
+        }
+
         _connectedPlayers.Remove(id);
         GD.Print($"Player {id} disconnected.");
 
@@ -247,6 +266,7 @@ public partial class GameplayNetwork : Node
         _awaitingServerStart = false;
         _gameSceneLoadRequested = false;
         _connectedPlayers.Clear();
+        _recentlyDisconnectedPlayers.Clear();
 
         if (Multiplayer.MultiplayerPeer == _peer)
         {

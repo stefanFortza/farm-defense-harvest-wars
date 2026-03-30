@@ -3,6 +3,7 @@ using FarmDefenseHarvestWars.Backend.Services;
 using FarmDefenseHarvestWars.Backend.Data;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.Shared.Models.Game;
+using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ public class GameController : ControllerBase
     private static readonly Queue<string> MatchQueue = [];
     private static readonly HashSet<string> QueuedUsers = [];
     private static readonly Dictionary<string, MatchmakingStatusDto> ActiveMatches = [];
+    private static readonly HashSet<string> CompletedMatchIds = [];
 
     private static readonly JsonSerializerOptions DeckSerializerOptions = new()
     {
@@ -33,6 +35,7 @@ public class GameController : ControllerBase
     private readonly IDefaultUnitUnlockService _defaultUnitUnlockService;
     private readonly IMatchServerOrchestrator _matchServerOrchestrator;
     private readonly IUnitRegistryProvider _unitRegistryProvider;
+    private readonly IConfiguration _configuration;
     private readonly ILogger<GameController> _logger;
 
     public GameController(
@@ -41,6 +44,7 @@ public class GameController : ControllerBase
         IDefaultUnitUnlockService defaultUnitUnlockService,
         IMatchServerOrchestrator matchServerOrchestrator,
         IUnitRegistryProvider unitRegistryProvider,
+        IConfiguration configuration,
         ILogger<GameController> logger)
     {
         _userManager = userManager;
@@ -48,6 +52,7 @@ public class GameController : ControllerBase
         _defaultUnitUnlockService = defaultUnitUnlockService;
         _matchServerOrchestrator = matchServerOrchestrator;
         _unitRegistryProvider = unitRegistryProvider;
+        _configuration = configuration;
         _logger = logger;
     }
 
@@ -281,6 +286,48 @@ public class GameController : ControllerBase
         return Ok(GetStatusForUser(userId));
     }
 
+    [AllowAnonymous]
+    [HttpPost("matchmaking/match/{matchId}/complete")]
+    public ActionResult CompleteMatch(
+        string matchId,
+        [FromBody] MatchCompletionRequestDto request)
+    {
+        if (string.IsNullOrWhiteSpace(matchId))
+        {
+            return BadRequest("Match id is required.");
+        }
+
+        if (!IsValidMatchServerCallback())
+        {
+            return Unauthorized("Missing or invalid match server callback key.");
+        }
+
+        int removedActiveEntries;
+        bool alreadyCompleted;
+
+        lock (QueueLock)
+        {
+            alreadyCompleted = !CompletedMatchIds.Add(matchId);
+            removedActiveEntries = RemoveActiveMatchEntriesByMatchId(matchId);
+        }
+
+        if (removedActiveEntries == 0 && !alreadyCompleted)
+        {
+            return NotFound($"Match '{matchId}' was not found in active matchmaking state.");
+        }
+
+        _logger.LogInformation(
+            "Match {MatchId} completion callback accepted. Winner={WinnerRole}, Reason={Reason}, IsAborted={IsAborted}, ClearedEntries={ClearedEntries}, AlreadyCompleted={AlreadyCompleted}",
+            matchId,
+            request.WinnerRole,
+            request.TerminationReason,
+            request.IsAborted,
+            removedActiveEntries,
+            alreadyCompleted);
+
+        return NoContent();
+    }
+
     private static bool IsDeckRole(PlayerRole role)
     {
         return role is PlayerRole.Defender or PlayerRole.Attacker;
@@ -464,6 +511,38 @@ public class GameController : ControllerBase
         {
             MatchQueue.Enqueue(remaining.Dequeue());
         }
+    }
+
+    private int RemoveActiveMatchEntriesByMatchId(string matchId)
+    {
+        string[] affectedUsers = ActiveMatches
+            .Where(kvp => string.Equals(kvp.Value.MatchId, matchId, StringComparison.Ordinal))
+            .Select(kvp => kvp.Key)
+            .ToArray();
+
+        foreach (string userId in affectedUsers)
+        {
+            ActiveMatches.Remove(userId);
+            RemoveFromQueue(userId);
+        }
+
+        return affectedUsers.Length;
+    }
+
+    private bool IsValidMatchServerCallback()
+    {
+        string? expectedKey = _configuration["GodotServer:CallbackKey"];
+        if (string.IsNullOrWhiteSpace(expectedKey))
+        {
+            return true;
+        }
+
+        if (!Request.Headers.TryGetValue("X-Match-Server-Key", out StringValues providedKey))
+        {
+            return false;
+        }
+
+        return string.Equals(expectedKey, providedKey.ToString(), StringComparison.Ordinal);
     }
 
     private async Task<PlayerProfileDto> BuildPlayerProfileAsync(ApplicationUser user, CancellationToken cancellationToken)

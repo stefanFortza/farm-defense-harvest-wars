@@ -3,6 +3,7 @@ using Refit;
 using System;
 using System.Threading.Tasks;
 using FarmDefenseHarvestWars.Shared.API;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
 public partial class NetworkBootstrap : Node
 {
@@ -23,7 +24,11 @@ public partial class NetworkBootstrap : Node
         Instance = this;
 
         // 1. Configurare HTTP
-        ApiClient = RestService.For<IGameApi>("http://localhost:5177", new RefitSettings
+        string backendBaseUrl = string.IsNullOrWhiteSpace(CmdArgs.BackendBaseUrl)
+            ? "http://localhost:5177"
+            : CmdArgs.BackendBaseUrl;
+
+        ApiClient = RestService.For<IGameApi>(backendBaseUrl, new RefitSettings
         {
             AuthorizationHeaderValueGetter = (_, __) => Task.FromResult(AccessToken)
         });
