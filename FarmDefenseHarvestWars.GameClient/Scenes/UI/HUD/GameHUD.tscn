@@ -1,71 +1,53 @@
-[gd_scene load_steps=4 format=3 uid="uid://gamehud1"]
+[gd_scene load_steps=5 format=3 uid="uid://gamehud1"]
 
 [ext_resource type="Script" uid="uid://cgb4dtyeununf" path="res://Scenes/UI/HUD/GameHUD.cs" id="1_game_hud_script"]
 [ext_resource type="PackedScene" uid="uid://c2icauiwkb3xc" path="res://Scenes/UI/Components/ResourcePanel.tscn" id="2_resource_panel"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/Card/Card.tscn" id="3_card_scene"]
+[ext_resource type="PackedScene" uid="uid://cjhyi7d4vd2vf" path="res://Scenes/UI/Card/UnitCard.tscn" id="3_card_scene"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="4_p2mjx"]
 
 [node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_pauseButton")]
 script = ExtResource("1_game_hud_script")
-_resourcePanel = NodePath("Margin/Root/TopBar/LeftGroup/ResourcePanel")
-_deckContainer = NodePath("Margin/Root/TopBar/LeftGroup/DeckContainer")
-_timerBar = NodePath("Margin/Root/TopBar/RightGroup/MatchTimerBar")
-_pauseButton = NodePath("Margin/Root/TopBar/RightGroup/PauseButton")
+_resourcePanel = NodePath("Margin/TopBar/LeftGroup/ResourcePanel")
+_deckContainer = NodePath("Margin/TopBar/LeftGroup/DeckContainer")
+_timerBar = NodePath("Margin/TopBar/RightGroup/MatchTimerBar")
+_pauseButton = NodePath("")
 _cardScene = ExtResource("3_card_scene")
 
 [node name="Margin" type="MarginContainer" parent="."]
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -320.0
-offset_bottom = -180.0
+offset_bottom = 30.0
 grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
 
-[node name="Root" type="Control" parent="Margin"]
+[node name="TopBar" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
-mouse_filter = 2
-
-[node name="TopBar" type="HBoxContainer" parent="Margin/Root"]
-layout_mode = 0
-anchor_right = 1.0
-offset_right = 132.0
-offset_bottom = 36.0
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="LeftGroup" type="HBoxContainer" parent="Margin/Root/TopBar"]
+[node name="LeftGroup" type="HBoxContainer" parent="Margin/TopBar"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="ResourcePanel" parent="Margin/Root/TopBar/LeftGroup" instance=ExtResource("2_resource_panel")]
-custom_minimum_size = Vector2(30, 30)
+[node name="ResourcePanel" parent="Margin/TopBar/LeftGroup" instance=ExtResource("2_resource_panel")]
 layout_mode = 2
 
-[node name="DeckContainer" type="HBoxContainer" parent="Margin/Root/TopBar/LeftGroup"]
+[node name="DeckContainer" type="HBoxContainer" parent="Margin/TopBar/LeftGroup"]
 custom_minimum_size = Vector2(100, 30)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="Spacer" type="Control" parent="Margin/Root/TopBar"]
-custom_minimum_size = Vector2(40, 1)
+[node name="RightGroup" type="HBoxContainer" parent="Margin/TopBar"]
 layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="RightGroup" type="HBoxContainer" parent="Margin/Root/TopBar"]
-layout_mode = 2
+size_flags_horizontal = 10
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 2
 
-[node name="MatchTimerBar" type="ProgressBar" parent="Margin/Root/TopBar/RightGroup"]
-custom_minimum_size = Vector2(40, 30)
+[node name="MatchTimerBar" type="ProgressBar" parent="Margin/TopBar/RightGroup"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-
-[node name="PauseButton" type="TextureButton" parent="Margin/Root/TopBar/RightGroup"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-tooltip_text = "Pause"
+theme = ExtResource("4_p2mjx")

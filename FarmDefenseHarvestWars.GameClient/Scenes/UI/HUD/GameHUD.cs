@@ -6,21 +6,21 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
+using FarmDefenseHarvestWars.GameClient.Scenes.UI;
 
 public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 {
     [Export] private ResourcePanel _resourcePanel = null!;
     [Export] private HBoxContainer _deckContainer = null!;
     [Export] private ProgressBar _timerBar = null!;
-    [Export] private TextureButton _pauseButton = null!;
     [Export] private PackedScene _cardScene = null!;
 
     private MatchManager _matchManager = null!;
     private InputController _inputController = null!;
     private UnitRegistry _unitRegistry = null!;
 
-    private readonly Array<Card> _cards = [];
-    private readonly Dictionary<UnitType, Card> _cardsByType = [];
+    private readonly Array<UnitCard> _cards = [];
+    private readonly Dictionary<UnitType, UnitCard> _cardsByType = [];
     private long _localPeerId;
     private int _localMoney;
     private float _matchDuration;
@@ -63,7 +63,6 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         this.EnsureNotNull(_resourcePanel, nameof(_resourcePanel));
         this.EnsureNotNull(_deckContainer, nameof(_deckContainer));
         this.EnsureNotNull(_timerBar, nameof(_timerBar));
-        this.EnsureNotNull(_pauseButton, nameof(_pauseButton));
 
         _localPeerId = Multiplayer.GetUniqueId();
         _isReady = true;
@@ -81,7 +80,6 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
             _matchManager.MoneyChanged -= OnMoneyChanged;
             _matchManager.TimerUpdated -= OnTimerUpdated;
             _inputController.PlacementResolved -= OnPlacementResolved;
-            _pauseButton.Pressed -= OnPausePressed;
         }
 
         if (_isGameStateBound && GameState.Instance != null)
@@ -136,12 +134,6 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
             _isGameStateBound = true;
         }
 
-        _pauseButton.Pressed += OnPausePressed;
-    }
-
-    private void OnPausePressed()
-    {
-        GetTree().Paused = !GetTree().Paused;
     }
 
     private void OnMoneyChanged(long peerId, int newAmount)
@@ -179,7 +171,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
                 continue;
             }
 
-            var card = _cardScene.Instantiate<Card>();
+            var card = _cardScene.Instantiate<UnitCard>();
             card.Setup(unitData);
             card.CardPressed += OnCardPressed;
 
