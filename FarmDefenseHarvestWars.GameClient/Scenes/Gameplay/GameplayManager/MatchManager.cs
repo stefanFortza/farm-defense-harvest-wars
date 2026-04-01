@@ -105,7 +105,17 @@ public partial class MatchManager : Node
 
     public override void _Process(double delta)
     {
-        if (!Multiplayer.IsServer() || _currentState != MatchState.Playing) return;
+        if (!Multiplayer.IsServer()) return;
+
+        if (_currentState == MatchState.Ended && _completionReported)
+        {
+            GD.Print("Match ended and completion reported. Quitting server.");
+            // Exit the server process only after completion report is sent
+            GetTree().Quit();
+            return;
+        }
+
+        if (_currentState != MatchState.Playing) return;
 
         float dt = (float)delta;
         UpdateTimer(dt);
@@ -293,6 +303,14 @@ public partial class MatchManager : Node
             return;
         }
 
+        // Check if both players are now disconnected
+        if (gameplay.ConnectedPlayerCount == 0)
+        {
+            EndMatch(PlayerRole.Defender, "both_players_disconnected", true);
+            Logger.Info($"MatchManager: Peer {id} ({disconnectedRole}) disconnected. Both players are now gone. Match ended immediately as aborted.");
+            return;
+        }
+
         ulong nextToken = _disconnectRoleTokens.TryGetValue(disconnectedRole, out ulong currentToken)
             ? currentToken + 1
             : 1;
@@ -338,7 +356,6 @@ public partial class MatchManager : Node
             return;
         }
 
-        _completionReported = true;
 
         string? matchId = GameState.Instance?.MatchId;
         if (string.IsNullOrWhiteSpace(matchId))
@@ -367,6 +384,8 @@ public partial class MatchManager : Node
                 matchId,
                 request,
                 CmdArgs.MatchServerCallbackKey);
+
+            _completionReported = true;
 
             Logger.Info($"MatchManager: Completion callback sent for match {matchId}.");
         }
