@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://vwvflu0isd8c"]
+[gd_scene load_steps=4 format=3 uid="uid://vwvflu0isd8c"]
 
 [ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.tscn" id="1_xiiqo"]
 [ext_resource type="SpriteFrames" uid="uid://bisv0tuhio3bc" path="res://Entities/Units/Defenders/PigUnit/PigUnitSpriteFrames.tres" id="2_4oxit"]
+[ext_resource type="Resource" uid="uid://co8s18xfuyd3d" path="res://Resources/Units/UnitStats/PigData.tres" id="2_jfyid"]
 
 [node name="PigUnit" instance=ExtResource("1_xiiqo")]
+Data = ExtResource("2_jfyid")
 
 [node name="AnimatedSprite2D" parent="." index="1"]
 position = Vector2(0, -6)

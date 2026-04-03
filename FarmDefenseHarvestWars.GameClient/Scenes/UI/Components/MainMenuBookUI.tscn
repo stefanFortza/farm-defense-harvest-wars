@@ -32,7 +32,6 @@ atlas = SubResource("CompressedTexture2D_p32bp")
 region = Rect2(192, 0, 16, 16)
 
 [node name="MainMenuBookUI" instance=ExtResource("1_0okjo")]
-metadata/_edit_lock_ = true
 
 [node name="BookUI" parent="." index="0"]
 anchors_preset = 8

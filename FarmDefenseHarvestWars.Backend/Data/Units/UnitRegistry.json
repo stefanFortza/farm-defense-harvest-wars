@@ -42,7 +42,7 @@
     {
       "Type": "Pig",
       "Role": "Defender",
-      "Name": "Unit",
+      "Name": "Pig",
       "MatchCost": 25,
       "UnlockCost": 100,
       "IsDefaultUnlocked": true,
@@ -55,7 +55,7 @@
     {
       "Type": "SkeletonMage",
       "Role": "Attacker",
-      "Name": "Unit",
+      "Name": "SkeletonMage",
       "MatchCost": 25,
       "UnlockCost": 100,
       "IsDefaultUnlocked": true,
