@@ -100,4 +100,29 @@ public partial class UnitRegistry : Resource
         GD.PrintErr($"[UnitRegistry] CRITICAL: Unit Type '{type}' nu a fost găsit în registry!");
         return new UnitData();
     }
+
+    public bool TryGetUnitData(UnitType type, out UnitData? data)
+    {
+        if (_lookupTable == null) InitializeLookup();
+
+        if (_lookupTable.TryGetValue(type, out var found))
+        {
+            data = found;
+            return true;
+        }
+
+        data = null;
+        return false;
+    }
+
+    public bool IsRoleCompatible(UnitType type, PlayerRole role)
+    {
+        if (!TryGetUnitData(type, out var unitData) || unitData == null)
+        {
+            GD.PrintErr($"[UnitRegistry] Unit '{type}' missing from registry. Treating as incompatible for role '{role}'.");
+            return false;
+        }
+
+        return unitData.Role == role;
+    }
 }

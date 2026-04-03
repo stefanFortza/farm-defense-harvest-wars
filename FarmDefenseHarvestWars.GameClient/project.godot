@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 NetworkBootstrap="*res://_Autoload/Networking/NetworkBootstrap.cs"
 GameState="*res://_Autoload/GameState.cs"
+DeckService="*res://_Autoload/DeckService.cs"
 
 [display]
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
@@ -9,6 +10,8 @@ using Refit;
 
 public abstract partial class DeckSelectionRight : Control
 {
+    private const double DeckSyncPollSeconds = 20.0;
+
     [Export] protected Label _titleLabel = null!;
     [Export] protected Label _statusLabel = null!;
     [Export] protected GridContainer _libraryContainer = null!;
@@ -19,6 +22,8 @@ public abstract partial class DeckSelectionRight : Control
     private readonly HashSet<UnitType> _unlockInFlight = [];
     private bool _isSavingDeck;
     private int _statusMessageVersion;
+    private CancellationTokenSource? _deckSyncCts;
+    private readonly SemaphoreSlim _deckSyncGate = new(1, 1);
 
     /// <summary>
     /// Returns the role this page is responsible for.
@@ -40,10 +45,12 @@ public abstract partial class DeckSelectionRight : Control
 
         ConnectStateSignals();
         Refresh();
+        StartDeckSyncLoop();
     }
 
     public override void _ExitTree()
     {
+        StopDeckSyncLoop();
         DisconnectStateSignals();
     }
 
@@ -120,7 +127,13 @@ public abstract partial class DeckSelectionRight : Control
 
     public override bool _CanDropData(Vector2 atPosition, Variant data)
     {
-        if (_isSavingDeck)
+        var role = GetRole();
+        if (!DeckService.Instance.CanEditDeckInMenu(role))
+        {
+            return false;
+        }
+
+        if (GameState.Instance?.IsDeckSaveInProgress(role) == true)
         {
             return false;
         }
@@ -136,7 +149,13 @@ public abstract partial class DeckSelectionRight : Control
 
     public override void _DropData(Vector2 atPosition, Variant data)
     {
-        if (_isSavingDeck)
+        var role = GetRole();
+        if (!DeckService.Instance.CanEditDeckInMenu(role))
+        {
+            return;
+        }
+
+        if (GameState.Instance?.IsDeckSaveInProgress(role) == true)
         {
             return;
         }
@@ -159,14 +178,13 @@ public abstract partial class DeckSelectionRight : Control
         }
 
         // Get the role and the deck
-        var role = GetRole();
-        var deck = DeckSelectionLogic.GetDeckForRole(role);
+        var deck = DeckService.Instance.GetDeckForRole(role, _unitRegistry);
 
         // Remove the unit at fromSlot
         if (fromSlot < deck.Count)
         {
             deck.RemoveAt(fromSlot);
-            DeckSelectionLogic.SubmitDeckSaveForRole(role, deck);
+            DeckService.Instance.SubmitDeckSaveForRole(role, deck, _unitRegistry);
         }
 
         GetTree().Root.SetInputAsHandled();
@@ -176,6 +194,7 @@ public abstract partial class DeckSelectionRight : Control
     {
         var role = GetRole();
         _titleLabel.Text = $"Library ({role})";
+        _isSavingDeck = GameState.Instance?.IsDeckSaveInProgress(role) ?? false;
 
         // Clear existing items
         foreach (Node child in _libraryContainer.GetChildren())
@@ -185,8 +204,8 @@ public abstract partial class DeckSelectionRight : Control
         _libraryItems.Clear();
 
         // Get compatible units for this role
-        var compatible = DeckSelectionLogic.GetCompatibleUnits(_unitRegistry, role);
-        var currentDeck = DeckSelectionLogic.GetDeckForRole(role);
+        var compatible = DeckService.Instance.GetCompatibleUnits(_unitRegistry, role);
+        var currentDeck = DeckService.Instance.GetDeckForRole(role, _unitRegistry);
         var state = GameState.Instance;
 
         // Create library items
@@ -229,5 +248,78 @@ public abstract partial class DeckSelectionRight : Control
 
         _statusLabel.Text = string.Empty;
         _statusLabel.Modulate = Colors.White;
+    }
+
+    private void StartDeckSyncLoop()
+    {
+        _deckSyncCts?.Cancel();
+        _deckSyncCts?.Dispose();
+        _deckSyncCts = new CancellationTokenSource();
+        _ = RunDeckSyncLoopAsync(_deckSyncCts.Token);
+    }
+
+    private void StopDeckSyncLoop()
+    {
+        _deckSyncCts?.Cancel();
+        _deckSyncCts?.Dispose();
+        _deckSyncCts = null;
+    }
+
+    private async Task RunDeckSyncLoopAsync(CancellationToken token)
+    {
+        try
+        {
+            await TrySyncDeckFromServerAsync(showResyncStatus: false, token);
+
+            while (!token.IsCancellationRequested)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(DeckSyncPollSeconds), token);
+                await TrySyncDeckFromServerAsync(showResyncStatus: true, token);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // no-op
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Deck sync loop failed for {GetRole()}: {ex.Message}");
+        }
+    }
+
+    private async Task TrySyncDeckFromServerAsync(bool showResyncStatus, CancellationToken token)
+    {
+        if (!IsInsideTree() || !IsVisibleInTree())
+        {
+            return;
+        }
+
+        var role = GetRole();
+        if (!DeckService.Instance.CanEditDeckInMenu(role))
+        {
+            return;
+        }
+
+        if (!await _deckSyncGate.WaitAsync(0, token))
+        {
+            return;
+        }
+
+        try
+        {
+            bool changed = await DeckService.Instance.SyncDeckForRoleFromServerAsync(role, _unitRegistry, skipIfSaveInFlight: true);
+            if (changed && showResyncStatus)
+            {
+                ShowTransientStatus("Deck resynced from server", Colors.LightSkyBlue, 1.6);
+            }
+        }
+        catch (ApiException ex)
+        {
+            GD.PrintErr($"Deck sync failed for role {role}: {ex.Message}");
+        }
+        finally
+        {
+            _deckSyncGate.Release();
+        }
     }
 }

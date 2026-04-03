@@ -42,15 +42,9 @@ public partial class AuthService : Node
 
     public async Task LoadPersistedDecksAsync()
     {
-        var api = NetworkBootstrap.Instance.ApiClient;
-
         try
         {
-            var defenderDeck = await api.GetDeckAsync(PlayerRole.Defender);
-            GameState.Instance.SetDeckForRole(PlayerRole.Defender, defenderDeck.Units);
-
-            var attackerDeck = await api.GetDeckAsync(PlayerRole.Attacker);
-            GameState.Instance.SetDeckForRole(PlayerRole.Attacker, attackerDeck.Units);
+            await NetworkBootstrap.Instance.Menu.SyncAllDecksFromServerAsync(skipIfSaveInFlight: false);
         }
         catch (ApiException ex)
         {

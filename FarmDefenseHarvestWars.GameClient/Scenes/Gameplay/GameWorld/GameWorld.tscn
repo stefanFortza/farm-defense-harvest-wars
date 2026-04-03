@@ -102,7 +102,7 @@ texture = ExtResource("6_xghf8")
 texture_scale = 0.5
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://cnapywfs7vvi7", "uid://7paoe53gsnp3", "uid://cnl2b6psuuhba")
+_spawnable_scenes = PackedStringArray("uid://7paoe53gsnp3", "uid://cnl2b6psuuhba", "uid://vwvflu0isd8c", "uid://cnapywfs7vvi7", "uid://da45x0td82lu1")
 spawn_path = NodePath("../UnitContainer")
 
 [node name="ProjectileSpawner" type="MultiplayerSpawner" parent="."]

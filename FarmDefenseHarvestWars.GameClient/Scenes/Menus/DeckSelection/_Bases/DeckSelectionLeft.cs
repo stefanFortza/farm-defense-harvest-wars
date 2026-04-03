@@ -47,7 +47,7 @@ public abstract partial class DeckSelectionLeft : Control
         }
         _slots.Clear();
 
-        for (int i = 0; i < DeckSelectionLogic.MaxCards; i++)
+        for (int i = 0; i < DeckService.MaxCards; i++)
         {
             DeckSlotControl? slot = _slotScene.Instantiate<DeckSlotControl>();
             if (slot == null)
@@ -111,20 +111,24 @@ public abstract partial class DeckSelectionLeft : Control
 
     protected virtual void OnSlotDropRequested(int targetIndex, int unitTypeValue, int fromSlotIndex)
     {
-        // Guard: deck editing only allowed in menu (no assigned role)
-        if (GameState.Instance.HasAssignedRole || _isSavingDeck)
-        {
-            return;
-        }
-
         var role = GetRole();
-        var unitType = (UnitType)unitTypeValue;
-        if (!DeckSelectionLogic.IsRoleCompatible(unitType, role))
+        if (!DeckService.Instance.CanEditDeckInMenu(role))
         {
             return;
         }
 
-        var deck = DeckSelectionLogic.GetDeckForRole(role);
+        if (GameState.Instance.IsDeckSaveInProgress(role))
+        {
+            return;
+        }
+
+        var unitType = (UnitType)unitTypeValue;
+        if (!DeckService.Instance.IsRoleCompatible(_unitRegistry, unitType, role))
+        {
+            return;
+        }
+
+        var deck = DeckService.Instance.GetDeckForRole(role, _unitRegistry);
 
         if (fromSlotIndex >= 0)
         {
@@ -135,7 +139,7 @@ public abstract partial class DeckSelectionLeft : Control
             InsertFromLibrary(deck, unitType, targetIndex);
         }
 
-        DeckSelectionLogic.SubmitDeckSaveForRole(role, deck);
+        DeckService.Instance.SubmitDeckSaveForRole(role, deck, _unitRegistry);
     }
 
     protected virtual void MoveDeckEntry(List<UnitType> deck, int fromIndex, int targetIndex)
@@ -170,18 +174,18 @@ public abstract partial class DeckSelectionLeft : Control
             return;
         }
 
-        int clampedTarget = Mathf.Clamp(targetIndex, 0, DeckSelectionLogic.MaxCards - 1);
+        int clampedTarget = Mathf.Clamp(targetIndex, 0, DeckService.MaxCards - 1);
 
         if (clampedTarget >= deck.Count)
         {
-            if (deck.Count < DeckSelectionLogic.MaxCards)
+            if (deck.Count < DeckService.MaxCards)
             {
                 deck.Add(unitType);
             }
             return;
         }
 
-        if (deck.Count < DeckSelectionLogic.MaxCards)
+        if (deck.Count < DeckService.MaxCards)
         {
             deck.Insert(clampedTarget, unitType);
             return;
@@ -194,8 +198,9 @@ public abstract partial class DeckSelectionLeft : Control
     {
         var role = GetRole();
         _titleLabel.Text = $"Deck ({role})";
+        _isSavingDeck = GameState.Instance?.IsDeckSaveInProgress(role) ?? false;
 
-        var deck = DeckSelectionLogic.GetDeckForRole(role);
+        var deck = DeckService.Instance.GetDeckForRole(role, _unitRegistry);
         for (int i = 0; i < _slots.Count; i++)
         {
             if (i < deck.Count)

@@ -13,4 +13,5 @@ Type = 9
 Role = 1
 Name = "SkeletonMage"
 Icon = SubResource("AtlasTexture_lxm8o")
+UnitScenePath = "uid://da45x0td82lu1"
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"
