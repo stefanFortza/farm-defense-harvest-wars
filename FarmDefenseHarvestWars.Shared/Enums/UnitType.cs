@@ -16,7 +16,7 @@ public enum UnitType
     // Attackers
     Skeleton,
     GoblinSpearman,
-    Orc,
+    OrcPeon,
     SkeletonMage,
     Spearman,
 }

@@ -1,14 +1,28 @@
-[gd_resource type="Resource" script_class="SpriteSheetGeneratorConfig" load_steps=6 format=3 uid="uid://cp6ylmqh8a12"]
+[gd_resource type="Resource" script_class="SpriteSheetGeneratorConfig" load_steps=10 format=3 uid="uid://cp6ylmqh8a12"]
 
 [ext_resource type="SpriteFrames" uid="uid://brevgbr7fehpt" path="res://Entities/Units/Enemies/SkeletonUnit/SkeletonUnitSpriteFrames.tres" id="1_e72b1"]
 [ext_resource type="Script" uid="uid://lhjwx6on360b" path="res://addons/sprite_frames_generator/sprite_sheet_generator_config/sprite_sheet_generator_config.gd" id="2_swoar"]
 [ext_resource type="Script" uid="uid://day2vxmnlqaxp" path="res://addons/sprite_frames_generator/sprite_sheet_generator_config/sprite_sheet_entry.gd" id="3_6y45l"]
-[ext_resource type="Texture2D" uid="uid://n2fgajflguhm" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Enemies/Skeleton/Skeleton_Mage.png" id="4_swoar"]
+[ext_resource type="Texture2D" uid="uid://bhptn433nuxyt" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Goblins/Goblin_Spearman.png" id="4_6y45l"]
+[ext_resource type="Texture2D" uid="uid://b2y40rctey0m5" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Orcs/Orc_Peon.png" id="5_u6m7v"]
+[ext_resource type="Texture2D" uid="uid://bhurvbttcqejm" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Knights/Spearman.png" id="6_jm47v"]
 
-[sub_resource type="Resource" id="Resource_6y45l"]
+[sub_resource type="Resource" id="Resource_0d16g"]
 script = ExtResource("3_6y45l")
-texture = ExtResource("4_swoar")
-file_name = "SkeletonMage.tres"
+texture = ExtResource("4_6y45l")
+file_name = "GoblinSpearmanUnitSpriteFrames.tres"
+naming_convention = 1
+
+[sub_resource type="Resource" id="Resource_tkv50"]
+script = ExtResource("3_6y45l")
+texture = ExtResource("5_u6m7v")
+file_name = "OrcPeonSpriteFrames.tres"
+naming_convention = 1
+
+[sub_resource type="Resource" id="Resource_xre6t"]
+script = ExtResource("3_6y45l")
+texture = ExtResource("6_jm47v")
+file_name = "SpearmanSpriteFrames.tres"
 naming_convention = 1
 
 [resource]
@@ -16,7 +30,7 @@ script = ExtResource("2_swoar")
 base_sprite_frames = ExtResource("1_e72b1")
 directory = "res://scenes/characters/player/assets/Player/Legs/Farmer_Pants/"
 naming_convention = 1
-sprite_sheets = Array[ExtResource("3_6y45l")]([SubResource("Resource_6y45l")])
+sprite_sheets = Array[ExtResource("3_6y45l")]([SubResource("Resource_0d16g"), SubResource("Resource_tkv50"), SubResource("Resource_xre6t")])
 animations_names = Array[String](["idle", "walk"])
-output_directory = "res://Entities/Units/Enemies/SkeletonMageUnit/"
+output_directory = "res://Entities/Units/Enemies/GoblinSpearmanUnit/"
 metadata/_custom_type_script = "uid://lhjwx6on360b"

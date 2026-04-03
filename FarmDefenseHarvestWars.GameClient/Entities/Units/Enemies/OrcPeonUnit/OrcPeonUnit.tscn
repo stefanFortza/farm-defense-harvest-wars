@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://c54cg7ycjmlcy"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_mfdsh"]
+[ext_resource type="SpriteFrames" uid="uid://cngv8jyakrju" path="res://Entities/Units/Enemies/OrcPeonUnit/OrcPeonSpriteFrames.tres" id="2_r1uym"]
+
+[node name="OrcPeonUnit" instance=ExtResource("1_mfdsh")]
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -11)
+sprite_frames = ExtResource("2_r1uym")
+animation = &"idle"

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://b2bbd1mp386qf"]
+
+[ext_resource type="Texture2D" uid="uid://cku4slturf81p" path="res://Assets/Icons/GoblinSpearmanIcon.png" id="1_lgtxr"]
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_ruftm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q7lc1"]
+atlas = ExtResource("1_lgtxr")
+region = Rect2(17, 21, 14, 21)
+
+[resource]
+script = ExtResource("1_ruftm")
+Type = 7
+Role = 1
+Name = "GoblinSpearman"
+Icon = SubResource("AtlasTexture_q7lc1")
+UnitScenePath = "uid://djrvfvsvhg0de"
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

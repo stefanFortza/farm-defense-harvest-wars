@@ -1,0 +1,59 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3 uid="uid://c3bofji2x8a41"]
+
+[ext_resource type="Texture2D" uid="uid://bhurvbttcqejm" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Knights/Spearman.png" id="1_acmdy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_liin1"]
+atlas = ExtResource("1_acmdy")
+region = Rect2(0, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0lbbf"]
+atlas = ExtResource("1_acmdy")
+region = Rect2(32, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yu5cv"]
+atlas = ExtResource("1_acmdy")
+region = Rect2(64, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p72yk"]
+atlas = ExtResource("1_acmdy")
+region = Rect2(96, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6g712"]
+atlas = ExtResource("1_acmdy")
+region = Rect2(128, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7fqxb"]
+atlas = ExtResource("1_acmdy")
+region = Rect2(160, 128, 32, 32)
+
+[resource]
+resource_name = "SpearmanSpriteFrames.tres"
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_liin1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0lbbf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yu5cv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p72yk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6g712")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7fqxb")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]

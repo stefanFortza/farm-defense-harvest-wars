@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://0bdd718djcwv"]
+
+[ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.tscn" id="1_yectf"]
+[ext_resource type="Resource" uid="uid://qvrjytrjhqem" path="res://Resources/Units/UnitStats/SheepData.tres" id="2_3jhfb"]
+[ext_resource type="SpriteFrames" uid="uid://druwu7gensui" path="res://Entities/Units/Defenders/SheepUnit/SheepUnitSpriteFrames.tres" id="2_hamfq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3jhfb"]
+radius = 8.0
+
+[node name="SheepUnit" instance=ExtResource("1_yectf")]
+Data = ExtResource("2_3jhfb")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -6)
+sprite_frames = ExtResource("2_hamfq")
+animation = &"IdleSide"
+autoplay = "IdleSide"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_3jhfb")

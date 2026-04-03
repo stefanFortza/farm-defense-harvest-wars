@@ -10,7 +10,7 @@ load_path = "res://.godot/imported/ChickenIcon.png-4fd7873d6d38a2905945b19e86c9b
 atlas = SubResource("CompressedTexture2D_ct1rl")
 region = Rect2(11, 10, 13, 12)
 
-[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label", "_costLabel", "_dragPreviewTemplate")]
+[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label", "_dragPreviewTemplate")]
 custom_minimum_size = Vector2(16, 16)
 offset_right = 16.0
 offset_bottom = 16.0
@@ -19,7 +19,6 @@ theme = ExtResource("1_ct1rl")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
 _label = NodePath("Icon/Name")
-_costLabel = NodePath("Icon/Cost")
 _dragPreviewTemplate = NodePath("DragPreviewTemplate")
 
 [node name="Icon" type="TextureRect" parent="."]
