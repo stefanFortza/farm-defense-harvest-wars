@@ -17,7 +17,6 @@ position = Vector2(0, -9)
 sprite_frames = ExtResource("4_ywnpo")
 animation = &"IdleSide"
 autoplay = "IdleSide"
-frame_progress = 0.70690584
 flip_h = true
 
 [node name="HurtboxComponent" parent="SpatialComponents" index="0"]

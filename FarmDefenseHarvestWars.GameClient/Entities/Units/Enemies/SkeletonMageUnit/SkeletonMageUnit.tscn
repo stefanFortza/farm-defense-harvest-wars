@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://da45x0td82lu1"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_kle5s"]
+[ext_resource type="SpriteFrames" uid="uid://xyn10pi008hy" path="res://Entities/Units/Enemies/SkeletonMageUnit/SkeletonMage.tres" id="2_3xt32"]
+
+[node name="SkeletonMageUnit" instance=ExtResource("1_kle5s")]
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -7)
+sprite_frames = ExtResource("2_3xt32")
+animation = &"walk"
+autoplay = "walk"
+frame_progress = 0.5369793
+
+[node name="FakeLight" parent="." index="2"]
+position = Vector2(0, -8)
