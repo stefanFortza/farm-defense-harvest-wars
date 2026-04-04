@@ -27,4 +27,3 @@ position = Vector2(0, -7)
 shape = SubResource("CircleShape2D_2kvwq")
 
 [node name="VisionComponent" parent="SpatialComponents" index="1"]
-target_position = Vector2(20, 0)

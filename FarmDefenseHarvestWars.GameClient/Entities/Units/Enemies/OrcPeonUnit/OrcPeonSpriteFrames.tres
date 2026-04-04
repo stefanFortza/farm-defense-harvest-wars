@@ -1,6 +1,30 @@
-[gd_resource type="SpriteFrames" load_steps=14 format=3 uid="uid://cngv8jyakrju"]
+[gd_resource type="SpriteFrames" load_steps=20 format=3 uid="uid://cngv8jyakrju"]
 
 [ext_resource type="Texture2D" uid="uid://b2y40rctey0m5" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Orcs/Orc_Peon.png" id="1_xelsx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xelsx"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lri6c"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1djl6"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(128, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7gl70"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(192, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w3ju0"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(256, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b556s"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(320, 256, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l2yw2"]
 atlas = ExtResource("1_xelsx")
@@ -53,6 +77,29 @@ region = Rect2(160, 128, 32, 32)
 [resource]
 resource_name = "OrcPeonSpriteFrames.tres"
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xelsx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lri6c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1djl6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7gl70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w3ju0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b556s")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_l2yw2")

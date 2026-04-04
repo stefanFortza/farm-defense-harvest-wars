@@ -1,8 +1,16 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3 uid="uid://bn3rh822yeemu"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://bn3rh822yeemu"]
 
+[ext_resource type="Texture2D" uid="uid://clvam3y3rhiwb" path="res://Assets/Icons/OrcPeonIcon.png" id="1_7sn6x"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_gle30"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3khc7"]
+atlas = ExtResource("1_7sn6x")
+region = Rect2(3, 4, 21, 23)
 
 [resource]
 script = ExtResource("1_gle30")
 Type = 8
+Icon = SubResource("AtlasTexture_3khc7")
+UnitScenePath = "uid://c54cg7ycjmlcy"
+Speed = 5.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"
