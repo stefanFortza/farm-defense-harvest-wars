@@ -129,6 +129,7 @@ public abstract partial class DeckSelectionLeft : Control
         }
 
         var deck = DeckService.Instance.GetDeckForRole(role, _unitRegistry);
+        var originalDeck = new List<UnitType>(deck);
 
         if (fromSlotIndex >= 0)
         {
@@ -139,7 +140,10 @@ public abstract partial class DeckSelectionLeft : Control
             InsertFromLibrary(deck, unitType, targetIndex);
         }
 
-        DeckService.Instance.SubmitDeckSaveForRole(role, deck, _unitRegistry);
+        if (!DecksAreEqual(originalDeck, deck))
+        {
+            DeckService.Instance.SubmitDeckSaveForRole(role, deck, _unitRegistry);
+        }
     }
 
     protected virtual void MoveDeckEntry(List<UnitType> deck, int fromIndex, int targetIndex)
@@ -149,11 +153,12 @@ public abstract partial class DeckSelectionLeft : Control
             return;
         }
 
+        int originalCount = deck.Count;
         var moving = deck[fromIndex];
         deck.RemoveAt(fromIndex);
 
         int insertIndex = Mathf.Clamp(targetIndex, 0, deck.Count);
-        if (fromIndex < targetIndex)
+        if (fromIndex < targetIndex && targetIndex < originalCount)
         {
             insertIndex = Mathf.Max(0, insertIndex - 1);
         }
@@ -165,6 +170,24 @@ public abstract partial class DeckSelectionLeft : Control
         }
 
         deck.Insert(insertIndex, moving);
+    }
+
+    protected static bool DecksAreEqual(List<UnitType> left, List<UnitType> right)
+    {
+        if (left.Count != right.Count)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < left.Count; i++)
+        {
+            if (left[i] != right[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected virtual void InsertFromLibrary(List<UnitType> deck, UnitType unitType, int targetIndex)

@@ -111,13 +111,13 @@ public abstract partial class DeckSelectionRight : Control
         if (string.IsNullOrWhiteSpace(message) && isSuccess)
         {
             ShowTransientStatus("Deck saved", Colors.LightGreen, 0.9);
-            return;
         }
-
-        if (!isSuccess)
+        else if (!isSuccess)
         {
             ShowTransientStatus($"Save failed: {message}", Colors.IndianRed, 2.2);
         }
+
+        Refresh();
     }
 
     protected virtual void OnProfileUpdated()
@@ -138,10 +138,12 @@ public abstract partial class DeckSelectionRight : Control
             return false;
         }
 
-        if (data.Obj is not Dictionary<string, Variant> dict)
+        if (data.VariantType != Variant.Type.Dictionary)
         {
             return false;
         }
+
+        var dict = data.AsGodotDictionary();
 
         // Only accept drops from deck slots (fromSlot >= 0 indicates it's from left page)
         return dict.ContainsKey("fromSlot");
@@ -160,17 +162,19 @@ public abstract partial class DeckSelectionRight : Control
             return;
         }
 
-        if (data.Obj is not Dictionary<string, Variant> dict)
+        if (data.VariantType != Variant.Type.Dictionary)
         {
             return;
         }
 
-        if (!dict.TryGetValue("fromSlot", out var fromSlotObj) || fromSlotObj.VariantType != Variant.Type.Int)
+        var dict = data.AsGodotDictionary();
+
+        if (!dict.ContainsKey("fromSlot"))
         {
             return;
         }
 
-        int fromSlot = (int)fromSlotObj;
+        int fromSlot = ReadInt(dict, "fromSlot", -1);
 
         if (fromSlot < 0)
         {
@@ -188,6 +192,22 @@ public abstract partial class DeckSelectionRight : Control
         }
 
         GetTree().Root.SetInputAsHandled();
+    }
+
+    private static int ReadInt(Godot.Collections.Dictionary dict, string key, int fallback)
+    {
+        if (!dict.ContainsKey(key))
+        {
+            return fallback;
+        }
+
+        var value = dict[key];
+        if (value.VariantType == Variant.Type.Int)
+        {
+            return (int)(long)value;
+        }
+
+        return fallback;
     }
 
     protected virtual void Refresh()
