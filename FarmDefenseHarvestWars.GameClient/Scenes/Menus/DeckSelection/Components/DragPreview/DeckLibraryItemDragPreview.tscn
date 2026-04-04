@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bg42jkxh1y32g"]
+
+[ext_resource type="Script" uid="uid://dnqqfnhc4lipe" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckDragPreviewControl.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+
+[node name="DeckLibraryItemDragPreview" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label")]
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+_icon = NodePath("Icon")
+_label = NodePath("")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme = ExtResource("2_theme")
+expand_mode = 1
+stretch_mode = 5

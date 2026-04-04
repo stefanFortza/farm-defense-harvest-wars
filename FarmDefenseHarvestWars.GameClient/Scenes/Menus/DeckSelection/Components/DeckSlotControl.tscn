@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4fsd5ricrid8"]
+[gd_scene load_steps=4 format=3 uid="uid://c4fsd5ricrid8"]
 
 [ext_resource type="Script" uid="uid://cq5racbfuott4" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_xmja5"]
+[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckSlotDragPreview.tscn" id="3_dragpreview"]
 
-[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_nameLabel", "_costLabel", "_dragPreviewTemplate")]
+[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_nameLabel", "_costLabel")]
 offset_right = 16.0
 offset_bottom = 16.0
 mouse_filter = 1
@@ -12,7 +13,7 @@ script = ExtResource("1_script")
 _icon = NodePath("Row/Icon")
 _nameLabel = NodePath("Row/Icon/Name")
 _costLabel = NodePath("Row/Icon/Cost")
-_dragPreviewTemplate = NodePath("DragPreviewTemplate")
+_dragPreviewScene = ExtResource("3_dragpreview")
 
 [node name="Row" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -54,7 +55,3 @@ theme = ExtResource("1_xmja5")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="DragPreviewTemplate" type="Label" parent="."]
-visible = false
-layout_mode = 2
-theme = ExtResource("1_xmja5")

@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c6ybv7pnl1wvj"]
+[gd_scene load_steps=6 format=3 uid="uid://c6ybv7pnl1wvj"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_ct1rl"]
 [ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.cs" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckLibraryItemDragPreview.tscn" id="2_dragpreview"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ct1rl"]
 load_path = "res://.godot/imported/ChickenIcon.png-4fd7873d6d38a2905945b19e86c9be65.ctex"
@@ -10,7 +11,7 @@ load_path = "res://.godot/imported/ChickenIcon.png-4fd7873d6d38a2905945b19e86c9b
 atlas = SubResource("CompressedTexture2D_ct1rl")
 region = Rect2(11, 10, 13, 12)
 
-[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label", "_dragPreviewTemplate")]
+[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label")]
 custom_minimum_size = Vector2(16, 16)
 offset_right = 16.0
 offset_bottom = 16.0
@@ -19,7 +20,7 @@ theme = ExtResource("1_ct1rl")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
 _label = NodePath("Icon/Name")
-_dragPreviewTemplate = NodePath("DragPreviewTemplate")
+_dragPreviewScene = ExtResource("2_dragpreview")
 
 [node name="Icon" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(20, 20)
@@ -51,7 +52,3 @@ theme = ExtResource("1_ct1rl")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="DragPreviewTemplate" type="Label" parent="."]
-visible = false
-layout_mode = 2
-theme = ExtResource("1_ct1rl")

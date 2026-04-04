@@ -19,4 +19,10 @@ public enum UnitType
     OrcPeon,
     SkeletonMage,
     Spearman,
+    Angel,
+    GoblinMaceman,
+    OrcArcher,
+    Farmer,
+    Miner,
+    Lumberjack,
 }

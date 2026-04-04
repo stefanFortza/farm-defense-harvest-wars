@@ -6,7 +6,7 @@ public partial class DeckLibraryItemControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
     [Export] private Label _label = null!;
-    [Export] private Label _dragPreviewTemplate = null!;
+    [Export] private PackedScene _dragPreviewScene = null!;
     private int _unitTypeValue;
     private bool _canDrag;
     private bool _isUnlocked;
@@ -17,7 +17,7 @@ public partial class DeckLibraryItemControl : PanelContainer
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_label, nameof(_label));
-        this.EnsureNotNull(_dragPreviewTemplate, nameof(_dragPreviewTemplate));
+        this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
     }
 
     public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
@@ -76,6 +76,19 @@ public partial class DeckLibraryItemControl : PanelContainer
         AcceptEvent();
     }
 
+    private Control CreateDragPreview(Texture2D texture)
+    {
+        var preview = _dragPreviewScene.Instantiate<DeckDragPreviewControl>();
+        if (preview == null)
+        {
+            return new Control();
+        }
+
+        preview.Setup(texture);
+        preview.Modulate = new Color(1f, 1f, 1f, 0.85f);
+        return preview;
+    }
+
     public override Variant _GetDragData(Vector2 atPosition)
     {
         if (!_canDrag)
@@ -89,14 +102,7 @@ public partial class DeckLibraryItemControl : PanelContainer
             ["fromSlot"] = -1
         };
 
-        if (_dragPreviewTemplate.Duplicate() is not Label preview)
-        {
-            return default;
-        }
-
-        preview.Text = _label.Text;
-        preview.Modulate = new Color(1f, 1f, 1f, 0.85f);
-        SetDragPreview(preview);
+        SetDragPreview(CreateDragPreview(_icon.Texture));
 
         return payload;
     }

@@ -153,23 +153,21 @@ public abstract partial class DeckSelectionLeft : Control
             return;
         }
 
-        int originalCount = deck.Count;
-        var moving = deck[fromIndex];
-        deck.RemoveAt(fromIndex);
-
-        int insertIndex = Mathf.Clamp(targetIndex, 0, deck.Count);
-        if (fromIndex < targetIndex && targetIndex < originalCount)
+        int clampedTarget = Mathf.Clamp(targetIndex, 0, DeckService.MaxCards - 1);
+        if (clampedTarget == fromIndex)
         {
-            insertIndex = Mathf.Max(0, insertIndex - 1);
+            return;
         }
 
-        if (insertIndex >= deck.Count)
+        if (clampedTarget >= deck.Count)
         {
+            var moving = deck[fromIndex];
+            deck.RemoveAt(fromIndex);
             deck.Add(moving);
             return;
         }
 
-        deck.Insert(insertIndex, moving);
+        (deck[fromIndex], deck[clampedTarget]) = (deck[clampedTarget], deck[fromIndex]);
     }
 
     protected static bool DecksAreEqual(List<UnitType> left, List<UnitType> right)
