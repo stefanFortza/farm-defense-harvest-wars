@@ -93,7 +93,7 @@
     },
     {
       "Type": "OrcPeon",
-      "Role": "Defender",
+      "Role": "Attacker",
       "Name": "Unit",
       "MatchCost": 25,
       "UnlockCost": 100,
