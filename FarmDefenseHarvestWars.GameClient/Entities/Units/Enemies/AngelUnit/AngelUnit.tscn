@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddm8aaqcqsixt"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_s5lmp"]
+[ext_resource type="Resource" uid="uid://bm3bptt6vqvrg" path="res://Resources/Units/UnitStats/AngelData.tres" id="2_0cs5a"]
+[ext_resource type="SpriteFrames" uid="uid://cqf6k65pk2rcv" path="res://Entities/Units/Enemies/AngelUnit/AngelUnitSpriteFrames.tres" id="3_yv7xt"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nekob"]
+radius = 8.0
+
+[node name="AngelUnit" instance=ExtResource("1_s5lmp")]
+Data = ExtResource("2_0cs5a")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -5)
+sprite_frames = ExtResource("3_yv7xt")
+animation = &"walk"
+autoplay = "walk"
+
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_nekob")

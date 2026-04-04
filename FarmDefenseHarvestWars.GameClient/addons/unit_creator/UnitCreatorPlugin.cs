@@ -1,7 +1,6 @@
 #if TOOLS
 using Godot;
 using System;
-using System.Linq;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.Shared.Models.Game;
@@ -39,7 +38,7 @@ public partial class UnitCreatorPlugin : EditorPlugin
             _dialog = new ConfirmationDialog();
             _dialog.Title = "Create New Unit";
             _dialog.Size = new Vector2I(350, 250);
-            
+
             var vBox = new VBoxContainer();
             _dialog.AddChild(vBox);
 
@@ -97,20 +96,14 @@ public partial class UnitCreatorPlugin : EditorPlugin
         // 2. Create Scene (Inherited)
         if (!FileAccess.FileExists(scenePath))
         {
-            var baseScene = GD.Load<PackedScene>(baseScenePath);
-            if (baseScene != null)
+            var sceneCreateError = CreateInheritedSceneFile(scenePath, baseScenePath, targetFolderName);
+            if (sceneCreateError == Error.Ok)
             {
-                var instance = baseScene.Instantiate();
-                instance.Name = targetFolderName;
-                
-                var packed = new PackedScene();
-                var error = packed.Pack(instance);
-                if (error == Error.Ok)
-                {
-                    ResourceSaver.Save(packed, scenePath);
-                    GD.Print($"Created scene: {scenePath}");
-                }
-                instance.Free();
+                GD.Print($"Created inherited scene: {scenePath}");
+            }
+            else
+            {
+                GD.PrintErr($"Failed to create inherited scene {scenePath}. Error: {sceneCreateError}");
             }
         }
 
@@ -120,12 +113,14 @@ public partial class UnitCreatorPlugin : EditorPlugin
         unitData.Role = isDefender ? PlayerRole.Defender : PlayerRole.Attacker;
         unitData.Type = (UnitType)typeValue;
         unitData.UnitScenePath = scenePath;
-        
+
         // Default Stats
         unitData.MatchCost = 50;
         unitData.MaxHealth = 100;
         unitData.Damage = 10;
         unitData.AttackRange = 64f;
+        unitData.OptimalRange = 56f;
+        unitData.MeleeRange = 24f;
         unitData.AttackSpeed = 1.0f;
         unitData.Speed = isDefender ? 0f : 50f;
 
@@ -171,6 +166,30 @@ public partial class UnitCreatorPlugin : EditorPlugin
             ResourceSaver.Save(registry, UnitRegistryPath);
             GD.Print($"Updated UnitRegistry: Added {newUnitData.Name}");
         }
+    }
+
+    private static Error CreateInheritedSceneFile(string scenePath, string baseScenePath, string rootNodeName)
+    {
+        string sceneText = BuildInheritedSceneText(baseScenePath, rootNodeName);
+
+        using var file = FileAccess.Open(scenePath, FileAccess.ModeFlags.Write);
+        if (file == null)
+        {
+            return FileAccess.GetOpenError();
+        }
+
+        file.StoreString(sceneText);
+        return Error.Ok;
+    }
+
+    private static string BuildInheritedSceneText(string baseScenePath, string rootNodeName)
+    {
+        string escapedRootName = rootNodeName.Replace("\"", "\\\"");
+
+        return
+            "[gd_scene load_steps=2 format=3]\n\n" +
+            $"[ext_resource type=\"PackedScene\" path=\"{baseScenePath}\" id=\"1_base\"]\n\n" +
+            $"[node name=\"{escapedRootName}\" instance=ExtResource(\"1_base\")]\n";
     }
 }
 #endif

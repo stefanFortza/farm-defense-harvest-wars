@@ -16,11 +16,6 @@ public partial class AttackerUnit : BaseUnit
         base._Ready();
 
         VisionComponent.Initialize((Data.AttackRange, Vector2.Left)); // Attackers look to the left by default
-
-        // if (IsMultiplayerAuthority())
-        // {
-        //     StateMachine.Start(UnitStateEnum.Moving);
-        // }
     }
 
     // This is called by the base class's _Ready after validating dependencies
@@ -28,8 +23,6 @@ public partial class AttackerUnit : BaseUnit
     {
         base.RegisterStates();
         StateMachine.RegisterState(UnitStateEnum.Moving, new MovingState(this));
-
-
     }
 
     protected override UnitStateEnum GetInitialState()
