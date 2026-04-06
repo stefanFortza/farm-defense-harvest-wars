@@ -39,7 +39,6 @@ sprite_frames = SubResource("SpriteFrames_y05vm")
 animation = &"IdleSide"
 autoplay = "IdleSide"
 frame_progress = 0.8690765
-flip_h = true
 
 [node name="FakeLight" parent="." index="2"]
 position = Vector2(0, -3)

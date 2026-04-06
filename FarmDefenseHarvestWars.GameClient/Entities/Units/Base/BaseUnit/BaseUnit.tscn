@@ -16,6 +16,9 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath("LogicComponents/HealthComponent:CurrentHealth")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath("LogicComponents/UnitStateMachine:SyncedStateIndex")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent")]
 script = ExtResource("1_sqjxt")
@@ -32,19 +35,25 @@ VisionComponent = NodePath("SpatialComponents/VisionComponent")
 [node name="FakeLight" parent="." instance=ExtResource("2_0cqh2")]
 visible = false
 scale = Vector2(0.5, 0.5)
+BaseColor = null
+RadiusMultiplier = null
+IsOval = null
 
 [node name="LogicComponents" type="Node" parent="."]
 
 [node name="UnitStateMachine" parent="LogicComponents" instance=ExtResource("2_j2i82")]
-SyncedStateIndex = 0
 
 [node name="HealthComponent" parent="LogicComponents" instance=ExtResource("4_o6myl")]
+CurrentHealth = null
 
-[node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar", "_unit") instance=ExtResource("4_4cha2")]
+[node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar", "_unit", "_animatedSprite", "_animationPlayer") instance=ExtResource("4_4cha2")]
 HealthBar = NodePath("../../HealthBar")
 _unit = NodePath("../..")
+_animatedSprite = NodePath("../../AnimatedSprite2D")
+_animationPlayer = NodePath("../../AnimationPlayer")
 
 [node name="MovementComponent" parent="LogicComponents" node_paths=PackedStringArray("_parent") instance=ExtResource("5_0cqh2")]
+IsMoving = null
 _parent = NodePath("../..")
 
 [node name="SpatialComponents" type="Node2D" parent="."]
@@ -55,6 +64,8 @@ HealthComponent = NodePath("../../LogicComponents/HealthComponent")
 [node name="VisionComponent" parent="SpatialComponents" instance=ExtResource("8_0cqh2")]
 position = Vector2(0, -7)
 collide_with_areas = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -20.0

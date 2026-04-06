@@ -14,12 +14,16 @@ public enum UnitStateEnum
 
 public partial class UnitStateMachine : Node
 {
+    [Signal] public delegate void StateChangedEventHandler(int previousState, int newState);
+
     private readonly Dictionary<UnitStateEnum, IState> _states = [];
 
-    private IState _currentState = null!;
+    private IState? _currentState;
     private UnitStateEnum _currentStateEnum;
 
     private bool _isActive = false;
+
+    public UnitStateEnum CurrentState => _currentStateEnum;
 
     [Export]
     public int SyncedStateIndex
@@ -32,12 +36,13 @@ public partial class UnitStateMachine : Node
             if (_currentStateEnum == newState && _currentState != null)
                 return;
 
-            _currentStateEnum = newState;
-
             if (_isActive)
             {
-                TransitionTo(_currentStateEnum);
+                TransitionTo(newState);
+                return;
             }
+
+            _currentStateEnum = newState;
         }
     }
 
@@ -83,11 +88,16 @@ public partial class UnitStateMachine : Node
 
     private void TransitionTo(UnitStateEnum stateId)
     {
-        if (!_states.TryGetValue(stateId, out IState newStateInstance))
+        if (!_states.TryGetValue(stateId, out IState? newStateInstance) || newStateInstance == null)
         {
             GD.PrintErr($"[UnitStateMachine] State {stateId} not registered in {Name}!");
             return;
         }
+
+        if (_currentStateEnum == stateId && _currentState != null)
+            return;
+
+        var previousState = _currentStateEnum;
 
         _currentState?.Exit();
 
@@ -95,6 +105,8 @@ public partial class UnitStateMachine : Node
         _currentState = newStateInstance;
 
         _currentState.Enter();
+
+        EmitSignal(SignalName.StateChanged, (int)previousState, (int)_currentStateEnum);
     }
 
     public void RequestStateChange(UnitStateEnum newStateId)

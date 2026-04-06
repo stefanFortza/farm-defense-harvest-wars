@@ -16,20 +16,6 @@ sprite_frames = ExtResource("2_meix2")
 animation = &"attack"
 autoplay = "walk"
 
-[node name="FakeLight" parent="." index="2"]
-BaseColor = null
-RadiusMultiplier = null
-IsOval = null
-
-[node name="UnitStateMachine" parent="LogicComponents" index="0"]
-SyncedStateIndex = null
-
-[node name="HealthComponent" parent="LogicComponents" index="1"]
-CurrentHealth = null
-
-[node name="MovementComponent" parent="LogicComponents" index="3"]
-IsMoving = null
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(-2, -9)
 shape = SubResource("CircleShape2D_6pb82")

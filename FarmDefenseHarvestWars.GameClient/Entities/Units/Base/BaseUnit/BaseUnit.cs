@@ -52,10 +52,10 @@ public partial class BaseUnit : CharacterBody2D
         AddToGroup("Units");
         RegisterStates();
 
-        if (IsMultiplayerAuthority())
-        {
-            StateMachine.Start(GetInitialState());
-        }
+        // if (IsMultiplayerAuthority())
+        // {
+        StateMachine.Start(GetInitialState());
+        // }
     }
 
     public override void _ExitTree()

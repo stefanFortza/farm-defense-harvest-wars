@@ -18,6 +18,9 @@ sprite_frames = ExtResource("4_pbiwv")
 animation = &"idle"
 autoplay = "walk"
 
+[node name="UnitVisualsComponent" parent="LogicComponents" index="2" node_paths=PackedStringArray("_animatedSprite")]
+_animatedSprite = NodePath("../../AnimatedSprite2D")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_pbiwv")

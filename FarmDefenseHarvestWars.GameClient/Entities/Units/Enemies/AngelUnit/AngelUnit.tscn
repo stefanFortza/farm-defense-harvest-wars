@@ -13,8 +13,9 @@ Data = ExtResource("2_0cs5a")
 [node name="AnimatedSprite2D" parent="." index="1"]
 position = Vector2(0, -5)
 sprite_frames = ExtResource("3_yv7xt")
-animation = &"walk"
-autoplay = "walk"
+animation = &"move"
+autoplay = "move"
+frame_progress = 0.22471873
 
 [node name="CollisionPolygon2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -8)
