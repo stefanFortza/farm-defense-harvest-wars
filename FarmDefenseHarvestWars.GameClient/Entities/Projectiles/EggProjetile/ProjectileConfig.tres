@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ProjectileConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://dsu0n5d4i4g44" path="res://Entities/Projectiles/ProjectileConfig.cs" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+Piercing = false
+PierceCount = 1
+AoeRadius = 24.0
+Homing = false
+metadata/_custom_type_script = "uid://dsu0n5d4i4g44"

@@ -62,6 +62,7 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 		if (occupiesGrid)
 		{
 			grid.RegisterUnit(gridPos, unit);
+			unit.Died += () => grid.UnregisterUnit(gridPos);
 			GD.Print($"[UnitFactory] Static unit {type} registered at grid {gridPos}.");
 		}
 		else

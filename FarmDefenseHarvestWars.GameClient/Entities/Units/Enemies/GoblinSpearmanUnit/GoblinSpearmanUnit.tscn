@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://djrvfvsvhg0de"]
+[gd_scene load_steps=5 format=3 uid="uid://djrvfvsvhg0de"]
 
 [ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_ckmyq"]
 [ext_resource type="SpriteFrames" uid="uid://0dhbloxq477d" path="res://Entities/Units/Enemies/GoblinSpearmanUnit/GoblinSpearmanUnitSpriteFrames.tres" id="2_gf7wl"]
 [ext_resource type="Resource" uid="uid://b2bbd1mp386qf" path="res://Resources/Units/UnitStats/GoblinSpearmanData.tres" id="2_pkqlv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pkqlv"]
+radius = 7.0
 
 [node name="GoblinSpearmanUnit" instance=ExtResource("1_ckmyq")]
 Data = ExtResource("2_pkqlv")
@@ -13,3 +16,7 @@ sprite_frames = ExtResource("2_gf7wl")
 animation = &"attack"
 autoplay = "walk"
 frame_progress = 0.84810513
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_pkqlv")

@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://3umk8bfbn1ht"]
+[gd_scene load_steps=5 format=3 uid="uid://3umk8bfbn1ht"]
 
 [ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_aokqo"]
 [ext_resource type="Resource" uid="uid://dlgmkcdlo4gwr" path="res://Resources/Units/UnitStats/GoblinMacemanData.tres" id="2_4c355"]
 [ext_resource type="SpriteFrames" uid="uid://ijfwe05svq7d" path="res://Entities/Units/Enemies/GoblinMacemanUnit/GoblinMacemanUnitSpriteFrames.tres" id="2_dnd5x"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4c355"]
+radius = 6.0
 
 [node name="GoblinMacemanUnit" instance=ExtResource("1_aokqo")]
 Data = ExtResource("2_4c355")
@@ -13,3 +16,7 @@ sprite_frames = ExtResource("2_dnd5x")
 animation = &"walk"
 autoplay = "walk"
 frame_progress = 0.9432055
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_4c355")

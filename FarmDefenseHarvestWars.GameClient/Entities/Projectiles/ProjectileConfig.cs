@@ -6,7 +6,7 @@ namespace FarmDefenseHarvestWars.GameClient.Entities.Projectiles;
 /// Optional per-projectile behavior flags. Attach to a concrete projectile scene as an
 /// exported resource, or leave null to use the plain BaseProjectile default behavior.
 ///
-/// Extension points (not yet wired up, reserved for future projectile variants):
+/// Supported behaviors:
 ///   - Piercing   : projectile passes through enemies (no QueueFree on hit until PierceCount runs out)
 ///   - AoeRadius  : on hit, damage all HurtboxComponents within this radius
 ///   - Homing     : each physics frame, steer toward the nearest enemy hurtbox

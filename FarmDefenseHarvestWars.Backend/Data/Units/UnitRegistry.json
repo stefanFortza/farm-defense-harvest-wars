@@ -126,7 +126,7 @@
       "IsDefaultUnlocked": true,
       "MaxHealth": 100,
       "Damage": 10,
-      "Speed": 0,
+      "Speed": 10,
       "AttackRange": 64,
       "AttackSpeed": 0.4
     },

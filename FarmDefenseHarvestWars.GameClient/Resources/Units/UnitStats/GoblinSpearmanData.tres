@@ -14,4 +14,5 @@ Role = 1
 Name = "GoblinSpearman"
 Icon = SubResource("AtlasTexture_q7lc1")
 UnitScenePath = "uid://djrvfvsvhg0de"
+Speed = 10.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

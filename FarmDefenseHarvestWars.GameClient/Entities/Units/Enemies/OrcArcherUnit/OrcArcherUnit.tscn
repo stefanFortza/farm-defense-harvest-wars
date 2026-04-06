@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://du0moaxfwwmu8"]
+[gd_scene load_steps=5 format=3 uid="uid://du0moaxfwwmu8"]
 
 [ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_base"]
 [ext_resource type="Resource" uid="uid://duncipcvc17go" path="res://Resources/Units/UnitStats/OrcArcherData.tres" id="2_6pb82"]
 [ext_resource type="SpriteFrames" uid="uid://dx7rsprd6teyr" path="res://Entities/Units/Enemies/OrcArcherUnit/OrcArcherUnitSpriteFrames.tres" id="2_meix2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6pb82"]
+radius = 9.055386
 
 [node name="OrcArcherUnit" instance=ExtResource("1_base")]
 Data = ExtResource("2_6pb82")
@@ -12,3 +15,21 @@ position = Vector2(0, -15)
 sprite_frames = ExtResource("2_meix2")
 animation = &"attack"
 autoplay = "walk"
+
+[node name="FakeLight" parent="." index="2"]
+BaseColor = null
+RadiusMultiplier = null
+IsOval = null
+
+[node name="UnitStateMachine" parent="LogicComponents" index="0"]
+SyncedStateIndex = null
+
+[node name="HealthComponent" parent="LogicComponents" index="1"]
+CurrentHealth = null
+
+[node name="MovementComponent" parent="LogicComponents" index="3"]
+IsMoving = null
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(-2, -9)
+shape = SubResource("CircleShape2D_6pb82")
