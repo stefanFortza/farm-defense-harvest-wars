@@ -129,6 +129,58 @@
       "Speed": 0,
       "AttackRange": 64,
       "AttackSpeed": 0.4
+    },
+    {
+      "Type": "Angel",
+      "Role": "Attacker",
+      "Name": "Angel",
+      "MatchCost": 50,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "Speed": 50,
+      "AttackRange": 64,
+      "AttackSpeed": 1
+    },
+    {
+      "Type": "OrcGrunt",
+      "Role": "Attacker",
+      "Name": "OrcGrunt",
+      "MatchCost": 50,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "Speed": 50,
+      "AttackRange": 64,
+      "AttackSpeed": 1
+    },
+    {
+      "Type": "OrcArcher",
+      "Role": "Attacker",
+      "Name": "OrcArcher",
+      "MatchCost": 50,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "Speed": 50,
+      "AttackRange": 64,
+      "AttackSpeed": 1
+    },
+    {
+      "Type": "GoblinMaceman",
+      "Role": "Attacker",
+      "Name": "GoblinMaceman",
+      "MatchCost": 50,
+      "UnlockCost": 100,
+      "IsDefaultUnlocked": true,
+      "MaxHealth": 100,
+      "Damage": 10,
+      "Speed": 50,
+      "AttackRange": 64,
+      "AttackSpeed": 1
     }
   ]
 }

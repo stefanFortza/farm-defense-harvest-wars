@@ -25,4 +25,5 @@ public enum UnitType
     Farmer,
     Miner,
     Lumberjack,
+    OrcGrunt,
 }
