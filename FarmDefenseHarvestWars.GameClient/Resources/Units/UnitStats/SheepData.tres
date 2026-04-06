@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://qvrjytrjhqem"]
+
+[ext_resource type="Texture2D" uid="uid://bbm8pffdn7sal" path="res://Assets/Icons/SheepIcon.png" id="1_cxadq"]
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_o0v87"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7blk3"]
+atlas = ExtResource("1_cxadq")
+region = Rect2(5, 8, 19, 14)
+
+[resource]
+script = ExtResource("1_o0v87")
+Type = 3
+Name = "Sheep"
+Icon = SubResource("AtlasTexture_7blk3")
+UnitScenePath = "uid://0bdd718djcwv"
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://cnapywfs7vvi7"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_xj8l3"]
+[ext_resource type="Script" uid="uid://t04aymm6gwl" path="res://Entities/Units/Enemies/SkeletonUnit/SkeletonUnit.cs" id="2_script"]
+[ext_resource type="Resource" uid="uid://b34saaikrumva" path="res://Resources/Units/UnitStats/SkeletonData.tres" id="3_pbiwv"]
+[ext_resource type="SpriteFrames" uid="uid://brevgbr7fehpt" path="res://Entities/Units/Enemies/SkeletonUnit/SkeletonUnitSpriteFrames.tres" id="4_pbiwv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbiwv"]
+radius = 7.0
+
+[node name="SkeletonUnit" instance=ExtResource("1_xj8l3")]
+script = ExtResource("2_script")
+Data = ExtResource("3_pbiwv")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -8)
+sprite_frames = ExtResource("4_pbiwv")
+animation = &"idle"
+autoplay = "walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -10)
+shape = SubResource("CircleShape2D_pbiwv")
+
+[node name="HealthBar" parent="." index="5"]
+offset_left = -13.0
+offset_top = -26.5
+offset_right = 13.0
+offset_bottom = -22.5

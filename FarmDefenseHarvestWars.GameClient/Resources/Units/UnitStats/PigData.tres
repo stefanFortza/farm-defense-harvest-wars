@@ -1,7 +1,16 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3 uid="uid://co8s18xfuyd3d"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://co8s18xfuyd3d"]
 
+[ext_resource type="Texture2D" uid="uid://bwhtcjn8yex8" path="res://Assets/Icons/PigIcon.png" id="1_6nb2c"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_p7oxb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydo0q"]
+atlas = ExtResource("1_6nb2c")
+region = Rect2(5, 9, 21, 15)
 
 [resource]
 script = ExtResource("1_p7oxb")
+Type = 4
+Name = "Pig"
+Icon = SubResource("AtlasTexture_ydo0q")
+UnitScenePath = "uid://vwvflu0isd8c"
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

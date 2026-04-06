@@ -1,14 +1,29 @@
-[gd_scene load_steps=2 format=3 uid="uid://c2icauiwkb3xc"]
+[gd_scene load_steps=3 format=3 uid="uid://c2icauiwkb3xc"]
 
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_1lg15"]
 [ext_resource type="Script" uid="uid://c6xywc8uw0ehy" path="res://Scenes/UI/Components/ResourcePanel.cs" id="1_resource_panel_script"]
 
 [node name="ResourcePanel" type="PanelContainer" node_paths=PackedStringArray("_valueLabel")]
-custom_minimum_size = Vector2(150, 44)
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_1lg15")
 script = ExtResource("1_resource_panel_script")
 _valueLabel = NodePath("Margin/HBox/ValueLabel")
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="HBox" type="HBoxContainer" parent="Margin"]
 layout_mode = 2

@@ -46,4 +46,10 @@ public interface IGameApi
     [Get(ApiRoutes.MatchmakingStatus)]
     [Headers("Authorization: Bearer")]
     Task<MatchmakingStatusDto> GetMatchmakingStatusAsync();
+
+    [Post(ApiRoutes.MatchComplete)]
+    Task CompleteMatchAsync(
+        [AliasAs("matchId")] string matchId,
+        [Body] MatchCompletionRequestDto request,
+        [Header("X-Match-Server-Key")] string? callbackKey = null);
 }

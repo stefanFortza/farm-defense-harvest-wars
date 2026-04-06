@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://grppy7lcc4k8"]
+
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_e0hbe"]
+[ext_resource type="Texture2D" uid="uid://cyo8sk2yelkl4" path="res://Assets/Icons/SpearmanIcon.png" id="1_y522i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_35123"]
+atlas = ExtResource("1_y522i")
+region = Rect2(15, 17, 14, 24)
+
+[resource]
+script = ExtResource("1_e0hbe")
+Type = 10
+Role = 1
+Name = "Spearman"
+Icon = SubResource("AtlasTexture_35123")
+UnitScenePath = "uid://bfvjkk7prgsm6"
+Speed = 7.0
+AttackRange = 44.34
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

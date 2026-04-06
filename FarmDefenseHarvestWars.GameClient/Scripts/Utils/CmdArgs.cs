@@ -15,6 +15,8 @@ public static class CmdArgs
     public static bool IsServer { get; private set; }
     public static int? Port { get; private set; }
     public static string? MatchId { get; private set; }
+    public static string? BackendBaseUrl { get; private set; }
+    public static string? MatchServerCallbackKey { get; private set; }
     public static IReadOnlyList<UnitType>? DefenderDeck { get; private set; }
     public static IReadOnlyList<UnitType>? AttackerDeck { get; private set; }
 
@@ -67,6 +69,15 @@ public static class CmdArgs
                 i++;
                 MatchId = userArgs[i];
             }
+            else if (arg.StartsWith("--backend-url="))
+            {
+                BackendBaseUrl = arg.Substring("--backend-url=".Length);
+            }
+            else if (arg == "--backend-url" && i + 1 < userArgs.Length)
+            {
+                i++;
+                BackendBaseUrl = userArgs[i];
+            }
         }
     }
 
@@ -100,6 +111,18 @@ public static class CmdArgs
         if (!string.IsNullOrWhiteSpace(matchIdEnv))
         {
             MatchId = matchIdEnv;
+        }
+
+        string? backendUrlEnv = System.Environment.GetEnvironmentVariable("BACKEND_BASE_URL");
+        if (!string.IsNullOrWhiteSpace(backendUrlEnv))
+        {
+            BackendBaseUrl = backendUrlEnv;
+        }
+
+        string? callbackKeyEnv = System.Environment.GetEnvironmentVariable("MATCH_SERVER_CALLBACK_KEY");
+        if (!string.IsNullOrWhiteSpace(callbackKeyEnv))
+        {
+            MatchServerCallbackKey = callbackKeyEnv;
         }
 
         // Read DEFENDER_DECK_JSON from environment

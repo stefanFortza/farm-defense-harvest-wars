@@ -1,28 +1,20 @@
 using System.Text.Json;
-using FarmDefenseHarvestWars.Backend.Data;
 using FarmDefenseHarvestWars.Backend.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace FarmDefenseHarvestWars.Backend.Services;
 
 public sealed class DevelopmentTestUserSeeder
 {
-    private readonly ApplicationDbContext _db;
-    private readonly IDefaultUnitUnlockService _defaultUnitUnlockService;
     private readonly IWebHostEnvironment _environment;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<DevelopmentTestUserSeeder> _logger;
 
     public DevelopmentTestUserSeeder(
-        ApplicationDbContext db,
-        IDefaultUnitUnlockService defaultUnitUnlockService,
         IWebHostEnvironment environment,
         UserManager<ApplicationUser> userManager,
         ILogger<DevelopmentTestUserSeeder> logger)
     {
-        _db = db;
-        _defaultUnitUnlockService = defaultUnitUnlockService;
         _environment = environment;
         _userManager = userManager;
         _logger = logger;
@@ -62,7 +54,6 @@ public sealed class DevelopmentTestUserSeeder
         int createdCount = 0;
         int skippedCount = 0;
         int failedCount = 0;
-        int defaultUnlocksCreatedCount = 0;
 
         foreach (SeedUserEntry userEntry in users)
         {
@@ -89,29 +80,6 @@ public sealed class DevelopmentTestUserSeeder
             if (result.Succeeded)
             {
                 createdCount++;
-
-                IReadOnlyList<UnitUnlock> defaultUnlocks = _defaultUnitUnlockService
-                    .CreateDefaultUnlocks(user.Id, DateTime.UtcNow);
-
-                if (defaultUnlocks.Count > 0)
-                {
-                    HashSet<string> existingKeys = await _db.UnitUnlocks
-                        .Where(unlock => unlock.UserId == user.Id)
-                        .Select(unlock => $"{unlock.Role}:{unlock.UnitType}")
-                        .ToHashSetAsync(cancellationToken);
-
-                    List<UnitUnlock> missingUnlocks = defaultUnlocks
-                        .Where(unlock => existingKeys.Add($"{unlock.Role}:{unlock.UnitType}"))
-                        .ToList();
-
-                    if (missingUnlocks.Count > 0)
-                    {
-                        await _db.UnitUnlocks.AddRangeAsync(missingUnlocks, cancellationToken);
-                        await _db.SaveChangesAsync(cancellationToken);
-                        defaultUnlocksCreatedCount += missingUnlocks.Count;
-                    }
-                }
-
                 continue;
             }
 
@@ -121,11 +89,10 @@ public sealed class DevelopmentTestUserSeeder
         }
 
         _logger.LogInformation(
-            "Development test-user seed completed. Created: {Created}, Skipped: {Skipped}, Failed: {Failed}, DefaultUnlocksCreated: {DefaultUnlocksCreated}",
+            "Development test-user seed completed. Created: {Created}, Skipped: {Skipped}, Failed: {Failed}",
             createdCount,
             skippedCount,
-            failedCount,
-            defaultUnlocksCreatedCount);
+            failedCount);
     }
 
     private sealed class SeedUserEntry

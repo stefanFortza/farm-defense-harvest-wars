@@ -1,8 +1,11 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
 public partial class MatchManager : Node
 {
@@ -14,15 +17,18 @@ public partial class MatchManager : Node
     [Export] public float PassiveIncomeInterval = 1.0f;
     [Export] public int MaxBaseHealth = 100;
     [Export] public float StateSyncInterval = 0.2f;
+    [Export] public float DisconnectGraceSeconds = 30f;
 
     private MatchState _currentState = MatchState.Waiting;
     private float _timeRemaining;
     private int _baseHealth;
     private float _incomeTimer = 0f;
     private float _stateSyncTimer = 0f;
+    private bool _completionReported;
 
     // PeerID -> Money
     private readonly Dictionary<long, int> _playerMoney = new();
+    private readonly Dictionary<PlayerRole, ulong> _disconnectRoleTokens = new();
 
     [Signal] public delegate void MatchStateChangedEventHandler(int newState);
     [Signal] public delegate void MoneyChangedEventHandler(long peerId, int newAmount);
@@ -66,8 +72,10 @@ public partial class MatchManager : Node
         _timeRemaining = MatchDurationSeconds;
         _baseHealth = MaxBaseHealth;
         _playerMoney.Clear();
+        _disconnectRoleTokens.Clear();
         _incomeTimer = 0f;
         _stateSyncTimer = 0f;
+        _completionReported = false;
 
         // Inițializăm banii pentru jucătorii deja conectați
         foreach (var id in Multiplayer.GetPeers())
@@ -97,7 +105,17 @@ public partial class MatchManager : Node
 
     public override void _Process(double delta)
     {
-        if (!Multiplayer.IsServer() || _currentState != MatchState.Playing) return;
+        if (!Multiplayer.IsServer()) return;
+
+        if (_currentState == MatchState.Ended && _completionReported)
+        {
+            GD.Print("Match ended and completion reported. Quitting server.");
+            // Exit the server process only after completion report is sent
+            GetTree().Quit();
+            return;
+        }
+
+        if (_currentState != MatchState.Playing) return;
 
         float dt = (float)delta;
         UpdateTimer(dt);
@@ -211,6 +229,11 @@ public partial class MatchManager : Node
 
     private void EndMatch(PlayerRole winner)
     {
+        EndMatch(winner, "normal", false);
+    }
+
+    private void EndMatch(PlayerRole winner, string terminationReason, bool isAborted)
+    {
         if (!Multiplayer.IsServer() || _currentState == MatchState.Ended)
         {
             return;
@@ -222,8 +245,9 @@ public partial class MatchManager : Node
 
         BroadcastSnapshot();
         Rpc(nameof(SyncMatchEndedRpc), (int)winner);
+        _ = ReportCompletionAsync(winner, terminationReason, isAborted);
 
-        Logger.Info($"MatchManager: Match Ended! Winner: {winner}");
+        Logger.Info($"MatchManager: Match Ended! Winner: {winner} | Reason: {terminationReason} | IsAborted={isAborted}");
     }
 
     public void RequestFullSync()
@@ -240,14 +264,136 @@ public partial class MatchManager : Node
     private void OnPeerConnected(long id)
     {
         if (!Multiplayer.IsServer()) return;
-        if (!_playerMoney.ContainsKey(id)) _playerMoney[id] = StartingMoney;
+
+        if (!_playerMoney.ContainsKey(id))
+        {
+            _playerMoney[id] = StartingMoney;
+        }
+
+        if (_currentState == MatchState.Playing)
+        {
+            // Any reconnect/new connection while match is active clears pending disconnect forfeits.
+            foreach (PlayerRole role in new List<PlayerRole>(_disconnectRoleTokens.Keys))
+            {
+                _disconnectRoleTokens[role]++;
+            }
+        }
+
         SendFullSyncToPeer(id);
     }
 
     private void OnPeerDisconnected(long id)
     {
-        if (!Multiplayer.IsServer()) return;
+        if (!Multiplayer.IsServer())
+        {
+            return;
+        }
+
         _playerMoney.Remove(id);
+
+        if (_currentState != MatchState.Playing)
+        {
+            return;
+        }
+
+        GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
+        if (gameplay == null || !gameplay.TryGetRoleForPeer(id, out PlayerRole disconnectedRole))
+        {
+            Logger.Error($"MatchManager: Could not resolve disconnected peer role for peer {id}; skipping forfeit flow.");
+            return;
+        }
+
+        // Check if both players are now disconnected
+        if (gameplay.ConnectedPlayerCount == 0)
+        {
+            EndMatch(PlayerRole.Defender, "both_players_disconnected", true);
+            Logger.Info($"MatchManager: Peer {id} ({disconnectedRole}) disconnected. Both players are now gone. Match ended immediately as aborted.");
+            return;
+        }
+
+        ulong nextToken = _disconnectRoleTokens.TryGetValue(disconnectedRole, out ulong currentToken)
+            ? currentToken + 1
+            : 1;
+
+        _disconnectRoleTokens[disconnectedRole] = nextToken;
+        _ = WatchDisconnectGraceAsync(disconnectedRole, nextToken, id);
+
+        Logger.Info($"MatchManager: Peer {id} ({disconnectedRole}) disconnected. Waiting {DisconnectGraceSeconds:0.##}s grace period before forfeit.");
+    }
+
+    private async Task WatchDisconnectGraceAsync(PlayerRole disconnectedRole, ulong token, long peerId)
+    {
+        await ToSignal(GetTree().CreateTimer(DisconnectGraceSeconds), SceneTreeTimer.SignalName.Timeout);
+
+        if (_currentState != MatchState.Playing)
+        {
+            return;
+        }
+
+        if (!_disconnectRoleTokens.TryGetValue(disconnectedRole, out ulong currentToken) || currentToken != token)
+        {
+            return;
+        }
+
+        GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
+        if (gameplay != null && gameplay.ConnectedPlayerCount >= 2)
+        {
+            return;
+        }
+
+        PlayerRole winner = disconnectedRole == PlayerRole.Defender
+            ? PlayerRole.Attacker
+            : PlayerRole.Defender;
+
+        EndMatch(winner, $"{disconnectedRole.ToString().ToLowerInvariant()}_disconnect_timeout", false);
+        Logger.Info($"MatchManager: Disconnect grace expired for peer {peerId} ({disconnectedRole}). Forfeit winner: {winner}.");
+    }
+
+    private async Task ReportCompletionAsync(PlayerRole winner, string terminationReason, bool isAborted)
+    {
+        if (_completionReported)
+        {
+            return;
+        }
+
+
+        string? matchId = GameState.Instance?.MatchId;
+        if (string.IsNullOrWhiteSpace(matchId))
+        {
+            Logger.Error("MatchManager: Missing match id for completion callback.");
+            return;
+        }
+
+        if (NetworkBootstrap.Instance?.ApiClient == null)
+        {
+            Logger.Error("MatchManager: API client unavailable for completion callback.");
+            return;
+        }
+
+        try
+        {
+            var request = new MatchCompletionRequestDto
+            {
+                WinnerRole = winner,
+                TerminationReason = terminationReason,
+                IsAborted = isAborted,
+                CompletedAtUtc = DateTimeOffset.UtcNow
+            };
+
+            await NetworkBootstrap.Instance.ApiClient.CompleteMatchAsync(
+                matchId,
+                request,
+                CmdArgs.MatchServerCallbackKey);
+
+            _completionReported = true;
+
+            Logger.Info($"MatchManager: Completion callback sent for match {matchId}.");
+        }
+        catch (Exception ex)
+        {
+            _completionReported = false;
+            Logger.Error($"MatchManager: Failed to send completion callback for match {matchId}. Error: {ex.Message}");
+        }
     }
 
     private void SendFullSyncToPeer(long peerId)

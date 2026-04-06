@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://5hjctpsrap0p"]
+
+[ext_resource type="Texture2D" uid="uid://08yw8t3h5o5i" path="res://Assets/Icons/DuckIcon.png" id="1_434wq"]
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_vwtc8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0srgy"]
+atlas = ExtResource("1_434wq")
+region = Rect2(8, 9, 14, 13)
+
+[resource]
+script = ExtResource("1_vwtc8")
+Type = 5
+Name = "Duck"
+Icon = SubResource("AtlasTexture_0srgy")
+UnitScenePath = "uid://dkvgoh0ab7vj7"
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

@@ -1,5 +1,6 @@
 using Godot;
 using FarmDefenseHarvestWars.GameClient.Entities.Components;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 
@@ -9,6 +10,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
 {
     [Export] public HitboxComponent HitboxComponent { get; set; } = null!;
     [Export] public Sprite2D Sprite2D { get; set; } = null!;
+    [Export] public ProjectileConfig? Config { get; set; }
     [Export] public float Speed { get; set; } = 100f;
     [Export] public Vector2 Direction { get; set; } = Vector2.Left;
     [Export] public int Damage { get; set; } = 10;
@@ -73,6 +75,44 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     /// </summary>
     protected virtual void OnHit(HurtboxComponent target)
     {
+        ApplyAreaDamage(target);
         QueueFree();
+    }
+
+    private void ApplyAreaDamage(HurtboxComponent directHitTarget)
+    {
+        float aoeRadius = Config?.AoeRadius ?? 0f;
+        if (aoeRadius <= 0f || !IsMultiplayerAuthority())
+        {
+            return;
+        }
+
+        if (!GodotObject.IsInstanceValid(directHitTarget))
+        {
+            return;
+        }
+
+        Vector2 impactPoint = directHitTarget.GlobalPosition;
+
+        foreach (Node node in GetTree().GetNodesInGroup("Units"))
+        {
+            if (node is not BaseUnit unit)
+            {
+                continue;
+            }
+
+            var hurtbox = unit.HurtboxComponent;
+            if (hurtbox == null || !GodotObject.IsInstanceValid(hurtbox) || hurtbox == directHitTarget)
+            {
+                continue;
+            }
+
+            if (hurtbox.GlobalPosition.DistanceTo(impactPoint) > aoeRadius)
+            {
+                continue;
+            }
+
+            hurtbox.ReceiveHit(Damage);
+        }
     }
 }

@@ -64,7 +64,7 @@ public partial class UnitRegistry : Resource
     {
         if (_lookupTable != null)
         {
-            GD.Print("[UnitRegistry] Lookup deja inițializat, sărim peste re-initializare.");
+            // GD.Print("[UnitRegistry] Lookup deja inițializat, sărim peste re-initializare.");
             return;
         }
 
@@ -83,7 +83,7 @@ public partial class UnitRegistry : Resource
             _lookupTable.Add(unit.Type, unit);
         }
 
-        GD.Print($"[UnitRegistry] Indexat {_lookupTable.Count} unități.");
+        // GD.Print($"[UnitRegistry] Indexat {_lookupTable.Count} unități.");
     }
 
     // Metoda rapidă de acces
@@ -99,5 +99,30 @@ public partial class UnitRegistry : Resource
 
         GD.PrintErr($"[UnitRegistry] CRITICAL: Unit Type '{type}' nu a fost găsit în registry!");
         return new UnitData();
+    }
+
+    public bool TryGetUnitData(UnitType type, out UnitData? data)
+    {
+        if (_lookupTable == null) InitializeLookup();
+
+        if (_lookupTable.TryGetValue(type, out var found))
+        {
+            data = found;
+            return true;
+        }
+
+        data = null;
+        return false;
+    }
+
+    public bool IsRoleCompatible(UnitType type, PlayerRole role)
+    {
+        if (!TryGetUnitData(type, out var unitData) || unitData == null)
+        {
+            GD.PrintErr($"[UnitRegistry] Unit '{type}' missing from registry. Treating as incompatible for role '{role}'.");
+            return false;
+        }
+
+        return unitData.Role == role;
     }
 }

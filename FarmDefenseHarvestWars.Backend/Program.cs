@@ -12,9 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Asigură-te că ai pachetul: Microsoft.EntityFrameworkCore.Sqlite
 builder.Services.AddScoped<IDefaultUnitUnlockService, DefaultUnitUnlockService>();
 builder.Services.AddScoped<DevelopmentTestUserSeeder>();
+builder.Services.AddSingleton<DefaultUnitUnlockCreationInterceptor>();
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
     options
-    .UseSqlite("Data Source=game_dev.db"));
+    .UseSqlite("Data Source=game_dev.db")
+    .AddInterceptors(serviceProvider.GetRequiredService<DefaultUnitUnlockCreationInterceptor>()));
 
 // 2. Configurare Identity (Login/Register)
 builder.Services.AddAuthorization();

@@ -17,7 +17,6 @@ position = Vector2(0, -9)
 sprite_frames = ExtResource("4_ywnpo")
 animation = &"IdleSide"
 autoplay = "IdleSide"
-frame_progress = 0.70690584
 flip_h = true
 
 [node name="HurtboxComponent" parent="SpatialComponents" index="0"]
@@ -28,4 +27,3 @@ position = Vector2(0, -7)
 shape = SubResource("CircleShape2D_2kvwq")
 
 [node name="VisionComponent" parent="SpatialComponents" index="1"]
-target_position = Vector2(20, 0)

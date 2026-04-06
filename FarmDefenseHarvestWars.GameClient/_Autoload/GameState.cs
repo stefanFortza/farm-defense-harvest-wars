@@ -5,9 +5,12 @@ using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public partial class GameState : Node
 {
+    private static readonly IReadOnlyList<UnitType> EmptyDeck = [];
+
     // Singleton
     public static GameState Instance { get; private set; } = null!;
 
@@ -15,7 +18,7 @@ public partial class GameState : Node
     public PlayerProfileDto? CurrentProfile { get; private set; }
     public SelectedDeckData? CurrentDeck { get; private set; }
 
-    // Match Configuration (Server mode only)
+    // Match configuration for active game (server loads it from cmd args, clients receive it via RPC)
     public string? MatchId { get; private set; }
     public IReadOnlyList<UnitType>? DefenderDeck { get; private set; }
     public IReadOnlyList<UnitType>? AttackerDeck { get; private set; }
@@ -38,6 +41,7 @@ public partial class GameState : Node
     [Signal] public delegate void MatchConfigurationLoadedEventHandler();
 
     private readonly HashSet<PlayerRole> _deckSavesInFlight = [];
+    private readonly object _deckStateSync = new();
 
     public override void _Ready()
     {
@@ -72,12 +76,47 @@ public partial class GameState : Node
 
     public void SetCurrentDeck(SelectedDeckData deck)
     {
-        CurrentDeck = deck;
+        lock (_deckStateSync)
+        {
+            CurrentDeck = deck;
+        }
 
         if (HasAssignedRole)
         {
             EmitSignal(SignalName.DeckUpdated, (int)AssignedRole!.Value);
         }
+    }
+
+    public void SetMatchDecks(IReadOnlyList<UnitType> defenderDeck, IReadOnlyList<UnitType> attackerDeck)
+    {
+        DefenderDeck = [.. defenderDeck];
+        AttackerDeck = [.. attackerDeck];
+        EmitSignal(SignalName.MatchConfigurationLoaded);
+    }
+
+    public IReadOnlyList<UnitType> GetMatchDeckForRole(PlayerRole role)
+    {
+
+        GD.Print($"Retrieving match deck for role {role} | DefenderDeck: {(DefenderDeck != null ? string.Join(", ", DefenderDeck) : "null")} | AttackerDeck: {(AttackerDeck != null ? string.Join(", ", AttackerDeck) : "null")}");
+        // if (!IsMatchConfigured)
+        // {
+        //     return EmptyDeck;
+        // }
+
+
+        return role == PlayerRole.Defender
+            ? DefenderDeck ?? EmptyDeck
+            : AttackerDeck ?? EmptyDeck;
+    }
+
+    public IReadOnlyList<UnitType> GetMyMatchDeck()
+    {
+        if (!AssignedRole.HasValue)
+        {
+            return EmptyDeck;
+        }
+
+        return GetMatchDeckForRole(AssignedRole.Value);
     }
 
     public bool IsUnitUnlocked(PlayerRole role, UnitType unitType)
@@ -97,36 +136,65 @@ public partial class GameState : Node
 
     public void SetDeckForRole(PlayerRole role, IReadOnlyCollection<UnitType> units)
     {
-        CurrentDeck ??= new SelectedDeckData();
-
-        if (role == PlayerRole.Defender)
+        bool shouldEmit = false;
+        lock (_deckStateSync)
         {
-            CurrentDeck.DefenderDeck = [.. units];
-            EmitSignal(SignalName.DeckUpdated, (int)role);
-            return;
+            CurrentDeck ??= new SelectedDeckData();
+
+            if (role == PlayerRole.Defender)
+            {
+                CurrentDeck.DefenderDeck = [.. units];
+                shouldEmit = true;
+            }
+
+            if (role == PlayerRole.Attacker)
+            {
+                CurrentDeck.AttackerDeck = [.. units];
+                shouldEmit = true;
+            }
         }
 
-        if (role == PlayerRole.Attacker)
+        if (shouldEmit)
         {
-            CurrentDeck.AttackerDeck = [.. units];
             EmitSignal(SignalName.DeckUpdated, (int)role);
+        }
+    }
+
+    public IReadOnlyList<UnitType> GetSelectedDeckForRoleSnapshot(PlayerRole role)
+    {
+        lock (_deckStateSync)
+        {
+            if (CurrentDeck == null)
+            {
+                return [];
+            }
+
+            return role == PlayerRole.Attacker
+                ? [.. CurrentDeck.AttackerDeck]
+                : [.. CurrentDeck.DefenderDeck];
         }
     }
 
     public bool IsDeckSaveInProgress(PlayerRole role)
     {
-        return _deckSavesInFlight.Contains(role);
+        lock (_deckStateSync)
+        {
+            return _deckSavesInFlight.Contains(role);
+        }
     }
 
     public void SetDeckSaveInProgress(PlayerRole role, bool isSaving)
     {
-        if (isSaving)
+        lock (_deckStateSync)
         {
-            _deckSavesInFlight.Add(role);
-        }
-        else
-        {
-            _deckSavesInFlight.Remove(role);
+            if (isSaving)
+            {
+                _deckSavesInFlight.Add(role);
+            }
+            else
+            {
+                _deckSavesInFlight.Remove(role);
+            }
         }
 
         EmitSignal(SignalName.DeckSaveStatusChanged, (int)role, isSaving, true, string.Empty);
@@ -145,10 +213,17 @@ public partial class GameState : Node
 
     public void ClearState()
     {
-        CurrentProfile = null;
-        CurrentDeck = null;
-        AssignedRole = null;
-        _deckSavesInFlight.Clear();
+        lock (_deckStateSync)
+        {
+            CurrentProfile = null;
+            CurrentDeck = null;
+            MatchId = null;
+            DefenderDeck = null;
+            AttackerDeck = null;
+            AssignedRole = null;
+            _deckSavesInFlight.Clear();
+        }
+
         EmitSignal(SignalName.LoggedOut);
     }
 }

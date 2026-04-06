@@ -13,7 +13,7 @@ public partial class DeckSlotControl : PanelContainer
     [Export] private TextureRect _icon = null!;
     [Export] private Label _nameLabel = null!;
     [Export] private Label _costLabel = null!;
-    [Export] private Label _dragPreviewTemplate = null!;
+    [Export] private PackedScene _dragPreviewScene = null!;
     private UnitType? _unitType;
 
     public override void _Ready()
@@ -22,7 +22,7 @@ public partial class DeckSlotControl : PanelContainer
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_nameLabel, nameof(_nameLabel));
         this.EnsureNotNull(_costLabel, nameof(_costLabel));
-        this.EnsureNotNull(_dragPreviewTemplate, nameof(_dragPreviewTemplate));
+        this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
 
         UpdateVisual();
     }
@@ -47,6 +47,19 @@ public partial class DeckSlotControl : PanelContainer
         UpdateVisual();
     }
 
+    private Control CreateDragPreview(Texture2D texture)
+    {
+        var preview = _dragPreviewScene.Instantiate<DeckDragPreviewControl>();
+        if (preview == null)
+        {
+            return new Control();
+        }
+
+        preview.Setup(texture);
+        preview.Modulate = new Color(1f, 1f, 1f, 0.85f);
+        return preview;
+    }
+
     public override Variant _GetDragData(Vector2 atPosition)
     {
         if (!_unitType.HasValue)
@@ -60,15 +73,7 @@ public partial class DeckSlotControl : PanelContainer
             ["fromSlot"] = SlotIndex
         };
 
-        var preview = _dragPreviewTemplate.Duplicate() as Label;
-        if (preview == null)
-        {
-            return default;
-        }
-
-        preview.Text = _nameLabel.Text;
-        preview.Modulate = new Color(1f, 1f, 1f, 0.85f);
-        SetDragPreview(preview);
+        SetDragPreview(CreateDragPreview(_icon.Texture));
 
         return payload;
     }

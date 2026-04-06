@@ -1,13 +1,16 @@
 using Godot;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
+using System.Threading;
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
 
-public partial class Card : PanelContainer
+namespace FarmDefenseHarvestWars.GameClient.Scenes.UI;
+
+public partial class UnitCard : PanelContainer
 {
     [Signal] public delegate void CardPressedEventHandler(int unitType);
 
     [Export] private TextureRect _icon = null!;
-    [Export] private Label _nameLabel = null!;
     [Export] private Label _costLabel = null!;
     [Export] private ColorRect _cooldownOverlay = null!;
     [Export] private Label _cooldownLabel = null!;
@@ -21,11 +24,10 @@ public partial class Card : PanelContainer
 
     public override void _Ready()
     {
-        _icon ??= GetNodeOrNull<TextureRect>("Margin/VBox/Icon");
-        _nameLabel ??= GetNodeOrNull<Label>("Margin/VBox/Name");
-        _costLabel ??= GetNodeOrNull<Label>("Margin/VBox/CostRow/CostLabel");
-        _cooldownOverlay ??= GetNodeOrNull<ColorRect>("CooldownOverlay");
-        _cooldownLabel ??= GetNodeOrNull<Label>("CooldownOverlay/CooldownLabel");
+        this.EnsureNotNull(_icon, nameof(_icon));
+        this.EnsureNotNull(_costLabel, nameof(_costLabel));
+        this.EnsureNotNull(_cooldownOverlay, nameof(_cooldownOverlay));
+        this.EnsureNotNull(_cooldownLabel, nameof(_cooldownLabel));
 
         SetProcess(false);
         UpdateVisualState();
@@ -34,23 +36,10 @@ public partial class Card : PanelContainer
     public void Setup(UnitData data)
     {
         _data = data;
-
-        if (_icon != null)
-        {
-            _icon.Texture = data.Icon;
-        }
-
-        if (_nameLabel != null)
-        {
-            _nameLabel.Text = data.Name;
-        }
-
-        if (_costLabel != null)
-        {
-            _costLabel.Text = data.MatchCost.ToString();
-        }
-
+        _icon.Texture = data.Icon;
+        _costLabel.Text = data.MatchCost.ToString();
         TooltipText = $"{data.Name} ({data.MatchCost})";
+
         UpdateVisualState();
     }
 
@@ -122,15 +111,9 @@ public partial class Card : PanelContainer
         MouseDefaultCursorShape = isUsable ? CursorShape.PointingHand : CursorShape.Forbidden;
         SelfModulate = isUsable ? Colors.White : new Color(1f, 1f, 1f, 0.55f);
 
-        if (_cooldownOverlay != null)
-        {
-            _cooldownOverlay.Visible = onCooldown;
-        }
+        _cooldownOverlay.Visible = onCooldown;
 
-        if (_cooldownLabel != null)
-        {
-            _cooldownLabel.Visible = onCooldown;
-            _cooldownLabel.Text = Mathf.CeilToInt(_cooldownRemaining).ToString();
-        }
+        _cooldownLabel.Visible = onCooldown;
+        _cooldownLabel.Text = Mathf.CeilToInt(_cooldownRemaining).ToString();
     }
 }

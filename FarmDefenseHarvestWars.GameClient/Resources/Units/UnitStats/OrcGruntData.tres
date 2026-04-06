@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://c8qupwyxareaw"]
+
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_8e71c"]
+[ext_resource type="Texture2D" uid="uid://wy5nru734ywk" path="res://Assets/Icons/OrcGruntIcon.png" id="1_hfbrq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5dcp"]
+atlas = ExtResource("1_hfbrq")
+region = Rect2(5, 2, 20, 27)
+
+[resource]
+script = ExtResource("1_8e71c")
+Type = 17
+Role = 1
+Name = "OrcGrunt"
+Icon = SubResource("AtlasTexture_c5dcp")
+MatchCost = 50
+UnitScenePath = "res://Entities/Units/Enemies/OrcGruntUnit/OrcGruntUnit.tscn"
+Speed = 50.0
+AttackSpeed = 1.0

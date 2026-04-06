@@ -25,6 +25,70 @@ public partial class MenuNetwork : Node
         return await NetworkBootstrap.Instance.ApiClient.UpdateDeckAsync(role, request);
     }
 
+    public async Task<bool> SyncDeckForRoleFromServerAsync(PlayerRole role, bool skipIfSaveInFlight = true)
+    {
+        var state = GameState.Instance;
+        if (state == null)
+        {
+            return false;
+        }
+
+        if (skipIfSaveInFlight && state.IsDeckSaveInProgress(role))
+        {
+            return false;
+        }
+
+        var serverDeck = await NetworkBootstrap.Instance.ApiClient.GetDeckAsync(role);
+        var localDeck = state.GetSelectedDeckForRoleSnapshot(role);
+        if (AreDecksEqual(localDeck, serverDeck.Units))
+        {
+            return false;
+        }
+
+        state.SetDeckForRole(role, serverDeck.Units);
+        return true;
+    }
+
+    public async Task<(bool DefenderChanged, bool AttackerChanged)> SyncAllDecksFromServerAsync(bool skipIfSaveInFlight = true)
+    {
+        var state = GameState.Instance;
+        if (state == null)
+        {
+            return (false, false);
+        }
+
+        var defenderTask = NetworkBootstrap.Instance.ApiClient.GetDeckAsync(PlayerRole.Defender);
+        var attackerTask = NetworkBootstrap.Instance.ApiClient.GetDeckAsync(PlayerRole.Attacker);
+        await Task.WhenAll(defenderTask, attackerTask);
+
+        bool defenderChanged = false;
+        bool attackerChanged = false;
+
+        if (!(skipIfSaveInFlight && state.IsDeckSaveInProgress(PlayerRole.Defender)))
+        {
+            var localDefender = state.GetSelectedDeckForRoleSnapshot(PlayerRole.Defender);
+            var serverDefender = defenderTask.Result.Units;
+            if (!AreDecksEqual(localDefender, serverDefender))
+            {
+                state.SetDeckForRole(PlayerRole.Defender, serverDefender);
+                defenderChanged = true;
+            }
+        }
+
+        if (!(skipIfSaveInFlight && state.IsDeckSaveInProgress(PlayerRole.Attacker)))
+        {
+            var localAttacker = state.GetSelectedDeckForRoleSnapshot(PlayerRole.Attacker);
+            var serverAttacker = attackerTask.Result.Units;
+            if (!AreDecksEqual(localAttacker, serverAttacker))
+            {
+                state.SetDeckForRole(PlayerRole.Attacker, serverAttacker);
+                attackerChanged = true;
+            }
+        }
+
+        return (defenderChanged, attackerChanged);
+    }
+
     public async Task<PlayerProfileDto> UnlockUnitAsync(UnitType unitType)
     {
         var profile = await NetworkBootstrap.Instance.ApiClient.UnlockUnitAsync(unitType);
@@ -106,5 +170,23 @@ public partial class MenuNetwork : Node
         {
             GD.Print("Matchmaking was already canceled server-side.");
         }
+    }
+
+    private static bool AreDecksEqual(IReadOnlyList<UnitType> left, IReadOnlyList<UnitType> right)
+    {
+        if (left.Count != right.Count)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < left.Count; i++)
+        {
+            if (left[i] != right[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

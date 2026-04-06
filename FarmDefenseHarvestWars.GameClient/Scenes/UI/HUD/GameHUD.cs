@@ -6,26 +6,28 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
+using FarmDefenseHarvestWars.GameClient.Scenes.UI;
 
 public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 {
     [Export] private ResourcePanel _resourcePanel = null!;
     [Export] private HBoxContainer _deckContainer = null!;
     [Export] private ProgressBar _timerBar = null!;
-    [Export] private TextureButton _pauseButton = null!;
     [Export] private PackedScene _cardScene = null!;
 
     private MatchManager _matchManager = null!;
     private InputController _inputController = null!;
     private UnitRegistry _unitRegistry = null!;
 
-    private readonly Array<Card> _cards = [];
-    private readonly Dictionary<UnitType, Card> _cardsByType = [];
+    private readonly Array<UnitCard> _cards = [];
+    private readonly Dictionary<UnitType, UnitCard> _cardsByType = [];
     private long _localPeerId;
     private int _localMoney;
     private float _matchDuration;
+    private PlayerRole? _assignedRole;
     private bool _isReady;
     private bool _isBound;
+    private bool _isGameStateBound;
 
     public bool IsInitialized { get; private set; } = false;
 
@@ -45,9 +47,15 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         _matchManager = data.Match;
         _inputController = data.Input;
         _unitRegistry = data.UnitRegistry;
+        _assignedRole = data.AssignedRole;
 
 
         IsInitialized = true;
+
+        if (_isReady)
+        {
+            ApplyInitialization();
+        }
     }
 
     public override void _Ready()
@@ -55,7 +63,6 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         this.EnsureNotNull(_resourcePanel, nameof(_resourcePanel));
         this.EnsureNotNull(_deckContainer, nameof(_deckContainer));
         this.EnsureNotNull(_timerBar, nameof(_timerBar));
-        this.EnsureNotNull(_pauseButton, nameof(_pauseButton));
 
         _localPeerId = Multiplayer.GetUniqueId();
         _isReady = true;
@@ -68,12 +75,20 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 
     public override void _ExitTree()
     {
-        _matchManager.MoneyChanged -= OnMoneyChanged;
-        _matchManager.TimerUpdated -= OnTimerUpdated;
+        if (_isBound)
+        {
+            _matchManager.MoneyChanged -= OnMoneyChanged;
+            _matchManager.TimerUpdated -= OnTimerUpdated;
+            _inputController.PlacementResolved -= OnPlacementResolved;
+        }
 
-        _inputController.PlacementResolved -= OnPlacementResolved;
-
-        _pauseButton.Pressed -= OnPausePressed;
+        if (_isGameStateBound && GameState.Instance != null)
+        {
+            GameState.Instance.RoleAssigned -= OnRoleAssigned;
+            GameState.Instance.DeckUpdated -= OnDeckUpdated;
+            GameState.Instance.MatchConfigurationLoaded -= OnMatchConfigurationLoaded;
+            _isGameStateBound = false;
+        }
     }
 
     private void ApplyInitialization()
@@ -85,7 +100,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 
         _unitRegistry.InitializeLookup();
         BindGameplaySignals();
-        PopulateDeck();
+        RebuildDeck();
         RefreshAffordability();
         _resourcePanel?.UpdateDisplay(_localMoney);
 
@@ -111,12 +126,14 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
             _localMoney = GameState.Instance.CurrentProfile.Gold;
         }
 
-        _pauseButton.Pressed += OnPausePressed;
-    }
+        if (!_isGameStateBound && GameState.Instance != null)
+        {
+            GameState.Instance.RoleAssigned += OnRoleAssigned;
+            GameState.Instance.DeckUpdated += OnDeckUpdated;
+            GameState.Instance.MatchConfigurationLoaded += OnMatchConfigurationLoaded;
+            _isGameStateBound = true;
+        }
 
-    private void OnPausePressed()
-    {
-        GetTree().Paused = !GetTree().Paused;
     }
 
     private void OnMoneyChanged(long peerId, int newAmount)
@@ -138,7 +155,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         _timerBar.Value = elapsed;
     }
 
-    private void PopulateDeck()
+    private void PopulateDeck(Array<UnitData> units)
     {
         foreach (Node child in _deckContainer.GetChildren())
         {
@@ -147,14 +164,14 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         _cards.Clear();
         _cardsByType.Clear();
 
-        foreach (var unitData in BuildDeckDataForRole())
+        foreach (var unitData in units)
         {
             if (unitData == null)
             {
                 continue;
             }
 
-            var card = _cardScene.Instantiate<Card>();
+            var card = _cardScene.Instantiate<UnitCard>();
             card.Setup(unitData);
             card.CardPressed += OnCardPressed;
 
@@ -162,61 +179,70 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
             _cards.Add(card);
             _cardsByType[unitData.Type] = card;
         }
+
+        RefreshAffordability();
     }
 
-    private Array<UnitData> BuildDeckDataForRole()
+    private void RebuildDeck()
+    {
+        if (!_isReady || !IsInitialized)
+        {
+            return;
+        }
+
+        if (!TryResolveAssignedRole(out PlayerRole role))
+        {
+            PopulateDeck([]);
+            return;
+        }
+
+        PopulateDeck(BuildOwnDeckData(role));
+    }
+
+    private bool TryResolveAssignedRole(out PlayerRole role)
+    {
+        if (_assignedRole.HasValue)
+        {
+            role = _assignedRole.Value;
+            return true;
+        }
+
+        var state = GameState.Instance;
+        if (state?.HasAssignedRole == true)
+        {
+            PlayerRole? assignedRole = state.AssignedRole;
+            if (assignedRole.HasValue)
+            {
+                _assignedRole = assignedRole;
+                role = assignedRole.Value;
+                return true;
+            }
+        }
+
+        role = default;
+        return false;
+    }
+
+    private Array<UnitData> BuildOwnDeckData(PlayerRole role)
     {
         var result = new Array<UnitData>();
-        var state = GameState.Instance;
-        if (state == null || !state.HasAssignedRole)
+        var selectedUnits = GameState.Instance?.GetMyMatchDeck();
+
+        GD.Print($"Rebuilding deck for role {role} with selected units: {string.Join(", ", selectedUnits ?? [])}");
+
+        if (selectedUnits != null)
         {
-            return result;
-        }
-
-        PlayerRole role = state.AssignedRole!.Value;
-
-        var selectedDeck = state.CurrentDeck;
-        if (selectedDeck != null)
-        {
-            Array<UnitType> selectedUnits = role == PlayerRole.Attacker
-                ? selectedDeck.AttackerDeck
-                : selectedDeck.DefenderDeck;
-
             foreach (var unitType in selectedUnits)
             {
-                result.Add(_unitRegistry.GetUnitData(unitType));
-            }
-
-            if (result.Count > 0)
-            {
-                return result;
-            }
-        }
-
-        foreach (var unit in _unitRegistry.AllUnits)
-        {
-            if (unit == null)
-            {
-                continue;
-            }
-
-            if (IsRoleCompatible(unit.Type, role))
-            {
-                result.Add(unit);
+                UnitData unitData = _unitRegistry.GetUnitData(unitType);
+                if (unitData != null && unitData.Role == role)
+                {
+                    result.Add(unitData);
+                }
             }
         }
 
         return result;
-    }
-
-    private static bool IsRoleCompatible(UnitType unitType, PlayerRole role)
-    {
-        if (role == PlayerRole.Attacker)
-        {
-            return unitType == UnitType.Skeleton;
-        }
-
-        return unitType != UnitType.Skeleton;
     }
 
     private void OnCardPressed(int unitTypeValue)
@@ -251,5 +277,26 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         {
             card.SetAffordable(_localMoney >= card.MatchCost);
         }
+    }
+
+    private void OnRoleAssigned(int role)
+    {
+        _assignedRole = (PlayerRole)role;
+        RebuildDeck();
+    }
+
+    private void OnDeckUpdated(int role)
+    {
+        if (_assignedRole.HasValue && role != (int)_assignedRole.Value)
+        {
+            return;
+        }
+
+        RebuildDeck();
+    }
+
+    private void OnMatchConfigurationLoaded()
+    {
+        RebuildDeck();
     }
 }

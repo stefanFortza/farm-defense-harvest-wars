@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 NetworkBootstrap="*res://_Autoload/Networking/NetworkBootstrap.cs"
 GameState="*res://_Autoload/GameState.cs"
+DeckService="*res://_Autoload/DeckService.cs"
 
 [display]
 
@@ -35,7 +36,7 @@ project/assembly_name="FarmDefenseHarvestWars.GameClient"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AutoKey_SpriteFrames/plugin.cfg", "res://addons/sprite_anim_importer/plugin.cfg", "res://addons/sprite_frames_generator/plugin.cfg")
+enabled=PackedStringArray("res://addons/AutoKey_SpriteFrames/plugin.cfg", "res://addons/sprite_anim_importer/plugin.cfg", "res://addons/sprite_frames_generator/plugin.cfg", "res://addons/unit_creator/plugin.cfg")
 
 [layer_names]
 

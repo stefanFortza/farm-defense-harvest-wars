@@ -32,7 +32,6 @@ atlas = SubResource("CompressedTexture2D_p32bp")
 region = Rect2(192, 0, 16, 16)
 
 [node name="MainMenuBookUI" instance=ExtResource("1_0okjo")]
-metadata/_edit_lock_ = true
 
 [node name="BookUI" parent="." index="0"]
 anchors_preset = 8
@@ -45,42 +44,7 @@ offset_top = -80.0
 offset_right = 120.0
 offset_bottom = 80.0
 
-[node name="TabsLayer" type="VBoxContainer" parent="." index="1" node_paths=PackedStringArray("_leftZone", "_rightZone")]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 116.0
-offset_top = 58.0
-offset_right = 148.0
-offset_bottom = 120.0
-grow_horizontal = 2
-theme_override_constants/separation = 4
-script = ExtResource("2_3q2n0")
-_leftZone = NodePath("../ContentOverlay/LeftZone")
-_rightZone = NodePath("../ContentOverlay/RightZone")
-
-[node name="MatchMakingPage" parent="TabsLayer" index="0" instance=ExtResource("2_a8ep5")]
-layout_mode = 2
-button_pressed = true
-button_group = ExtResource("3_0vkk7")
-IconTexture = SubResource("AtlasTexture_s7ux1")
-TabKey = "MatchMakingPage"
-
-[node name="Background2" parent="TabsLayer" index="1" instance=ExtResource("2_a8ep5")]
-layout_mode = 2
-button_group = ExtResource("3_0vkk7")
-IconTexture = SubResource("AtlasTexture_luq8n")
-TabKey = "DeckSelectionAttacker"
-
-[node name="Background3" parent="TabsLayer" index="2" instance=ExtResource("2_a8ep5")]
-layout_mode = 2
-button_group = ExtResource("3_0vkk7")
-IconTexture = SubResource("AtlasTexture_va5ld")
-TabKey = "DeckSelectionDefender"
-
-[node name="ContentOverlay" type="HBoxContainer" parent="." index="2"]
+[node name="ContentOverlay" type="HBoxContainer" parent="." index="1"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -126,3 +90,38 @@ visible = false
 custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 theme = null
+
+[node name="TabsLayer" type="VBoxContainer" parent="." index="2" node_paths=PackedStringArray("_leftZone", "_rightZone")]
+custom_minimum_size = Vector2(32, 60)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 116.0
+offset_top = 58.0
+offset_right = 148.0
+offset_bottom = 126.0
+grow_horizontal = 2
+theme_override_constants/separation = 4
+script = ExtResource("2_3q2n0")
+_leftZone = NodePath("../ContentOverlay/LeftZone")
+_rightZone = NodePath("../ContentOverlay/RightZone")
+
+[node name="MatchMakingPage" parent="TabsLayer" index="0" instance=ExtResource("2_a8ep5")]
+layout_mode = 2
+button_pressed = true
+button_group = ExtResource("3_0vkk7")
+IconTexture = SubResource("AtlasTexture_s7ux1")
+TabKey = "MatchMakingPage"
+
+[node name="Background2" parent="TabsLayer" index="1" instance=ExtResource("2_a8ep5")]
+layout_mode = 2
+button_group = ExtResource("3_0vkk7")
+IconTexture = SubResource("AtlasTexture_luq8n")
+TabKey = "DeckSelectionAttacker"
+
+[node name="Background3" parent="TabsLayer" index="2" instance=ExtResource("2_a8ep5")]
+layout_mode = 2
+button_group = ExtResource("3_0vkk7")
+IconTexture = SubResource("AtlasTexture_va5ld")
+TabKey = "DeckSelectionDefender"

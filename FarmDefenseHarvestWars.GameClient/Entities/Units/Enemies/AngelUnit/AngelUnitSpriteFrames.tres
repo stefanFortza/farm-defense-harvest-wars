@@ -1,0 +1,115 @@
+[gd_resource type="SpriteFrames" load_steps=16 format=3 uid="uid://cqf6k65pk2rcv"]
+
+[ext_resource type="Texture2D" uid="uid://cj7y0dx4uq1j2" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Angels/Angel_2.png" id="1_4f2rm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m2jvn"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(0, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mtrrr"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(64, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u3gp2"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(128, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fht1c"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(192, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_56emx"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(256, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cox51"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(320, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mv18"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(384, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_akjgl"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(448, 448, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ht788"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gou6t"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m760s"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(128, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r0du1"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(192, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8co3k"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(256, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esf88"]
+atlas = ExtResource("1_4f2rm")
+region = Rect2(320, 256, 64, 64)
+
+[resource]
+resource_name = "AngelUnitSpriteFrames.tres"
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m2jvn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mtrrr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u3gp2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fht1c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_56emx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cox51")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mv18")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akjgl")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ht788")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gou6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m760s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r0du1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8co3k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esf88")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]

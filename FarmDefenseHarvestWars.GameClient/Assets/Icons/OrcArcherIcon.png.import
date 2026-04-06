@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clvam3y3rhiwb"
-path="res://.godot/imported/OrcIcon.png-e43d065baa846f4117904fc2a7b15c85.ctex"
+uid="uid://c8x47xs6jh4op"
+path="res://.godot/imported/OrcArcherIcon.png-d952ac4983cc51b28f2df1260b57e5bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Icons/OrcIcon.png"
-dest_files=["res://.godot/imported/OrcIcon.png-e43d065baa846f4117904fc2a7b15c85.ctex"]
+source_file="res://Assets/Icons/OrcArcherIcon.png"
+dest_files=["res://.godot/imported/OrcArcherIcon.png-d952ac4983cc51b28f2df1260b57e5bb.ctex"]
 
 [params]
 

@@ -12,7 +12,8 @@ public partial class GameplayNetwork : Node
     private const double ClientJoinTimeoutSeconds = 10.0;
 
     // Stocăm ID -> Role
-    private readonly Dictionary<long, PlayerRole> _connectedPlayers = [];
+    private readonly System.Collections.Generic.Dictionary<long, PlayerRole> _connectedPlayers = [];
+    private readonly System.Collections.Generic.Dictionary<long, PlayerRole> _recentlyDisconnectedPlayers = [];
     private ulong _clientConnectAttemptId;
     private bool _awaitingServerStart;
     private bool _gameSceneLoadRequested;
@@ -22,6 +23,18 @@ public partial class GameplayNetwork : Node
     // Proprietate helper pentru a afla rolul meu curent rapid
     public PlayerRole? MyRole =>
         _connectedPlayers.TryGetValue(Multiplayer.GetUniqueId(), out var role) ? role : null;
+
+    public int ConnectedPlayerCount => _connectedPlayers.Count;
+
+    public bool TryGetRoleForPeer(long id, out PlayerRole role)
+    {
+        if (_connectedPlayers.TryGetValue(id, out role))
+        {
+            return true;
+        }
+
+        return _recentlyDisconnectedPlayers.TryGetValue(id, out role);
+    }
 
     public override void _Ready()
     {
@@ -89,6 +102,7 @@ public partial class GameplayNetwork : Node
 
         PlayerRole newRole = _connectedPlayers.Count == 0 ? PlayerRole.Defender : PlayerRole.Attacker;
 
+        _recentlyDisconnectedPlayers.Remove(id);
         _connectedPlayers[id] = newRole;
 
         // 3. Trimitem noului jucător lista cu TOȚI jucătorii existenți (ca să știe cine e cine)
@@ -106,6 +120,11 @@ public partial class GameplayNetwork : Node
 
     private void OnPlayerDisconnected(long id)
     {
+        if (_connectedPlayers.TryGetValue(id, out PlayerRole role))
+        {
+            _recentlyDisconnectedPlayers[id] = role;
+        }
+
         _connectedPlayers.Remove(id);
         GD.Print($"Player {id} disconnected.");
 
@@ -119,6 +138,7 @@ public partial class GameplayNetwork : Node
         {
             GD.Print("Match Ready! Starting in 1s...");
             // GetTree().CreateTimer(1.0).Timeout += () => Rpc(nameof(StartGameScene));
+            Rpc(nameof(SyncMatchDecksToClient), BuildDeckPayload(CmdArgs.DefenderDeck), BuildDeckPayload(CmdArgs.AttackerDeck));
             Rpc(nameof(StartGameScene));
         }
     }
@@ -138,6 +158,25 @@ public partial class GameplayNetwork : Node
         }
 
         GD.Print($"[Sync] Player {id} is assigned {role}");
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncMatchDecksToClient(Godot.Collections.Array<int> defenderDeck, Godot.Collections.Array<int> attackerDeck)
+    {
+        List<UnitType> defenderUnits = [];
+        List<UnitType> attackerUnits = [];
+
+        foreach (int unitType in defenderDeck)
+        {
+            defenderUnits.Add((UnitType)unitType);
+        }
+
+        foreach (int unitType in attackerDeck)
+        {
+            attackerUnits.Add((UnitType)unitType);
+        }
+
+        GameState.Instance?.SetMatchDecks(defenderUnits, attackerUnits);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -198,6 +237,23 @@ public partial class GameplayNetwork : Node
         FailClientJoin("Timed out waiting for match server response.");
     }
 
+    private static Godot.Collections.Array<int> BuildDeckPayload(IReadOnlyList<UnitType>? units)
+    {
+        Godot.Collections.Array<int> payload = [];
+
+        if (units == null)
+        {
+            return payload;
+        }
+
+        foreach (UnitType unitType in units)
+        {
+            payload.Add((int)unitType);
+        }
+
+        return payload;
+    }
+
     private void FailClientJoin(string reason)
     {
         GD.PrintErr($"[GameplayNetwork] {reason}");
@@ -210,6 +266,7 @@ public partial class GameplayNetwork : Node
         _awaitingServerStart = false;
         _gameSceneLoadRequested = false;
         _connectedPlayers.Clear();
+        _recentlyDisconnectedPlayers.Clear();
 
         if (Multiplayer.MultiplayerPeer == _peer)
         {

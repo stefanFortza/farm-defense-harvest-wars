@@ -1,3 +1,4 @@
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using Godot;
 using System;
@@ -16,6 +17,11 @@ public partial class HurtboxComponent : Area2D, IInitializable<HealthComponent>
         IsInitialized = true;
     }
 
+    public override void _Ready()
+    {
+        ValidateDependencies();
+    }
+
     public void ReceiveHit(int damage)
     {
         if (!IsMultiplayerAuthority()) return;
@@ -27,5 +33,24 @@ public partial class HurtboxComponent : Area2D, IInitializable<HealthComponent>
         }
 
         HealthComponent.TakeDamage(damage);
+    }
+
+    private void ValidateDependencies()
+    {
+        Node? parentNode = GetNodeOrNull<Node>("../..");
+        this.EnsureNotNull(parentNode, "Parent node at ../..");
+
+        CollisionShape2D? collisionShape = null;
+
+        foreach (Node child in GetChildren())
+        {
+            if (child is CollisionShape2D shape)
+            {
+                collisionShape = shape;
+                break;
+            }
+        }
+
+        parentNode!.EnsureNotNull(collisionShape, $"CollisionShape2D child (required by {Name})");
     }
 }

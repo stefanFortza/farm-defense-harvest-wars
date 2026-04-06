@@ -1,0 +1,148 @@
+[gd_resource type="SpriteFrames" load_steps=20 format=3 uid="uid://cngv8jyakrju"]
+
+[ext_resource type="Texture2D" uid="uid://b2y40rctey0m5" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Orcs/Orc_Peon.png" id="1_xelsx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xelsx"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lri6c"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1djl6"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(128, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7gl70"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(192, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w3ju0"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(256, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b556s"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(320, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l2yw2"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ja10"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrklo"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2kfls"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pqkob"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(128, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x1dh8"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(160, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ddltl"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(0, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4hm6"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(32, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o63i0"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(64, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d12fc"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(96, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1d1m5"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(128, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idg0a"]
+atlas = ExtResource("1_xelsx")
+region = Rect2(160, 128, 32, 32)
+
+[resource]
+resource_name = "OrcPeonSpriteFrames.tres"
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xelsx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lri6c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1djl6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7gl70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w3ju0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b556s")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l2yw2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ja10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nrklo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2kfls")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pqkob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x1dh8")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ddltl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i4hm6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o63i0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d12fc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1d1m5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idg0a")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]

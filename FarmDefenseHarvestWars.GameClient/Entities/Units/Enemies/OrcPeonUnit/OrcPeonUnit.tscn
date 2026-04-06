@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://c54cg7ycjmlcy"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_mfdsh"]
+[ext_resource type="Resource" uid="uid://bn3rh822yeemu" path="res://Resources/Units/UnitStats/OrcPeon.tres" id="2_pbhp2"]
+[ext_resource type="SpriteFrames" uid="uid://cngv8jyakrju" path="res://Entities/Units/Enemies/OrcPeonUnit/OrcPeonSpriteFrames.tres" id="2_r1uym"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbhp2"]
+radius = 8.0
+
+[node name="OrcPeonUnit" instance=ExtResource("1_mfdsh")]
+Data = ExtResource("2_pbhp2")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -11)
+sprite_frames = ExtResource("2_r1uym")
+animation = &"attack"
+frame_progress = 0.31551614
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_pbhp2")

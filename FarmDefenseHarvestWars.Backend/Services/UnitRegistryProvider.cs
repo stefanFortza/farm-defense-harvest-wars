@@ -6,22 +6,6 @@ namespace FarmDefenseHarvestWars.Backend.Services;
 
 public sealed class UnitRegistryProvider : IUnitRegistryProvider
 {
-    private static readonly HashSet<UnitType> DefenderUnits =
-    [
-        UnitType.Cow,
-        UnitType.Chicken,
-        UnitType.Sheep,
-        UnitType.Pig
-    ];
-
-    private static readonly HashSet<UnitType> AttackerUnits =
-    [
-        UnitType.Wolf,
-        UnitType.Fox,
-        UnitType.Bear,
-        UnitType.Skeleton
-    ];
-
     private readonly Lazy<UnitRegistryDto> _registry;
 
     public UnitRegistryProvider(IWebHostEnvironment environment)
@@ -54,18 +38,8 @@ public sealed class UnitRegistryProvider : IUnitRegistryProvider
 
     public bool IsRoleCompatible(UnitType unitType, PlayerRole role)
     {
-        UnitDataDto? unit = _registry.Value.Units.FirstOrDefault(x => x.Type == unitType);
-        if (unit?.Role is PlayerRole unitRole)
-        {
-            return unitRole == role;
-        }
-
-        return role switch
-        {
-            PlayerRole.Defender => DefenderUnits.Contains(unitType),
-            PlayerRole.Attacker => AttackerUnits.Contains(unitType),
-            _ => false
-        };
+        UnitDataDto? unit = GetUnit(unitType);
+        return unit?.Role == role;
     }
 
     public bool UnitExists(UnitType unitType)

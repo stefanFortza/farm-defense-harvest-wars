@@ -1,7 +1,18 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=2 format=3 uid="uid://dtnhbyump40a"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://dtnhbyump40a"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_2n5jv"]
+[ext_resource type="Texture2D" uid="uid://btor5cpp6c5jl" path="res://Assets/Icons/SkeletonMageIcon.png" id="1_3h25t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxm8o"]
+atlas = ExtResource("1_3h25t")
+region = Rect2(10, 3, 13, 22)
 
 [resource]
 script = ExtResource("1_2n5jv")
+Type = 9
+Role = 1
+Name = "SkeletonMage"
+Icon = SubResource("AtlasTexture_lxm8o")
+UnitScenePath = "uid://da45x0td82lu1"
+Speed = 10.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

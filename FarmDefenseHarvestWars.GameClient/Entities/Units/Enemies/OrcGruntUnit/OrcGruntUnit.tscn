@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://bhbdnmhr2ffo0"]
+
+[ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_base"]
+[ext_resource type="Resource" uid="uid://c8qupwyxareaw" path="res://Resources/Units/UnitStats/OrcGruntData.tres" id="2_1eucx"]
+[ext_resource type="SpriteFrames" uid="uid://mb0c5kqs54og" path="res://Entities/Units/Enemies/OrcGruntUnit/OrcGruntSpriteFrames.tres" id="3_r23r3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r23r3"]
+radius = 8.0
+
+[node name="OrcGruntUnit" instance=ExtResource("1_base")]
+Data = ExtResource("2_1eucx")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -13)
+sprite_frames = ExtResource("3_r23r3")
+animation = &"attack"
+autoplay = "walk"
+frame_progress = 0.84548986
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(1, -9)
+shape = SubResource("CircleShape2D_r23r3")

@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://dkvgoh0ab7vj7"]
+
+[ext_resource type="PackedScene" uid="uid://cel1v1h1yao6q" path="res://Entities/Units/Base/DefenderUnit/DefenderUnit.tscn" id="1_yy50p"]
+[ext_resource type="SpriteFrames" uid="uid://bkab88oujdn73" path="res://Entities/Units/Defenders/DuckUnit/DuckUnitSpriteFrames.tres" id="2_3hfg7"]
+[ext_resource type="Resource" uid="uid://5hjctpsrap0p" path="res://Resources/Units/UnitStats/DuckData.tres" id="2_ulye0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3hfg7"]
+radius = 7.071068
+
+[node name="DuckUnit" instance=ExtResource("1_yy50p")]
+Data = ExtResource("2_ulye0")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+position = Vector2(0, -6)
+sprite_frames = ExtResource("2_3hfg7")
+animation = &"IdleSide"
+autoplay = "IdleSide"
+frame_progress = 0.7125844
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_3hfg7")

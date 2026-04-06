@@ -1,14 +1,28 @@
-[gd_resource type="Resource" script_class="SpriteSheetGeneratorConfig" load_steps=6 format=3 uid="uid://cp6ylmqh8a12"]
+[gd_resource type="Resource" script_class="SpriteSheetGeneratorConfig" load_steps=10 format=3 uid="uid://cp6ylmqh8a12"]
 
-[ext_resource type="SpriteFrames" uid="uid://o0tajo0rxdx8" path="res://Entities/Units/Defenders/CowUnit/CowUnitSpriteFrames.tres" id="1_e72b1"]
+[ext_resource type="SpriteFrames" uid="uid://brevgbr7fehpt" path="res://Entities/Units/Enemies/SkeletonUnit/SkeletonUnitSpriteFrames.tres" id="1_e72b1"]
 [ext_resource type="Script" uid="uid://lhjwx6on360b" path="res://addons/sprite_frames_generator/sprite_sheet_generator_config/sprite_sheet_generator_config.gd" id="2_swoar"]
 [ext_resource type="Script" uid="uid://day2vxmnlqaxp" path="res://addons/sprite_frames_generator/sprite_sheet_generator_config/sprite_sheet_entry.gd" id="3_6y45l"]
-[ext_resource type="Texture2D" uid="uid://dxmp64qpekiyk" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Chicken/Chicken_01.png" id="4_swoar"]
+[ext_resource type="Texture2D" uid="uid://cj7y0dx4uq1j2" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Angels/Angel_2.png" id="4_6y45l"]
+[ext_resource type="Texture2D" uid="uid://2o1mqklgk35u" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Goblins/Goblin_Maceman.png" id="5_u6m7v"]
+[ext_resource type="Texture2D" uid="uid://cmu31aby8pl1c" path="res://Assets/Cute_Fantasy/Cute_Fantasy_Characters/Orcs/Orc_Archer.png" id="6_jm47v"]
 
-[sub_resource type="Resource" id="Resource_6y45l"]
+[sub_resource type="Resource" id="Resource_0d16g"]
 script = ExtResource("3_6y45l")
-texture = ExtResource("4_swoar")
-file_name = "Chicken01.tres"
+texture = ExtResource("4_6y45l")
+file_name = "AngelUnitSpriteFrames.tres"
+naming_convention = 1
+
+[sub_resource type="Resource" id="Resource_tkv50"]
+script = ExtResource("3_6y45l")
+texture = ExtResource("5_u6m7v")
+file_name = "GoblinMacemanUnitSpriteFrames.tres"
+naming_convention = 1
+
+[sub_resource type="Resource" id="Resource_xre6t"]
+script = ExtResource("3_6y45l")
+texture = ExtResource("6_jm47v")
+file_name = "OrcArcherUnitSpriteFrames.tres"
 naming_convention = 1
 
 [resource]
@@ -16,7 +30,7 @@ script = ExtResource("2_swoar")
 base_sprite_frames = ExtResource("1_e72b1")
 directory = "res://scenes/characters/player/assets/Player/Legs/Farmer_Pants/"
 naming_convention = 1
-sprite_sheets = Array[ExtResource("3_6y45l")]([SubResource("Resource_6y45l")])
-animations_names = Array[String](["Chew", "Eat", "HurtDown", "HurtSide", "HurtUp", "IdleDown", "IdleSide", "IdleUp", "SitDown", "SleepLoop", "SleepStart", "StandUp", "WalkDown", "WalkSide", "WalkUp"])
-output_directory = "res://Entities/Units/Defenders/ChickenUnit/"
+sprite_sheets = Array[ExtResource("3_6y45l")]([SubResource("Resource_0d16g"), SubResource("Resource_tkv50"), SubResource("Resource_xre6t")])
+animations_names = Array[String](["idle", "walk"])
+output_directory = "res://Entities/Units/Enemies/"
 metadata/_custom_type_script = "uid://lhjwx6on360b"
