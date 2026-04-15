@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfhnycpwquvkf"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_pnwfq"]
+[ext_resource type="Script" uid="uid://dsvaloffs7iu7" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPage.cs" id="1_settings_script"]
+[ext_resource type="PackedScene" uid="uid://cqdnk020aojvu" path="res://Scenes/Menus/MainMenu/MenuLabel/MenuLabel.tscn" id="3_wo1eg"]
+
+[node name="SettingsPage" type="MarginContainer" node_paths=PackedStringArray("MasterVolumeSlider", "FullscreenToggle", "VolumeValueLabel")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+script = ExtResource("1_settings_script")
+MasterVolumeSlider = NodePath("VBox/VolumeRow/MasterVolumeSlider")
+FullscreenToggle = NodePath("VBox/FullscreenToggle")
+VolumeValueLabel = NodePath("VBox/VolumeRow/VolumeValueLabel")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/separation = 6
+
+[node name="Title" parent="VBox" instance=ExtResource("3_wo1eg")]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+ButtonText = "Settings"
+
+[node name="VolumeRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/separation = 6
+
+[node name="VolumeLabel" type="Label" parent="VBox/VolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_pnwfq")
+text = "Master Volume"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="VBox/VolumeRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_pnwfq")
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="VolumeValueLabel" type="Label" parent="VBox/VolumeRow"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+text = "80%"
+horizontal_alignment = 2
+
+[node name="FullscreenToggle" type="CheckButton" parent="VBox"]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+text = "Fullscreen"
+
+[node name="FooterHint" type="Label" parent="VBox"]
+modulate = Color(0.86, 0.8, 0.64, 0.75)
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+text = "Changes are saved automatically."
+autowrap_mode = 3

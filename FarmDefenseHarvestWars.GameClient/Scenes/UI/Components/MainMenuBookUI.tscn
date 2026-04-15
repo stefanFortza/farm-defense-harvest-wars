@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://hmlfj1sythl0"]
+[gd_scene load_steps=19 format=3 uid="uid://hmlfj1sythl0"]
 
 [ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="1_0okjo"]
 [ext_resource type="Script" uid="uid://c4m8g5uopi6yl" path="res://Scenes/UI/Components/TabsManager.cs" id="2_3q2n0"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://cqolh2mxdo31g" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionLeftDefender.tscn" id="7_left_defender"]
 [ext_resource type="PackedScene" uid="uid://bciae1s8yqpfv" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionRightAttacker.tscn" id="8_right_attacker"]
 [ext_resource type="PackedScene" uid="uid://b0y6o272xk1jg" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionRightDefender.tscn" id="9_right_defender"]
+[ext_resource type="PackedScene" path="res://Scenes/Menus/MainMenu/MainMenuPages/ProfileDetailsPage.tscn" id="10_profile_page"]
+[ext_resource type="PackedScene" uid="uid://bfhnycpwquvkf" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPage.tscn" id="11_settings_page"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0opko"]
 load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
@@ -30,6 +32,10 @@ load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0
 [sub_resource type="AtlasTexture" id="AtlasTexture_va5ld"]
 atlas = SubResource("CompressedTexture2D_p32bp")
 region = Rect2(192, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_settings"]
+atlas = SubResource("CompressedTexture2D_3q2n0")
+region = Rect2(80, 16, 16, 16)
 
 [node name="MainMenuBookUI" instance=ExtResource("1_0okjo")]
 
@@ -67,6 +73,7 @@ visible = false
 layout_mode = 2
 
 [node name="DeckSelectionAttacker" parent="ContentOverlay/LeftZone" index="1" instance=ExtResource("6_left_attacker")]
+visible = false
 layout_mode = 2
 
 [node name="DeckSelectionDefender" parent="ContentOverlay/LeftZone" index="2" instance=ExtResource("7_left_defender")]
@@ -78,11 +85,12 @@ theme = null
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("5_luq8n")]
+[node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("10_profile_page")]
 visible = false
 layout_mode = 2
 
 [node name="DeckSelectionAttacker" parent="ContentOverlay/RightZone" index="1" instance=ExtResource("8_right_attacker")]
+visible = false
 layout_mode = 2
 
 [node name="DeckSelectionDefender" parent="ContentOverlay/RightZone" index="2" instance=ExtResource("9_right_defender")]
@@ -91,8 +99,11 @@ custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 theme = null
 
+[node name="SettingsPage" parent="ContentOverlay/RightZone" index="3" instance=ExtResource("11_settings_page")]
+layout_mode = 2
+
 [node name="TabsLayer" type="VBoxContainer" parent="." index="2" node_paths=PackedStringArray("_leftZone", "_rightZone")]
-custom_minimum_size = Vector2(32, 60)
+custom_minimum_size = Vector2(32, 104)
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -100,7 +111,7 @@ anchor_right = 0.5
 offset_left = 116.0
 offset_top = 58.0
 offset_right = 148.0
-offset_bottom = 126.0
+offset_bottom = 170.0
 grow_horizontal = 2
 theme_override_constants/separation = 4
 script = ExtResource("2_3q2n0")
@@ -125,3 +136,9 @@ layout_mode = 2
 button_group = ExtResource("3_0vkk7")
 IconTexture = SubResource("AtlasTexture_va5ld")
 TabKey = "DeckSelectionDefender"
+
+[node name="SettingsPage" parent="TabsLayer" index="3" instance=ExtResource("2_a8ep5")]
+layout_mode = 2
+button_group = ExtResource("3_0vkk7")
+IconTexture = SubResource("AtlasTexture_settings")
+TabKey = "SettingsPage"

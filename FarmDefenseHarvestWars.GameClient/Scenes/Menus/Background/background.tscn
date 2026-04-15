@@ -9,10 +9,16 @@ shader = ExtResource("2_uepjy")
 shader_parameter/warm_light_color = Color(1, 0.8, 0.5, 1)
 shader_parameter/light_intensity = 0.4
 shader_parameter/light_radius = 0.7
+shader_parameter/pulse_speed = 0.65
+shader_parameter/pulse_strength = 0.18
+shader_parameter/flicker_speed = 8.0
+shader_parameter/flicker_strength = 0.05
 shader_parameter/vignette_color = Color(0.05, 0.02, 0, 1)
 shader_parameter/vignette_radius = 0.9
 shader_parameter/vignette_intensity = 0.85
 shader_parameter/contrast = 1.15
+shader_parameter/drift_amount = 0.003
+shader_parameter/drift_speed = 0.2
 
 [node name="Background" type="Node2D"]
 

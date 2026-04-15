@@ -4,14 +4,18 @@ using Refit;
 
 public partial class MainMenuUI : Control
 {
-    [Export] public Control MatchmakingPanel { get; set; }
-    [Export] public Control SettingsPanel { get; set; }
-    [Export] public Control MenuButtons { get; set; }
+    private const string ProfileWelcomeGroup = "profile_welcome_label";
+    private const string ProfileGoldGroup = "profile_gold_label";
+    private const string ProfileLevelGroup = "profile_level_label";
+
+    [Export] public Control? MatchmakingPanel { get; set; } = null!;
+    [Export] public Control? SettingsPanel { get; set; } = null!;
+    [Export] public Control? MenuButtons { get; set; } = null!;
 
     // Restored UI Elements
-    [Export] public Label WelcomeLabel { get; set; }
-    [Export] public Label GoldLabel { get; set; }
-    [Export] public Label LevelLabel { get; set; }
+    [Export] public Label? WelcomeLabel { get; set; } = null!;
+    [Export] public Label? GoldLabel { get; set; } = null!;
+    [Export] public Label? LevelLabel { get; set; } = null!;
 
     public override void _Ready()
     {
@@ -33,13 +37,40 @@ public partial class MainMenuUI : Control
         if (GameState.Instance != null && GameState.Instance.IsLoggedIn && GameState.Instance.CurrentProfile != null)
         {
             var profile = GameState.Instance.CurrentProfile;
-            WelcomeLabel?.Text = $"Welcome, {profile.Email}!";
-            GoldLabel?.Text = $"{profile.Gold}";
-            LevelLabel?.Text = $"Level: {profile.Level}";
+            string welcomeText = $"Welcome, {profile.Email}!";
+            string goldText = $"Gold: {profile.Gold}";
+            string levelText = $"Level: {profile.Level}";
+
+            WelcomeLabel?.Text = welcomeText;
+            GoldLabel?.Text = goldText;
+            LevelLabel?.Text = levelText;
+
+            SetLabelsInGroup(ProfileWelcomeGroup, welcomeText);
+            SetLabelsInGroup(ProfileGoldGroup, goldText);
+            SetLabelsInGroup(ProfileLevelGroup, levelText);
         }
         else
         {
-            WelcomeLabel?.Text = "Not logged in.";
+            const string notLoggedText = "Not logged in.";
+
+            WelcomeLabel?.Text = notLoggedText;
+            GoldLabel?.Text = "Gold: --";
+            LevelLabel?.Text = "Level: --";
+
+            SetLabelsInGroup(ProfileWelcomeGroup, notLoggedText);
+            SetLabelsInGroup(ProfileGoldGroup, "Gold: --");
+            SetLabelsInGroup(ProfileLevelGroup, "Level: --");
+        }
+    }
+
+    private void SetLabelsInGroup(string groupName, string text)
+    {
+        foreach (var node in GetTree().GetNodesInGroup(groupName))
+        {
+            if (node is Label label)
+            {
+                label.Text = text;
+            }
         }
     }
 
@@ -91,7 +122,7 @@ public partial class MainMenuUI : Control
 
     public void OnSettingsPressed()
     {
-        SettingsPanel?.Visible = true;
+        ActivateTabByKey("SettingsPage");
     }
 
     public void OnLogoutPressed()
@@ -107,7 +138,25 @@ public partial class MainMenuUI : Control
 
     public void OnCloseSettingsPressed()
     {
-        SettingsPanel?.Visible = false;
+        ActivateTabByKey("MatchMakingPage");
+    }
+
+    private void ActivateTabByKey(string tabKey)
+    {
+        var tabsLayer = GetNodeOrNull<Control>("MainMenuBookUI/TabsLayer");
+        if (tabsLayer == null)
+        {
+            return;
+        }
+
+        foreach (Node child in tabsLayer.GetChildren())
+        {
+            if (child is TabButton tabButton && tabButton.TabKey == tabKey)
+            {
+                tabButton.ButtonPressed = true;
+                return;
+            }
+        }
     }
 
     public async void OnCancelMatchmakingPressed()

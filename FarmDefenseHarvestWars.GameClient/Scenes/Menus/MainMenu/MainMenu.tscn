@@ -4,16 +4,23 @@
 [ext_resource type="Script" uid="uid://dxt8pg6wyixd8" path="res://Scenes/Menus/MainMenu/MainMenuUI.cs" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://c8ggqd2i4lrmh" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Houses_Interiors/Wood_Stairs.png" id="2_mggrh"]
 [ext_resource type="PackedScene" uid="uid://hmlfj1sythl0" path="res://Scenes/UI/Components/MainMenuBookUI.tscn" id="3_hqtmt"]
+[ext_resource type="PackedScene" path="res://Scenes/Environment/AmbientMenuParticles/AmbientMenuParticles.tscn" id="4_particles"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bq65x"]
 shader = ExtResource("1_445kf")
 shader_parameter/warm_light_color = Color(1, 0.8, 0.5, 1)
 shader_parameter/light_intensity = 0.4
 shader_parameter/light_radius = 0.7
+shader_parameter/pulse_speed = 0.65
+shader_parameter/pulse_strength = 0.18
+shader_parameter/flicker_speed = 8.0
+shader_parameter/flicker_strength = 0.05
 shader_parameter/vignette_color = Color(0.05, 0.02, 0, 1)
 shader_parameter/vignette_radius = 0.9
 shader_parameter/vignette_intensity = 0.85
 shader_parameter/contrast = 1.15
+shader_parameter/drift_amount = 0.003
+shader_parameter/drift_speed = 0.2
 
 [node name="MainMenu" type="Node2D"]
 
@@ -27,6 +34,8 @@ offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_mggrh")
+
+[node name="AmbientMenuParticles" parent="." instance=ExtResource("4_particles")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

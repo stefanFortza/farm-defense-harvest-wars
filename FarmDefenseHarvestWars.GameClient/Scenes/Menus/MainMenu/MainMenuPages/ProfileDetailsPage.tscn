@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[node name="ProfileDetailsPage" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Profile"
+horizontal_alignment = 1
+
+[node name="WelcomeLabel" type="Label" parent="VBox" groups=["profile_welcome_label"]]
+layout_mode = 2
+text = "Welcome, traveler!"
+autowrap_mode = 3
+
+[node name="LevelLabel" type="Label" parent="VBox" groups=["profile_level_label"]]
+layout_mode = 2
+text = "Level: --"
+
+[node name="GoldLabel" type="Label" parent="VBox" groups=["profile_gold_label"]]
+layout_mode = 2
+text = "--"
+
+[node name="Hint" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Tip: Build your deck before queueing."
+autowrap_mode = 3
+modulate = Color(0.86, 0.8, 0.64, 0.75)
