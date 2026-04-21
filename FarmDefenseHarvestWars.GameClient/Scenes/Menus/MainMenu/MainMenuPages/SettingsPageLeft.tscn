@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://0lrcdnkk0nb4"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_pnwfq"]
+[ext_resource type="Script" uid="uid://dojp38ip1tbla" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageLeft.cs" id="2_33jlv"]
+[ext_resource type="PackedScene" uid="uid://n35a5mmf4ux6" path="res://Scenes/Menus/MainMenu/MenuTitle/MenuTitle.tscn" id="3_7e3f1"]
+[ext_resource type="PackedScene" uid="uid://cqdnk020aojvu" path="res://Scenes/Menus/MainMenu/MenuLabel/MenuLabel.tscn" id="3_wo1eg"]
+[ext_resource type="PackedScene" uid="uid://dgm2eb2j8tdep" path="res://Scenes/UI/Components/SettingsSlider/SettingsSlider.tscn" id="4_settings_slider"]
+
+[node name="SettingsPageLeft" type="MarginContainer" node_paths=PackedStringArray("MasterVolumeSlider", "MusicVolumeSlider", "SfxVolumeSlider")]
+offset_right = 84.0
+offset_bottom = 150.0
+theme = ExtResource("1_pnwfq")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("2_33jlv")
+MasterVolumeSlider = NodePath("VBox/MasterSlider")
+MusicVolumeSlider = NodePath("VBox/MusicSlider")
+SfxVolumeSlider = NodePath("VBox/SfxSlider")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/separation = 8
+
+[node name="Settings" parent="VBox" instance=ExtResource("3_7e3f1")]
+layout_mode = 2
+ButtonText = "Settings"
+
+[node name="AudioHeader" parent="VBox" instance=ExtResource("3_wo1eg")]
+layout_mode = 2
+ButtonText = "Audio"
+
+[node name="MasterSlider" parent="VBox" instance=ExtResource("4_settings_slider")]
+layout_mode = 2
+
+[node name="MusicSlider" parent="VBox" instance=ExtResource("4_settings_slider")]
+layout_mode = 2
+TitleText = "Music"
+
+[node name="SfxSlider" parent="VBox" instance=ExtResource("4_settings_slider")]
+layout_mode = 2
+TitleText = "SFX"

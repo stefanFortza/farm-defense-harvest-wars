@@ -1,0 +1,116 @@
+[gd_scene load_steps=15 format=3 uid="uid://dgm2eb2j8tdep"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://cyef300vhdr4o" path="res://Scenes/UI/Components/SettingsSlider/SettingsSlider.cs" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://bygrs5tnch4uk" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Sliders.png" id="5_l5n4s"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_siu84"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0lrb3"]
+atlas = SubResource("CompressedTexture2D_siu84")
+region = Rect2(1021, 13, 22, 22)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_q48mm"]
+load_path = "res://.godot/imported/UI_Buttons.png-61ed5781c7ff83c1dcddd48eef3a55ea.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_siu84"]
+atlas = SubResource("CompressedTexture2D_q48mm")
+region = Rect2(96, 32, 16, 16)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_jblif"]
+load_path = "res://.godot/imported/UI_Buttons.png-61ed5781c7ff83c1dcddd48eef3a55ea.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q48mm"]
+atlas = SubResource("CompressedTexture2D_jblif")
+region = Rect2(96, 368, 16, 16)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l5n4s"]
+load_path = "res://.godot/imported/UI_Sliders.png-77db5453d50429b41523ea36b7b07f5e.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_he3ck"]
+atlas = SubResource("CompressedTexture2D_l5n4s")
+region = Rect2(128, 0, 32, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0lrb3"]
+texture = SubResource("AtlasTexture_he3ck")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rpbx2"]
+atlas = ExtResource("5_l5n4s")
+region = Rect2(64, 0, 32, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_he3ck"]
+texture = SubResource("AtlasTexture_rpbx2")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="SettingsSlider" type="HBoxContainer" node_paths=PackedStringArray("_titleLabel", "_slider")]
+custom_minimum_size = Vector2(64, 16)
+offset_right = 64.0
+offset_bottom = 16.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_theme")
+theme_override_constants/separation = 3
+script = ExtResource("2_script")
+_titleLabel = NodePath("NinePatchRect/TitleLabel")
+_slider = NodePath("Slider")
+_titleText = "Setting"
+_minValue = 0.0
+_maxValue = 1.0
+_step = 0.01
+_value = 0.8
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("AtlasTexture_0lrb3")
+region_rect = Rect2(0, 0, 22, 22)
+patch_margin_left = 3
+patch_margin_top = 3
+patch_margin_right = 3
+patch_margin_bottom = 3
+
+[node name="TitleLabel" type="Label" parent="NinePatchRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -4.5
+offset_right = 24.0
+offset_bottom = 4.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Setting"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slider" type="HSlider" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_icons/grabber = SubResource("AtlasTexture_siu84")
+theme_override_icons/grabber_highlight = SubResource("AtlasTexture_q48mm")
+theme_override_styles/slider = SubResource("StyleBoxTexture_0lrb3")
+theme_override_styles/grabber_area = SubResource("StyleBoxTexture_he3ck")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxTexture_he3ck")
+max_value = 1.0
+step = 0.01
+value = 0.8

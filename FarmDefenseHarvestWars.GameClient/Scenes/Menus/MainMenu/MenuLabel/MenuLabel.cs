@@ -4,7 +4,7 @@ using Godot;
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MenuLabel;
 
 [Tool]
-public partial class MenuLabel : PanelContainer
+public partial class MenuLabel : Control
 {
     [Export] private Label _label = null!;
     private string _buttonText = "demo";

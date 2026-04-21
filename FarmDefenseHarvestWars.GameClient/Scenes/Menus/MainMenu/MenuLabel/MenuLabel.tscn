@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cqdnk020aojvu"]
+[gd_scene load_steps=5 format=3 uid="uid://cqdnk020aojvu"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_n1yhr"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_cm4bi"]
@@ -8,35 +8,47 @@
 atlas = ExtResource("2_cm4bi")
 region = Rect2(1064, 104, 32, 32)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n1yhr"]
-texture = SubResource("AtlasTexture_m1dp3")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[node name="MenuLabel" type="PanelContainer" node_paths=PackedStringArray("_label")]
-custom_minimum_size = Vector2(32, 32)
+[node name="MenuLabel" type="MarginContainer" node_paths=PackedStringArray("_label")]
+custom_minimum_size = Vector2(32, 16)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -27.0
-offset_top = -20.5
-offset_right = 14.0
-offset_bottom = 11.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 5.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_n1yhr")
-theme_override_styles/panel = SubResource("StyleBoxTexture_n1yhr")
 script = ExtResource("3_menu_label_script")
-_label = NodePath("Label")
+_label = NodePath("NinePatchRect/Label")
 
-[node name="Label" type="Label" parent="."]
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
 layout_mode = 2
+texture = SubResource("AtlasTexture_m1dp3")
+region_rect = Rect2(0, 0, 32, 32)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="Label" type="Label" parent="NinePatchRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.5
+offset_top = -4.5
+offset_right = 10.5
+offset_bottom = 4.5
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
+theme = ExtResource("1_n1yhr")
 text = "demo"
 horizontal_alignment = 1
 vertical_alignment = 1

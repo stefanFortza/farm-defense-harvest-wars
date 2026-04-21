@@ -1,0 +1,75 @@
+[gd_scene load_steps=5 format=3 uid="uid://4qc10cis3uyw"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_pnwfq"]
+[ext_resource type="Script" uid="uid://d127yx7v3fp4h" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageRight.cs" id="2_321pm"]
+[ext_resource type="PackedScene" uid="uid://cqdnk020aojvu" path="res://Scenes/Menus/MainMenu/MenuLabel/MenuLabel.tscn" id="3_wo1eg"]
+
+[sub_resource type="DPITexture" id="DPITexture_321pm"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\"><path fill=\"none\" stroke=\"#b2b2b2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".85\" stroke-width=\"2\" d=\"m2 4 4 4 4-4\"/></svg>
+"
+base_scale = 0.5
+
+[node name="SettingsPageRight" type="MarginContainer" node_paths=PackedStringArray("FullscreenToggle", "VsyncToggle", "FpsCapOption")]
+offset_right = 121.0
+offset_bottom = 146.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_pnwfq")
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 12
+script = ExtResource("2_321pm")
+FullscreenToggle = NodePath("VBox/VideoToggleRow/FullscreenToggle")
+VsyncToggle = NodePath("VBox/VideoToggleRow/VsyncToggle")
+FpsCapOption = NodePath("VBox/FpsCapRow/FpsCapOption")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/separation = 6
+
+[node name="VideoHeader" parent="VBox" instance=ExtResource("3_wo1eg")]
+layout_mode = 2
+ButtonText = "Video"
+_buttonText = "Video"
+
+[node name="VideoToggleRow" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/separation = 8
+
+[node name="FullscreenToggle" type="CheckButton" parent="VBox/VideoToggleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_pnwfq")
+theme_override_font_sizes/font_size = 6
+text = "Fullscreen"
+
+[node name="VsyncToggle" type="CheckButton" parent="VBox/VideoToggleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_pnwfq")
+button_pressed = true
+text = "VSync"
+
+[node name="FpsCapRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme = ExtResource("1_pnwfq")
+theme_override_constants/separation = 6
+
+[node name="FpsCapLabel" parent="VBox/FpsCapRow" instance=ExtResource("3_wo1eg")]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+ButtonText = "FPS"
+_buttonText = "FPS"
+
+[node name="FpsCapOption" type="OptionButton" parent="VBox/FpsCapRow"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_pnwfq")
+theme_override_font_sizes/font_size = 4
+theme_override_icons/arrow = SubResource("DPITexture_321pm")

@@ -26,6 +26,7 @@ public partial class UnitVisualsComponent : Node
     private UnitStateMachine? _boundStateMachine;
     private bool _boundBaseHealthSignal;
 
+    // TODO sync animations with attack speed
     public override void _Ready()
     {
         ResolveRuntimeReferences();
