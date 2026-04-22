@@ -167,7 +167,6 @@ public partial class DeckService : Node
                 if (!_pendingDeckByRole.TryGetValue(role, out requestedDeck))
                 {
                     _isProcessingRole.Remove(role);
-                    GameState.Instance?.SetDeckSaveInProgress(role, false);
                     return;
                 }
 

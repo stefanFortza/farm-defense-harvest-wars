@@ -202,6 +202,11 @@ public partial class GameState : Node
 
     public void NotifyDeckSaveResult(PlayerRole role, bool isSuccess, string message)
     {
+        lock (_deckStateSync)
+        {
+            _deckSavesInFlight.Remove(role);
+        }
+
         EmitSignal(SignalName.DeckSaveStatusChanged, (int)role, false, isSuccess, message);
     }
 

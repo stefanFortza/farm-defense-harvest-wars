@@ -5,11 +5,10 @@
 [ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="3_registry"]
 [ext_resource type="PackedScene" uid="uid://c6ybv7pnl1wvj" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.tscn" id="4_libraryitem"]
 
-[node name="DeckSelectionRightDefender" node_paths=PackedStringArray("_titleLabel", "_statusLabel", "_libraryContainer") instance=ExtResource("1_base")]
+[node name="DeckSelectionRightDefender" node_paths=PackedStringArray("_titleLabel", "_libraryContainer") instance=ExtResource("1_base")]
 size_flags_horizontal = 4
 script = ExtResource("2_script")
 _titleLabel = NodePath("Margin/VBox/Title")
-_statusLabel = NodePath("Margin/VBox/Status")
 _libraryContainer = NodePath("Margin/VBox/LibraryScroll/Library")
 _unitRegistry = ExtResource("3_registry")
 _libraryItemScene = ExtResource("4_libraryitem")

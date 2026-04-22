@@ -49,11 +49,6 @@ theme = ExtResource("1_pyety")
 text = "Drag cardurile aici in deck-ul din stanga pentru remove."
 autowrap_mode = 2
 
-[node name="Status" type="Label" parent="Margin/VBox"]
-layout_mode = 2
-theme = ExtResource("1_pyety")
-autowrap_mode = 2
-
 [node name="LibraryScroll" type="ScrollContainer" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3

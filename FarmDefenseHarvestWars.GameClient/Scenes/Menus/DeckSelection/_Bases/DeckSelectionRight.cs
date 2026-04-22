@@ -13,7 +13,6 @@ public abstract partial class DeckSelectionRight : Control
     private const double DeckSyncPollSeconds = 20.0;
 
     [Export] protected Label _titleLabel = null!;
-    [Export] protected Label _statusLabel = null!;
     [Export] protected GridContainer _libraryContainer = null!;
     [Export] protected UnitRegistry _unitRegistry = null!;
     [Export] protected PackedScene _libraryItemScene = null!;
@@ -21,8 +20,6 @@ public abstract partial class DeckSelectionRight : Control
     protected readonly List<DeckLibraryItemControl> _libraryItems = new();
     private readonly HashSet<UnitType> _unlockInFlight = [];
     private bool _isSavingDeck;
-    private int _statusMessageVersion;
-    private string _saveLoadingToastId = string.Empty;
     private CancellationTokenSource? _deckSyncCts;
     private readonly SemaphoreSlim _deckSyncGate = new(1, 1);
 
@@ -35,12 +32,9 @@ public abstract partial class DeckSelectionRight : Control
     public override void _Ready()
     {
         this.EnsureNotNull(_titleLabel, nameof(_titleLabel));
-        this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
         this.EnsureNotNull(_libraryContainer, nameof(_libraryContainer));
         this.EnsureNotNull(_unitRegistry, nameof(_unitRegistry));
         this.EnsureNotNull(_libraryItemScene, nameof(_libraryItemScene));
-
-        _statusLabel.Text = string.Empty;
 
         _unitRegistry.InitializeLookup();
 
@@ -51,7 +45,6 @@ public abstract partial class DeckSelectionRight : Control
 
     public override void _ExitTree()
     {
-        DismissSaveLoadingToast();
         StopDeckSyncLoop();
         DisconnectStateSignals();
     }
@@ -105,37 +98,19 @@ public abstract partial class DeckSelectionRight : Control
 
         if (isSaving)
         {
-            if (string.IsNullOrWhiteSpace(_saveLoadingToastId)
-                && ToastNotifications.TryShowLoading("Saving deck...", out var toastId))
-            {
-                _saveLoadingToastId = toastId;
-                _statusLabel.Text = string.Empty;
-                _statusLabel.Modulate = Colors.White;
-                return;
-            }
-
-            _statusLabel.Text = "Saving deck...";
-            _statusLabel.Modulate = Colors.Goldenrod;
             return;
         }
 
-        DismissSaveLoadingToast();
 
         if (string.IsNullOrWhiteSpace(message) && isSuccess)
         {
-            if (!ToastNotifications.TrySuccess("Deck saved", 0.9))
-            {
-                ShowTransientStatus("Deck saved", Colors.LightGreen, 0.9);
-            }
+            ToastNotifications.TrySuccess("Deck saved", 0.9);
         }
         else if (!isSuccess)
         {
             string error = string.IsNullOrWhiteSpace(message) ? "Unknown error" : message;
             string text = $"Save failed: {error}";
-            if (!ToastNotifications.TryError(text, 2.2))
-            {
-                ShowTransientStatus(text, Colors.IndianRed, 2.2);
-            }
+            ToastNotifications.TryError(text, 2.2);
         }
 
         Refresh();
@@ -268,40 +243,6 @@ public abstract partial class DeckSelectionRight : Control
         }
     }
 
-    private async void ShowTransientStatus(string text, Color color, double seconds)
-    {
-        _statusMessageVersion++;
-        int version = _statusMessageVersion;
-
-        _statusLabel.Text = text;
-        _statusLabel.Modulate = color;
-
-        await ToSignal(GetTree().CreateTimer(seconds), SceneTreeTimer.SignalName.Timeout);
-        if (!IsInsideTree())
-        {
-            return;
-        }
-
-        if (version != _statusMessageVersion)
-        {
-            return;
-        }
-
-        _statusLabel.Text = string.Empty;
-        _statusLabel.Modulate = Colors.White;
-    }
-
-    private void DismissSaveLoadingToast()
-    {
-        if (string.IsNullOrWhiteSpace(_saveLoadingToastId))
-        {
-            return;
-        }
-
-        ToastNotifications.TryDismiss(_saveLoadingToastId);
-        _saveLoadingToastId = string.Empty;
-    }
-
     private void StartDeckSyncLoop()
     {
         _deckSyncCts?.Cancel();
@@ -362,10 +303,7 @@ public abstract partial class DeckSelectionRight : Control
             bool changed = await DeckService.Instance.SyncDeckForRoleFromServerAsync(role, _unitRegistry, skipIfSaveInFlight: true);
             if (changed && showResyncStatus)
             {
-                if (!ToastNotifications.TryInfo("Deck resynced from server", 1.6))
-                {
-                    ShowTransientStatus("Deck resynced from server", Colors.LightSkyBlue, 1.6);
-                }
+                ToastNotifications.TryInfo("Deck resynced from server", 1.6);
             }
         }
         catch (ApiException ex)
