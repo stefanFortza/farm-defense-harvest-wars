@@ -12,3 +12,6 @@ _statusLabel = NodePath("Margin/VBox/Status")
 _libraryContainer = NodePath("Margin/VBox/LibraryScroll/Library")
 _unitRegistry = ExtResource("3_registry")
 _libraryItemScene = ExtResource("4_libraryitem")
+
+[node name="Library" parent="Margin/VBox/LibraryScroll" index="0"]
+columns = 2

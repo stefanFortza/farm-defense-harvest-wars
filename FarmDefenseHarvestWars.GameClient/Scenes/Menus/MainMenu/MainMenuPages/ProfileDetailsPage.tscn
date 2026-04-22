@@ -7,7 +7,7 @@ offset_right = 55.0
 offset_bottom = 193.0
 theme = ExtResource("1_asn6v")
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 8
 

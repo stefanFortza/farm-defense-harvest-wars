@@ -34,11 +34,15 @@ ButtonText = "Audio"
 
 [node name="MasterSlider" parent="VBox" instance=ExtResource("4_settings_slider")]
 layout_mode = 2
+size_flags_horizontal = 1
+TitleText = "Master"
 
 [node name="MusicSlider" parent="VBox" instance=ExtResource("4_settings_slider")]
 layout_mode = 2
+size_flags_horizontal = 1
 TitleText = "Music"
 
 [node name="SfxSlider" parent="VBox" instance=ExtResource("4_settings_slider")]
 layout_mode = 2
+size_flags_horizontal = 1
 TitleText = "SFX"

@@ -15,6 +15,7 @@ public partial class MenuLabel : Control
         get => _buttonText;
         set
         {
+
             _buttonText = value;
             ApplyText();
         }
@@ -28,6 +29,8 @@ public partial class MenuLabel : Control
 
     private void ApplyText()
     {
+        if (_label == null) return;
+
         _label.Text = _buttonText;
     }
 }

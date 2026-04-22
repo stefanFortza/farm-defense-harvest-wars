@@ -64,7 +64,7 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 6
 theme = ExtResource("1_pyety")
-columns = 4
+columns = 2
 
 [node name="DeckLibraryItemControl" parent="Margin/VBox/LibraryScroll/Library" instance=ExtResource("2_dr1kt")]
 layout_mode = 2

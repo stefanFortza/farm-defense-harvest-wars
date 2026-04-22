@@ -8,7 +8,7 @@ public partial class SettingsPageRight : MarginContainer
 {
 
     private const string SettingsPath = "user://main_menu_settings.cfg";
-    private static readonly int[] FpsOptions = [30, 60, 120];
+    private static readonly int[] FpsOptions = [30, 60, 120, 0];
 
 
     [Export] public CheckButton FullscreenToggle { get; set; } = null!;
@@ -28,7 +28,7 @@ public partial class SettingsPageRight : MarginContainer
 
     public override void _ExitTree()
     {
-        UnbindSingals();
+        UnbindSignals();
     }
 
     private void BindSignals()
@@ -38,6 +38,7 @@ public partial class SettingsPageRight : MarginContainer
         this.EnsureNotNull(FpsCapOption, nameof(FpsCapOption));
 
         SetupFpsOptions();
+        RefreshUiControls();
 
         FullscreenToggle.Toggled += OnFullscreenToggled;
         VsyncToggle.Toggled += OnVsyncToggled;
@@ -45,11 +46,29 @@ public partial class SettingsPageRight : MarginContainer
     }
 
 
-    private void UnbindSingals()
+    private void UnbindSignals()
     {
-        FullscreenToggle.Toggled -= OnFullscreenToggled;
-        VsyncToggle.Toggled -= OnVsyncToggled;
-        FpsCapOption.ItemSelected -= OnFpsCapSelected;
+        if (FullscreenToggle != null && GodotObject.IsInstanceValid(FullscreenToggle))
+        {
+            FullscreenToggle.Toggled -= OnFullscreenToggled;
+        }
+
+        if (VsyncToggle != null && GodotObject.IsInstanceValid(VsyncToggle))
+        {
+            VsyncToggle.Toggled -= OnVsyncToggled;
+        }
+
+        if (FpsCapOption != null && GodotObject.IsInstanceValid(FpsCapOption))
+        {
+            FpsCapOption.ItemSelected -= OnFpsCapSelected;
+        }
+    }
+
+    private void RefreshUiControls()
+    {
+        FullscreenToggle.ButtonPressed = _isFullscreen;
+        VsyncToggle.ButtonPressed = _vsyncEnabled;
+        SelectFpsCapOption();
     }
 
 

@@ -22,13 +22,30 @@ public partial class UnitCreatorPlugin : EditorPlugin
 
     public override void _EnterTree()
     {
-        AddToolMenuItem("Create New Unit", Callable.From(ShowDialog));
+        // Utilizare Callable nativ, evitând Callable.From()
+        AddToolMenuItem("Create New Unit", new Callable(this, MethodName.ShowDialog));
     }
 
     public override void _ExitTree()
     {
         RemoveToolMenuItem("Create New Unit");
-        _dialog?.QueueFree();
+
+        if (_dialog != null && GodotObject.IsInstanceValid(_dialog))
+        {
+            Callable onConfirmedCallable = new Callable(this, MethodName.OnConfirmed);
+            if (_dialog.IsConnected(ConfirmationDialog.SignalName.Confirmed, onConfirmedCallable))
+            {
+                _dialog.Disconnect(ConfirmationDialog.SignalName.Confirmed, onConfirmedCallable);
+            }
+
+            _dialog.QueueFree();
+        }
+
+        // Eliberarea referințelor pentru a permite Garbage Collection-ul asamblării
+        _dialog = null;
+        _nameEdit = null;
+        _roleOption = null;
+        _typeEdit = null;
     }
 
     private void ShowDialog()
@@ -56,7 +73,9 @@ public partial class UnitCreatorPlugin : EditorPlugin
             _typeEdit = new SpinBox { MinValue = 0, MaxValue = 1000, Value = 0 };
             vBox.AddChild(_typeEdit);
 
-            _dialog.Confirmed += OnConfirmed;
+            // Utilizare Callable nativ în loc de operatorul +=
+            _dialog.Connect(ConfirmationDialog.SignalName.Confirmed, new Callable(this, MethodName.OnConfirmed));
+
             GetEditorInterface().GetBaseControl().AddChild(_dialog);
         }
 

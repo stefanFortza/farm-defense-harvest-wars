@@ -41,9 +41,20 @@ public partial class SettingsPageLeft : MarginContainer
 
     private void UnbindSignals()
     {
-        MasterVolumeSlider.ValueChanged -= OnMasterVolumeChanged;
-        MusicVolumeSlider.ValueChanged -= OnMusicVolumeChanged;
-        SfxVolumeSlider.ValueChanged -= OnSfxVolumeChanged;
+        if (MasterVolumeSlider != null && GodotObject.IsInstanceValid(MasterVolumeSlider))
+        {
+            MasterVolumeSlider.ValueChanged -= OnMasterVolumeChanged;
+        }
+
+        if (MusicVolumeSlider != null && GodotObject.IsInstanceValid(MusicVolumeSlider))
+        {
+            MusicVolumeSlider.ValueChanged -= OnMusicVolumeChanged;
+        }
+
+        if (SfxVolumeSlider != null && GodotObject.IsInstanceValid(SfxVolumeSlider))
+        {
+            SfxVolumeSlider.ValueChanged -= OnSfxVolumeChanged;
+        }
     }
 
 

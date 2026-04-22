@@ -22,6 +22,7 @@ public abstract partial class DeckSelectionRight : Control
     private readonly HashSet<UnitType> _unlockInFlight = [];
     private bool _isSavingDeck;
     private int _statusMessageVersion;
+    private string _saveLoadingToastId = string.Empty;
     private CancellationTokenSource? _deckSyncCts;
     private readonly SemaphoreSlim _deckSyncGate = new(1, 1);
 
@@ -50,6 +51,7 @@ public abstract partial class DeckSelectionRight : Control
 
     public override void _ExitTree()
     {
+        DismissSaveLoadingToast();
         StopDeckSyncLoop();
         DisconnectStateSignals();
     }
@@ -103,18 +105,37 @@ public abstract partial class DeckSelectionRight : Control
 
         if (isSaving)
         {
+            if (string.IsNullOrWhiteSpace(_saveLoadingToastId)
+                && ToastNotifications.TryShowLoading("Saving deck...", out var toastId))
+            {
+                _saveLoadingToastId = toastId;
+                _statusLabel.Text = string.Empty;
+                _statusLabel.Modulate = Colors.White;
+                return;
+            }
+
             _statusLabel.Text = "Saving deck...";
             _statusLabel.Modulate = Colors.Goldenrod;
             return;
         }
 
+        DismissSaveLoadingToast();
+
         if (string.IsNullOrWhiteSpace(message) && isSuccess)
         {
-            ShowTransientStatus("Deck saved", Colors.LightGreen, 0.9);
+            if (!ToastNotifications.TrySuccess("Deck saved", 0.9))
+            {
+                ShowTransientStatus("Deck saved", Colors.LightGreen, 0.9);
+            }
         }
         else if (!isSuccess)
         {
-            ShowTransientStatus($"Save failed: {message}", Colors.IndianRed, 2.2);
+            string error = string.IsNullOrWhiteSpace(message) ? "Unknown error" : message;
+            string text = $"Save failed: {error}";
+            if (!ToastNotifications.TryError(text, 2.2))
+            {
+                ShowTransientStatus(text, Colors.IndianRed, 2.2);
+            }
         }
 
         Refresh();
@@ -270,6 +291,17 @@ public abstract partial class DeckSelectionRight : Control
         _statusLabel.Modulate = Colors.White;
     }
 
+    private void DismissSaveLoadingToast()
+    {
+        if (string.IsNullOrWhiteSpace(_saveLoadingToastId))
+        {
+            return;
+        }
+
+        ToastNotifications.TryDismiss(_saveLoadingToastId);
+        _saveLoadingToastId = string.Empty;
+    }
+
     private void StartDeckSyncLoop()
     {
         _deckSyncCts?.Cancel();
@@ -330,7 +362,10 @@ public abstract partial class DeckSelectionRight : Control
             bool changed = await DeckService.Instance.SyncDeckForRoleFromServerAsync(role, _unitRegistry, skipIfSaveInFlight: true);
             if (changed && showResyncStatus)
             {
-                ShowTransientStatus("Deck resynced from server", Colors.LightSkyBlue, 1.6);
+                if (!ToastNotifications.TryInfo("Deck resynced from server", 1.6))
+                {
+                    ShowTransientStatus("Deck resynced from server", Colors.LightSkyBlue, 1.6);
+                }
             }
         }
         catch (ApiException ex)

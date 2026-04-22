@@ -41,13 +41,8 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme = ExtResource("1_lmhls")
 text = "Deck"
-
-[node name="Hint" type="Label" parent="Margin/VBox"]
-visible = false
-layout_mode = 2
-theme = ExtResource("1_lmhls")
-text = "Drag din dreapta aici. Drag inapoi spre dreapta pentru remove."
-autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Slots" type="GridContainer" parent="Margin/VBox"]
 custom_minimum_size = Vector2(0, 16)
@@ -55,7 +50,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
 theme = ExtResource("1_lmhls")
-columns = 4
+columns = 2
 
 [node name="DeckSlotControl" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
 layout_mode = 2
@@ -71,12 +66,4 @@ layout_mode = 2
 
 [node name="DeckSlotControl5" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
 layout_mode = 2
-
-[node name="DeckSlotControl6" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
-layout_mode = 2
-
-[node name="DeckSlotControl7" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
-layout_mode = 2
-
-[node name="DeckSlotControl8" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
-layout_mode = 2
+size_flags_horizontal = 4
