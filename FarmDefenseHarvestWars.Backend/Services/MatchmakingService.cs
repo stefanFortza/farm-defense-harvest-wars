@@ -7,7 +7,12 @@ namespace FarmDefenseHarvestWars.Backend.Services;
 public class MatchmakingService : IMatchmakingService
 {
     private readonly object _queueLock = new();
-    private readonly Queue<string> _matchQueue = [];
+    
+    // Separate queues for each role preference
+    private readonly Queue<string> _defenderQueue = [];
+    private readonly Queue<string> _attackerQueue = [];
+    private readonly Queue<string> _anyQueue = [];
+    
     private readonly HashSet<string> _queuedUsers = [];
     private readonly Dictionary<string, MatchmakingStatusDto> _activeMatches = [];
     private readonly HashSet<string> _completedMatchIds = [];
@@ -26,7 +31,7 @@ public class MatchmakingService : IMatchmakingService
         _logger = logger;
     }
 
-    public async Task<MatchmakingStatusDto> QueueForMatchAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<MatchmakingStatusDto> QueueForMatchAsync(string userId, PlayerRole preferredRole = PlayerRole.Any, CancellationToken cancellationToken = default)
     {
         if (TryGetActiveMatch(userId, out var activeMatch))
         {
@@ -45,16 +50,73 @@ public class MatchmakingService : IMatchmakingService
 
             if (!_queuedUsers.Contains(userId))
             {
-                _matchQueue.Enqueue(userId);
-                _queuedUsers.Add(userId);
-            }
-
-            if (_matchQueue.Count >= 2)
-            {
-                defenderId = _matchQueue.Dequeue();
-                attackerId = _matchQueue.Dequeue();
-                _queuedUsers.Remove(defenderId);
-                _queuedUsers.Remove(attackerId);
+                // Try to match immediately
+                if (preferredRole == PlayerRole.Defender)
+                {
+                    if (_attackerQueue.Count > 0)
+                    {
+                        defenderId = userId;
+                        attackerId = _attackerQueue.Dequeue();
+                        _queuedUsers.Remove(attackerId);
+                    }
+                    else if (_anyQueue.Count > 0)
+                    {
+                        defenderId = userId;
+                        attackerId = _anyQueue.Dequeue();
+                        _queuedUsers.Remove(attackerId);
+                    }
+                    else
+                    {
+                        _defenderQueue.Enqueue(userId);
+                        _queuedUsers.Add(userId);
+                    }
+                }
+                else if (preferredRole == PlayerRole.Attacker)
+                {
+                    if (_defenderQueue.Count > 0)
+                    {
+                        attackerId = userId;
+                        defenderId = _defenderQueue.Dequeue();
+                        _queuedUsers.Remove(defenderId);
+                    }
+                    else if (_anyQueue.Count > 0)
+                    {
+                        attackerId = userId;
+                        defenderId = _anyQueue.Dequeue();
+                        _queuedUsers.Remove(defenderId);
+                    }
+                    else
+                    {
+                        _attackerQueue.Enqueue(userId);
+                        _queuedUsers.Add(userId);
+                    }
+                }
+                else // PlayerRole.Any
+                {
+                    if (_defenderQueue.Count > 0)
+                    {
+                        attackerId = userId;
+                        defenderId = _defenderQueue.Dequeue();
+                        _queuedUsers.Remove(defenderId);
+                    }
+                    else if (_attackerQueue.Count > 0)
+                    {
+                        defenderId = userId;
+                        attackerId = _attackerQueue.Dequeue();
+                        _queuedUsers.Remove(attackerId);
+                    }
+                    else if (_anyQueue.Count > 0)
+                    {
+                        defenderId = _anyQueue.Dequeue();
+                        attackerId = userId;
+                        _queuedUsers.Remove(defenderId);
+                    }
+                    else
+                    {
+                        _anyQueue.Enqueue(userId);
+                        _queuedUsers.Add(userId);
+                    }
+                }
             }
         }
 
@@ -67,6 +129,8 @@ public class MatchmakingService : IMatchmakingService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create match for players {DefenderId} and {AttackerId}", defenderId, attackerId);
+                // If match creation fails, we could potentially put them back in queue, 
+                // but for now we throw and let them try again.
                 throw;
             }
         }
@@ -178,10 +242,19 @@ public class MatchmakingService : IMatchmakingService
             return;
         }
 
+        RemoveFromSpecificQueue(_defenderQueue, userId);
+        RemoveFromSpecificQueue(_attackerQueue, userId);
+        RemoveFromSpecificQueue(_anyQueue, userId);
+    }
+
+    private static void RemoveFromSpecificQueue(Queue<string> queue, string userId)
+    {
+        if (!queue.Contains(userId)) return;
+
         var remaining = new Queue<string>();
-        while (_matchQueue.Count > 0)
+        while (queue.Count > 0)
         {
-            string queuedUser = _matchQueue.Dequeue();
+            string queuedUser = queue.Dequeue();
             if (!string.Equals(queuedUser, userId, StringComparison.Ordinal))
             {
                 remaining.Enqueue(queuedUser);
@@ -190,7 +263,7 @@ public class MatchmakingService : IMatchmakingService
 
         while (remaining.Count > 0)
         {
-            _matchQueue.Enqueue(remaining.Dequeue());
+            queue.Enqueue(remaining.Dequeue());
         }
     }
 

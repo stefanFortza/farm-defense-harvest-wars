@@ -5,7 +5,7 @@ namespace FarmDefenseHarvestWars.Backend.Services;
 
 public interface IMatchmakingService
 {
-    Task<MatchmakingStatusDto> QueueForMatchAsync(string userId, CancellationToken cancellationToken = default);
+    Task<MatchmakingStatusDto> QueueForMatchAsync(string userId, PlayerRole preferredRole = PlayerRole.Any, CancellationToken cancellationToken = default);
     void CancelMatchmaking(string userId);
     MatchmakingStatusDto GetStatusForUser(string userId);
     void CompleteMatch(string matchId);

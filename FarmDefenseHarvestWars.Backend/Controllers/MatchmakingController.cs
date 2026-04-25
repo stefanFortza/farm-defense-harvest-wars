@@ -1,5 +1,6 @@
 using FarmDefenseHarvestWars.Backend.Models;
 using FarmDefenseHarvestWars.Backend.Services;
+using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +32,9 @@ public class MatchmakingController : ControllerBase
     }
 
     [HttpPost("matchmaking/queue")]
-    public async Task<ActionResult<MatchmakingStatusDto>> QueueForMatch(CancellationToken cancellationToken)
+    public async Task<ActionResult<MatchmakingStatusDto>> QueueForMatch(
+        [FromQuery] PlayerRole preferredRole = PlayerRole.Any,
+        CancellationToken cancellationToken = default)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -41,7 +44,7 @@ public class MatchmakingController : ControllerBase
 
         try
         {
-            var status = await _matchmakingService.QueueForMatchAsync(user.Id, cancellationToken);
+            var status = await _matchmakingService.QueueForMatchAsync(user.Id, preferredRole, cancellationToken);
             return Ok(status);
         }
         catch (Exception ex)

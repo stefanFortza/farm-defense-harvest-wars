@@ -37,7 +37,7 @@ public interface IGameApi
 
     [Post(ApiRoutes.MatchmakingQueue)]
     [Headers("Authorization: Bearer")]
-    Task<MatchmakingStatusDto> QueueForMatchAsync();
+    Task<MatchmakingStatusDto> QueueForMatchAsync([Query] PlayerRole preferredRole = PlayerRole.Any);
 
     [Delete(ApiRoutes.MatchmakingQueue)]
     [Headers("Authorization: Bearer")]
