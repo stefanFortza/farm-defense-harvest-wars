@@ -1,8 +1,27 @@
-[gd_scene load_steps=4 format=3 uid="uid://jexdnjfq6irb"]
+[gd_scene load_steps=10 format=3 uid="uid://dx56d0jedhm70"]
 
-[ext_resource type="Script" uid="uid://crcgygv4fgfmm" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchMakingButton.cs" id="1_hwqfs"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_nc66o"]
+[ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_gjx4f"]
+[ext_resource type="Script" uid="uid://bt5pytucnt2np" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/DefenderMatchmakingButton.cs" id="2_nmnjn"]
+[ext_resource type="Texture2D" uid="uid://sii8tit3s0hv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Buttons.png" id="2_x0rs0"]
+[ext_resource type="Script" uid="uid://ckpcclqnhxie" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/AttackerMatchmakingButton.cs" id="3_e8msr"]
 [ext_resource type="PackedScene" uid="uid://cxhertfk0dn51" path="res://Scenes/Menus/MainMenu/Components/MatchmakingOverlay.tscn" id="3_overlay"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_digje"]
+atlas = ExtResource("2_gjx4f")
+region = Rect2(194, 1, 12, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gjx4f"]
+atlas = ExtResource("2_x0rs0")
+region = Rect2(1, 1, 30, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_66rl0"]
+texture = SubResource("AtlasTexture_gjx4f")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 6.0
+region_rect = Rect2(0, 0, 30, 14)
 
 [node name="MatchMakingPageLeft" type="CenterContainer"]
 custom_minimum_size = Vector2(120, 150)
@@ -19,9 +38,14 @@ theme_override_constants/separation = 20
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_nc66o")
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 4
+theme_override_icons/icon = SubResource("AtlasTexture_digje")
+theme_override_styles/normal = SubResource("StyleBoxTexture_66rl0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_66rl0")
+theme_override_styles/hover = SubResource("StyleBoxTexture_66rl0")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_66rl0")
 text = "Play as Defender"
-script = ExtResource("1_hwqfs")
+script = ExtResource("2_nmnjn")
 Overlay = NodePath("../../MatchmakingOverlay")
 
 [node name="PlayAttacker" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
@@ -29,10 +53,8 @@ layout_mode = 2
 theme = ExtResource("1_nc66o")
 theme_override_font_sizes/font_size = 6
 text = "Play as Attacker"
-script = ExtResource("1_hwqfs")
-PreferredRole = 1
+script = ExtResource("3_e8msr")
 Overlay = NodePath("../../MatchmakingOverlay")
 
 [node name="MatchmakingOverlay" parent="." instance=ExtResource("3_overlay")]
 visible = false
-layout_mode = 2

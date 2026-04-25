@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://cqolh2mxdo31g" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionLeftDefender.tscn" id="7_left_defender"]
 [ext_resource type="PackedScene" uid="uid://bciae1s8yqpfv" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionRightAttacker.tscn" id="8_right_attacker"]
 [ext_resource type="PackedScene" uid="uid://b0y6o272xk1jg" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionRightDefender.tscn" id="9_right_defender"]
-[ext_resource type="PackedScene" uid="uid://dntgb7jtuqwwa" path="res://Scenes/Menus/MainMenu/MainMenuPages/ProfileDetailsPage.tscn" id="10_profile_page"]
+[ext_resource type="PackedScene" uid="uid://matchmakingpageright1" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.tscn" id="10_matchmaking_right"]
 [ext_resource type="PackedScene" uid="uid://0lrcdnkk0nb4" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageLeft.tscn" id="11_settings_page_left"]
 [ext_resource type="PackedScene" uid="uid://4qc10cis3uyw" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageRight.tscn" id="12_settings_page_right"]
 
@@ -93,7 +93,7 @@ custom_minimum_size = Vector2(120, 150)
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("10_profile_page")]
+[node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("10_matchmaking_right")]
 layout_mode = 2
 
 [node name="DeckSelectionAttacker" parent="ContentOverlay/RightZone" index="1" instance=ExtResource("8_right_attacker")]

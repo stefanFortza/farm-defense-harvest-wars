@@ -4,7 +4,13 @@
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://p4l7m7y7y7y7" path="res://icon.svg" id="3_icon"]
 
-[node name="MatchmakingOverlay" type="Control" node_paths=PackedStringArray("_statusLabel", "_spinner", "_cancelButton")]
+[node name="MatchmakingOverlay" type="CanvasLayer" node_paths=PackedStringArray("_statusLabel", "_spinner", "_cancelButton")]
+script = ExtResource("1_script")
+_statusLabel = NodePath("Control/ColorRect/CenterContainer/VBoxContainer/Label")
+_spinner = NodePath("Control/ColorRect/CenterContainer/VBoxContainer/Control/Spinner")
+_cancelButton = NodePath("Control/ColorRect/CenterContainer/VBoxContainer/Button")
+
+[node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,12 +18,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
-script = ExtResource("1_script")
-_statusLabel = NodePath("ColorRect/CenterContainer/VBoxContainer/Label")
-_spinner = NodePath("ColorRect/CenterContainer/VBoxContainer/Control/Spinner")
-_cancelButton = NodePath("ColorRect/CenterContainer/VBoxContainer/Button")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +28,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.784314)
 
-[node name="CenterContainer" type="CenterContainer" parent="ColorRect"]
+[node name="CenterContainer" type="CenterContainer" parent="Control/ColorRect"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,17 +36,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/ColorRect/CenterContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Control" type="Control" parent="ColorRect/CenterContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="Control/ColorRect/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Spinner" type="TextureRect" parent="ColorRect/CenterContainer/VBoxContainer/Control"]
+[node name="Spinner" type="TextureRect" parent="Control/ColorRect/CenterContainer/VBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -60,16 +62,16 @@ grow_vertical = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
 
-[node name="Label" type="Label" parent="ColorRect/CenterContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Control/ColorRect/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "Searching for match..."
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="ColorRect/CenterContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="Control/ColorRect/CenterContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 6
 text = "Cancel"
 
-[connection signal="pressed" from="ColorRect/CenterContainer/VBoxContainer/Button" to="." method="OnCancelPressed"]
+[connection signal="pressed" from="Control/ColorRect/CenterContainer/VBoxContainer/Button" to="." method="OnCancelPressed"]

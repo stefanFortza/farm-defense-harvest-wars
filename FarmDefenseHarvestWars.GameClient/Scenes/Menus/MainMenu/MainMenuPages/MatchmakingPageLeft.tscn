@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://b43ty2gekpviu"]
+
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_nc66o"]
+[ext_resource type="PackedScene" uid="uid://matchmakingdefenderbutton1" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/MatchmakingDefenderButton.tscn" id="2_defender"]
+[ext_resource type="PackedScene" uid="uid://matchmakingattackerbutton1" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/MatchmakingAttackerButton.tscn" id="3_attacker"]
+[ext_resource type="PackedScene" uid="uid://matchmakingoverlay1" path="res://Scenes/Menus/MainMenu/Components/MatchmakingOverlay.tscn" id="4_overlay"]
+
+[node name="MatchMakingPageLeft" type="CenterContainer"]
+custom_minimum_size = Vector2(120, 150)
+offset_right = 120.0
+offset_bottom = 150.0
+theme = ExtResource("1_nc66o")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_nc66o")
+theme_override_constants/separation = 20
+
+[node name="MatchmakingDefenderButton" parent="VBoxContainer" node_paths=PackedStringArray("Overlay") instance=ExtResource("2_defender")]
+layout_mode = 2
+Overlay = NodePath("../../MatchmakingOverlay")
+
+[node name="MatchmakingAttackerButton" parent="VBoxContainer" node_paths=PackedStringArray("Overlay") instance=ExtResource("3_attacker")]
+layout_mode = 2
+Overlay = NodePath("../../MatchmakingOverlay")
+
+[node name="MatchmakingOverlay" parent="." node_paths=PackedStringArray("_contentToHide") instance=ExtResource("4_overlay")]
+_contentToHide = NodePath("../VBoxContainer")

@@ -7,11 +7,12 @@ using Refit;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.Components;
 
-public partial class MatchmakingOverlay : Control
+public partial class MatchmakingOverlay : CanvasLayer
 {
     [Export] private Label _statusLabel = null!;
     [Export] private Control _spinner = null!;
     [Export] private Button _cancelButton = null!;
+    [Export] private Control? _contentToHide;
 
     private bool _isClosing = false;
 
@@ -38,6 +39,12 @@ public partial class MatchmakingOverlay : Control
 
         _isClosing = false;
         Visible = true;
+        
+        if (_contentToHide != null)
+        {
+            _contentToHide.Visible = false;
+        }
+
         _statusLabel.Text = $"Searching as {role}...";
         _cancelButton.Disabled = false;
 
@@ -62,11 +69,7 @@ public partial class MatchmakingOverlay : Control
             int port = status.ServerPort ?? 7777;
 
             NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
-            
-            // Note: The actual scene change is handled by MenuNetwork or the caller, 
-            // but usually it happens when connection is successful.
-            // For now we'll wait a bit or let the NetworkBootstrap handle it.
-            // In a real app, you'd listen for a "Connected" signal.
+            GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
         }
         catch (Exception ex)
         {
@@ -102,5 +105,10 @@ public partial class MatchmakingOverlay : Control
     {
         Visible = false;
         _isClosing = true;
+        
+        if (_contentToHide != null)
+        {
+            _contentToHide.Visible = true;
+        }
     }
 }
