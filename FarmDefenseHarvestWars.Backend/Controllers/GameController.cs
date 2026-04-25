@@ -18,7 +18,7 @@ namespace FarmDefenseHarvestWars.Backend.Controllers;
 [Authorize] // <--- ASTA E CHEIA: Nimeni nu intră aici fără token valid!
 public class GameController : ControllerBase
 {
-    private const int MaxDeckCards = 5;
+    private const int MaxDeckCards = 6;
     private static readonly object QueueLock = new();
     private static readonly Queue<string> MatchQueue = [];
     private static readonly HashSet<string> QueuedUsers = [];

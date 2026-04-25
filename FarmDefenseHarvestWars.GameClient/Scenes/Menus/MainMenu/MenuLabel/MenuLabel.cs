@@ -6,7 +6,7 @@ namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MenuLabel;
 [Tool]
 public partial class MenuLabel : Control
 {
-    [Export] private Label _label = null!;
+    [Export] public Label TitleLabel = null!;
     private string _buttonText = "demo";
 
     [Export]
@@ -23,14 +23,14 @@ public partial class MenuLabel : Control
 
     public override void _Ready()
     {
-        this.EnsureNotNull(_label, nameof(_label));
+        this.EnsureNotNull(TitleLabel, nameof(TitleLabel));
         ApplyText();
     }
 
     private void ApplyText()
     {
-        if (_label == null) return;
+        if (TitleLabel == null) return;
 
-        _label.Text = _buttonText;
+        TitleLabel.Text = _buttonText;
     }
 }

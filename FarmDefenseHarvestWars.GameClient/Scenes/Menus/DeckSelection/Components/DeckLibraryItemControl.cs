@@ -1,12 +1,14 @@
 using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
+using FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
 
 public partial class DeckLibraryItemControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
-    [Export] private Label _label = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
+    [Export] private PackedScene _tooltipScene = null!;
+    private UnitData? _unitData;
     private int _unitTypeValue;
     private bool _canDrag;
     private bool _isUnlocked;
@@ -16,8 +18,8 @@ public partial class DeckLibraryItemControl : PanelContainer
     {
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
-        this.EnsureNotNull(_label, nameof(_label));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
+        this.EnsureNotNull(_tooltipScene, nameof(_tooltipScene));
 
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
@@ -25,6 +27,7 @@ public partial class DeckLibraryItemControl : PanelContainer
 
     public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
     {
+        _unitData = unitData;
         _unitTypeValue = (int)unitData.Type;
         _isUnlocked = isUnlocked;
         _isUnlocking = isUnlocking;
@@ -34,7 +37,6 @@ public partial class DeckLibraryItemControl : PanelContainer
         string deckTag = alreadyInDeck ? " [IN DECK]" : "";
         string lockTag = isUnlocked ? "" : " [LOCKED]";
         string pendingTag = isUnlocking ? " [UNLOCKING...]" : "";
-        _label.Text = $"{unitData.Name}{deckTag}{lockTag}{pendingTag}";
         TooltipText = isUnlocked
             ? unitData.Name
             : isUnlocking
@@ -117,6 +119,15 @@ public partial class DeckLibraryItemControl : PanelContainer
         preview.Setup(texture);
         preview.Modulate = new Color(1f, 1f, 1f, 0.85f);
         return preview;
+    }
+
+    public override Control _MakeCustomTooltip(string forText)
+    {
+        if (_unitData == null || _tooltipScene == null) return null!;
+
+        var tooltip = _tooltipScene.Instantiate<UnitTooltip>();
+        tooltip.Setup(_unitData);
+        return tooltip;
     }
 
     public override Variant _GetDragData(Vector2 atPosition)

@@ -38,7 +38,7 @@ layout_mode = 2
 theme = ExtResource("1_pyety")
 theme_override_constants/separation = 8
 
-[node name="MenuTitle" parent="Margin/VBox" instance=ExtResource("2_3r1ux")]
+[node name="Title" parent="Margin/VBox" instance=ExtResource("2_3r1ux")]
 layout_mode = 2
 ButtonText = "Library"
 

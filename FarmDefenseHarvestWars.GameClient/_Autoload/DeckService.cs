@@ -8,7 +8,7 @@ using Refit;
 
 public partial class DeckService : Node
 {
-    public const int MaxCards = 5;
+    public const int MaxCards = 6;
 
     public static DeckService Instance { get; private set; } = null!;
 

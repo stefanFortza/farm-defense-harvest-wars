@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://c6ybv7pnl1wvj"]
+[gd_scene load_steps=10 format=3 uid="uid://c6ybv7pnl1wvj"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_ct1rl"]
 [ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.cs" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_5ass7"]
 [ext_resource type="PackedScene" uid="uid://bg42jkxh1y32g" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckLibraryItemDragPreview.tscn" id="2_dragpreview"]
+[ext_resource type="PackedScene" uid="uid://cunittooltip0" path="res://Scenes/UI/Components/UnitTooltip.tscn" id="3_tooltip"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6k0ts"]
 atlas = ExtResource("2_5ass7")
@@ -28,7 +29,7 @@ load_path = "res://.godot/imported/ChickenIcon.png-4fd7873d6d38a2905945b19e86c9b
 atlas = SubResource("CompressedTexture2D_ct1rl")
 region = Rect2(11, 10, 13, 12)
 
-[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label")]
+[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon")]
 custom_minimum_size = Vector2(32, 32)
 offset_right = 32.0
 offset_bottom = 32.0
@@ -39,11 +40,11 @@ theme = ExtResource("1_ct1rl")
 theme_override_styles/panel = SubResource("StyleBoxTexture_l57fl")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
-_label = NodePath("Icon/Name")
 _dragPreviewScene = ExtResource("2_dragpreview")
+_tooltipScene = ExtResource("3_tooltip")
 
 [node name="Icon" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(20, 20)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -51,26 +52,3 @@ theme = ExtResource("1_ct1rl")
 texture = SubResource("AtlasTexture_6o8nk")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Name" type="Label" parent="Icon"]
-visible = false
-layout_mode = 0
-offset_left = 24.0
-offset_right = 25.0
-offset_bottom = 16.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource("1_ct1rl")
-vertical_alignment = 1
-
-[node name="Cost" type="Label" parent="Icon"]
-visible = false
-custom_minimum_size = Vector2(46, 0)
-layout_mode = 0
-offset_left = 24.0
-offset_top = 3.0
-offset_right = 70.0
-offset_bottom = 12.0
-theme = ExtResource("1_ct1rl")
-horizontal_alignment = 2
-vertical_alignment = 1

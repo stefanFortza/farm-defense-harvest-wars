@@ -1,19 +1,20 @@
-[gd_scene load_steps=7 format=3 uid="uid://c4fsd5ricrid8"]
+[gd_scene load_steps=8 format=3 uid="uid://c4fsd5ricrid8"]
 
 [ext_resource type="Script" uid="uid://cq5racbfuott4" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_xmja5"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_seekc"]
 [ext_resource type="PackedScene" uid="uid://46mss1durf4d" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckSlotDragPreview.tscn" id="3_dragpreview"]
+[ext_resource type="PackedScene" uid="uid://cunittooltip0" path="res://Scenes/UI/Components/UnitTooltip.tscn" id="4_tooltip"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6k0ts"]
 atlas = ExtResource("2_seekc")
 region = Rect2(681, 8, 30, 34)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vm4yd"]
-content_margin_left = 6.0
-content_margin_top = 6.0
-content_margin_right = 6.0
-content_margin_bottom = 6.0
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 texture = SubResource("AtlasTexture_6k0ts")
 texture_margin_left = 6.0
 texture_margin_top = 8.0
@@ -21,56 +22,23 @@ texture_margin_right = 6.0
 texture_margin_bottom = 9.0
 region_rect = Rect2(0, 0, 30, 34)
 
-[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_nameLabel", "_costLabel")]
-custom_minimum_size = Vector2(32, 32)
-offset_right = 16.0
-offset_bottom = 16.0
+[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon")]
+custom_minimum_size = Vector2(28, 28)
+offset_right = 28.0
+offset_bottom = 28.0
 mouse_filter = 1
 theme = ExtResource("1_xmja5")
 theme_override_styles/panel = SubResource("StyleBoxTexture_vm4yd")
 script = ExtResource("1_script")
-_icon = NodePath("Row/Icon")
-_nameLabel = NodePath("Row/Icon/Name")
-_costLabel = NodePath("Row/Icon/Cost")
+_icon = NodePath("Icon")
 _dragPreviewScene = ExtResource("3_dragpreview")
+_tooltipScene = ExtResource("4_tooltip")
 
-[node name="Row" type="VBoxContainer" parent="."]
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource("1_xmja5")
-
-[node name="Icon" type="TextureRect" parent="Row"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme = ExtResource("1_xmja5")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Name" type="Label" parent="Row/Icon"]
-visible = false
-layout_mode = 0
-offset_right = 16.0
-offset_bottom = 9.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource("1_xmja5")
-vertical_alignment = 1
-
-[node name="Cost" type="Label" parent="Row/Icon"]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -8.0
-offset_top = -4.5
-offset_right = 8.0
-offset_bottom = 4.5
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("1_xmja5")
-horizontal_alignment = 2
-vertical_alignment = 1

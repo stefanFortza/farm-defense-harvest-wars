@@ -1,0 +1,121 @@
+[gd_scene load_steps=3 format=3 uid="uid://cunittooltip0"]
+
+[ext_resource type="Script" path="res://Scenes/UI/Components/UnitTooltip.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tooltip"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 0.941176)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8, 0.8, 0.8, 0.501961)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[node name="UnitTooltip" type="PanelContainer" node_paths=PackedStringArray("_nameLabel", "_costLabel", "_healthLabel", "_damageLabel", "_rangeLabel", "_speedLabel", "_iconRect")]
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tooltip")
+script = ExtResource("1_script")
+_nameLabel = NodePath("VBox/TitleHBox/NameLabel")
+_costLabel = NodePath("VBox/Grid/CostHBox/Value")
+_healthLabel = NodePath("VBox/Grid/HealthHBox/Value")
+_damageLabel = NodePath("VBox/Grid/DamageHBox/Value")
+_rangeLabel = NodePath("VBox/Grid/RangeHBox/Value")
+_speedLabel = NodePath("VBox/Grid/SpeedHBox/Value")
+_iconRect = NodePath("VBox/TitleHBox/Icon")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleHBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Icon" type="TextureRect" parent="VBox/TitleHBox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="VBox/TitleHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "Unit Name"
+
+[node name="HSeparator" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="CostHBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Grid/CostHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Cost:"
+
+[node name="Value" type="Label" parent="VBox/Grid/CostHBox"]
+layout_mode = 2
+text = "25"
+
+[node name="HealthHBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Grid/HealthHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "HP:"
+
+[node name="Value" type="Label" parent="VBox/Grid/HealthHBox"]
+layout_mode = 2
+text = "100"
+
+[node name="DamageHBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Grid/DamageHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "DMG:"
+
+[node name="Value" type="Label" parent="VBox/Grid/DamageHBox"]
+layout_mode = 2
+text = "10"
+
+[node name="RangeHBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Grid/RangeHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Rng:"
+
+[node name="Value" type="Label" parent="VBox/Grid/RangeHBox"]
+layout_mode = 2
+text = "64"
+
+[node name="SpeedHBox" type="HBoxContainer" parent="VBox/Grid"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Grid/SpeedHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Spd:"
+
+[node name="Value" type="Label" parent="VBox/Grid/SpeedHBox"]
+layout_mode = 2
+text = "10"

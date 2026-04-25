@@ -8,7 +8,7 @@
 atlas = ExtResource("3_2m2o0")
 region = Rect2(97, 0, 78, 21)
 
-[node name="MenuTitle" type="MarginContainer" node_paths=PackedStringArray("_label")]
+[node name="MenuTitle" type="MarginContainer" node_paths=PackedStringArray("TitleLabel")]
 custom_minimum_size = Vector2(32, 16)
 anchors_preset = 8
 anchor_left = 0.5
@@ -23,7 +23,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_2m2o0")
 script = ExtResource("2_f0yph")
-_label = NodePath("NinePatchRect/Label")
+TitleLabel = NodePath("NinePatchRect/Label")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
 custom_minimum_size = Vector2(64, 20)

@@ -6,13 +6,13 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MenuLabel;
 using Refit;
 
 public abstract partial class DeckSelectionRight : Control
 {
     private const double DeckSyncPollSeconds = 20.0;
 
-    [Export] protected Label _titleLabel = null!;
     [Export] protected GridContainer _libraryContainer = null!;
     [Export] protected UnitRegistry _unitRegistry = null!;
     [Export] protected PackedScene _libraryItemScene = null!;
@@ -31,7 +31,6 @@ public abstract partial class DeckSelectionRight : Control
 
     public override void _Ready()
     {
-        this.EnsureNotNull(_titleLabel, nameof(_titleLabel));
         this.EnsureNotNull(_libraryContainer, nameof(_libraryContainer));
         this.EnsureNotNull(_unitRegistry, nameof(_unitRegistry));
         this.EnsureNotNull(_libraryItemScene, nameof(_libraryItemScene));
@@ -209,7 +208,6 @@ public abstract partial class DeckSelectionRight : Control
     protected virtual void Refresh()
     {
         var role = GetRole();
-        _titleLabel.Text = $"Library ({role})";
         _isSavingDeck = GameState.Instance?.IsDeckSaveInProgress(role) ?? false;
 
         // Clear existing items

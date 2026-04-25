@@ -3,10 +3,10 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MenuLabel;
 
 public abstract partial class DeckSelectionLeft : Control
 {
-    [Export] protected Label _titleLabel = null!;
     [Export] protected GridContainer _slotsContainer = null!;
     [Export] protected UnitRegistry _unitRegistry = null!;
     [Export] protected PackedScene _slotScene = null!;
@@ -22,7 +22,6 @@ public abstract partial class DeckSelectionLeft : Control
 
     public override void _Ready()
     {
-        this.EnsureNotNull(_titleLabel, nameof(_titleLabel));
         this.EnsureNotNull(_slotsContainer, nameof(_slotsContainer));
         this.EnsureNotNull(_unitRegistry, nameof(_unitRegistry));
         this.EnsureNotNull(_slotScene, nameof(_slotScene));
@@ -218,7 +217,6 @@ public abstract partial class DeckSelectionLeft : Control
     protected virtual void Refresh()
     {
         var role = GetRole();
-        _titleLabel.Text = $"Deck ({role})";
         _isSavingDeck = GameState.Instance?.IsDeckSaveInProgress(role) ?? false;
 
         var deck = DeckService.Instance.GetDeckForRole(role, _unitRegistry);

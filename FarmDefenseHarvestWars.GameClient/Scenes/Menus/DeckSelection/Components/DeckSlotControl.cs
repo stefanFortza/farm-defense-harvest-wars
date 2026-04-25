@@ -2,6 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
 
 public partial class DeckSlotControl : PanelContainer
 {
@@ -11,18 +12,23 @@ public partial class DeckSlotControl : PanelContainer
     [Export] public int SlotIndex = 0;
 
     [Export] private TextureRect _icon = null!;
-    [Export] private Label _nameLabel = null!;
-    [Export] private Label _costLabel = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
+    [Export] private PackedScene _tooltipScene = null!;
+    private UnitData? _unitData;
     private UnitType? _unitType;
 
     public override void _Ready()
     {
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
-        this.EnsureNotNull(_nameLabel, nameof(_nameLabel));
-        this.EnsureNotNull(_costLabel, nameof(_costLabel));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
+
+        if (_tooltipScene == null)
+        {
+            GD.PrintErr($"[DeckSlotControl] Tooltip scene is null on {Name}. Attempting to load fallback.");
+            _tooltipScene = ResourceLoader.Load<PackedScene>("res://Scenes/UI/Components/UnitTooltip.tscn");
+        }
+        this.EnsureNotNull(_tooltipScene, nameof(_tooltipScene));
 
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
@@ -48,22 +54,28 @@ public partial class DeckSlotControl : PanelContainer
 
     public void SetUnit(UnitData unitData)
     {
+        _unitData = unitData;
         _unitType = unitData.Type;
         _icon.Texture = unitData.Icon;
-        _nameLabel.Text = $"{SlotIndex + 1}. {unitData.Name}";
-        _costLabel.Text = unitData.MatchCost.ToString();
         TooltipText = unitData.Name;
         UpdateVisual();
     }
 
     public void ClearUnit()
     {
+        _unitData = null;
         _unitType = null;
         _icon.Texture = null;
-        _nameLabel.Text = $"{SlotIndex + 1}. [Empty]";
-        _costLabel.Text = "-";
-        TooltipText = "";
         UpdateVisual();
+    }
+
+    public override Control _MakeCustomTooltip(string forText)
+    {
+        if (_unitData == null || _tooltipScene == null) return null!;
+
+        var tooltip = _tooltipScene.Instantiate<UnitTooltip>();
+        tooltip.Setup(_unitData);
+        return tooltip;
     }
 
     private Control CreateDragPreview(Texture2D texture)
