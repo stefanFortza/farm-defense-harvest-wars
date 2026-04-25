@@ -44,12 +44,12 @@ public partial class DeckSlotControl : PanelContainer
 
     public void OnMouseEntered()
     {
-        UIAnimations.TryAnimateScaleUp(this, .2f);
+        UIAnimations.TryAnimateScale(this, new Vector2(1.1f, 1.1f), 0.15);
     }
 
     public void OnMouseExited()
     {
-        UIAnimations.TryAnimateScaleDown(this, .2f);
+        UIAnimations.TryAnimateScale(this, Vector2.One, 0.15);
     }
 
     public void SetUnit(UnitData unitData)

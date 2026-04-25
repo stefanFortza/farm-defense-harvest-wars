@@ -1,27 +1,39 @@
-[gd_scene load_steps=3 format=3 uid="uid://cunittooltip0"]
+[gd_scene load_steps=9 format=3 uid="uid://cunittooltip0"]
 
-[ext_resource type="Script" path="res://Scenes/UI/Components/UnitTooltip.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://ch7c63t6qjknk" path="res://Scenes/UI/Components/UnitTooltip.cs" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_dkc63"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://bygrs5tnch4uk" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Sliders.png" id="4_oky0g"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tooltip"]
-bg_color = Color(0.129412, 0.129412, 0.129412, 0.941176)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.8, 0.8, 0.8, 0.501961)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="AtlasTexture" id="AtlasTexture_oky0g"]
+atlas = ExtResource("2_dkc63")
+region = Rect2(915, 4, 42, 41)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nqji6"]
+texture = SubResource("AtlasTexture_oky0g")
+texture_margin_left = 11.0
+texture_margin_top = 12.0
+texture_margin_right = 11.0
+texture_margin_bottom = 13.0
 expand_margin_left = 4.0
 expand_margin_top = 4.0
 expand_margin_right = 4.0
 expand_margin_bottom = 4.0
+region_rect = Rect2(0, 0, 42, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nqji6"]
+atlas = ExtResource("4_oky0g")
+region = Rect2(105, 102, 30, 4)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cfc4v"]
+texture = SubResource("AtlasTexture_nqji6")
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
+region_rect = Rect2(0, 0, 30, 4)
 
 [node name="UnitTooltip" type="PanelContainer" node_paths=PackedStringArray("_nameLabel", "_costLabel", "_healthLabel", "_damageLabel", "_rangeLabel", "_speedLabel", "_iconRect")]
 theme = ExtResource("2_theme")
-theme_override_styles/panel = SubResource("StyleBoxFlat_tooltip")
+theme_override_styles/panel = SubResource("StyleBoxTexture_nqji6")
 script = ExtResource("1_script")
 _nameLabel = NodePath("VBox/TitleHBox/NameLabel")
 _costLabel = NodePath("VBox/Grid/CostHBox/Value")
@@ -53,6 +65,7 @@ text = "Unit Name"
 
 [node name="HSeparator" type="HSeparator" parent="VBox"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxTexture_cfc4v")
 
 [node name="Grid" type="GridContainer" parent="VBox"]
 layout_mode = 2
