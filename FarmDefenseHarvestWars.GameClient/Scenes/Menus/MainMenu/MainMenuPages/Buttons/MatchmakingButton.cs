@@ -26,12 +26,24 @@ public partial class MatchmakingButton : Button
 
     public void OnMouseEntered()
     {
-        UIAnimations.TryAnimateScale(this, new Vector2(1.1f, 1.1f), 0.15);
+        UIAnimations.TryAnimateScale(this, new Vector2(1.05f, 1.05f), 0.15);
+        AnimateHoverShader(1.0f);
     }
 
     public void OnMouseExited()
     {
         UIAnimations.TryAnimateScale(this, Vector2.One, 0.15);
+        AnimateHoverShader(0.0f);
+    }
+
+    private void AnimateHoverShader(float target)
+    {
+        if (Material is ShaderMaterial shaderMat)
+        {
+            var tween = GetTree().CreateTween();
+            tween.TweenMethod(Callable.From<float>((val) => shaderMat.SetShaderParameter("hover_intensity", val)), 
+                (float)shaderMat.GetShaderParameter("hover_intensity"), target, 0.15);
+        }
     }
 
     private async void OnPressed()

@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2pbrn4oof35o"]
+[gd_scene load_steps=9 format=3 uid="uid://d2pbrn4oof35o"]
 
 [ext_resource type="Texture2D" uid="uid://dkaacttteavom" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/Book_UI.png" id="1_ilrgx"]
 [ext_resource type="Script" uid="uid://cybrmvvjxif7h" path="res://Scenes/UI/Components/TabButton/TabButton.cs" id="2_8paob"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_nglnj"]
+[ext_resource type="Shader" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="3_shader"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0vkk7"]
 atlas = ExtResource("1_ilrgx")
@@ -38,6 +39,7 @@ ContentRootNode = NodePath("ContentRoot")
 BackgroundNormalNode = NodePath("ContentRoot/BackgroundNormal")
 BackgroundActiveNode = NodePath("ContentRoot/BackgroundActive")
 IconNode = NodePath("ContentRoot/Icon")
+ButtonShader = ExtResource("3_shader")
 
 [node name="ContentRoot" type="Control" parent="."]
 layout_mode = 1

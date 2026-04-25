@@ -1,9 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://matchmakingdefenderbutton1"]
+[gd_scene load_steps=5 format=3 uid="uid://matchmakingdefenderbutton1"]
 
 [ext_resource type="Script" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/DefenderMatchmakingButton.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Shader" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="3_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shine"]
+shader = ExtResource("3_shader")
+shader_parameter/shine_color = Color(1, 1, 1, 0.25)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.05
+shader_parameter/shine_angle = 45.0
+shader_parameter/pulse_color = Color(0.2, 0.6, 1, 0.3)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.1
 
 [node name="MatchmakingDefenderButton" type="Button"]
+material = SubResource("ShaderMaterial_shine")
 custom_minimum_size = Vector2(100, 24)
 theme = ExtResource("2_theme")
 text = "Play as Defender"

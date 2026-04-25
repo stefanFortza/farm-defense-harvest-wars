@@ -27,9 +27,18 @@ public partial class MatchmakingOverlay : CanvasLayer
 
     public override void _Process(double delta)
     {
-        if (Visible && _spinner != null)
+        if (Visible)
         {
-            _spinner.Rotation += (float)delta * 5.0f;
+            if (_spinner != null)
+            {
+                _spinner.Rotation += (float)delta * 5.0f;
+            }
+            
+            if (_statusLabel != null)
+            {
+                float pulse = (Mathf.Sin((float)Time.GetTicksMsec() * 0.005f) + 1.0f) * 0.5f;
+                _statusLabel.SelfModulate = new Color(1, 1, 1, 0.5f + pulse * 0.5f);
+            }
         }
     }
 

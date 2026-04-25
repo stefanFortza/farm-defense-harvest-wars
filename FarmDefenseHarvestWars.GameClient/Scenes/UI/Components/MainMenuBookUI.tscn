@@ -1,17 +1,29 @@
-[gd_scene load_steps=20 format=3 uid="uid://hmlfj1sythl0"]
+[gd_scene load_steps=22 format=3 uid="uid://hmlfj1sythl0"]
 
 [ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="1_0okjo"]
 [ext_resource type="Script" uid="uid://c4m8g5uopi6yl" path="res://Scenes/UI/Components/TabsManager.cs" id="2_3q2n0"]
 [ext_resource type="PackedScene" uid="uid://d2pbrn4oof35o" path="res://Scenes/UI/Components/TabButton/TabButton.tscn" id="2_a8ep5"]
 [ext_resource type="ButtonGroup" uid="uid://dylcgpek81sf8" path="res://Scenes/Menus/MainMenu/MainMenuButtonGroup.tres" id="3_0vkk7"]
-[ext_resource type="PackedScene" uid="uid://jexdnjfq6irb" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchMakingPageLeft.tscn" id="5_luq8n"]
+[ext_resource type="PackedScene" uid="uid://dx56d0jedhm70" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchMakingPageLeft.tscn" id="5_luq8n"]
 [ext_resource type="PackedScene" uid="uid://cjn2iv0rl573k" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionLeftAttacker.tscn" id="6_left_attacker"]
 [ext_resource type="PackedScene" uid="uid://cqolh2mxdo31g" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionLeftDefender.tscn" id="7_left_defender"]
 [ext_resource type="PackedScene" uid="uid://bciae1s8yqpfv" path="res://Scenes/Menus/DeckSelection/Variants/Attacker/DeckSelectionRightAttacker.tscn" id="8_right_attacker"]
 [ext_resource type="PackedScene" uid="uid://b0y6o272xk1jg" path="res://Scenes/Menus/DeckSelection/Variants/Defender/DeckSelectionRightDefender.tscn" id="9_right_defender"]
-[ext_resource type="PackedScene" uid="uid://matchmakingpageright1" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.tscn" id="10_matchmaking_right"]
+[ext_resource type="PackedScene" uid="uid://blrwg6gbelgip" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.tscn" id="10_matchmaking_right"]
 [ext_resource type="PackedScene" uid="uid://0lrcdnkk0nb4" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageLeft.tscn" id="11_settings_page_left"]
+[ext_resource type="Shader" uid="uid://bfo7e38067llu" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="12_llrdo"]
 [ext_resource type="PackedScene" uid="uid://4qc10cis3uyw" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageRight.tscn" id="12_settings_page_right"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_njopl"]
+shader = ExtResource("12_llrdo")
+shader_parameter/shine_color = Color(1, 1, 1, 0.25)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.01
+shader_parameter/shine_angle = 45.0
+shader_parameter/pulse_color = Color(1, 1, 1, 0)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.05
+shader_parameter/hover_intensity = 0.0
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0opko"]
 load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
@@ -128,6 +140,7 @@ _leftZone = NodePath("../ContentOverlay/LeftZone")
 _rightZone = NodePath("../ContentOverlay/RightZone")
 
 [node name="MatchMakingPage" parent="TabsLayer" index="0" instance=ExtResource("2_a8ep5")]
+material = SubResource("ShaderMaterial_njopl")
 layout_mode = 2
 button_pressed = true
 button_group = ExtResource("3_0vkk7")
@@ -135,18 +148,21 @@ IconTexture = SubResource("AtlasTexture_s7ux1")
 TabKey = "MatchMakingPage"
 
 [node name="Background2" parent="TabsLayer" index="1" instance=ExtResource("2_a8ep5")]
+material = SubResource("ShaderMaterial_njopl")
 layout_mode = 2
 button_group = ExtResource("3_0vkk7")
 IconTexture = SubResource("AtlasTexture_luq8n")
 TabKey = "DeckSelectionAttacker"
 
 [node name="Background3" parent="TabsLayer" index="2" instance=ExtResource("2_a8ep5")]
+material = SubResource("ShaderMaterial_njopl")
 layout_mode = 2
 button_group = ExtResource("3_0vkk7")
 IconTexture = SubResource("AtlasTexture_va5ld")
 TabKey = "DeckSelectionDefender"
 
 [node name="SettingsPage" parent="TabsLayer" index="3" instance=ExtResource("2_a8ep5")]
+material = SubResource("ShaderMaterial_njopl")
 layout_mode = 2
 button_group = ExtResource("3_0vkk7")
 IconTexture = SubResource("AtlasTexture_settings")

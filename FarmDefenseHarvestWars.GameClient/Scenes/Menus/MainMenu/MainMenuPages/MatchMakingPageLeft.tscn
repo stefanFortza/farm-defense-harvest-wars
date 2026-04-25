@@ -1,11 +1,23 @@
-[gd_scene load_steps=10 format=3 uid="uid://dx56d0jedhm70"]
+[gd_scene load_steps=12 format=3 uid="uid://dx56d0jedhm70"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_nc66o"]
+[ext_resource type="Shader" uid="uid://bfo7e38067llu" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="2_66rl0"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_gjx4f"]
 [ext_resource type="Script" uid="uid://bt5pytucnt2np" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/DefenderMatchmakingButton.cs" id="2_nmnjn"]
 [ext_resource type="Texture2D" uid="uid://sii8tit3s0hv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Buttons.png" id="2_x0rs0"]
 [ext_resource type="Script" uid="uid://ckpcclqnhxie" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/AttackerMatchmakingButton.cs" id="3_e8msr"]
 [ext_resource type="PackedScene" uid="uid://cxhertfk0dn51" path="res://Scenes/Menus/MainMenu/Components/MatchmakingOverlay.tscn" id="3_overlay"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_digje"]
+shader = ExtResource("2_66rl0")
+shader_parameter/shine_color = Color(1, 1, 1, 0.25)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.01
+shader_parameter/shine_angle = 45.0
+shader_parameter/pulse_color = Color(1, 1, 1, 0)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.05
+shader_parameter/hover_intensity = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_digje"]
 atlas = ExtResource("2_gjx4f")
@@ -35,6 +47,7 @@ theme = ExtResource("1_nc66o")
 theme_override_constants/separation = 20
 
 [node name="PlayDefender" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
+material = SubResource("ShaderMaterial_digje")
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_nc66o")

@@ -28,12 +28,14 @@ public partial class TabButton : TextureButton
 	[ExportGroup("Settings")]
 	[Export] public float LiftAmount = -2.0f;
 	[Export] public float ActiveLiftAmount = -4.0f;
+	[Export] public Shader? ButtonShader;
 
 	private const float AnimationDuration = 0.2f;
 
 	private Vector2 _contentOriginalPos;
 	private bool _isHovered = false;
 	private TabButtonState _currentState = TabButtonState.Inactive;
+	private ShaderMaterial? _shaderMaterial;
 
 	public override void _Ready()
 	{
@@ -45,16 +47,44 @@ public partial class TabButton : TextureButton
 		_contentOriginalPos = ContentRootNode.Position;
 		IconNode.PivotOffset = IconNode.Size / 2;
 
+		// Setup Shader (Only for the Icon)
+		SetupShader();
+
 		// Apply custom icon if provided
 		IconNode.Texture = IconTexture;
 
-		// Connect event handlers - using separate methods for better debuggability and testability
+		// Connect event handlers
 		Toggled += OnToggled;
 		MouseEntered += OnMouseEntered;
 		MouseExited += OnMouseExited;
 
 		// Initialize visual state
 		UpdateVisualState();
+	}
+
+	private void SetupShader()
+	{
+		if (ButtonShader == null) return;
+
+		_shaderMaterial = new ShaderMaterial { Shader = ButtonShader };
+		
+		// Desynchronize shine
+		float randomOffset = GD.Randf() * 10.0f;
+		_shaderMaterial.SetShaderParameter("shine_time_offset", randomOffset);
+		_shaderMaterial.SetShaderParameter("shine_size", 0.05f);
+		
+		// Apply ONLY to the Icon node
+		IconNode.Material = _shaderMaterial;
+	}
+
+	private void AnimateHoverShader(float target)
+	{
+		if (_shaderMaterial != null)
+		{
+			var tween = GetTree().CreateTween();
+			tween.TweenMethod(Callable.From<float>((val) => _shaderMaterial.SetShaderParameter("hover_intensity", val)), 
+				(float)_shaderMaterial.GetShaderParameter("hover_intensity"), target, AnimationDuration);
+		}
 	}
 
 	public void SetIconTexture(Texture2D texture)
@@ -65,7 +95,6 @@ public partial class TabButton : TextureButton
 
 	public override void _ExitTree()
 	{
-		// Clean up event subscriptions to prevent memory leaks
 		Toggled -= OnToggled;
 		MouseEntered -= OnMouseEntered;
 		MouseExited -= OnMouseExited;
@@ -80,12 +109,14 @@ public partial class TabButton : TextureButton
 	{
 		_isHovered = true;
 		UpdateVisualState();
+		AnimateHoverShader(1.0f);
 	}
 
 	private void OnMouseExited()
 	{
 		_isHovered = false;
 		UpdateVisualState();
+		AnimateHoverShader(0.0f);
 	}
 
 	private void UpdateVisualState()
@@ -121,10 +152,7 @@ public partial class TabButton : TextureButton
 	{
 		SetActiveBackgroundVisible(true);
 		var tween = MoveToHorizontalOffset(ActiveLiftAmount, AnimationDuration);
-
-		// Ensure scale is normal for active state
 		UIAnimations.TryAnimateScaleDown(ContentRootNode, AnimationDuration);
-
 		IconNode.ResetShake();
 		return tween;
 	}
@@ -133,22 +161,16 @@ public partial class TabButton : TextureButton
 	{
 		SetActiveBackgroundVisible(false);
 		var tween = MoveToHorizontalOffset(LiftAmount, AnimationDuration);
-
-		// Apply hover scale effect (1.04x)
 		UIAnimations.TryAnimateScaleUp(ContentRootNode, AnimationDuration);
-
 		IconNode.Shake();
 		return tween;
 	}
 
 	private Tween ApplyInactiveState()
 	{
-		// Ensure scale is normal for inactive state
 		UIAnimations.TryAnimateScaleDown(ContentRootNode, AnimationDuration);
-
 		SetActiveBackgroundVisible(false);
 		var tween = MoveToHorizontalOffset(0, AnimationDuration);
-
 		IconNode.ResetShake();
 		return tween;
 	}
@@ -161,7 +183,6 @@ public partial class TabButton : TextureButton
 
 	private void OnAnimationFinished()
 	{
-		// Emit signal to parent when animation completes, including which state animation finished
 		EmitSignal(SignalName.AnimationFinished, this, Variant.From(_currentState));
 	}
 
