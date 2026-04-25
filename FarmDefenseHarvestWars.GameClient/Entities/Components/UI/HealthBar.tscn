@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://healthbar1"]
+
+[ext_resource type="Script" path="res://Entities/Components/UI/HealthBar.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+
+[node name="HealthBar" type="Control" node_paths=PackedStringArray("_progressBar")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_script")
+_progressBar = NodePath("ProgressBar")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -2.0
+offset_right = 16.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+value = 50.0
+show_percentage = false

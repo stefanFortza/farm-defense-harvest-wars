@@ -5,12 +5,12 @@
 [ext_resource type="PackedScene" uid="uid://cjhyi7d4vd2vf" path="res://Scenes/UI/Card/UnitCard.tscn" id="3_card_scene"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="4_p2mjx"]
 
-[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_pauseButton")]
+[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_baseHealthBar")]
 script = ExtResource("1_game_hud_script")
 _resourcePanel = NodePath("Margin/TopBar/LeftGroup/ResourcePanel")
 _deckContainer = NodePath("Margin/TopBar/LeftGroup/DeckContainer")
 _timerBar = NodePath("Margin/TopBar/RightGroup/MatchTimerBar")
-_pauseButton = NodePath("")
+_baseHealthBar = NodePath("BottomBar/BaseHealthBar")
 _cardScene = ExtResource("3_card_scene")
 
 [node name="Margin" type="MarginContainer" parent="."]
@@ -51,3 +51,33 @@ alignment = 2
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 theme = ExtResource("4_p2mjx")
+
+[node name="BottomBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="BaseHealthBar" type="ProgressBar" parent="BottomBar"]
+custom_minimum_size = Vector2(120, 8)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = -12.0
+offset_right = 60.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("4_p2mjx")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+value = 100.0
+show_percentage = false

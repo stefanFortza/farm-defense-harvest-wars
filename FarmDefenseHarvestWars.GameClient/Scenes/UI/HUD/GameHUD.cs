@@ -13,6 +13,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     [Export] private ResourcePanel _resourcePanel = null!;
     [Export] private HBoxContainer _deckContainer = null!;
     [Export] private ProgressBar _timerBar = null!;
+    [Export] private ProgressBar _baseHealthBar = null!;
     [Export] private PackedScene _cardScene = null!;
 
     private MatchManager _matchManager = null!;
@@ -79,6 +80,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         {
             _matchManager.MoneyChanged -= OnMoneyChanged;
             _matchManager.TimerUpdated -= OnTimerUpdated;
+            _matchManager.BaseHealthComponent.HealthChanged -= OnBaseHealthChanged;
             _inputController.PlacementResolved -= OnPlacementResolved;
         }
 
@@ -111,6 +113,11 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     {
         _matchManager.MoneyChanged += OnMoneyChanged;
         _matchManager.TimerUpdated += OnTimerUpdated;
+        _matchManager.BaseHealthComponent.HealthChanged += OnBaseHealthChanged;
+
+        // Initialize display
+        OnBaseHealthChanged(_matchManager.BaseHealthComponent.CurrentHealth, _matchManager.BaseHealthComponent.MaxHealth);
+
         _matchDuration = Mathf.Max(_matchManager.MatchDurationSeconds, 1f);
 
         _timerBar.MinValue = 0f;
@@ -153,6 +160,15 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 
         float elapsed = Mathf.Clamp(_matchDuration - timeRemaining, 0f, _matchDuration);
         _timerBar.Value = elapsed;
+    }
+
+    private void OnBaseHealthChanged(int currentHealth, int maxHealth)
+    {
+        if (_baseHealthBar != null)
+        {
+            _baseHealthBar.MaxValue = maxHealth;
+            _baseHealthBar.Value = currentHealth;
+        }
     }
 
     private void PopulateDeck(Array<UnitData> units)

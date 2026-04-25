@@ -8,6 +8,7 @@ namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 public partial class DefenderBase : Node2D, IInitializable<HealthComponent>
 {
     [Export] public HurtboxComponent HurtboxComponent { get; private set; } = null!;
+    [Export] public Node2D? HealthBar { get; private set; }
 
     public bool IsInitialized { get; private set; } = false;
 
@@ -23,6 +24,11 @@ public partial class DefenderBase : Node2D, IInitializable<HealthComponent>
         if (HurtboxComponent != null && _healthComponent != null)
         {
             HurtboxComponent.Initialize(_healthComponent);
+        }
+
+        if (HealthBar is IInitializable<HealthComponent> initializable)
+        {
+            initializable.Initialize(_healthComponent);
         }
     }
 
