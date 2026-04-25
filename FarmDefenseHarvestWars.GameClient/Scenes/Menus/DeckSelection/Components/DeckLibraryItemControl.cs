@@ -18,6 +18,9 @@ public partial class DeckLibraryItemControl : PanelContainer
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_label, nameof(_label));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
+
+        MouseEntered += OnMouseEntered;
+        MouseExited += OnMouseExited;
     }
 
     public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
@@ -55,6 +58,33 @@ public partial class DeckLibraryItemControl : PanelContainer
 
         // GD.Print($"Setup library item: {unitData.Name}, Unlocked: {isUnlocked}, Unlocking: {isUnlocking}, InDeck: {alreadyInDeck}, CanDrag: {_canDrag}");
     }
+
+    public override void _ExitTree()
+    {
+        MouseEntered -= OnMouseEntered;
+        MouseExited -= OnMouseExited;
+    }
+
+    public void OnMouseEntered()
+    {
+        if (!_isUnlocked && !_isUnlocking)
+        {
+            return;
+        }
+
+        UIAnimations.TryAnimateScaleUp(this, .2f);
+    }
+
+    public void OnMouseExited()
+    {
+        if (!_isUnlocked && !_isUnlocking)
+        {
+            return;
+        }
+
+        UIAnimations.TryAnimateScaleDown(this, .2f);
+    }
+
 
     public override void _GuiInput(InputEvent @event)
     {

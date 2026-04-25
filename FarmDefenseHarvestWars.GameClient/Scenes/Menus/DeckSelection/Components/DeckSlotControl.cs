@@ -24,7 +24,26 @@ public partial class DeckSlotControl : PanelContainer
         this.EnsureNotNull(_costLabel, nameof(_costLabel));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
 
+        MouseEntered += OnMouseEntered;
+        MouseExited += OnMouseExited;
+
         UpdateVisual();
+    }
+
+    public override void _ExitTree()
+    {
+        MouseEntered -= OnMouseEntered;
+        MouseExited -= OnMouseExited;
+    }
+
+    public void OnMouseEntered()
+    {
+        UIAnimations.TryAnimateScaleUp(this, .2f);
+    }
+
+    public void OnMouseExited()
+    {
+        UIAnimations.TryAnimateScaleDown(this, .2f);
     }
 
     public void SetUnit(UnitData unitData)

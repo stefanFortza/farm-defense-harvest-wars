@@ -1,13 +1,30 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg42jkxh1y32g"]
+[gd_scene load_steps=6 format=3 uid="uid://bg42jkxh1y32g"]
 
 [ext_resource type="Script" uid="uid://dnqqfnhc4lipe" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckDragPreviewControl.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 
-[node name="DeckLibraryItemDragPreview" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label")]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ry5na"]
+load_path = "res://.godot/imported/UI_ALL.png-def8f8e8aa6f92cc0c172993caa7cfa0.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nhlbs"]
+atlas = SubResource("CompressedTexture2D_ry5na")
+region = Rect2(1211, 11, 26, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1jt61"]
+texture = SubResource("AtlasTexture_nhlbs")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 26, 26)
+
+[node name="DeckLibraryItemDragPreview" type="PanelContainer" node_paths=PackedStringArray("_icon")]
+offset_right = 30.0
+offset_bottom = 30.0
 theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxTexture_1jt61")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
-_label = NodePath("")
 
 [node name="Icon" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(20, 20)

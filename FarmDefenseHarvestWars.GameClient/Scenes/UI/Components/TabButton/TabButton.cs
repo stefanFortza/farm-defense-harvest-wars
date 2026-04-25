@@ -122,6 +122,9 @@ public partial class TabButton : TextureButton
 		SetActiveBackgroundVisible(true);
 		var tween = MoveToHorizontalOffset(ActiveLiftAmount, AnimationDuration);
 
+		// Ensure scale is normal for active state
+		UIAnimations.TryAnimateScaleDown(ContentRootNode, AnimationDuration);
+
 		IconNode.ResetShake();
 		return tween;
 	}
@@ -131,12 +134,18 @@ public partial class TabButton : TextureButton
 		SetActiveBackgroundVisible(false);
 		var tween = MoveToHorizontalOffset(LiftAmount, AnimationDuration);
 
+		// Apply hover scale effect (1.04x)
+		UIAnimations.TryAnimateScaleUp(ContentRootNode, AnimationDuration);
+
 		IconNode.Shake();
 		return tween;
 	}
 
 	private Tween ApplyInactiveState()
 	{
+		// Ensure scale is normal for inactive state
+		UIAnimations.TryAnimateScaleDown(ContentRootNode, AnimationDuration);
+
 		SetActiveBackgroundVisible(false);
 		var tween = MoveToHorizontalOffset(0, AnimationDuration);
 

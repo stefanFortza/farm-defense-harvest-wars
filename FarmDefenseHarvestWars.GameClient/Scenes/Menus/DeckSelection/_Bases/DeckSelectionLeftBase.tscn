@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4j1j2asmp8mq"]
+[gd_scene load_steps=4 format=3 uid="uid://c4j1j2asmp8mq"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_lmhls"]
+[ext_resource type="PackedScene" uid="uid://n35a5mmf4ux6" path="res://Scenes/Menus/MainMenu/MenuTitle/MenuTitle.tscn" id="2_6adgt"]
 [ext_resource type="PackedScene" uid="uid://c4fsd5ricrid8" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.tscn" id="2_pukcp"]
 
 [node name="DeckSelectionLeftBase" type="Control"]
@@ -37,7 +38,12 @@ layout_mode = 2
 theme = ExtResource("1_lmhls")
 theme_override_constants/separation = 8
 
+[node name="MenuTitle" parent="Margin/VBox" instance=ExtResource("2_6adgt")]
+layout_mode = 2
+ButtonText = "Deck"
+
 [node name="Title" type="Label" parent="Margin/VBox"]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_lmhls")
 text = "Deck"
@@ -65,5 +71,9 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="DeckSlotControl5" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="DeckSlotControl6" parent="Margin/VBox/Slots" instance=ExtResource("2_pukcp")]
 layout_mode = 2
 size_flags_horizontal = 4

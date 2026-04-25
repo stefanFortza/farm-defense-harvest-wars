@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://dwm1bludfkgf7"]
+[gd_scene load_steps=4 format=3 uid="uid://dwm1bludfkgf7"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_pyety"]
+[ext_resource type="PackedScene" uid="uid://n35a5mmf4ux6" path="res://Scenes/Menus/MainMenu/MenuTitle/MenuTitle.tscn" id="2_3r1ux"]
 [ext_resource type="PackedScene" uid="uid://c6ybv7pnl1wvj" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.tscn" id="2_dr1kt"]
 
 [node name="DeckSelectionRightBase" type="Control"]
@@ -37,17 +38,9 @@ layout_mode = 2
 theme = ExtResource("1_pyety")
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Margin/VBox"]
+[node name="MenuTitle" parent="Margin/VBox" instance=ExtResource("2_3r1ux")]
 layout_mode = 2
-theme = ExtResource("1_pyety")
-text = "Library"
-
-[node name="Hint" type="Label" parent="Margin/VBox"]
-visible = false
-layout_mode = 2
-theme = ExtResource("1_pyety")
-text = "Drag cardurile aici in deck-ul din stanga pentru remove."
-autowrap_mode = 2
+ButtonText = "Library"
 
 [node name="LibraryScroll" type="ScrollContainer" parent="Margin/VBox"]
 layout_mode = 2

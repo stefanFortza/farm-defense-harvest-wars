@@ -1,13 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://46mss1durf4d"]
+[gd_scene load_steps=6 format=3 uid="uid://46mss1durf4d"]
 
 [ext_resource type="Script" uid="uid://dnqqfnhc4lipe" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckDragPreviewControl.cs" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://6sdeu0fryt76" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_ALL.png" id="2_qk82f"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 
-[node name="DeckSlotDragPreview" type="PanelContainer" node_paths=PackedStringArray("_icon", "_label")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3naj"]
+atlas = ExtResource("2_qk82f")
+region = Rect2(1211, 11, 26, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kqn7c"]
+texture = SubResource("AtlasTexture_k3naj")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 26, 26)
+
+[node name="DeckSlotDragPreview" type="PanelContainer" node_paths=PackedStringArray("_icon")]
 theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxTexture_kqn7c")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
-_label = NodePath("")
 
 [node name="Icon" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(20, 20)
