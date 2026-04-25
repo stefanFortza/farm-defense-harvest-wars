@@ -1,6 +1,51 @@
-[gd_scene load_steps=1 format=3 uid="uid://gameover1"]
+[gd_scene load_steps=3 format=3 uid="uid://gameover1"]
 
-[node name="GameOver" type="Control"]
+[ext_resource type="Script" path="res://Scenes/Gameplay/GameOverUI.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://be87780p8v7p8" path="res://Resources/PixelTheme.tres" id="2_theme"]
 
-[node name="Label" type="Label" parent="."]
+[node name="GameOver" type="CanvasLayer" node_paths=PackedStringArray("_winnerLabel")]
+layer = 10
+script = ExtResource("1_script")
+_winnerLabel = NodePath("Control/CenterContainer/VBoxContainer/Label")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.705882)
+
+[node name="CenterContainer" type="CenterContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Game Over"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back to Menu"
+
+[connection signal="pressed" from="Control/CenterContainer/VBoxContainer/Button" to="." method="OnBackToMenuPressed"]

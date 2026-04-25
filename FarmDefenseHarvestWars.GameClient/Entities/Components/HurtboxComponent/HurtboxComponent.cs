@@ -24,7 +24,9 @@ public partial class HurtboxComponent : Area2D, IInitializable<HealthComponent>
 
     public void ReceiveHit(int damage)
     {
-        if (!IsMultiplayerAuthority()) return;
+        if (!Multiplayer.IsServer()) return;
+        
+        GD.Print($"[HurtboxComponent] {Name} on {GetParent().Name} received hit for {damage} damage.");
 
         if (HealthComponent == null)
         {

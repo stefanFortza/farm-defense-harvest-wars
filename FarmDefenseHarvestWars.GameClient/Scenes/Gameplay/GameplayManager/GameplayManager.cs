@@ -27,7 +27,9 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 	[Export] private MatchManager _matchManager = null!;
 	[Export] private UnitFactory _unitFactory = null!;
 	[Export] private GameplayOrchestrator _orchestrator = null!;
-	[Export] private InputController _inputController = null!;
+	[Export] public InputController _inputController = null!;
+
+	public MatchManager MatchManager => _matchManager;
 
 	public bool IsInitialized { get; private set; } = false;
 

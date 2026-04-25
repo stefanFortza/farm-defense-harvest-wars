@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b3eudmxt181c6"]
+[gd_scene load_steps=19 format=3 uid="uid://b3eudmxt181c6"]
 
 [ext_resource type="Script" uid="uid://crnjqc17jbmcd" path="res://Scenes/Gameplay/GameWorld/GameWorld.cs" id="1_vhl2x"]
 [ext_resource type="PackedScene" uid="uid://cu12uic4kd4ek" path="res://Scenes/Gameplay/GameplayManager/GameplayManager.tscn" id="2_cs20h"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://bkhynxg80q4f3" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/House_Decor/Chimney_smoke_Anim.png" id="6_1re74"]
 [ext_resource type="PackedScene" uid="uid://gamehud1" path="res://Scenes/UI/HUD/GameHUD.tscn" id="6_hud"]
 [ext_resource type="Texture2D" uid="uid://c6cmff4stp10d" path="res://Resources/Textures/DefaultLight.tres" id="6_xghf8"]
+[ext_resource type="Script" uid="uid://ho6bogsl0h5a" path="res://Entities/Units/Base/DefenderBase/DefenderBase.cs" id="7_base"]
+[ext_resource type="PackedScene" uid="uid://ycst6x1wgv7e" path="res://Entities/Components/HurtboxComponent/HurtboxComponent.tscn" id="9_hurtbox"]
+[ext_resource type="PackedScene" uid="uid://gameover1" path="res://Scenes/Gameplay/GameOver.tscn" id="10_gameover"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_it3t4"]
 atlas = ExtResource("6_1re74")
@@ -52,13 +55,18 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_unitContainer", "_projectileContainer", "_gameHUD", "_map", "_unitSpawner", "_projectileSpawner")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
+size = Vector2(40, 112)
+
+[node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_unitContainer", "_projectileContainer", "_map", "_defenderBase", "_gameHUD", "_unitSpawner", "_projectileSpawner")]
 script = ExtResource("1_vhl2x")
 _managers = NodePath("GameplayManagers")
 _unitContainer = NodePath("UnitContainer")
 _projectileContainer = NodePath("ProjectileContainer")
-_gameHUD = NodePath("GameHUD")
 _map = NodePath("MapTest")
+_defenderBase = NodePath("DefenderBase")
+_gameHUD = NodePath("GameHUD")
+_gameOverScene = ExtResource("10_gameover")
 _unitSpawner = NodePath("UnitSpawner")
 _projectileSpawner = NodePath("ProjectileSpawner")
 
@@ -76,28 +84,36 @@ _unitRegistry = ExtResource("3_1re74")
 
 [node name="ProjectileContainer" type="Node2D" parent="."]
 
-[node name="DefenderBase" type="Node2D" parent="."]
-position = Vector2(52, 74)
+[node name="DefenderBase" type="Node2D" parent="." node_paths=PackedStringArray("HurtboxComponent")]
+position = Vector2(52, 88)
+script = ExtResource("7_base")
+HurtboxComponent = NodePath("HurtboxComponent")
 
 [node name="House1LimestoneBaseBlack" type="Sprite2D" parent="DefenderBase"]
+position = Vector2(0, -14)
 texture = ExtResource("5_ragko")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="DefenderBase"]
-position = Vector2(26, -43)
+position = Vector2(26, -57)
 sprite_frames = SubResource("SpriteFrames_psut0")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.7274519
 
 [node name="PointLight2D" type="PointLight2D" parent="DefenderBase"]
-position = Vector2(0, 3)
+position = Vector2(0, -11)
 texture = ExtResource("6_xghf8")
 texture_scale = 0.5
 
 [node name="PointLight2D2" type="PointLight2D" parent="DefenderBase"]
-position = Vector2(16, 33)
+position = Vector2(16, 19)
 texture = ExtResource("6_xghf8")
 texture_scale = 0.5
+
+[node name="HurtboxComponent" parent="DefenderBase" instance=ExtResource("9_hurtbox")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DefenderBase/HurtboxComponent"]
+shape = SubResource("RectangleShape2D_base")
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("../UnitContainer")

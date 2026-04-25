@@ -6,6 +6,8 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
+using FarmDefenseHarvestWars.GameClient.Entities.Components;
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
 
 public partial class MatchManager : Node
 {
@@ -19,12 +21,16 @@ public partial class MatchManager : Node
     [Export] public float StateSyncInterval = 0.2f;
     [Export] public float DisconnectGraceSeconds = 30f;
 
+    [Export] public HealthComponent BaseHealthComponent { get; private set; } = null!;
+
     private MatchState _currentState = MatchState.Waiting;
     private float _timeRemaining;
-    private int _baseHealth;
     private float _incomeTimer = 0f;
     private float _stateSyncTimer = 0f;
     private bool _completionReported;
+
+    // Local copy for clients, synced from server
+    private int _syncedBaseHealth;
 
     // PeerID -> Money
     private readonly Dictionary<long, int> _playerMoney = new();
@@ -38,10 +44,16 @@ public partial class MatchManager : Node
 
     public override void _Ready()
     {
+        this.EnsureNotNull(BaseHealthComponent, nameof(BaseHealthComponent));
+
         if (Multiplayer.IsServer())
         {
             Multiplayer.PeerConnected += OnPeerConnected;
             Multiplayer.PeerDisconnected += OnPeerDisconnected;
+            
+            BaseHealthComponent.HealthChanged += OnBaseHealthChanged;
+            BaseHealthComponent.Died += OnBaseDestroyed;
+            
             ResetMatch();
             return;
         }
@@ -52,6 +64,12 @@ public partial class MatchManager : Node
 
     public override void _ExitTree()
     {
+        if (BaseHealthComponent != null)
+        {
+            BaseHealthComponent.HealthChanged -= OnBaseHealthChanged;
+            BaseHealthComponent.Died -= OnBaseDestroyed;
+        }
+
         if (!Multiplayer.IsServer())
         {
             return;
@@ -70,25 +88,25 @@ public partial class MatchManager : Node
 
         _currentState = MatchState.Playing;
         _timeRemaining = MatchDurationSeconds;
-        _baseHealth = MaxBaseHealth;
+        
+        BaseHealthComponent.Initialize(MaxBaseHealth);
+        
         _playerMoney.Clear();
         _disconnectRoleTokens.Clear();
         _incomeTimer = 0f;
         _stateSyncTimer = 0f;
         _completionReported = false;
 
-        // Inițializăm banii pentru jucătorii deja conectați
         foreach (var id in Multiplayer.GetPeers())
         {
             _playerMoney[id] = StartingMoney;
             EmitSignal(SignalName.MoneyChanged, id, StartingMoney);
         }
 
-        // Serverul poate fi și el un jucător (Peer 1)
         _playerMoney[1] = StartingMoney;
         EmitSignal(SignalName.MoneyChanged, 1L, StartingMoney);
 
-        EmitSignal(SignalName.BaseHealthChanged, _baseHealth, MaxBaseHealth);
+        EmitSignal(SignalName.BaseHealthChanged, BaseHealthComponent.CurrentHealth, MaxBaseHealth);
         EmitSignal(SignalName.MatchStateChanged, (int)_currentState);
         EmitSignal(SignalName.TimerUpdated, _timeRemaining);
 
@@ -103,15 +121,20 @@ public partial class MatchManager : Node
         Logger.Info(matchLog);
     }
 
+    private float _quitDelayTimer = 2.0f; // Give clients some time to receive final RPCs
+
     public override void _Process(double delta)
     {
         if (!Multiplayer.IsServer()) return;
 
         if (_currentState == MatchState.Ended && _completionReported)
         {
-            GD.Print("Match ended and completion reported. Quitting server.");
-            // Exit the server process only after completion report is sent
-            GetTree().Quit();
+            _quitDelayTimer -= (float)delta;
+            if (_quitDelayTimer <= 0)
+            {
+                GD.Print("Match ended, completion reported and delay expired. Quitting server.");
+                GetTree().Quit();
+            }
             return;
         }
 
@@ -160,13 +183,9 @@ public partial class MatchManager : Node
         }
     }
 
-
     public void AddMoney(long peerId, int amount)
     {
-        if (!Multiplayer.IsServer())
-        {
-            return;
-        }
+        if (!Multiplayer.IsServer()) return;
 
         if (!_playerMoney.ContainsKey(peerId))
         {
@@ -210,21 +229,23 @@ public partial class MatchManager : Node
         return TrySpend(playerId, finalCost);
     }
 
+    // Still useful for manual damage if needed, but primarily handled by HealthComponent
     public void TakeBaseDamage(int amount)
     {
         if (!Multiplayer.IsServer() || _currentState != MatchState.Playing || amount <= 0) return;
+        BaseHealthComponent.TakeDamage(amount);
+    }
 
-        _baseHealth -= amount;
-        _baseHealth = Math.Max(0, _baseHealth);
-
-        EmitSignal(SignalName.BaseHealthChanged, _baseHealth, MaxBaseHealth);
+    private void OnBaseHealthChanged(int current, int max)
+    {
+        EmitSignal(SignalName.BaseHealthChanged, current, max);
         BroadcastSnapshot();
-        Logger.Info($"MatchManager: Base HP changed: {_baseHealth}/{MaxBaseHealth}");
+        Logger.Info($"MatchManager: Base HP changed via HealthComponent: {current}/{max}");
+    }
 
-        if (_baseHealth <= 0)
-        {
-            EndMatch(PlayerRole.Attacker); // Base destroyed -> Attacker wins
-        }
+    private void OnBaseDestroyed()
+    {
+        EndMatch(PlayerRole.Attacker);
     }
 
     private void EndMatch(PlayerRole winner)
@@ -272,7 +293,6 @@ public partial class MatchManager : Node
 
         if (_currentState == MatchState.Playing)
         {
-            // Any reconnect/new connection while match is active clears pending disconnect forfeits.
             foreach (PlayerRole role in new List<PlayerRole>(_disconnectRoleTokens.Keys))
             {
                 _disconnectRoleTokens[role]++;
@@ -284,17 +304,11 @@ public partial class MatchManager : Node
 
     private void OnPeerDisconnected(long id)
     {
-        if (!Multiplayer.IsServer())
-        {
-            return;
-        }
+        if (!Multiplayer.IsServer()) return;
 
         _playerMoney.Remove(id);
 
-        if (_currentState != MatchState.Playing)
-        {
-            return;
-        }
+        if (_currentState != MatchState.Playing) return;
 
         GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
         if (gameplay == null || !gameplay.TryGetRoleForPeer(id, out PlayerRole disconnectedRole))
@@ -303,7 +317,6 @@ public partial class MatchManager : Node
             return;
         }
 
-        // Check if both players are now disconnected
         if (gameplay.ConnectedPlayerCount == 0)
         {
             EndMatch(PlayerRole.Defender, "both_players_disconnected", true);
@@ -325,10 +338,7 @@ public partial class MatchManager : Node
     {
         await ToSignal(GetTree().CreateTimer(DisconnectGraceSeconds), SceneTreeTimer.SignalName.Timeout);
 
-        if (_currentState != MatchState.Playing)
-        {
-            return;
-        }
+        if (_currentState != MatchState.Playing) return;
 
         if (!_disconnectRoleTokens.TryGetValue(disconnectedRole, out ulong currentToken) || currentToken != token)
         {
@@ -336,10 +346,7 @@ public partial class MatchManager : Node
         }
 
         GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
-        if (gameplay != null && gameplay.ConnectedPlayerCount >= 2)
-        {
-            return;
-        }
+        if (gameplay != null && gameplay.ConnectedPlayerCount >= 2) return;
 
         PlayerRole winner = disconnectedRole == PlayerRole.Defender
             ? PlayerRole.Attacker
@@ -351,11 +358,7 @@ public partial class MatchManager : Node
 
     private async Task ReportCompletionAsync(PlayerRole winner, string terminationReason, bool isAborted)
     {
-        if (_completionReported)
-        {
-            return;
-        }
-
+        if (_completionReported) return;
 
         string? matchId = GameState.Instance?.MatchId;
         if (string.IsNullOrWhiteSpace(matchId))
@@ -386,7 +389,6 @@ public partial class MatchManager : Node
                 CmdArgs.MatchServerCallbackKey);
 
             _completionReported = true;
-
             Logger.Info($"MatchManager: Completion callback sent for match {matchId}.");
         }
         catch (Exception ex)
@@ -398,7 +400,8 @@ public partial class MatchManager : Node
 
     private void SendFullSyncToPeer(long peerId)
     {
-        RpcId(peerId, nameof(SyncSnapshotRpc), (int)_currentState, _timeRemaining, _baseHealth, MaxBaseHealth);
+        int currentHp = Multiplayer.IsServer() ? BaseHealthComponent.CurrentHealth : _syncedBaseHealth;
+        RpcId(peerId, nameof(SyncSnapshotRpc), (int)_currentState, _timeRemaining, currentHp, MaxBaseHealth);
         foreach (var kv in _playerMoney)
         {
             RpcId(peerId, nameof(SyncMoneyRpc), kv.Key, kv.Value);
@@ -407,7 +410,8 @@ public partial class MatchManager : Node
 
     private void BroadcastSnapshot()
     {
-        Rpc(nameof(SyncSnapshotRpc), (int)_currentState, _timeRemaining, _baseHealth, MaxBaseHealth);
+        int currentHp = Multiplayer.IsServer() ? BaseHealthComponent.CurrentHealth : _syncedBaseHealth;
+        Rpc(nameof(SyncSnapshotRpc), (int)_currentState, _timeRemaining, currentHp, MaxBaseHealth);
     }
 
     private void BroadcastAllMoney()
@@ -432,11 +436,11 @@ public partial class MatchManager : Node
     {
         _currentState = (MatchState)state;
         _timeRemaining = Math.Max(0f, timeRemaining);
-        _baseHealth = Math.Clamp(baseHealth, 0, maxBaseHealth);
+        _syncedBaseHealth = Math.Clamp(baseHealth, 0, maxBaseHealth);
 
         EmitSignal(SignalName.MatchStateChanged, state);
         EmitSignal(SignalName.TimerUpdated, _timeRemaining);
-        EmitSignal(SignalName.BaseHealthChanged, _baseHealth, maxBaseHealth);
+        EmitSignal(SignalName.BaseHealthChanged, _syncedBaseHealth, maxBaseHealth);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -449,6 +453,7 @@ public partial class MatchManager : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncMatchEndedRpc(int winnerRole)
     {
+        GD.Print($"[MatchManager] SyncMatchEndedRpc received. Winner role: {winnerRole}");
         _currentState = MatchState.Ended;
         EmitSignal(SignalName.MatchStateChanged, (int)_currentState);
         EmitSignal(SignalName.MatchEnded, winnerRole);
@@ -456,5 +461,5 @@ public partial class MatchManager : Node
 
     public MatchState GetCurrentState() => _currentState;
     public float GetTimeRemaining() => _timeRemaining;
-    public int GetBaseHealth() => _baseHealth;
+    public int GetBaseHealth() => Multiplayer.IsServer() ? BaseHealthComponent.CurrentHealth : _syncedBaseHealth;
 }

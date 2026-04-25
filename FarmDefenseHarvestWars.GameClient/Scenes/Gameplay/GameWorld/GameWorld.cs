@@ -5,6 +5,7 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using Godot;
 using System;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
+using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
 
@@ -26,8 +27,12 @@ public partial class GameWorld : Node2D
 	[Export] private GameplayManager _managers = null!;
 	[Export] private Node2D _unitContainer = null!;
 	[Export] private Node2D _projectileContainer = null!;
-	[Export] private GameHUD _gameHUD = null!;
 	[Export] private Map _map = null!;
+	[Export] private DefenderBase _defenderBase = null!;
+
+	[ExportGroup("UI")]
+	[Export] private GameHUD _gameHUD = null!;
+	[Export] private PackedScene _gameOverScene = null!;
 
 	[ExportGroup("Multiplayer Spawners")]
 	[Export] private MultiplayerSpawner _unitSpawner = null!;
@@ -44,6 +49,10 @@ public partial class GameWorld : Node2D
 		this.EnsureNotNull(_map, nameof(_map));
 		this.EnsureNotNull(_unitSpawner, nameof(_unitSpawner));
 		this.EnsureNotNull(_projectileSpawner, nameof(_projectileSpawner));
+		this.EnsureNotNull(_defenderBase, nameof(_defenderBase));
+
+		this.EnsureNotNull(_map.GridSystem, "Map.GridSystem");
+		this.EnsureNotNull(_gameOverScene, nameof(_gameOverScene));
 
 		_gridSystem = _map.GridSystem;
 
@@ -57,8 +66,45 @@ public partial class GameWorld : Node2D
 
 		_managers.Initialize(context);
 
+		// Initialize DefenderBase with the centralized HealthComponent from MatchManager
+		_defenderBase.Initialize(_managers.MatchManager.BaseHealthComponent);
+
 		var hudContext = _managers.CreateHudContext();
 		_gameHUD.Initialize(hudContext);
+
+		_managers.MatchManager.MatchEnded += OnMatchEnded;
+	}
+
+	public override void _ExitTree()
+	{
+		if (_managers?.MatchManager != null)
+		{
+			_managers.MatchManager.MatchEnded -= OnMatchEnded;
+		}
+	}
+
+	private void OnMatchEnded(int winnerRole)
+	{
+		GD.Print($"[GameWorld] OnMatchEnded triggered. Winner: {(PlayerRole)winnerRole}");
+
+		// Disable input once match ends to prevent further RPC attempts
+		var inputController = _managers._inputController;
+		if (inputController != null)
+		{
+			inputController.CancelPlacement();
+			inputController.SetProcess(false);
+			inputController.SetProcessInput(false);
+			inputController.SetProcessUnhandledInput(false);
+		}
+
+		if (_gameOverScene != null)
+		{
+			var gameOverUI = _gameOverScene.Instantiate<GameOverUI>();
+			AddChild(gameOverUI);
+
+			string winnerText = (PlayerRole)winnerRole == PlayerRole.Defender ? "Defender Wins!" : "Attacker Wins!";
+			gameOverUI.SetWinner(winnerText);
+		}
 	}
 
 	private void AutoRegisterSpawnableScenes()

@@ -39,8 +39,6 @@ public partial class HealthComponent : Node
 
     public void Initialize(int maxHealth)
     {
-        if (IsInitialized) return;
-
         MaxHealth = maxHealth;
         CurrentHealth = MaxHealth; // Acest apel va declanșa setter-ul și semnalele
         IsInitialized = true;

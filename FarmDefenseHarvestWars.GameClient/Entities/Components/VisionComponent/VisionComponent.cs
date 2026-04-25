@@ -19,6 +19,7 @@ public partial class VisionComponent : RayCast2D, IInitializable<(float range, V
         Direction = data.direction;
 
         TargetPosition = Direction.Normalized() * Range;
+        CollideWithAreas = true; // Essential for detecting HurtboxComponent (Area2D)
 
         IsInitialized = true;
     }
