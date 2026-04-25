@@ -9,7 +9,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-text = "Play"
+theme_override_constants/separation = 20
+
+[node name="PlayDefender" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+text = "Play as Defender"
 script = ExtResource("1_hwqfs")
+PreferredRole = 0
+
+[node name="PlayAttacker" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+text = "Play as Attacker"
+script = ExtResource("1_hwqfs")
+PreferredRole = 1

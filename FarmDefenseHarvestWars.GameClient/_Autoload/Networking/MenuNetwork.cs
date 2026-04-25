@@ -96,7 +96,7 @@ public partial class MenuNetwork : Node
         return profile;
     }
 
-    public async Task QueueForMatchAsync()
+    public async Task QueueForMatchAsync(PlayerRole preferredRole = PlayerRole.Any)
     {
         if (IsMatchmakingActive)
         {
@@ -106,7 +106,7 @@ public partial class MenuNetwork : Node
         _matchmakingCts = new CancellationTokenSource();
         try
         {
-            await NetworkBootstrap.Instance.ApiClient.QueueForMatchAsync();
+            await NetworkBootstrap.Instance.ApiClient.QueueForMatchAsync(preferredRole);
         }
         catch
         {
@@ -116,9 +116,9 @@ public partial class MenuNetwork : Node
         }
     }
 
-    public async Task<MatchmakingStatusDto?> StartMatchmakingUntilFoundAsync(double pollIntervalSeconds = 1.0)
+    public async Task<MatchmakingStatusDto?> StartMatchmakingUntilFoundAsync(PlayerRole preferredRole = PlayerRole.Any, double pollIntervalSeconds = 1.0)
     {
-        await QueueForMatchAsync();
+        await QueueForMatchAsync(preferredRole);
         return await PollMatchStatusUntilFoundAsync(pollIntervalSeconds);
     }
 

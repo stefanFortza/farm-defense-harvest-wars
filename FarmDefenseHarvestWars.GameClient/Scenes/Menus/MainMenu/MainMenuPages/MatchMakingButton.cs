@@ -1,3 +1,4 @@
+using FarmDefenseHarvestWars.Shared.Enums;
 using Godot;
 using Refit;
 using System;
@@ -6,12 +7,16 @@ namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MainMenuPages;
 
 public partial class MatchMakingButton : Button
 {
+	[Export] public PlayerRole PreferredRole { get; set; } = PlayerRole.Any;
+	[Export] public Control? MatchmakingPanel { get; set; }
 	private bool _isSearching;
 	private GameplayNetwork Gameplay => NetworkBootstrap.Instance.Gameplay;
+	private string _originalText = "";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		_originalText = Text;
 		Pressed += OnPressed;
 		Gameplay.ClientJoinStateChanged += OnClientJoinStateChanged;
 	}
@@ -34,13 +39,14 @@ public partial class MatchMakingButton : Button
 		_isSearching = true;
 		Disabled = true;
 		Text = "Searching...";
+		MatchmakingPanel?.Show();
 		bool waitingForServerStart = false;
 
-		GD.Print("MatchMakingButton was pressed! Starting matchmaking...");
+		GD.Print($"MatchMakingButton was pressed! Starting matchmaking as {PreferredRole}...");
 
 		try
 		{
-			var status = await NetworkBootstrap.Instance.Menu.StartMatchmakingUntilFoundAsync();
+			var status = await NetworkBootstrap.Instance.Menu.StartMatchmakingUntilFoundAsync(PreferredRole);
 
 			if (status == null || !status.MatchFound)
 			{
@@ -52,6 +58,7 @@ public partial class MatchMakingButton : Button
 
 			Text = "Connecting...";
 			Gameplay.JoinGameServer(host, port);
+			GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
 			waitingForServerStart = true;
 			return;
 		}
@@ -68,11 +75,12 @@ public partial class MatchMakingButton : Button
 			if (!waitingForServerStart)
 			{
 				_isSearching = false;
+				MatchmakingPanel?.Hide();
 
 				if (IsInsideTree())
 				{
 					Disabled = false;
-					Text = "Play";
+					Text = _originalText;
 				}
 			}
 		}
@@ -100,7 +108,7 @@ public partial class MatchMakingButton : Button
 
 		_isSearching = false;
 		Disabled = false;
-		Text = "Play";
+		Text = _originalText;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
