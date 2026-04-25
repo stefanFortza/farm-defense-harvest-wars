@@ -11,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Configurare SQLite
 // Asigură-te că ai pachetul: Microsoft.EntityFrameworkCore.Sqlite
 builder.Services.AddScoped<IDefaultUnitUnlockService, DefaultUnitUnlockService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IDeckService, DeckService>();
+builder.Services.AddSingleton<IMatchmakingService, MatchmakingService>();
 builder.Services.AddScoped<DevelopmentTestUserSeeder>();
 builder.Services.AddSingleton<DefaultUnitUnlockCreationInterceptor>();
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
