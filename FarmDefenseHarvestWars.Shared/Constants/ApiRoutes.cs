@@ -11,4 +11,5 @@ public static class ApiRoutes
     public const string MatchmakingQueue = "/api/game/matchmaking/queue";
     public const string MatchmakingStatus = "/api/game/matchmaking/status";
     public const string MatchComplete = "/api/game/matchmaking/match/{matchId}/complete";
+    public const string MatchReward = "/api/game/matchmaking/match/{matchId}/reward";
 }

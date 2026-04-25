@@ -3,10 +3,12 @@
 [ext_resource type="Script" path="res://Scenes/Gameplay/GameOverUI.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://be87780p8v7p8" path="res://Resources/PixelTheme.tres" id="2_theme"]
 
-[node name="GameOver" type="CanvasLayer" node_paths=PackedStringArray("_winnerLabel")]
+[node name="GameOver" type="CanvasLayer" node_paths=PackedStringArray("_winnerLabel", "_rewardLabel", "_rewardContainer")]
 layer = 10
 script = ExtResource("1_script")
 _winnerLabel = NodePath("Control/CenterContainer/VBoxContainer/Label")
+_rewardLabel = NodePath("Control/CenterContainer/VBoxContainer/RewardContainer/RewardLabel")
+_rewardContainer = NodePath("Control/CenterContainer/VBoxContainer/RewardContainer")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -42,6 +44,14 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Game Over"
+horizontal_alignment = 1
+
+[node name="RewardContainer" type="VBoxContainer" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RewardLabel" type="Label" parent="Control/CenterContainer/VBoxContainer/RewardContainer"]
+layout_mode = 2
+text = "Fetching rewards..."
 horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="Control/CenterContainer/VBoxContainer"]

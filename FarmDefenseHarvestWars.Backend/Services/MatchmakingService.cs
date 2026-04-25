@@ -1,5 +1,10 @@
+using FarmDefenseHarvestWars.Backend.Data;
+using FarmDefenseHarvestWars.Backend.Models;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.Shared.Models.Game;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace FarmDefenseHarvestWars.Backend.Services;
@@ -15,6 +20,7 @@ public class MatchmakingService : IMatchmakingService
     
     private readonly HashSet<string> _queuedUsers = [];
     private readonly Dictionary<string, MatchmakingStatusDto> _activeMatches = [];
+    private readonly Dictionary<string, (string DefenderId, string AttackerId)> _matchParticipants = [];
     private readonly HashSet<string> _completedMatchIds = [];
 
     private readonly IServiceProvider _serviceProvider;
@@ -129,8 +135,6 @@ public class MatchmakingService : IMatchmakingService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create match for players {DefenderId} and {AttackerId}", defenderId, attackerId);
-                // If match creation fails, we could potentially put them back in queue, 
-                // but for now we throw and let them try again.
                 throw;
             }
         }
@@ -172,13 +176,131 @@ public class MatchmakingService : IMatchmakingService
         }
     }
 
-    public void CompleteMatch(string matchId)
+    public async Task CompleteMatchAsync(string matchId, MatchCompletionRequestDto request)
     {
+        string? defenderId = null;
+        string? attackerId = null;
+
         lock (_queueLock)
         {
+            if (_matchParticipants.TryGetValue(matchId, out var participants))
+            {
+                defenderId = participants.DefenderId;
+                attackerId = participants.AttackerId;
+            }
+            
             _completedMatchIds.Add(matchId);
             RemoveActiveMatchEntriesByMatchIdInternal(matchId);
+            _matchParticipants.Remove(matchId);
         }
+
+        if (defenderId != null && attackerId != null)
+        {
+            await ProcessMatchRewardsAsync(matchId, defenderId, attackerId, request);
+        }
+    }
+
+    public async Task<MatchRewardDto?> GetMatchRewardAsync(string matchId, string userId)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var result = await db.MatchResults.FindAsync(matchId);
+        if (result == null) return null;
+
+        var user = await userManager.FindByIdAsync(userId);
+        if (user == null) return null;
+
+        bool isDefender = result.DefenderUserId == userId;
+        bool isAttacker = result.AttackerUserId == userId;
+
+        if (!isDefender && !isAttacker) return null;
+
+        return new MatchRewardDto
+        {
+            MatchId = matchId,
+            Role = isDefender ? PlayerRole.Defender : PlayerRole.Attacker,
+            WinnerRole = result.WinnerRole,
+            IsAborted = result.IsAborted,
+            GoldEarned = isDefender ? result.DefenderGoldEarned : result.AttackerGoldEarned,
+            XpEarned = isDefender ? result.DefenderXpEarned : result.AttackerXpEarned,
+            TotalGoldNow = user.Gold,
+            TotalXpNow = user.Xp,
+            TotalLevelNow = user.Level
+        };
+    }
+
+    private async Task ProcessMatchRewardsAsync(string matchId, string defenderId, string attackerId, MatchCompletionRequestDto request)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var defender = await userManager.FindByIdAsync(defenderId);
+        var attacker = await userManager.FindByIdAsync(attackerId);
+
+        if (defender == null || attacker == null) return;
+
+        // Simple reward logic:
+        // Win: 50 Gold, 100 XP
+        // Loss: 20 Gold, 40 XP
+        // Draw/Abort: 10 Gold, 20 XP
+
+        int defGold = 10;
+        int defXp = 20;
+        int atkGold = 10;
+        int atkXp = 20;
+
+        if (!request.IsAborted && request.WinnerRole.HasValue)
+        {
+            if (request.WinnerRole == PlayerRole.Defender)
+            {
+                defGold = 50; defXp = 100;
+                atkGold = 20; atkXp = 40;
+            }
+            else
+            {
+                atkGold = 50; atkXp = 100;
+                defGold = 20; defXp = 40;
+            }
+        }
+
+        defender.Gold += defGold;
+        defender.Xp += defXp;
+        // Level up logic: 1000 XP per level
+        if (defender.Xp >= defender.Level * 1000)
+        {
+            defender.Xp -= defender.Level * 1000;
+            defender.Level++;
+        }
+
+        attacker.Gold += atkGold;
+        attacker.Xp += atkXp;
+        if (attacker.Xp >= attacker.Level * 1000)
+        {
+            attacker.Xp -= attacker.Level * 1000;
+            attacker.Level++;
+        }
+
+        var result = new MatchResult
+        {
+            MatchId = matchId,
+            DefenderUserId = defenderId,
+            AttackerUserId = attackerId,
+            WinnerRole = request.WinnerRole,
+            IsAborted = request.IsAborted,
+            DefenderGoldEarned = defGold,
+            DefenderXpEarned = defXp,
+            AttackerGoldEarned = atkGold,
+            AttackerXpEarned = atkXp,
+            CompletedAtUtc = DateTimeOffset.UtcNow
+        };
+
+        db.MatchResults.Add(result);
+        await db.SaveChangesAsync();
+        await userManager.UpdateAsync(defender);
+        await userManager.UpdateAsync(attacker);
     }
 
     private bool TryGetActiveMatch(string userId, out MatchmakingStatusDto status)
@@ -232,6 +354,7 @@ public class MatchmakingService : IMatchmakingService
         {
             _activeMatches[defenderUserId] = defenderStatus;
             _activeMatches[attackerUserId] = attackerStatus;
+            _matchParticipants[matchId] = (defenderUserId, attackerUserId);
         }
     }
 

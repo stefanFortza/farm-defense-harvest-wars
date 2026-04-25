@@ -81,7 +81,7 @@ public class MatchmakingController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("matchmaking/match/{matchId}/complete")]
-    public ActionResult CompleteMatch(
+    public async Task<ActionResult> CompleteMatch(
         string matchId,
         [FromBody] MatchCompletionRequestDto request)
     {
@@ -95,7 +95,7 @@ public class MatchmakingController : ControllerBase
             return Unauthorized("Missing or invalid match server callback key.");
         }
 
-        _matchmakingService.CompleteMatch(matchId);
+        await _matchmakingService.CompleteMatchAsync(matchId, request);
 
         _logger.LogInformation(
             "Match {MatchId} completion callback accepted. Winner={WinnerRole}, Reason={Reason}, IsAborted={IsAborted}",
@@ -105,6 +105,24 @@ public class MatchmakingController : ControllerBase
             request.IsAborted);
 
         return NoContent();
+    }
+
+    [HttpGet("matchmaking/match/{matchId}/reward")]
+    public async Task<ActionResult<MatchRewardDto>> GetMatchReward(string matchId)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var reward = await _matchmakingService.GetMatchRewardAsync(matchId, userId);
+        if (reward == null)
+        {
+            return NotFound("Match reward not found or not authorized for this user.");
+        }
+
+        return Ok(reward);
     }
 
     private bool IsValidMatchServerCallback()

@@ -132,13 +132,18 @@ public partial class GameplayNetwork : Node
         // networkManager.EndGame("Opponent Disconnected");
     }
 
-    private void CheckGameStart()
+    private async void CheckGameStart()
     {
         if (_connectedPlayers.Count == MaxPlayers)
         {
             GD.Print("Match Ready! Starting in 1s...");
-            // GetTree().CreateTimer(1.0).Timeout += () => Rpc(nameof(StartGameScene));
-            Rpc(nameof(SyncMatchDecksToClient), BuildDeckPayload(CmdArgs.DefenderDeck), BuildDeckPayload(CmdArgs.AttackerDeck));
+            
+            // Wait 1 second so clients can see the "Connected" status
+            await Task.Delay(1000);
+            
+            if (!IsInsideTree()) return;
+
+            Rpc(nameof(SyncMatchDecksToClient), CmdArgs.MatchId ?? "", BuildDeckPayload(CmdArgs.DefenderDeck), BuildDeckPayload(CmdArgs.AttackerDeck));
             Rpc(nameof(StartGameScene));
         }
     }
@@ -161,7 +166,7 @@ public partial class GameplayNetwork : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncMatchDecksToClient(Godot.Collections.Array<int> defenderDeck, Godot.Collections.Array<int> attackerDeck)
+    private void SyncMatchDecksToClient(string matchId, Godot.Collections.Array<int> defenderDeck, Godot.Collections.Array<int> attackerDeck)
     {
         List<UnitType> defenderUnits = [];
         List<UnitType> attackerUnits = [];
@@ -176,7 +181,7 @@ public partial class GameplayNetwork : Node
             attackerUnits.Add((UnitType)unitType);
         }
 
-        GameState.Instance?.SetMatchDecks(defenderUnits, attackerUnits);
+        GameState.Instance?.SetMatchDecks(matchId, defenderUnits, attackerUnits);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

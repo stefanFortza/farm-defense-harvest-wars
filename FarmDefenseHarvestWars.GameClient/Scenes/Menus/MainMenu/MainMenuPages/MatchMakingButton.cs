@@ -58,9 +58,9 @@ public partial class MatchMakingButton : Button
 
 			Text = "Connecting...";
 			Gameplay.JoinGameServer(host, port);
-			GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
 			waitingForServerStart = true;
 			return;
+
 		}
 		catch (ApiException ex)
 		{

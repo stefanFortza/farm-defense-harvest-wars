@@ -8,5 +8,6 @@ public interface IMatchmakingService
     Task<MatchmakingStatusDto> QueueForMatchAsync(string userId, PlayerRole preferredRole = PlayerRole.Any, CancellationToken cancellationToken = default);
     void CancelMatchmaking(string userId);
     MatchmakingStatusDto GetStatusForUser(string userId);
-    void CompleteMatch(string matchId);
+    Task CompleteMatchAsync(string matchId, MatchCompletionRequestDto request);
+    Task<MatchRewardDto?> GetMatchRewardAsync(string matchId, string userId);
 }

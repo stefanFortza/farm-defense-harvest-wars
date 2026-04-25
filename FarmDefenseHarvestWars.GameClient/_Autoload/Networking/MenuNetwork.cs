@@ -96,6 +96,13 @@ public partial class MenuNetwork : Node
         return profile;
     }
 
+    public async Task<PlayerProfileDto> GetProfileAsync()
+    {
+        var profile = await NetworkBootstrap.Instance.ApiClient.GetProfileAsync();
+        GameState.Instance.SetProfile(profile);
+        return profile;
+    }
+
     public async Task QueueForMatchAsync(PlayerRole preferredRole = PlayerRole.Any)
     {
         if (IsMatchmakingActive)

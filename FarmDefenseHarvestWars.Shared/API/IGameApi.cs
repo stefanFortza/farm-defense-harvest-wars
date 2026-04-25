@@ -47,6 +47,10 @@ public interface IGameApi
     [Headers("Authorization: Bearer")]
     Task<MatchmakingStatusDto> GetMatchmakingStatusAsync();
 
+    [Get(ApiRoutes.MatchReward)]
+    [Headers("Authorization: Bearer")]
+    Task<MatchRewardDto> GetMatchRewardAsync([AliasAs("matchId")] string matchId);
+
     [Post(ApiRoutes.MatchComplete)]
     Task CompleteMatchAsync(
         [AliasAs("matchId")] string matchId,

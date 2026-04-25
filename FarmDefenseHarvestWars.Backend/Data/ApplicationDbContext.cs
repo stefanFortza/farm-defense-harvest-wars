@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Deck> Decks => Set<Deck>();
     public DbSet<UnitUnlock> UnitUnlocks => Set<UnitUnlock>();
+    public DbSet<MatchResult> MatchResults => Set<MatchResult>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

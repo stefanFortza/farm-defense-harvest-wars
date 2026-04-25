@@ -87,8 +87,9 @@ public partial class GameState : Node
         }
     }
 
-    public void SetMatchDecks(IReadOnlyList<UnitType> defenderDeck, IReadOnlyList<UnitType> attackerDeck)
+    public void SetMatchDecks(string matchId, IReadOnlyList<UnitType> defenderDeck, IReadOnlyList<UnitType> attackerDeck)
     {
+        MatchId = matchId;
         DefenderDeck = [.. defenderDeck];
         AttackerDeck = [.. attackerDeck];
         EmitSignal(SignalName.MatchConfigurationLoaded);
