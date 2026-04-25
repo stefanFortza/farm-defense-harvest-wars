@@ -12,18 +12,18 @@ radius = 7.0
 script = ExtResource("2_script")
 Data = ExtResource("3_2kvwq")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -9)
 sprite_frames = ExtResource("4_ywnpo")
 animation = &"IdleSide"
 autoplay = "IdleSide"
 flip_h = true
 
-[node name="HurtboxComponent" parent="SpatialComponents" index="0"]
+[node name="HurtboxComponent" parent="Visuals/SpatialComponents" index="0"]
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -7)
 shape = SubResource("CircleShape2D_2kvwq")
 
-[node name="VisionComponent" parent="SpatialComponents" index="1"]
+[node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]

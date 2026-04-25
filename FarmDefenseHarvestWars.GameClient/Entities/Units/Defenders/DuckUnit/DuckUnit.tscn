@@ -10,13 +10,13 @@ radius = 7.071068
 [node name="DuckUnit" instance=ExtResource("1_yy50p")]
 Data = ExtResource("2_ulye0")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = ExtResource("2_3hfg7")
 animation = &"IdleSide"
 autoplay = "IdleSide"
 frame_progress = 0.7125844
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_3hfg7")

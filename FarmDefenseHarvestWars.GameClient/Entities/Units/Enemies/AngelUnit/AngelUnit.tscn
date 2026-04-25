@@ -10,13 +10,13 @@ radius = 8.0
 [node name="AngelUnit" instance=ExtResource("1_s5lmp")]
 Data = ExtResource("2_0cs5a")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -5)
 sprite_frames = ExtResource("3_yv7xt")
 animation = &"move"
 autoplay = "move"
 frame_progress = 0.22471873
 
-[node name="CollisionPolygon2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_nekob")

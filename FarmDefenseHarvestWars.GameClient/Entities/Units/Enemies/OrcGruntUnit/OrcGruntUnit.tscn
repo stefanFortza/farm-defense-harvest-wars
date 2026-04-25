@@ -10,13 +10,13 @@ radius = 8.0
 [node name="OrcGruntUnit" instance=ExtResource("1_base")]
 Data = ExtResource("2_1eucx")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -13)
 sprite_frames = ExtResource("3_r23r3")
 animation = &"attack"
 autoplay = "walk"
 frame_progress = 0.84548986
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(1, -9)
 shape = SubResource("CircleShape2D_r23r3")

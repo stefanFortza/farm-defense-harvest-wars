@@ -23,6 +23,20 @@ public partial class BaseUnit : CharacterBody2D
     [Export] public MovementComponent MovementComponent { get; private set; } = null!;
     [Export] public HurtboxComponent HurtboxComponent { get; private set; } = null!;
     [Export] public VisionComponent VisionComponent { get; private set; } = null!;
+    [Export] public VisionComponent? SecondaryVisionComponent { get; private set; }
+    [Export] public Node2D? Visuals { get; private set; }
+
+    private int _facingDirection = 1;
+    [Export]
+    public int FacingDirection 
+    { 
+        get => _facingDirection;
+        set 
+        {
+            _facingDirection = value;
+            ApplyFacing();
+        }
+    }
 
     public int CurrentHealth => HealthComponent?.CurrentHealth ?? 0;
     public virtual UnitType Type => Data?.Type ?? UnitType.None;
@@ -52,10 +66,36 @@ public partial class BaseUnit : CharacterBody2D
         AddToGroup("Units");
         RegisterStates();
 
+        // Initial flip state
+        ApplyFacing();
+
         // if (IsMultiplayerAuthority())
         // {
         StateMachine.Start(GetInitialState());
         // }
+    }
+
+    public void Flip()
+    {
+        FacingDirection *= -1;
+        ApplyFacing();
+    }
+
+    public Vector2 GetForwardVector()
+    {
+        // Attackers are base-oriented Left, others Right
+        Vector2 baseDir = (this is AttackerUnit) ? Vector2.Left : Vector2.Right;
+        return baseDir * FacingDirection;
+    }
+
+    private void ApplyFacing()
+    {
+        if (Visuals != null)
+        {
+            Vector2 scale = Visuals.Scale;
+            scale.X = Math.Abs(scale.X) * FacingDirection;
+            Visuals.Scale = scale;
+        }
     }
 
     public override void _ExitTree()

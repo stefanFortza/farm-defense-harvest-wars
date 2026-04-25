@@ -95,7 +95,7 @@ public class RangedAttackState : IState
         {
             baseProj.Initialize((
                 Damage: _unit.Data.Damage,
-                Direction: (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right
+                Direction: _unit.GetForwardVector()
             ));
         }
 

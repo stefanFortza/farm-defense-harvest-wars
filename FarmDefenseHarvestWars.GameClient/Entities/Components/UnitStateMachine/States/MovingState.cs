@@ -2,6 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
 using FarmDefenseHarvestWars.GameClient.Entities.Components;
 using FarmDefenseHarvestWars.GameClient.Scripts.Core.StateMachine;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 
@@ -32,14 +33,23 @@ public class MovingState : IState
 
     public void PhysicsUpdate(double delta)
     {
-        // Check for targets first
+        // 1. Check for targets in front
         if (_vision.GetFirstValidEnemy() != null)
         {
             _unit.StateMachine.RequestStateChange(UnitStateEnum.Attacking);
             return;
         }
 
-        _movement.MoveLeft(delta);
+        // 2. Check for targets in back - ONLY FOR DEFENDERS
+        if (_unit.Data.Role == PlayerRole.Defender && _unit.SecondaryVisionComponent != null && _unit.SecondaryVisionComponent.GetFirstValidEnemy() != null)
+        {
+            GD.Print($"{_unit.Name} (Defender) detected enemy in BACK vision while moving. Flipping!");
+            _unit.Flip();
+            _unit.StateMachine.RequestStateChange(UnitStateEnum.Attacking);
+            return;
+        }
+
+        _movement.MoveForward(delta);
     }
 
     public void Update(double delta)

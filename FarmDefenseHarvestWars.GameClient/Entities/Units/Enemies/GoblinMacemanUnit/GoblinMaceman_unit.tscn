@@ -10,13 +10,13 @@ radius = 6.0
 [node name="GoblinMacemanUnit" instance=ExtResource("1_aokqo")]
 Data = ExtResource("2_4c355")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = ExtResource("2_dnd5x")
 animation = &"walk"
 autoplay = "walk"
 frame_progress = 0.9432055
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_4c355")

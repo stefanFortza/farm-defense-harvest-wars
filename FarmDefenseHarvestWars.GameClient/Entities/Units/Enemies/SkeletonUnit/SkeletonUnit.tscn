@@ -12,20 +12,20 @@ radius = 7.0
 script = ExtResource("2_script")
 Data = ExtResource("3_pbiwv")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -8)
 sprite_frames = ExtResource("4_pbiwv")
 animation = &"idle"
 autoplay = "walk"
 
 [node name="UnitVisualsComponent" parent="LogicComponents" index="2" node_paths=PackedStringArray("_animatedSprite")]
-_animatedSprite = NodePath("../../AnimatedSprite2D")
+_animatedSprite = NodePath("../../Visuals/AnimatedSprite2D")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_pbiwv")
 
-[node name="HealthBar" parent="." index="5"]
+[node name="HealthBar" parent="Visuals" index="3"]
 offset_left = -13.0
 offset_top = -26.5
 offset_right = 13.0

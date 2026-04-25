@@ -33,16 +33,16 @@ radius = 6.0
 [node name="ChickenUnit" instance=ExtResource("1_2c4l4")]
 Data = ExtResource("2_f1uhc")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_y05vm")
 animation = &"IdleSide"
 autoplay = "IdleSide"
 frame_progress = 0.8690765
 
-[node name="FakeLight" parent="." index="2"]
+[node name="FakeLight" parent="Visuals" index="1"]
 position = Vector2(0, -3)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_f1uhc")

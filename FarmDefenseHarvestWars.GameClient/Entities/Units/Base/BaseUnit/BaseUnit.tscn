@@ -19,25 +19,20 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath("LogicComponents/UnitStateMachine:SyncedStateIndex")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+properties/3/path = NodePath(".:FacingDirection")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
-[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent")]
+[node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent", "Visuals")]
 script = ExtResource("1_sqjxt")
 StateMachine = NodePath("LogicComponents/UnitStateMachine")
 HealthComponent = NodePath("LogicComponents/HealthComponent")
 MovementComponent = NodePath("LogicComponents/MovementComponent")
-HurtboxComponent = NodePath("SpatialComponents/HurtboxComponent")
-VisionComponent = NodePath("SpatialComponents/VisionComponent")
+HurtboxComponent = NodePath("Visuals/SpatialComponents/HurtboxComponent")
+VisionComponent = NodePath("Visuals/SpatialComponents/VisionComponent")
+Visuals = NodePath("Visuals")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-
-[node name="FakeLight" parent="." instance=ExtResource("2_0cqh2")]
-visible = false
-scale = Vector2(0.5, 0.5)
-BaseColor = null
-RadiusMultiplier = null
-IsOval = null
 
 [node name="LogicComponents" type="Node" parent="."]
 
@@ -47,32 +42,43 @@ IsOval = null
 CurrentHealth = null
 
 [node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar", "_unit", "_animatedSprite", "_animationPlayer") instance=ExtResource("4_4cha2")]
-HealthBar = NodePath("../../HealthBar")
+HealthBar = NodePath("../../Visuals/HealthBar")
 _unit = NodePath("../..")
-_animatedSprite = NodePath("../../AnimatedSprite2D")
+_animatedSprite = NodePath("../../Visuals/AnimatedSprite2D")
 _animationPlayer = NodePath("../../AnimationPlayer")
 
 [node name="MovementComponent" parent="LogicComponents" node_paths=PackedStringArray("_parent") instance=ExtResource("5_0cqh2")]
 IsMoving = null
 _parent = NodePath("../..")
 
-[node name="SpatialComponents" type="Node2D" parent="."]
+[node name="Visuals" type="Node2D" parent="."]
 
-[node name="HurtboxComponent" parent="SpatialComponents" node_paths=PackedStringArray("HealthComponent") instance=ExtResource("6_0cqh2")]
-HealthComponent = NodePath("../../LogicComponents/HealthComponent")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visuals"]
 
-[node name="VisionComponent" parent="SpatialComponents" instance=ExtResource("8_0cqh2")]
+[node name="FakeLight" parent="Visuals" instance=ExtResource("2_0cqh2")]
+visible = false
+scale = Vector2(0.5, 0.5)
+BaseColor = null
+RadiusMultiplier = null
+IsOval = null
+
+[node name="SpatialComponents" type="Node2D" parent="Visuals"]
+
+[node name="HurtboxComponent" parent="Visuals/SpatialComponents" node_paths=PackedStringArray("HealthComponent") instance=ExtResource("6_0cqh2")]
+HealthComponent = NodePath("../../../LogicComponents/HealthComponent")
+
+[node name="VisionComponent" parent="Visuals/SpatialComponents" instance=ExtResource("8_0cqh2")]
 position = Vector2(0, -7)
 collide_with_areas = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-
-[node name="HealthBar" type="ProgressBar" parent="."]
+[node name="HealthBar" type="ProgressBar" parent="Visuals"]
 offset_left = -20.0
 offset_top = -40.0
 offset_right = 20.0
 offset_bottom = -35.0
 show_percentage = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_r1xd3")

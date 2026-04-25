@@ -18,6 +18,11 @@ public partial class DefenderUnit : BaseUnit
 
         VisionComponent.Initialize((Data.AttackRange, Vector2.Right)); // Defenders look to the right by default
 
+        if (SecondaryVisionComponent != null)
+        {
+            SecondaryVisionComponent.Initialize((Data.AttackRange, Vector2.Left));
+        }
+
         // Get Timer from Scene
         _actionTimer = GetNode<Timer>("ActionTimer");
         _actionTimer.WaitTime = ActionInterval;

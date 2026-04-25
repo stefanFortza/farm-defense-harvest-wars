@@ -10,12 +10,12 @@ radius = 9.055386
 [node name="OrcArcherUnit" instance=ExtResource("1_base")]
 Data = ExtResource("2_6pb82")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -15)
 sprite_frames = ExtResource("2_meix2")
 animation = &"attack"
 autoplay = "walk"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(-2, -9)
 shape = SubResource("CircleShape2D_6pb82")

@@ -27,6 +27,20 @@ public partial class MovementComponent : Node, IInitializable<(CharacterBody2D P
         this.EnsureNotNull(_parent, nameof(_parent));
     }
 
+    public void MoveForward(double delta)
+    {
+        if (!GodotObject.IsInstanceValid(_parent) || !IsMoving) return;
+
+        Vector2 direction = Vector2.Left;
+        if (_parent is Units.Base.BaseUnit baseUnit)
+        {
+            direction = baseUnit.GetForwardVector();
+        }
+
+        _parent.Velocity = direction * MovementSpeed;
+        _parent.MoveAndSlide();
+    }
+
     public void MoveLeft(double delta)
     {
         if (GodotObject.IsInstanceValid(_parent) == false)

@@ -2,6 +2,7 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.StateMachine;
 using FarmDefenseHarvestWars.GameClient.Entities.Components;
 using FarmDefenseHarvestWars.GameClient.Scripts.Core.StateMachine;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 
@@ -32,8 +33,25 @@ public class MeleeAttackState : IState
 
     public void PhysicsUpdate(double delta)
     {
+        // 1. Check priority (Secondary/Rear Vision) - ONLY FOR DEFENDERS
+        HurtboxComponent? target = null;
+        if (_unit.Data.Role == PlayerRole.Defender && _unit.SecondaryVisionComponent != null)
+        {
+            target = _unit.SecondaryVisionComponent.GetFirstValidEnemy();
+            if (target != null)
+            {
+                // Instant flip to face the rear enemy
+                GD.Print($"{_unit.Name} (Defender) detected enemy in REAR vision. Flipping!");
+                _unit.Flip();
+            }
+        }
 
-        var target = _vision.GetFirstValidEnemy();
+        // 2. If no rear enemy, check Front Vision
+        if (target == null)
+        {
+            target = _vision.GetFirstValidEnemy();
+        }
+
         if (target == null)
         {
             UnitStateEnum fallbackState = _unit.Data.IsStatic ? UnitStateEnum.Idle : UnitStateEnum.Moving;

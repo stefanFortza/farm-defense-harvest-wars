@@ -10,16 +10,16 @@ radius = 9.0
 [node name="SpearmanUnit" instance=ExtResource("1_261xf")]
 Data = ExtResource("2_k0tih")
 
-[node name="AnimatedSprite2D" parent="." index="1"]
+[node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -15)
 sprite_frames = ExtResource("2_mapwb")
 animation = &"walk"
 autoplay = "walk"
 frame_progress = 0.88052946
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatialComponents/HurtboxComponent" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_k0tih")
 
-[node name="VisionComponent" parent="SpatialComponents" index="1"]
+[node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]
 target_position = Vector2(-28, 0)
