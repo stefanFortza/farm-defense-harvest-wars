@@ -1,28 +1,38 @@
-[gd_scene load_steps=2 format=3 uid="uid://jexdnjfq6irb"]
+[gd_scene load_steps=4 format=3 uid="uid://jexdnjfq6irb"]
 
 [ext_resource type="Script" uid="uid://crcgygv4fgfmm" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchMakingButton.cs" id="1_hwqfs"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_nc66o"]
+[ext_resource type="PackedScene" uid="uid://cxhertfk0dn51" path="res://Scenes/Menus/MainMenu/Components/MatchmakingOverlay.tscn" id="3_overlay"]
 
 [node name="MatchMakingPageLeft" type="CenterContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(120, 150)
+offset_right = 120.0
+offset_bottom = 150.0
+theme = ExtResource("1_nc66o")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+theme = ExtResource("1_nc66o")
 theme_override_constants/separation = 20
 
-[node name="PlayDefender" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(250, 60)
+[node name="PlayDefender" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
 layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_nc66o")
+theme_override_font_sizes/font_size = 6
 text = "Play as Defender"
 script = ExtResource("1_hwqfs")
-PreferredRole = 0
+Overlay = NodePath("../../MatchmakingOverlay")
 
-[node name="PlayAttacker" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(250, 60)
+[node name="PlayAttacker" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
 layout_mode = 2
+theme = ExtResource("1_nc66o")
+theme_override_font_sizes/font_size = 6
 text = "Play as Attacker"
 script = ExtResource("1_hwqfs")
 PreferredRole = 1
+Overlay = NodePath("../../MatchmakingOverlay")
+
+[node name="MatchmakingOverlay" parent="." instance=ExtResource("3_overlay")]
+visible = false
+layout_mode = 2

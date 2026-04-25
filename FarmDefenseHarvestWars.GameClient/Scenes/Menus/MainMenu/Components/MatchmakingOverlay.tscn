@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=3 uid="uid://matchmakingoverlay1"]
+
+[ext_resource type="Script" path="res://Scenes/Menus/MainMenu/Components/MatchmakingOverlay.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://p4l7m7y7y7y7" path="res://icon.svg" id="3_icon"]
+
+[node name="MatchmakingOverlay" type="Control" node_paths=PackedStringArray("_statusLabel", "_spinner", "_cancelButton")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+_statusLabel = NodePath("ColorRect/CenterContainer/VBoxContainer/Label")
+_spinner = NodePath("ColorRect/CenterContainer/VBoxContainer/Control/Spinner")
+_cancelButton = NodePath("ColorRect/CenterContainer/VBoxContainer/Button")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Control" type="Control" parent="ColorRect/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Spinner" type="TextureRect" parent="ColorRect/CenterContainer/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="ColorRect/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Searching for match..."
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="ColorRect/CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 6
+text = "Cancel"
+
+[connection signal="pressed" from="ColorRect/CenterContainer/VBoxContainer/Button" to="." method="OnCancelPressed"]
