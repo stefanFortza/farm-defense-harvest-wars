@@ -1,10 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://b3eudmxt181c6"]
+[gd_scene load_steps=15 format=3 uid="uid://b3eudmxt181c6"]
 
 [ext_resource type="Script" uid="uid://crnjqc17jbmcd" path="res://Scenes/Gameplay/GameWorld/GameWorld.cs" id="1_vhl2x"]
 [ext_resource type="PackedScene" uid="uid://cu12uic4kd4ek" path="res://Scenes/Gameplay/GameplayManager/GameplayManager.tscn" id="2_cs20h"]
-[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/Map/Map.tscn" id="2_vhl2x"]
 [ext_resource type="Resource" uid="uid://c86tn06s55780" path="res://Resources/Units/UnitRegistry.tres" id="3_1re74"]
-[ext_resource type="PackedScene" uid="uid://by43f2iyitjl7" path="res://Scenes/Gameplay/MapTest/MapTest.tscn" id="4_l6n4v"]
+[ext_resource type="PackedScene" uid="uid://by43f2iyitjl7" path="res://Scenes/Gameplay/Map/MapTest.tscn" id="4_l6n4v"]
 [ext_resource type="Texture2D" uid="uid://o6cfnuo5eq3" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Buildings/Houses/Limestone/House_1_Limestone_Base_Black.png" id="5_ragko"]
 [ext_resource type="Texture2D" uid="uid://bkhynxg80q4f3" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/House_Decor/Chimney_smoke_Anim.png" id="6_1re74"]
 [ext_resource type="PackedScene" uid="uid://gamehud1" path="res://Scenes/UI/HUD/GameHUD.tscn" id="6_hud"]
@@ -53,13 +52,13 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_gridSystem", "_unitContainer", "_projectileContainer", "_gameHUD", "_unitSpawner", "_projectileSpawner")]
+[node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_unitContainer", "_projectileContainer", "_gameHUD", "_map", "_unitSpawner", "_projectileSpawner")]
 script = ExtResource("1_vhl2x")
 _managers = NodePath("GameplayManagers")
-_gridSystem = NodePath("Map/GridSystem")
 _unitContainer = NodePath("UnitContainer")
 _projectileContainer = NodePath("ProjectileContainer")
 _gameHUD = NodePath("GameHUD")
+_map = NodePath("MapTest")
 _unitSpawner = NodePath("UnitSpawner")
 _projectileSpawner = NodePath("ProjectileSpawner")
 
@@ -70,9 +69,6 @@ blend_mode = 1
 
 [node name="GameplayManagers" parent="." instance=ExtResource("2_cs20h")]
 _unitRegistry = ExtResource("3_1re74")
-
-[node name="Map" parent="." instance=ExtResource("2_vhl2x")]
-visible = false
 
 [node name="MapTest" parent="." instance=ExtResource("4_l6n4v")]
 

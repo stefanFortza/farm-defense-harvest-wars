@@ -1,4 +1,3 @@
-using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
 using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
@@ -25,24 +24,28 @@ public record GameHudContext(
 public partial class GameWorld : Node2D
 {
 	[Export] private GameplayManager _managers = null!;
-	[Export] private GridSystem _gridSystem = null!;
 	[Export] private Node2D _unitContainer = null!;
 	[Export] private Node2D _projectileContainer = null!;
 	[Export] private GameHUD _gameHUD = null!;
+	[Export] private Map _map = null!;
 
 	[ExportGroup("Multiplayer Spawners")]
 	[Export] private MultiplayerSpawner _unitSpawner = null!;
 	[Export] private MultiplayerSpawner _projectileSpawner = null!;
 
+	private GridSystem _gridSystem = null!;
+
 	public override void _Ready()
 	{
 		this.EnsureNotNull(_managers, nameof(_managers));
-		this.EnsureNotNull(_gridSystem, nameof(_gridSystem));
 		this.EnsureNotNull(_unitContainer, nameof(_unitContainer));
 		this.EnsureNotNull(_projectileContainer, nameof(_projectileContainer));
 		this.EnsureNotNull(_gameHUD, nameof(_gameHUD));
+		this.EnsureNotNull(_map, nameof(_map));
 		this.EnsureNotNull(_unitSpawner, nameof(_unitSpawner));
 		this.EnsureNotNull(_projectileSpawner, nameof(_projectileSpawner));
+
+		_gridSystem = _map.GridSystem;
 
 		AutoRegisterSpawnableScenes();
 

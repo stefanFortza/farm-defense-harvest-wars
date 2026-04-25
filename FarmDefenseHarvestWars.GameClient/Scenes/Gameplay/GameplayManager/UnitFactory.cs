@@ -1,5 +1,4 @@
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
-using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using FarmDefenseHarvestWars.Shared.Enums;

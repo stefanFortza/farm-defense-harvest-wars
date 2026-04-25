@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using FarmDefenseHarvestWars.Shared.Enums;
-using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 

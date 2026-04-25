@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://bydgh6pxqwaqg"]
+[gd_scene load_steps=4 format=3 uid="uid://bydgh6pxqwaqg"]
 
-[ext_resource type="PackedScene" uid="uid://farmmap1" path="res://Scenes/Gameplay/Map/Map.tscn" id="1_ht41h"]
 [ext_resource type="Texture2D" uid="uid://c8ggqd2i4lrmh" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Houses_Interiors/Wood_Stairs.png" id="2_42k7r"]
 [ext_resource type="Shader" uid="uid://bnlybmflqsmol" path="res://Scenes/Menus/Background/background.gdshader" id="2_uepjy"]
 
@@ -21,8 +20,6 @@ shader_parameter/drift_amount = 0.003
 shader_parameter/drift_speed = 0.2
 
 [node name="Background" type="Node2D"]
-
-[node name="FarmMap" parent="." instance=ExtResource("1_ht41h")]
 
 [node name="Sprite2D" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_a28ft")

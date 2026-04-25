@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://d328k3ewg0nay" path="res://Resources/DefaultTileset.tres" id="1_hdriw"]
 [ext_resource type="Script" uid="uid://i5qavmfqfft5" path="res://Scenes/Gameplay/Map/Map.cs" id="1_kspip"]
 [ext_resource type="Script" uid="uid://dtjug4lf5yiml" path="res://Scenes/Gameplay/Map/GridSystem.cs" id="3_7aggt"]
-[ext_resource type="Shader" uid="uid://by5j26whxp17r" path="res://Scenes/Gameplay/MapTest/GridLanes.gdshader" id="5_omu8v"]
+[ext_resource type="Shader" uid="uid://by5j26whxp17r" path="res://Scenes/Gameplay/Map/GridLanes.gdshader" id="5_omu8v"]
 [ext_resource type="Texture2D" uid="uid://l2vabokwiwof" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Buildings/Unique_Buildings/Church/Church_Red.png" id="6_4srud"]
 [ext_resource type="Texture2D" uid="uid://chqnqakawes0x" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/Buildings/Unique_Buildings/Coop/Coop_Green_Blue.png" id="7_78ftc"]
 [ext_resource type="Texture2D" uid="uid://c6cmff4stp10d" path="res://Resources/Textures/DefaultLight.tres" id="7_i2f6i"]
@@ -27,8 +27,9 @@ region = Rect2(336, 0, 112, 144)
 atlas = ExtResource("7_78ftc")
 region = Rect2(80, 0, 80, 128)
 
-[node name="MapTest" type="Node2D"]
+[node name="MapTest" type="Node2D" node_paths=PackedStringArray("GridSystem")]
 script = ExtResource("1_kspip")
+GridSystem = NodePath("GridSystem")
 
 [node name="PlacementGrid" type="TileMapLayer" parent="."]
 tile_set = ExtResource("1_hdriw")

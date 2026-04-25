@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
 using FarmDefenseHarvestWars.Shared.Enums; // Asumând că ai PlayerRole aici
 
-namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.Map;
+namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
 
 public partial class GridSystem : Node
 {
