@@ -60,4 +60,24 @@ public class ProfileController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPost("avatar/{avatarIndex}")]
+    public async Task<ActionResult<PlayerProfileDto>> UpdateAvatar(int avatarIndex, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized("User not found.");
+        }
+
+        try
+        {
+            PlayerProfileDto profile = await _profileService.UpdateAvatarAsync(user, avatarIndex, cancellationToken);
+            return Ok(profile);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

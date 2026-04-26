@@ -35,6 +35,10 @@ public interface IGameApi
     [Headers("Authorization: Bearer")]
     Task<PlayerProfileDto> UnlockUnitAsync([AliasAs("unitType")] UnitType unitType);
 
+    [Post(ApiRoutes.UpdateAvatar)]
+    [Headers("Authorization: Bearer")]
+    Task<PlayerProfileDto> UpdateAvatarAsync([AliasAs("avatarIndex")] int avatarIndex);
+
     [Post(ApiRoutes.MatchmakingQueue)]
     [Headers("Authorization: Bearer")]
     Task<MatchmakingStatusDto> QueueForMatchAsync([Query] PlayerRole preferredRole = PlayerRole.Any);

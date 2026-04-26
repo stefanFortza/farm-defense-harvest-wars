@@ -1,15 +1,71 @@
-[gd_scene load_steps=6 format=3 uid="uid://bplupdgixgj3q"]
+[gd_scene load_steps=23 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_tu18y"]
 [ext_resource type="Texture2D" uid="uid://84fimc7v8i08" path="res://icon.svg" id="4_avatar"]
+[ext_resource type="Texture2D" uid="uid://c7y68d2iqtmcs" path="res://Assets/Icons/FarmerBobIcon.png" id="10_av6"]
+[ext_resource type="Texture2D" uid="uid://bl4t4ekj8xxu5" path="res://Assets/Icons/LumberjackIcon.png" id="11_av7"]
+[ext_resource type="Texture2D" uid="uid://bvtkbxnx63030" path="res://Assets/avatar_btns.png" id="12_3lx0l"]
+[ext_resource type="Texture2D" uid="uid://gfs6tsq23sn" path="res://Assets/Icons/MinerIcon.png" id="12_av8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_reuvb"]
+atlas = ExtResource("10_av6")
+region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lucoy"]
+atlas = ExtResource("12_av8")
+region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8nwv"]
+atlas = ExtResource("11_av7")
+region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_q1443"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2tbmo"]
+atlas = SubResource("CompressedTexture2D_q1443")
+region = Rect2(1112, 8, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jap17"]
+texture = SubResource("AtlasTexture_2tbmo")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q1443"]
+atlas = ExtResource("12_3lx0l")
+region = Rect2(17, 0, 14, 14)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iqxka"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2tbmo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3lx0l"]
+atlas = ExtResource("3_tu18y")
+region = Rect2(1019, 107, 26, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q1443"]
+texture = SubResource("AtlasTexture_3lx0l")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3lx0l"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iqxka"]
+atlas = SubResource("CompressedTexture2D_3lx0l")
+region = Rect2(1, 0, 14, 14)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_panel"]
 atlas = ExtResource("3_tu18y")
 region = Rect2(1112, 8, 32, 32)
 
-[node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel")]
+[node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel", "_avatarTexture", "_prevBtn", "_nextBtn")]
 custom_minimum_size = Vector2(120, 150)
 offset_right = 120.0
 offset_bottom = 163.0
@@ -19,13 +75,17 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 6
 script = ExtResource("1_script")
-_emailLabel = NodePath("VBox/ProfilePanel/Margin/HBox/VBox/Email")
+_emailLabel = NodePath("VBox/Margin/HBox/VBox/Email")
 _levelLabel = NodePath("VBox/StatsPanel/Margin/Grid/LevelValue")
 _goldLabel = NodePath("VBox/StatsPanel/Margin/Grid/GoldValue")
+_avatarTexture = NodePath("VBox/Margin/HBox/AvatarSelection/AvatarFrame/Avatar")
+_prevBtn = NodePath("VBox/Margin/HBox/AvatarSelection/PrevBtn")
+_nextBtn = NodePath("VBox/Margin/HBox/AvatarSelection/NextBtn")
+_avatars = [SubResource("AtlasTexture_reuvb"), SubResource("AtlasTexture_lucoy"), SubResource("AtlasTexture_a8nwv")]
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
 [node name="Title" type="Label" parent="VBox"]
 layout_mode = 2
@@ -36,84 +96,94 @@ theme_override_font_sizes/font_size = 12
 text = "The Journal"
 horizontal_alignment = 1
 
-[node name="ProfilePanel" type="NinePatchRect" parent="VBox"]
-custom_minimum_size = Vector2(0, 36)
+[node name="Margin" type="PanelContainer" parent="VBox"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_jap17")
+
+[node name="HBox" type="VBoxContainer" parent="VBox/Margin"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="AvatarSelection" type="HBoxContainer" parent="VBox/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="PrevBtn" type="Button" parent="VBox/Margin/HBox/AvatarSelection"]
+custom_minimum_size = Vector2(16, 24)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+theme_override_icons/icon = SubResource("AtlasTexture_q1443")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_iqxka")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2tbmo")
+icon_alignment = 1
+expand_icon = true
+
+[node name="AvatarFrame" type="PanelContainer" parent="VBox/Margin/HBox/AvatarSelection"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxTexture_q1443")
+
+[node name="Avatar" type="TextureRect" parent="VBox/Margin/HBox/AvatarSelection/AvatarFrame"]
+layout_mode = 2
+texture = ExtResource("4_avatar")
+expand_mode = 1
+
+[node name="NextBtn" type="Button" parent="VBox/Margin/HBox/AvatarSelection"]
+custom_minimum_size = Vector2(16, 24)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+theme_override_icons/icon = SubResource("AtlasTexture_iqxka")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_iqxka")
+icon_alignment = 1
+expand_icon = true
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Header" type="Label" parent="VBox/Margin/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 6
+text = "TRAVELLER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Email" type="Label" parent="VBox/Margin/HBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 8
+text = "mail@example.com"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="StatsPanel" type="NinePatchRect" parent="VBox"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 4
 texture = SubResource("AtlasTexture_panel")
 patch_margin_left = 8
 patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="Margin" type="MarginContainer" parent="VBox/ProfilePanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 4
-
-[node name="HBox" type="HBoxContainer" parent="VBox/ProfilePanel/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="AvatarFrame" type="ColorRect" parent="VBox/ProfilePanel/Margin/HBox"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-size_flags_vertical = 4
-color = Color(0.129412, 0.109804, 0.0862745, 1)
-
-[node name="Avatar" type="TextureRect" parent="VBox/ProfilePanel/Margin/HBox/AvatarFrame"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = -1.0
-offset_bottom = -1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_avatar")
-expand_mode = 1
-
-[node name="VBox" type="VBoxContainer" parent="VBox/ProfilePanel/Margin/HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 1
-alignment = 1
-
-[node name="Header" type="Label" parent="VBox/ProfilePanel/Margin/HBox/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 6
-text = "TRAVELLER"
-
-[node name="Email" type="Label" parent="VBox/ProfilePanel/Margin/HBox/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 8
-text = "mail@example.com"
-autowrap_mode = 3
-
-[node name="StatsPanel" type="NinePatchRect" parent="VBox"]
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 2
-texture = SubResource("AtlasTexture_panel")
-patch_margin_left = 6
-patch_margin_top = 6
-patch_margin_right = 6
-patch_margin_bottom = 6
-
 [node name="Margin" type="MarginContainer" parent="VBox/StatsPanel"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 14
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.5
+offset_top = -17.0
+offset_bottom = 17.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 8
@@ -154,29 +224,3 @@ theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_font_sizes/font_size = 8
 text = "0"
 horizontal_alignment = 2
-
-[node name="RankLabel" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 8
-text = "Rank:"
-
-[node name="RankValue" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 8
-text = "Unranked"
-horizontal_alignment = 2
-
-[node name="Spacer" type="Control" parent="VBox"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Hint" type="Label" parent="VBox"]
-modulate = Color(0.862745, 0.8, 0.639216, 0.627451)
-layout_mode = 2
-theme_override_font_sizes/font_size = 6
-text = "Tip: Use your gold to unlock new units in the Deck builder."
-horizontal_alignment = 1
-autowrap_mode = 3

@@ -8,6 +8,7 @@ public class ApplicationUser : IdentityUser
     public int Gold { get; set; } = 100; // Începe cu 100 aur
     public int Level { get; set; } = 1;
     public int Xp { get; set; } = 0;
+    public int AvatarIndex { get; set; } = 1; // Default avatar index (1-8)
 
     // Putem salva deck-ul ca un string JSON simplu pentru început
     // Ex: "['cow_unit', 'chicken_unit']"

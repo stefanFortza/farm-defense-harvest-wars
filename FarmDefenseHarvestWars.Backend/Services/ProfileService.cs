@@ -79,6 +79,19 @@ public class ProfileService : IProfileService
         return await BuildPlayerProfileAsync(user, cancellationToken);
     }
 
+    public async Task<PlayerProfileDto> UpdateAvatarAsync(ApplicationUser user, int avatarIndex, CancellationToken cancellationToken = default)
+    {
+        if (avatarIndex < 1 || avatarIndex > 8)
+        {
+            throw new ArgumentException("Avatar index must be between 1 and 8.");
+        }
+
+        user.AvatarIndex = avatarIndex;
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return await BuildPlayerProfileAsync(user, cancellationToken);
+    }
+
     public async Task<HashSet<UnitType>> GetUnlockedUnitTypesForRoleAsync(string userId, PlayerRole role, CancellationToken cancellationToken = default)
     {
         List<UnitType> unlockedUnits = await _db.UnitUnlocks
@@ -100,6 +113,7 @@ public class ProfileService : IProfileService
             Gold = user.Gold,
             Level = user.Level,
             Xp = user.Xp,
+            AvatarIndex = user.AvatarIndex,
             UnlockedUnits = unlockedUnits
         };
     }
