@@ -1,12 +1,46 @@
-[gd_scene load_steps=12 format=3 uid="uid://dx56d0jedhm70"]
+[gd_scene load_steps=26 format=3 uid="uid://dx56d0jedhm70"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_nc66o"]
 [ext_resource type="Shader" uid="uid://bfo7e38067llu" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="2_66rl0"]
+[ext_resource type="Texture2D" uid="uid://bfec33bvbljyo" path="res://Assets/kind_of_logo.png" id="2_digje"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="2_gjx4f"]
+[ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_kldmn"]
 [ext_resource type="Script" uid="uid://bt5pytucnt2np" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/DefenderMatchmakingButton.cs" id="2_nmnjn"]
 [ext_resource type="Texture2D" uid="uid://sii8tit3s0hv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Buttons.png" id="2_x0rs0"]
+[ext_resource type="Texture2D" uid="uid://cfjgvafmsrrv8" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Tiles/Grass/Grass_1_Middle.png" id="3_banr3"]
 [ext_resource type="Script" uid="uid://ckpcclqnhxie" path="res://Scenes/Menus/MainMenu/MainMenuPages/Buttons/AttackerMatchmakingButton.cs" id="3_e8msr"]
 [ext_resource type="PackedScene" uid="uid://cxhertfk0dn51" path="res://Scenes/Menus/MainMenu/Components/MatchmakingOverlay.tscn" id="3_overlay"]
+[ext_resource type="Texture2D" uid="uid://coof3uomkpqan" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Flower_Grass_1_Anim.png" id="4_7ef0a"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_banr3"]
+atlas = ExtResource("2_kldmn")
+region = Rect2(1021, 13, 22, 22)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7ef0a"]
+texture = SubResource("AtlasTexture_banr3")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(0, 0, 22, 22)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_4uiuv"]
+load_path = "res://.godot/imported/Flowers.png-a4b922407cbadedce8611e8e4c1c1c37.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4uiuv"]
+atlas = SubResource("CompressedTexture2D_4uiuv")
+region = Rect2(20, 82, 7, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gxvb"]
+atlas = ExtResource("4_7ef0a")
+region = Rect2(4, 4, 9, 8)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7ef0a"]
+load_path = "res://.godot/imported/Flowers.png-a4b922407cbadedce8611e8e4c1c1c37.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_odnbj"]
+atlas = SubResource("CompressedTexture2D_7ef0a")
+region = Rect2(34, 98, 12, 13)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_digje"]
 shader = ExtResource("2_66rl0")
@@ -14,6 +48,7 @@ shader_parameter/shine_color = Color(1, 1, 1, 0.25)
 shader_parameter/shine_speed = 1.0
 shader_parameter/shine_size = 0.01
 shader_parameter/shine_angle = 45.0
+shader_parameter/shine_time_offset = 0.0
 shader_parameter/pulse_color = Color(1, 1, 1, 0)
 shader_parameter/pulse_speed = 2.0
 shader_parameter/pulse_intensity = 0.05
@@ -35,16 +70,109 @@ texture_margin_right = 4.0
 texture_margin_bottom = 6.0
 region_rect = Rect2(0, 0, 30, 14)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ef0a"]
+shader = ExtResource("2_66rl0")
+shader_parameter/shine_color = Color(1, 1, 1, 0.25)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.01
+shader_parameter/shine_angle = 45.0
+shader_parameter/shine_time_offset = 0.0
+shader_parameter/pulse_color = Color(1, 1, 1, 0)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.05
+shader_parameter/hover_intensity = 0.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_odnbj"]
+load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xhoxw"]
+atlas = SubResource("CompressedTexture2D_odnbj")
+region = Rect2(17, 17, 14, 14)
+
 [node name="MatchMakingPageLeft" type="CenterContainer"]
 custom_minimum_size = Vector2(120, 150)
 offset_right = 120.0
 offset_bottom = 150.0
 theme = ExtResource("1_nc66o")
+metadata/_edit_horizontal_guides_ = [60.0]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme = ExtResource("1_nc66o")
-theme_override_constants/separation = 20
+theme_override_constants/separation = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_7ef0a")
+
+[node name="Grass" type="TextureRect" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+texture = ExtResource("3_banr3")
+
+[node name="Flowers" type="Control" parent="VBoxContainer/PanelContainer"]
+clip_contents = true
+layout_mode = 2
+
+[node name="Flower" type="TextureRect" parent="VBoxContainer/PanelContainer/Flowers"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.0
+offset_top = -22.0
+offset_right = 12.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_4uiuv")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="Flower2" type="TextureRect" parent="VBoxContainer/PanelContainer/Flowers"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -20.0
+offset_right = 67.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_8gxvb")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="Flower3" type="TextureRect" parent="VBoxContainer/PanelContainer/Flowers"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -8.0
+offset_right = 77.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_odnbj")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="KindOfLogo" type="TextureRect" parent="VBoxContainer/PanelContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_digje")
+expand_mode = 1
+stretch_mode = 3
 
 [node name="PlayDefender" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
 material = SubResource("ShaderMaterial_digje")
@@ -59,14 +187,23 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_66rl0")
 theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_66rl0")
 text = "Play as Defender"
 script = ExtResource("2_nmnjn")
+PreferredRole = 0
 Overlay = NodePath("../../MatchmakingOverlay")
 
-[node name="PlayAttacker" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
+[node name="PlayDefender2" type="Button" parent="VBoxContainer" node_paths=PackedStringArray("Overlay")]
+material = SubResource("ShaderMaterial_7ef0a")
 layout_mode = 2
+size_flags_horizontal = 4
 theme = ExtResource("1_nc66o")
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 4
+theme_override_icons/icon = SubResource("AtlasTexture_xhoxw")
+theme_override_styles/normal = SubResource("StyleBoxTexture_66rl0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_66rl0")
+theme_override_styles/hover = SubResource("StyleBoxTexture_66rl0")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_66rl0")
 text = "Play as Attacker"
 script = ExtResource("3_e8msr")
+PreferredRole = 1
 Overlay = NodePath("../../MatchmakingOverlay")
 
 [node name="MatchmakingOverlay" parent="." instance=ExtResource("3_overlay")]

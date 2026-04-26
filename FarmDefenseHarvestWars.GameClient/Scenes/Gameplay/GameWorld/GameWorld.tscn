@@ -56,7 +56,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_base"]
-size = Vector2(40, 112)
+size = Vector2(47, 112)
 
 [node name="GameWorld" type="Node2D" node_paths=PackedStringArray("_managers", "_unitContainer", "_projectileContainer", "_map", "_defenderBase", "_gameHUD", "_unitSpawner", "_projectileSpawner")]
 script = ExtResource("1_vhl2x")
@@ -113,6 +113,7 @@ texture_scale = 0.5
 [node name="HurtboxComponent" parent="DefenderBase" instance=ExtResource("9_hurtbox")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DefenderBase/HurtboxComponent"]
+position = Vector2(3.5, 0)
 shape = SubResource("RectangleShape2D_base")
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="."]

@@ -20,6 +20,7 @@ shader_parameter/shine_color = Color(1, 1, 1, 0.25)
 shader_parameter/shine_speed = 1.0
 shader_parameter/shine_size = 0.01
 shader_parameter/shine_angle = 45.0
+shader_parameter/shine_time_offset = 0.0
 shader_parameter/pulse_color = Color(1, 1, 1, 0)
 shader_parameter/pulse_speed = 2.0
 shader_parameter/pulse_intensity = 0.05
@@ -84,6 +85,8 @@ size_flags_horizontal = 3
 
 [node name="MatchMakingPage" parent="ContentOverlay/LeftZone" index="0" instance=ExtResource("5_luq8n")]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="DeckSelectionAttacker" parent="ContentOverlay/LeftZone" index="1" instance=ExtResource("6_left_attacker")]
 visible = false
