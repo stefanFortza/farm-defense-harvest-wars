@@ -1,9 +1,37 @@
-[gd_scene load_steps=5 format=3 uid="uid://gamehud1"]
+[gd_scene load_steps=11 format=3 uid="uid://gamehud1"]
 
 [ext_resource type="Script" uid="uid://cgb4dtyeununf" path="res://Scenes/UI/HUD/GameHUD.cs" id="1_game_hud_script"]
 [ext_resource type="PackedScene" uid="uid://c2icauiwkb3xc" path="res://Scenes/UI/Components/ResourcePanel.tscn" id="2_resource_panel"]
 [ext_resource type="PackedScene" uid="uid://cjhyi7d4vd2vf" path="res://Scenes/UI/Card/UnitCard.tscn" id="3_card_scene"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="4_p2mjx"]
+[ext_resource type="Texture2D" uid="uid://bwv1ohy88lmwn" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Bars.png" id="5_p2mjx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8y4w"]
+atlas = ExtResource("5_p2mjx")
+region = Rect2(82, 33, 12, 6)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_acadi"]
+texture = SubResource("AtlasTexture_j8y4w")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+region_rect = Rect2(0, 0, 12, 6)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_p2mjx"]
+load_path = "res://.godot/imported/UI_Bars.png-6b81e423ab573a38c87455926b496537.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_acadi"]
+atlas = SubResource("CompressedTexture2D_p2mjx")
+region = Rect2(83, 42, 10, 4)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iv6am"]
+texture = SubResource("AtlasTexture_acadi")
+region_rect = Rect2(0, 0, 10, 4)
 
 [node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_baseHealthBar")]
 script = ExtResource("1_game_hud_script")
@@ -79,5 +107,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("4_p2mjx")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-value = 100.0
+theme_override_styles/background = SubResource("StyleBoxTexture_acadi")
+theme_override_styles/fill = SubResource("StyleBoxTexture_iv6am")
+value = 85.84
 show_percentage = false

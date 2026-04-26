@@ -1,105 +1,179 @@
-[gd_scene load_steps=3 format=3 uid="uid://blrwg6gbelgip"]
+[gd_scene load_steps=6 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_tu18y"]
+[ext_resource type="Texture2D" uid="uid://84fimc7v8i08" path="res://icon.svg" id="4_avatar"]
 
-[node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel", "_rankLabel")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_panel"]
+atlas = ExtResource("3_tu18y")
+region = Rect2(1112, 8, 32, 32)
+
+[node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel")]
+custom_minimum_size = Vector2(120, 150)
+offset_right = 120.0
+offset_bottom = 163.0
+theme = ExtResource("2_theme")
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+script = ExtResource("1_script")
+_emailLabel = NodePath("VBox/ProfilePanel/Margin/HBox/VBox/Email")
+_levelLabel = NodePath("VBox/StatsPanel/Margin/Grid/LevelValue")
+_goldLabel = NodePath("VBox/StatsPanel/Margin/Grid/GoldValue")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.843137, 0.439216, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 12
+text = "The Journal"
+horizontal_alignment = 1
+
+[node name="ProfilePanel" type="NinePatchRect" parent="VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+texture = SubResource("AtlasTexture_panel")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="Margin" type="MarginContainer" parent="VBox/ProfilePanel"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_theme")
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-script = ExtResource("1_script")
-_emailLabel = NodePath("VBox/ProfileSection/Email")
-_levelLabel = NodePath("VBox/StatsSection/Grid/LevelValue")
-_goldLabel = NodePath("VBox/StatsSection/Grid/GoldValue")
-_rankLabel = NodePath("")
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="VBox/ProfilePanel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="VBox"]
+[node name="AvatarFrame" type="ColorRect" parent="VBox/ProfilePanel/Margin/HBox"]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.92549, 0.701961, 1)
-theme_override_font_sizes/font_size = 12
-text = "Journal"
-horizontal_alignment = 1
+size_flags_vertical = 4
+color = Color(0.129412, 0.109804, 0.0862745, 1)
 
-[node name="ProfileSection" type="VBoxContainer" parent="VBox"]
+[node name="Avatar" type="TextureRect" parent="VBox/ProfilePanel/Margin/HBox/AvatarFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_avatar")
+expand_mode = 1
+
+[node name="VBox" type="VBoxContainer" parent="VBox/ProfilePanel/Margin/HBox"]
 layout_mode = 2
-theme_override_constants/separation = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+alignment = 1
 
-[node name="Header" type="Label" parent="VBox/ProfileSection"]
+[node name="Header" type="Label" parent="VBox/ProfilePanel/Margin/HBox/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 6
 text = "TRAVELLER"
 
-[node name="Email" type="Label" parent="VBox/ProfileSection"]
+[node name="Email" type="Label" parent="VBox/ProfilePanel/Margin/HBox/VBox"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 8
 text = "mail@example.com"
 autowrap_mode = 3
 
-[node name="HSeparator" type="HSeparator" parent="VBox"]
+[node name="StatsPanel" type="NinePatchRect" parent="VBox"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+texture = SubResource("AtlasTexture_panel")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
 
-[node name="StatsSection" type="VBoxContainer" parent="VBox"]
-layout_mode = 2
-theme_override_constants/separation = 4
+[node name="Margin" type="MarginContainer" parent="VBox/StatsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
-[node name="Header" type="Label" parent="VBox/StatsSection"]
+[node name="Grid" type="GridContainer" parent="VBox/StatsPanel/Margin"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 6
-text = "RECORDS"
-
-[node name="Grid" type="GridContainer" parent="VBox/StatsSection"]
-layout_mode = 2
-theme_override_constants/h_separation = 10
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 6
 columns = 2
 
-[node name="LevelLabel" type="Label" parent="VBox/StatsSection/Grid"]
+[node name="LevelLabel" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 8
-text = "Level"
+text = "Level:"
 
-[node name="LevelValue" type="Label" parent="VBox/StatsSection/Grid"]
+[node name="LevelValue" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 8
 text = "0"
 horizontal_alignment = 2
 
-[node name="GoldLabel" type="Label" parent="VBox/StatsSection/Grid"]
+[node name="GoldLabel" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 8
-text = "Gold"
+text = "Gold:"
 
-[node name="GoldValue" type="Label" parent="VBox/StatsSection/Grid"]
+[node name="GoldValue" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_font_sizes/font_size = 8
 text = "0"
 horizontal_alignment = 2
 
-[node name="RankLabel" type="Label" parent="VBox/StatsSection/Grid"]
+[node name="RankLabel" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 8
-text = "Rank"
+text = "Rank:"
+
+[node name="RankValue" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 8
+text = "Unranked"
+horizontal_alignment = 2
 
 [node name="Spacer" type="Control" parent="VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HintSection" type="VBoxContainer" parent="VBox"]
-layout_mode = 2
-
-[node name="Hint" type="Label" parent="VBox/HintSection"]
+[node name="Hint" type="Label" parent="VBox"]
 modulate = Color(0.862745, 0.8, 0.639216, 0.627451)
 layout_mode = 2
 theme_override_font_sizes/font_size = 6
