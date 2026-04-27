@@ -1,8 +1,48 @@
-[gd_resource type="Theme" load_steps=15 format=3 uid="uid://cuvouiyt7ahos"]
+[gd_resource type="Theme" load_steps=25 format=3 uid="uid://cuvouiyt7ahos"]
 
 [ext_resource type="FontFile" uid="uid://bh07rtt0cay5h" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/alagard.ttf" id="1_6h47m"]
 [ext_resource type="FontFile" uid="uid://c8emf24bmv5nv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/pixel_operator/PixelOperator8.ttf" id="2_508ev"]
+[ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_nwdoh"]
 [ext_resource type="Texture2D" uid="uid://bygrs5tnch4uk" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Sliders.png" id="3_sw4cq"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1brns"]
+load_path = "res://.godot/imported/UI_Sliders.png-77db5453d50429b41523ea36b7b07f5e.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5cse7"]
+atlas = SubResource("CompressedTexture2D_1brns")
+region = Rect2(193, 1, 30, 14)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_25i8a"]
+load_path = "res://.godot/imported/UI_Sliders.png-77db5453d50429b41523ea36b7b07f5e.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5gfv"]
+atlas = SubResource("CompressedTexture2D_25i8a")
+region = Rect2(417, 1, 30, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ui057"]
+atlas = ExtResource("3_nwdoh")
+region = Rect2(1112, 8, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p4d4a"]
+texture = SubResource("AtlasTexture_ui057")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2q605"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wkplo"]
+atlas = SubResource("CompressedTexture2D_2q605")
+region = Rect2(1112, 8, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5cse7"]
+texture = SubResource("AtlasTexture_wkplo")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sw4cq"]
 
@@ -71,6 +111,14 @@ AuthEditInput/fonts/font = ExtResource("1_6h47m")
 AuthEditInput/styles/focus = null
 Button/font_sizes/font_size = 9
 Button/fonts/font = ExtResource("2_508ev")
+CheckButton/fonts/font = ExtResource("1_6h47m")
+CheckButton/icons/checked = SubResource("AtlasTexture_5cse7")
+CheckButton/icons/unchecked = SubResource("AtlasTexture_c5gfv")
+CheckButton/styles/focus = SubResource("StyleBoxTexture_p4d4a")
+CheckButton/styles/hover = SubResource("StyleBoxTexture_p4d4a")
+CheckButton/styles/hover_pressed = SubResource("StyleBoxTexture_p4d4a")
+CheckButton/styles/normal = SubResource("StyleBoxTexture_5cse7")
+CheckButton/styles/pressed = SubResource("StyleBoxTexture_p4d4a")
 Label/font_sizes/font_size = 9
 Label/fonts/font = ExtResource("1_6h47m")
 ProgressBar/font_sizes/font_size = 9

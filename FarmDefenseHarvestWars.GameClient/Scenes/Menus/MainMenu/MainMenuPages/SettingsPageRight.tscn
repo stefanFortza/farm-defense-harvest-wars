@@ -1,33 +1,69 @@
-[gd_scene load_steps=9 format=3 uid="uid://4qc10cis3uyw"]
+[gd_scene load_steps=18 format=3 uid="uid://4qc10cis3uyw"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_pnwfq"]
 [ext_resource type="Script" uid="uid://d127yx7v3fp4h" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageRight.cs" id="2_321pm"]
 [ext_resource type="PackedScene" uid="uid://cqdnk020aojvu" path="res://Scenes/Menus/MainMenu/MenuLabel/MenuLabel.tscn" id="3_wo1eg"]
+[ext_resource type="Texture2D" uid="uid://6sdeu0fryt76" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_ALL.png" id="4_m0on7"]
 
-[sub_resource type="DPITexture" id="DPITexture_m0on7"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".75\" rx=\"7\"/><circle cx=\"24\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\"/></svg>
-"
-base_scale = 0.5
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_321pm"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
 
-[sub_resource type="DPITexture" id="DPITexture_ui057"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><g fill-opacity=\".5\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#1a1a1a\" rx=\"7\"/><circle cx=\"8\" cy=\"8\" r=\"5\" fill=\"#fff\"/></g></svg>
-"
-base_scale = 0.5
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0on7"]
+atlas = SubResource("CompressedTexture2D_321pm")
+region = Rect2(1112, 8, 32, 32)
 
-[sub_resource type="DPITexture" id="DPITexture_p4d4a"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".75\" rx=\"7\"/><circle cx=\"24\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\"/></svg>
-"
-base_scale = 0.5
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ui057"]
+texture = SubResource("AtlasTexture_m0on7")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
 
-[sub_resource type="DPITexture" id="DPITexture_wiqnp"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><g fill-opacity=\".5\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#1a1a1a\" rx=\"7\"/><circle cx=\"8\" cy=\"8\" r=\"5\" fill=\"#fff\"/></g></svg>
-"
-base_scale = 0.5
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_p4d4a"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
 
-[sub_resource type="DPITexture" id="DPITexture_321pm"]
-_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\"><path fill=\"none\" stroke=\"#b2b2b2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".85\" stroke-width=\"2\" d=\"m2 4 4 4 4-4\"/></svg>
-"
-base_scale = 0.5
+[sub_resource type="AtlasTexture" id="AtlasTexture_wiqnp"]
+atlas = SubResource("CompressedTexture2D_p4d4a")
+region = Rect2(1112, 8, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_23hv4"]
+texture = SubResource("AtlasTexture_wiqnp")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_xjvyc"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_63usc"]
+atlas = SubResource("CompressedTexture2D_xjvyc")
+region = Rect2(1112, 8, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pcl6i"]
+texture = SubResource("AtlasTexture_63usc")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5m5jo"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75orn"]
+atlas = SubResource("CompressedTexture2D_5m5jo")
+region = Rect2(1112, 8, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ng5b3"]
+texture = SubResource("AtlasTexture_75orn")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ui057"]
+atlas = ExtResource("4_m0on7")
+region = Rect2(529, 353, 14, 14)
 
 [node name="SettingsPageRight" type="MarginContainer" node_paths=PackedStringArray("FullscreenToggle", "VsyncToggle", "FpsCapOption")]
 offset_right = 121.0
@@ -52,7 +88,6 @@ theme_override_constants/separation = 6
 [node name="VideoHeader" parent="VBox" instance=ExtResource("3_wo1eg")]
 layout_mode = 2
 ButtonText = "Video"
-_buttonText = "Video"
 
 [node name="VideoToggleRow" type="VBoxContainer" parent="VBox"]
 layout_mode = 2
@@ -63,22 +98,18 @@ theme_override_constants/separation = 8
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_pnwfq")
-theme_override_font_sizes/font_size = 6
-theme_override_icons/checked = SubResource("DPITexture_m0on7")
-theme_override_icons/unchecked = SubResource("DPITexture_ui057")
+theme_override_font_sizes/font_size = 9
 text = "Fullscreen"
 
 [node name="VsyncToggle" type="CheckButton" parent="VBox/VideoToggleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_pnwfq")
-theme_override_font_sizes/font_size = 6
-theme_override_icons/checked = SubResource("DPITexture_p4d4a")
-theme_override_icons/unchecked = SubResource("DPITexture_wiqnp")
-button_pressed = true
+theme_override_font_sizes/font_size = 9
 text = "VSync"
 
 [node name="FpsCapRow" type="HBoxContainer" parent="VBox"]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_pnwfq")
 theme_override_constants/separation = 6
@@ -89,7 +120,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 ButtonText = "FPS"
-_buttonText = "FPS"
 
 [node name="FpsCapOption" type="OptionButton" parent="VBox/FpsCapRow"]
 layout_mode = 2
@@ -97,4 +127,8 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("1_pnwfq")
 theme_override_font_sizes/font_size = 4
-theme_override_icons/arrow = SubResource("DPITexture_321pm")
+theme_override_styles/normal = SubResource("StyleBoxTexture_ui057")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_23hv4")
+theme_override_styles/hover = SubResource("StyleBoxTexture_pcl6i")
+theme_override_styles/focus = SubResource("StyleBoxTexture_ng5b3")
+theme_override_icons/arrow = SubResource("AtlasTexture_ui057")
