@@ -74,10 +74,19 @@ public partial class MatchmakingOverlay : CanvasLayer
             ToastNotifications.TrySuccess("Match Found! Connecting...", 3.0);
             _cancelButton.Disabled = true;
 
+            // Show Loading Screen
+            var loadingScene = GD.Load<PackedScene>("res://Scenes/UI/Components/LoadingScreen.tscn");
+            var loadingScreen = loadingScene.Instantiate<LoadingScreen>();
+            GetTree().Root.AddChild(loadingScreen);
+            loadingScreen.SetStatus("Connecting to Battle...");
+
             string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
             int port = status.ServerPort ?? 7777;
 
             NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
+            
+            // Wait a tiny bit for connection to start before switching scene
+            await Task.Delay(500);
             GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
         }
         catch (Exception ex)

@@ -70,13 +70,16 @@ public partial class MatchManager : Node
             BaseHealthComponent.Died -= OnBaseDestroyed;
         }
 
-        if (!Multiplayer.IsServer())
+        // Check if multiplayer is still active and valid before unbinding network events
+        if (Multiplayer != null && Multiplayer.MultiplayerPeer != null && 
+            Multiplayer.MultiplayerPeer.GetConnectionStatus() != MultiplayerPeer.ConnectionStatus.Disconnected)
         {
-            return;
+            if (Multiplayer.IsServer())
+            {
+                Multiplayer.PeerConnected -= OnPeerConnected;
+                Multiplayer.PeerDisconnected -= OnPeerDisconnected;
+            }
         }
-
-        Multiplayer.PeerConnected -= OnPeerConnected;
-        Multiplayer.PeerDisconnected -= OnPeerDisconnected;
     }
 
     public void ResetMatch()

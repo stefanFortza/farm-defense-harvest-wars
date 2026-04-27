@@ -68,8 +68,8 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 		int unitLevel = 1;
 		
 		// Find level from the match deck of the player who requested it
-		var network = GetNode<GameplayNetwork>("/root/GameplayNetwork");
-		if (network.TryGetRoleForPeer(CurrentSender, out var role))
+		var network = NetworkBootstrap.Instance?.Gameplay;
+		if (network != null && network.TryGetRoleForPeer(CurrentSender, out var role))
 		{
 			var deck = GameState.Instance.GetMatchDeckForRole(role);
 			var unlock = deck.FirstOrDefault(u => u.UnitType == type);

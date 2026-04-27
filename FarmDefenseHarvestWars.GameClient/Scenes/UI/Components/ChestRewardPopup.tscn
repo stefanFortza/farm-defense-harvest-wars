@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dm3jyvx5x8y2o"]
+[gd_scene load_steps=9 format=3 uid="uid://5nbc448mpv87"]
 
-[ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/UI/Components/ChestRewardPopup.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://cxi5qo2kvn3sv" path="res://Scenes/UI/Components/ChestRewardPopup.cs" id="2_opuvx"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_frames"]
-[ext_resource type="PackedScene" uid="uid://dp3jyvx5x8y1n" path="res://Scenes/UI/Components/ChestRewardItemControl.tscn" id="4_item"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/Components/ChestRewardItemControl.tscn" id="4_item"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bg"]
 atlas = ExtResource("3_frames")
@@ -16,13 +16,20 @@ texture_margin_top = 8.0
 texture_margin_right = 8.0
 texture_margin_bottom = 8.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_close"]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_close"]
 atlas = ExtResource("3_frames")
 region = Rect2(849, 11, 14, 14)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_close"]
+[node name="ChestRewardPopup" type="CanvasLayer" node_paths=PackedStringArray("_rewardContainer", "_closeButton")]
+layer = 110
+script = ExtResource("2_opuvx")
+_rewardContainer = NodePath("Control/Panel/Margin/VBox/RewardHBox")
+_rewardItemScene = ExtResource("4_item")
+_closeButton = NodePath("Control/Panel/Margin/VBox/CloseBtn")
 
-[node name="ChestRewardPopup" type="Control" node_paths=PackedStringArray("_rewardContainer", "_closeButton")]
+[node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,12 +37,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
-script = ExtResource("1_script")
-_rewardContainer = NodePath("Panel/Margin/VBox/RewardHBox")
-_rewardItemScene = ExtResource("4_item")
-_closeButton = NodePath("Panel/Margin/VBox/CloseBtn")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,7 +47,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.7)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="Control"]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 1
 anchors_preset = 8
@@ -60,37 +63,36 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_popup")
 
-[node name="Margin" type="MarginContainer" parent="Panel"]
+[node name="Margin" type="MarginContainer" parent="Control/Panel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Control/Panel/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Title" type="Label" parent="Panel/Margin/VBox"]
+[node name="Title" type="Label" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0.439216, 1)
 theme_override_font_sizes/font_size = 14
 text = "CHEST REWARDS"
 horizontal_alignment = 1
 
-[node name="RewardHBox" type="HBoxContainer" parent="Panel/Margin/VBox"]
+[node name="RewardHBox" type="HBoxContainer" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
-theme_override_constants/h_separation = 8
 alignment = 1
 
-[node name="CloseBtn" type="Button" parent="Panel/Margin/VBox"]
+[node name="CloseBtn" type="Button" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxEmpty_close")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_close")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_close")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_close")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_close")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_close")
 icon = SubResource("AtlasTexture_close")

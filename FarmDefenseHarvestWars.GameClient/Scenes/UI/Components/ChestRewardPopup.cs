@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 
-public partial class ChestRewardPopup : Control
+public partial class ChestRewardPopup : CanvasLayer
 {
     [Export] private Container _rewardContainer = null!;
     [Export] private PackedScene _rewardItemScene = null!;
@@ -17,6 +17,16 @@ public partial class ChestRewardPopup : Control
         this.EnsureNotNull(_closeButton, nameof(_closeButton));
 
         _closeButton.Pressed += () => QueueFree();
+
+        // Background click to close
+        var backgroundControl = GetNodeOrNull<Control>("Control");
+        if (backgroundControl != null)
+        {
+            backgroundControl.GuiInput += (ev) => {
+                if (ev is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
+                    QueueFree();
+            };
+        }
     }
 
     public void Setup(List<UnitUnlockDto> rewards)

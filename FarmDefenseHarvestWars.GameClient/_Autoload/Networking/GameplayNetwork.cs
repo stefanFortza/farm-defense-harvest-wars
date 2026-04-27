@@ -213,6 +213,15 @@ public partial class GameplayNetwork : Node
         _awaitingServerStart = false;
         EmitSignal(SignalName.ClientJoinStateChanged, false, "");
 
+        // Cleanup Loading Screen if any
+        foreach (var child in GetTree().Root.GetChildren())
+        {
+            if (child is LoadingScreen ls)
+            {
+                ls.QueueFree();
+            }
+        }
+
         GD.Print("Loading Game World...");
         GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
     }
