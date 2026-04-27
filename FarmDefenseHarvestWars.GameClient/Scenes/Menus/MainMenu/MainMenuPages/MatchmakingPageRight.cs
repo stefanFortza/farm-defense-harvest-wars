@@ -104,7 +104,8 @@ public partial class MatchmakingPageRight : MarginContainer
 
         if (_avatarTexture != null && _avatars.Length >= profile.AvatarIndex)
         {
-            _avatarTexture.Texture = _avatars[profile.AvatarIndex - 1];
+            GD.Print($"[MatchmakingPageRight] Setting avatar index: {profile.AvatarIndex}");
+            _avatarTexture.Texture = _avatars[profile.AvatarIndex];
         }
     }
 

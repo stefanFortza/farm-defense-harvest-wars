@@ -1,25 +1,50 @@
-[gd_scene load_steps=50 format=3 uid="uid://bplupdgixgj3q"]
+[gd_scene load_steps=60 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://cgxrfaa1c62hg" path="res://Assets/Avatars/Bartender_Bruno.png" id="3_mpwkp"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_tu18y"]
 [ext_resource type="Texture2D" uid="uid://84fimc7v8i08" path="res://icon.svg" id="4_avatar"]
+[ext_resource type="Texture2D" uid="uid://ctc41xhgaadwk" path="res://Assets/Avatars/Bartender_Katy.png" id="4_pegx7"]
+[ext_resource type="Texture2D" uid="uid://cxua66otcvt1k" path="res://Assets/Avatars/Chef_Chloe.png" id="5_reuvb"]
+[ext_resource type="Texture2D" uid="uid://lj13qtwhu4sl" path="res://Assets/Avatars/Farmer_Bob.png" id="6_a8nwv"]
 [ext_resource type="Shader" uid="uid://bfo7e38067llu" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="6_lucoy"]
-[ext_resource type="Texture2D" uid="uid://c7y68d2iqtmcs" path="res://Assets/Icons/FarmerBobIcon.png" id="10_av6"]
-[ext_resource type="Texture2D" uid="uid://bl4t4ekj8xxu5" path="res://Assets/Icons/LumberjackIcon.png" id="11_av7"]
-[ext_resource type="Texture2D" uid="uid://gfs6tsq23sn" path="res://Assets/Icons/MinerIcon.png" id="12_av8"]
+[ext_resource type="Texture2D" uid="uid://ot3m5vlefvxw" path="res://Assets/Avatars/Farmer_Buba.png" id="7_a8nwv"]
+[ext_resource type="Texture2D" uid="uid://dsvfb7100saow" path="res://Assets/Avatars/Fisherman_Fin.png" id="8_4q10u"]
+[ext_resource type="Texture2D" uid="uid://bo3mhsq4l0vx0" path="res://Assets/Avatars/Lumberjack_Jack.png" id="9_sei41"]
+[ext_resource type="Texture2D" uid="uid://b4yuobqsinbsv" path="res://Assets/Avatars/Miner_Mike.png" id="10_3lx0l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pegx7"]
+atlas = ExtResource("3_mpwkp")
+region = Rect2(26, 23, 11, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_reuvb"]
-atlas = ExtResource("10_av6")
-region = Rect2(23, 19, 17, 20)
+atlas = ExtResource("4_pegx7")
+region = Rect2(24, 19, 15, 20)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lucoy"]
-atlas = ExtResource("12_av8")
-region = Rect2(23, 19, 17, 20)
+atlas = ExtResource("5_reuvb")
+region = Rect2(25, 13, 13, 26)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8nwv"]
-atlas = ExtResource("11_av7")
+atlas = ExtResource("6_a8nwv")
 region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqyo7"]
+atlas = ExtResource("7_a8nwv")
+region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1a7s"]
+atlas = ExtResource("8_4q10u")
+region = Rect2(25, 22, 13, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kg75a"]
+atlas = ExtResource("9_sei41")
+region = Rect2(25, 21, 13, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tp3xp"]
+atlas = ExtResource("10_3lx0l")
+region = Rect2(26, 21, 11, 18)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_q1443"]
 load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
@@ -190,7 +215,7 @@ _goldLabel = NodePath("VBox/StatsPanel/Margin/Grid/GoldValue")
 _avatarTexture = NodePath("VBox/Margin/HBox/AvatarSelection/AvatarFrame/Avatar")
 _prevBtn = NodePath("VBox/Margin/HBox/AvatarSelection/PrevBtn")
 _nextBtn = NodePath("VBox/Margin/HBox/AvatarSelection/NextBtn")
-_avatars = [SubResource("AtlasTexture_reuvb"), SubResource("AtlasTexture_lucoy"), SubResource("AtlasTexture_a8nwv")]
+_avatars = [SubResource("AtlasTexture_pegx7"), SubResource("AtlasTexture_reuvb"), SubResource("AtlasTexture_lucoy"), SubResource("AtlasTexture_a8nwv"), SubResource("AtlasTexture_sqyo7"), SubResource("AtlasTexture_k1a7s"), SubResource("AtlasTexture_kg75a"), SubResource("AtlasTexture_tp3xp")]
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 2

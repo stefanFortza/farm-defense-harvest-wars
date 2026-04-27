@@ -6,8 +6,10 @@ using FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
 public partial class DeckLibraryItemControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
+    [Export] private Label _statusLabel = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
     [Export] private PackedScene _tooltipScene = null!;
+    
     private UnitData? _unitData;
     private int _unitTypeValue;
     private bool _canDrag;
@@ -18,11 +20,14 @@ public partial class DeckLibraryItemControl : PanelContainer
     {
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
+        this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
         this.EnsureNotNull(_tooltipScene, nameof(_tooltipScene));
 
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
+        
+        _statusLabel.Hide();
     }
 
     public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
@@ -34,19 +39,34 @@ public partial class DeckLibraryItemControl : PanelContainer
         _canDrag = !alreadyInDeck && isUnlocked && !isUnlocking && !isDeckSaving;
 
         _icon.Texture = unitData.Icon;
-        string deckTag = alreadyInDeck ? " [IN DECK]" : "";
-        string lockTag = isUnlocked ? "" : " [LOCKED]";
-        string pendingTag = isUnlocking ? " [UNLOCKING...]" : "";
+        
+        // Status display
+        if (!isUnlocked)
+        {
+            _statusLabel.Text = isUnlocking ? "..." : "L";
+            _statusLabel.Show();
+            _icon.Modulate = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+            SelfModulate = new Color(0.8f, 0.8f, 0.8f, 0.6f);
+        }
+        else if (alreadyInDeck)
+        {
+            _statusLabel.Text = "D";
+            _statusLabel.Show();
+            _icon.Modulate = new Color(0.6f, 0.6f, 0.6f, 0.7f);
+            SelfModulate = new Color(0.9f, 0.9f, 0.9f, 0.8f);
+        }
+        else
+        {
+            _statusLabel.Hide();
+            _icon.Modulate = Colors.White;
+            SelfModulate = Colors.White;
+        }
+
         TooltipText = isUnlocked
             ? unitData.Name
             : isUnlocking
                 ? $"Unlock in progress for {unitData.Name}"
                 : $"Click to unlock {unitData.Name} for {unitData.UnlockCost} gold";
-        SelfModulate = !isUnlocked
-            ? new Color(1f, 1f, 1f, 0.55f)
-            : alreadyInDeck
-                ? new Color(1f, 1f, 1f, 0.75f)
-                : Colors.White;
 
         MouseDefaultCursorShape = _canDrag
             ? CursorShape.Drag
@@ -57,8 +77,6 @@ public partial class DeckLibraryItemControl : PanelContainer
                 : isUnlocked
                 ? CursorShape.Forbidden
                 : CursorShape.PointingHand;
-
-        // GD.Print($"Setup library item: {unitData.Name}, Unlocked: {isUnlocked}, Unlocking: {isUnlocking}, InDeck: {alreadyInDeck}, CanDrag: {_canDrag}");
     }
 
     public override void _ExitTree()
@@ -71,20 +89,16 @@ public partial class DeckLibraryItemControl : PanelContainer
     {
         if (!_isUnlocked && !_isUnlocking)
         {
+            UIAnimations.TryAnimateScale(this, new Vector2(1.05f, 1.05f), 0.15);
             return;
         }
 
-        UIAnimations.TryAnimateScaleUp(this, .2f);
+        UIAnimations.TryAnimateScaleUp(this, 0.15);
     }
 
     public void OnMouseExited()
     {
-        if (!_isUnlocked && !_isUnlocking)
-        {
-            return;
-        }
-
-        UIAnimations.TryAnimateScaleDown(this, .2f);
+        UIAnimations.TryAnimateScaleDown(this, 0.15);
     }
 
 

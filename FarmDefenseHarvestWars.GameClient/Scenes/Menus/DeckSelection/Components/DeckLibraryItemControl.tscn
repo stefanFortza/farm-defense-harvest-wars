@@ -22,14 +22,15 @@ texture_margin_right = 6.0
 texture_margin_bottom = 9.0
 region_rect = Rect2(0, 0, 30, 34)
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ct1rl"]
-load_path = "res://.godot/imported/ChickenIcon.png-4fd7873d6d38a2905945b19e86c9be65.ctex"
+[sub_resource type="LabelSettings" id="LabelSettings_status"]
+font_size = 8
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6o8nk"]
-atlas = SubResource("CompressedTexture2D_ct1rl")
+[sub_resource type="AtlasTexture" id="AtlasTexture_placeholder"]
 region = Rect2(11, 10, 13, 12)
 
-[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon")]
+[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_statusLabel")]
 custom_minimum_size = Vector2(32, 32)
 offset_right = 32.0
 offset_bottom = 32.0
@@ -40,6 +41,7 @@ theme = ExtResource("1_ct1rl")
 theme_override_styles/panel = SubResource("StyleBoxTexture_l57fl")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
+_statusLabel = NodePath("StatusLabel")
 _dragPreviewScene = ExtResource("2_dragpreview")
 _tooltipScene = ExtResource("3_tooltip")
 
@@ -49,6 +51,14 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("1_ct1rl")
-texture = SubResource("AtlasTexture_6o8nk")
+texture = SubResource("AtlasTexture_placeholder")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "L"
+label_settings = SubResource("LabelSettings_status")
+horizontal_alignment = 2

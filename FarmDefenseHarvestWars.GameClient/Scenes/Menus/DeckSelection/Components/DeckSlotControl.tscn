@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://c4fsd5ricrid8"]
+[gd_scene load_steps=9 format=3 uid="uid://c4fsd5ricrid8"]
 
 [ext_resource type="Script" uid="uid://cq5racbfuott4" path="res://Scenes/Menus/DeckSelection/Components/DeckSlotControl.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_xmja5"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_seekc"]
-[ext_resource type="PackedScene" uid="uid://46mss1durf4d" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckSlotDragPreview.tscn" id="3_dragpreview"]
-[ext_resource type="PackedScene" uid="uid://cunittooltip0" path="res://Scenes/UI/Components/UnitTooltip.tscn" id="4_tooltip"]
+[ext_resource type="PackedScene" uid="uid://46mss1durf4d" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckSlotDragPreview.tscn" id="4_dragpreview"]
+[ext_resource type="PackedScene" uid="uid://cunittooltip0" path="res://Scenes/UI/Components/UnitTooltip.tscn" id="5_tooltip"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6k0ts"]
 atlas = ExtResource("2_seekc")
@@ -22,7 +22,11 @@ texture_margin_right = 6.0
 texture_margin_bottom = 9.0
 region_rect = Rect2(0, 0, 30, 34)
 
-[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon")]
+[sub_resource type="LabelSettings" id="LabelSettings_plus"]
+font_size = 8
+font_color = Color(1, 1, 1, 0.470588)
+
+[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_emptyIcon")]
 custom_minimum_size = Vector2(28, 28)
 offset_right = 28.0
 offset_bottom = 28.0
@@ -31,8 +35,17 @@ theme = ExtResource("1_xmja5")
 theme_override_styles/panel = SubResource("StyleBoxTexture_vm4yd")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
-_dragPreviewScene = ExtResource("3_dragpreview")
-_tooltipScene = ExtResource("4_tooltip")
+_emptyIcon = NodePath("EmptyIcon")
+_dragPreviewScene = ExtResource("4_dragpreview")
+_tooltipScene = ExtResource("5_tooltip")
+
+[node name="EmptyIcon" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "+"
+label_settings = SubResource("LabelSettings_plus")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Icon" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(16, 16)

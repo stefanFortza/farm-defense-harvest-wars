@@ -12,6 +12,7 @@ public partial class DeckSlotControl : PanelContainer
     [Export] public int SlotIndex = 0;
 
     [Export] private TextureRect _icon = null!;
+    [Export] private Control _emptyIcon = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
     [Export] private PackedScene _tooltipScene = null!;
     private UnitData? _unitData;
@@ -21,6 +22,7 @@ public partial class DeckSlotControl : PanelContainer
     {
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
+        this.EnsureNotNull(_emptyIcon, nameof(_emptyIcon));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
 
         if (_tooltipScene == null)
@@ -58,6 +60,10 @@ public partial class DeckSlotControl : PanelContainer
         _unitType = unitData.Type;
         _icon.Texture = unitData.Icon;
         TooltipText = unitData.Name;
+        
+        // Juiciness: Pop effect when setting a unit
+        UIAnimations.AnimatePop(this);
+        
         UpdateVisual();
     }
 
@@ -141,9 +147,13 @@ public partial class DeckSlotControl : PanelContainer
 
     private void UpdateVisual()
     {
-        SelfModulate = _unitType.HasValue
+        bool hasUnit = _unitType.HasValue;
+        _icon.Visible = hasUnit;
+        _emptyIcon.Visible = !hasUnit;
+
+        SelfModulate = hasUnit
             ? Colors.White
-            : new Color(1f, 1f, 1f, 0.65f);
+            : new Color(1f, 1f, 1f, 0.4f);
     }
 
     private static int ReadInt(Godot.Collections.Dictionary dict, string key, int fallback)
