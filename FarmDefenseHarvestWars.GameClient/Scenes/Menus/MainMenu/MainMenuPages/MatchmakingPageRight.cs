@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
+using FarmDefenseHarvestWars.GameClient.Core.Utils;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MainMenuPages;
 
@@ -23,10 +24,49 @@ public partial class MatchmakingPageRight : MarginContainer
             GameState.Instance.ProfileUpdated += UpdateUI;
         }
 
+        _prevBtn.MouseEntered += OnMouseEnteredPrev;
+        _prevBtn.MouseExited += OnMouseExitedPrev;
+        _nextBtn.MouseEntered += OnMouseEnteredNext;
+        _nextBtn.MouseExited += OnMouseExitedNext;
+
         if (_prevBtn != null) _prevBtn.Pressed += () => ChangeAvatar(-1);
         if (_nextBtn != null) _nextBtn.Pressed += () => ChangeAvatar(1);
     }
 
+    private void OnMouseEnteredPrev()
+    {
+        UIAnimations.TryAnimateScale(_prevBtn, new Vector2(1.05f, 1.05f), 0.15);
+        AnimateHoverShader(1.0f);
+    }
+
+    private void OnMouseExitedPrev()
+    {
+        UIAnimations.TryAnimateScale(_prevBtn, Vector2.One, 0.15);
+        AnimateHoverShader(0.0f);
+    }
+
+    public void OnMouseEnteredNext()
+    {
+        UIAnimations.TryAnimateScale(_nextBtn, new Vector2(1.05f, 1.05f), 0.15);
+        AnimateHoverShader(1.0f);
+    }
+
+    public void OnMouseExitedNext()
+    {
+        UIAnimations.TryAnimateScale(_nextBtn, Vector2.One, 0.15);
+        AnimateHoverShader(0.0f);
+    }
+
+
+    private void AnimateHoverShader(float target)
+    {
+        if (Material is ShaderMaterial shaderMat)
+        {
+            var tween = GetTree().CreateTween();
+            tween.TweenMethod(Callable.From<float>((val) => shaderMat.SetShaderParameter("hover_intensity", val)),
+                (float)shaderMat.GetShaderParameter("hover_intensity"), target, 0.15);
+        }
+    }
     private void ChangeAvatar(int direction)
     {
         if (GameState.Instance?.CurrentProfile == null) return;

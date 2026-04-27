@@ -1,12 +1,12 @@
-[gd_scene load_steps=23 format=3 uid="uid://bplupdgixgj3q"]
+[gd_scene load_steps=50 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_tu18y"]
 [ext_resource type="Texture2D" uid="uid://84fimc7v8i08" path="res://icon.svg" id="4_avatar"]
+[ext_resource type="Shader" uid="uid://bfo7e38067llu" path="res://Scenes/UI/Shaders/ButtonEffects.gdshader" id="6_lucoy"]
 [ext_resource type="Texture2D" uid="uid://c7y68d2iqtmcs" path="res://Assets/Icons/FarmerBobIcon.png" id="10_av6"]
 [ext_resource type="Texture2D" uid="uid://bl4t4ekj8xxu5" path="res://Assets/Icons/LumberjackIcon.png" id="11_av7"]
-[ext_resource type="Texture2D" uid="uid://bvtkbxnx63030" path="res://Assets/avatar_btns.png" id="12_3lx0l"]
 [ext_resource type="Texture2D" uid="uid://gfs6tsq23sn" path="res://Assets/Icons/MinerIcon.png" id="12_av8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_reuvb"]
@@ -35,13 +35,67 @@ texture_margin_top = 8.0
 texture_margin_right = 8.0
 texture_margin_bottom = 8.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_q1443"]
-atlas = ExtResource("12_3lx0l")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a8nwv"]
+shader = ExtResource("6_lucoy")
+shader_parameter/shine_color = Color(1, 1, 1, 0.25)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.01
+shader_parameter/shine_angle = 45.0
+shader_parameter/shine_time_offset = 0.0
+shader_parameter/pulse_color = Color(1, 1, 1, 0)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.05
+shader_parameter/hover_intensity = 0.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_reuvb"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4q10u"]
+atlas = SubResource("CompressedTexture2D_reuvb")
 region = Rect2(17, 0, 14, 14)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iqxka"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sei41"]
+texture = SubResource("AtlasTexture_4q10u")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2tbmo"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_lucoy"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sei41"]
+atlas = SubResource("CompressedTexture2D_lucoy")
+region = Rect2(17, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3lx0l"]
+texture = SubResource("AtlasTexture_sei41")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_iqxka"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jap17"]
+atlas = SubResource("CompressedTexture2D_iqxka")
+region = Rect2(17, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6021l"]
+texture = SubResource("AtlasTexture_jap17")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sqyo7"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dqkh5"]
+atlas = SubResource("CompressedTexture2D_sqyo7")
+region = Rect2(17, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_efmht"]
+texture = SubResource("AtlasTexture_dqkh5")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_k1a7s"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p8np0"]
+atlas = SubResource("CompressedTexture2D_k1a7s")
+region = Rect2(17, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_24jni"]
+texture = SubResource("AtlasTexture_p8np0")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3lx0l"]
 atlas = ExtResource("3_tu18y")
@@ -54,12 +108,67 @@ texture_margin_top = 5.0
 texture_margin_right = 5.0
 texture_margin_bottom = 5.0
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3lx0l"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4q10u"]
+shader = ExtResource("6_lucoy")
+shader_parameter/shine_color = Color(1, 1, 1, 0.25)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.01
+shader_parameter/shine_angle = 45.0
+shader_parameter/shine_time_offset = 0.0
+shader_parameter/pulse_color = Color(1, 1, 1, 0)
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.05
+shader_parameter/hover_intensity = 0.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sei41"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q1443"]
+atlas = SubResource("CompressedTexture2D_sei41")
+region = Rect2(1, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iqxka"]
+texture = SubResource("AtlasTexture_q1443")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_a8nwv"]
 load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iqxka"]
-atlas = SubResource("CompressedTexture2D_3lx0l")
+atlas = SubResource("CompressedTexture2D_a8nwv")
 region = Rect2(1, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2tbmo"]
+texture = SubResource("AtlasTexture_iqxka")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_jap17"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6021l"]
+atlas = SubResource("CompressedTexture2D_jap17")
+region = Rect2(1, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqyo7"]
+texture = SubResource("AtlasTexture_6021l")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dqkh5"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_efmht"]
+atlas = SubResource("CompressedTexture2D_dqkh5")
+region = Rect2(1, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k1a7s"]
+texture = SubResource("AtlasTexture_efmht")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_p8np0"]
+load_path = "res://.godot/imported/avatar_btns.png-f8359e20d16fba8f446919d853918945.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_24jni"]
+atlas = SubResource("CompressedTexture2D_p8np0")
+region = Rect2(1, 0, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kg75a"]
+texture = SubResource("AtlasTexture_24jni")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_panel"]
 atlas = ExtResource("3_tu18y")
@@ -112,13 +221,18 @@ size_flags_vertical = 4
 theme_override_constants/separation = 2
 
 [node name="PrevBtn" type="Button" parent="VBox/Margin/HBox/AvatarSelection"]
-custom_minimum_size = Vector2(16, 24)
+material = SubResource("ShaderMaterial_a8nwv")
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 focus_mode = 0
-theme_override_icons/icon = SubResource("AtlasTexture_q1443")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_iqxka")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_2tbmo")
+theme = ExtResource("2_theme")
+theme_override_styles/normal = SubResource("StyleBoxTexture_sei41")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3lx0l")
+theme_override_styles/hover = SubResource("StyleBoxTexture_6021l")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_efmht")
+theme_override_styles/focus = SubResource("StyleBoxTexture_24jni")
 icon_alignment = 1
 expand_icon = true
 
@@ -134,12 +248,17 @@ texture = ExtResource("4_avatar")
 expand_mode = 1
 
 [node name="NextBtn" type="Button" parent="VBox/Margin/HBox/AvatarSelection"]
-custom_minimum_size = Vector2(16, 24)
+material = SubResource("ShaderMaterial_4q10u")
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
-theme_override_icons/icon = SubResource("AtlasTexture_iqxka")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_iqxka")
+theme = ExtResource("2_theme")
+theme_override_styles/normal = SubResource("StyleBoxTexture_iqxka")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2tbmo")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sqyo7")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_k1a7s")
+theme_override_styles/focus = SubResource("StyleBoxTexture_kg75a")
 icon_alignment = 1
 expand_icon = true
 

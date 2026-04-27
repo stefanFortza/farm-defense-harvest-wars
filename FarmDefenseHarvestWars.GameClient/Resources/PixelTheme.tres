@@ -1,8 +1,10 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://cuvouiyt7ahos"]
+[gd_resource type="Theme" load_steps=15 format=3 uid="uid://cuvouiyt7ahos"]
 
 [ext_resource type="FontFile" uid="uid://bh07rtt0cay5h" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/alagard.ttf" id="1_6h47m"]
 [ext_resource type="FontFile" uid="uid://c8emf24bmv5nv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/pixel_operator/PixelOperator8.ttf" id="2_508ev"]
 [ext_resource type="Texture2D" uid="uid://bygrs5tnch4uk" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Sliders.png" id="3_sw4cq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sw4cq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nwdoh"]
 atlas = ExtResource("3_sw4cq")
@@ -74,6 +76,7 @@ Label/fonts/font = ExtResource("1_6h47m")
 ProgressBar/font_sizes/font_size = 9
 ProgressBar/fonts/font = ExtResource("1_6h47m")
 TabContainer/fonts/font = ExtResource("1_6h47m")
+TooltipPanel/styles/panel = SubResource("StyleBoxEmpty_sw4cq")
 VScrollBar/styles/grabber = SubResource("StyleBoxTexture_2q605")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxTexture_1brns")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxTexture_wkplo")

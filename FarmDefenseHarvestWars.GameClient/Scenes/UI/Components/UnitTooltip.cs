@@ -4,7 +4,7 @@ using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
 
-public partial class UnitTooltip : PanelContainer
+public partial class UnitTooltip : MarginContainer
 {
     [Export] private Label _nameLabel = null!;
     [Export] private Label _costLabel = null!;
@@ -17,22 +17,22 @@ public partial class UnitTooltip : PanelContainer
     public override void _Ready()
     {
         // Custom smooth appearance animation
-        Modulate = new Color(1, 1, 1, 0);
-        
+        // Modulate = new Color(1, 1, 1, 0);
+
         // Use a slight delay to allow size calculation if needed, 
         // but for tooltips we usually want immediate feedback.
-        Tween tween = CreateTween();
-        tween.SetParallel(true);
-        tween.SetTrans(Tween.TransitionType.Quad);
-        tween.SetEase(Tween.EaseType.Out);
-        
+        // Tween tween = CreateTween();
+        // tween.SetParallel(true);
+        // tween.SetTrans(Tween.TransitionType.Quad);
+        // tween.SetEase(Tween.EaseType.Out);
+
         // Fade in
-        tween.TweenProperty(this, "modulate:a", 1.0f, 0.15f);
-        
+        // tween.TweenProperty(this, "modulate:a", 1.0f, 0.15f);
+
         // Slight scale up from 0.95 to 1.0 for a "zoom" feel instead of a "bounce"
-        Scale = new Vector2(0.95f, 0.95f);
-        PivotOffset = Size / 2;
-        tween.TweenProperty(this, "scale", Vector2.One, 0.15f);
+        // Scale = new Vector2(0.95f, 0.95f);
+        // PivotOffset = Size / 2;
+        // tween.TweenProperty(this, "scale", Vector2.One, 0.15f);
     }
 
     public void Setup(UnitData data)

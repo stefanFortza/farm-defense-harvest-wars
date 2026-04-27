@@ -31,104 +31,115 @@ expand_margin_top = 3.0
 expand_margin_bottom = 3.0
 region_rect = Rect2(0, 0, 30, 4)
 
-[node name="UnitTooltip" type="PanelContainer" node_paths=PackedStringArray("_nameLabel", "_costLabel", "_healthLabel", "_damageLabel", "_rangeLabel", "_speedLabel", "_iconRect")]
+[node name="MarginContainer" type="MarginContainer" node_paths=PackedStringArray("_nameLabel", "_costLabel", "_healthLabel", "_damageLabel", "_rangeLabel", "_speedLabel", "_iconRect")]
+offset_right = 102.0
+offset_bottom = 84.0
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+script = ExtResource("1_script")
+_nameLabel = NodePath("UnitTooltip/VBox/TitleHBox/NameLabel")
+_costLabel = NodePath("UnitTooltip/VBox/Grid/CostHBox/Value")
+_healthLabel = NodePath("UnitTooltip/VBox/Grid/HealthHBox/Value")
+_damageLabel = NodePath("UnitTooltip/VBox/Grid/DamageHBox/Value")
+_rangeLabel = NodePath("UnitTooltip/VBox/Grid/RangeHBox/Value")
+_speedLabel = NodePath("UnitTooltip/VBox/Grid/SpeedHBox/Value")
+_iconRect = NodePath("UnitTooltip/VBox/TitleHBox/Icon")
+
+[node name="UnitTooltip" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxTexture_nqji6")
-script = ExtResource("1_script")
-_nameLabel = NodePath("VBox/TitleHBox/NameLabel")
-_costLabel = NodePath("VBox/Grid/CostHBox/Value")
-_healthLabel = NodePath("VBox/Grid/HealthHBox/Value")
-_damageLabel = NodePath("VBox/Grid/DamageHBox/Value")
-_rangeLabel = NodePath("VBox/Grid/RangeHBox/Value")
-_speedLabel = NodePath("VBox/Grid/SpeedHBox/Value")
-_iconRect = NodePath("VBox/TitleHBox/Icon")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="UnitTooltip"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="TitleHBox" type="HBoxContainer" parent="VBox"]
+[node name="TitleHBox" type="HBoxContainer" parent="UnitTooltip/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Icon" type="TextureRect" parent="VBox/TitleHBox"]
+[node name="Icon" type="TextureRect" parent="UnitTooltip/VBox/TitleHBox"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="NameLabel" type="Label" parent="VBox/TitleHBox"]
+[node name="NameLabel" type="Label" parent="UnitTooltip/VBox/TitleHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_font_sizes/font_size = 12
 text = "Unit Name"
 
-[node name="HSeparator" type="HSeparator" parent="VBox"]
+[node name="HSeparator" type="HSeparator" parent="UnitTooltip/VBox"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxTexture_cfc4v")
 
-[node name="Grid" type="GridContainer" parent="VBox"]
+[node name="Grid" type="GridContainer" parent="UnitTooltip/VBox"]
 layout_mode = 2
 theme_override_constants/h_separation = 12
 theme_override_constants/v_separation = 2
 columns = 2
 
-[node name="CostHBox" type="HBoxContainer" parent="VBox/Grid"]
+[node name="CostHBox" type="HBoxContainer" parent="UnitTooltip/VBox/Grid"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/Grid/CostHBox"]
+[node name="Label" type="Label" parent="UnitTooltip/VBox/Grid/CostHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 text = "Cost:"
 
-[node name="Value" type="Label" parent="VBox/Grid/CostHBox"]
+[node name="Value" type="Label" parent="UnitTooltip/VBox/Grid/CostHBox"]
 layout_mode = 2
 text = "25"
 
-[node name="HealthHBox" type="HBoxContainer" parent="VBox/Grid"]
+[node name="HealthHBox" type="HBoxContainer" parent="UnitTooltip/VBox/Grid"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/Grid/HealthHBox"]
+[node name="Label" type="Label" parent="UnitTooltip/VBox/Grid/HealthHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 text = "HP:"
 
-[node name="Value" type="Label" parent="VBox/Grid/HealthHBox"]
+[node name="Value" type="Label" parent="UnitTooltip/VBox/Grid/HealthHBox"]
 layout_mode = 2
 text = "100"
 
-[node name="DamageHBox" type="HBoxContainer" parent="VBox/Grid"]
+[node name="DamageHBox" type="HBoxContainer" parent="UnitTooltip/VBox/Grid"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/Grid/DamageHBox"]
+[node name="Label" type="Label" parent="UnitTooltip/VBox/Grid/DamageHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 text = "DMG:"
 
-[node name="Value" type="Label" parent="VBox/Grid/DamageHBox"]
+[node name="Value" type="Label" parent="UnitTooltip/VBox/Grid/DamageHBox"]
 layout_mode = 2
 text = "10"
 
-[node name="RangeHBox" type="HBoxContainer" parent="VBox/Grid"]
+[node name="RangeHBox" type="HBoxContainer" parent="UnitTooltip/VBox/Grid"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/Grid/RangeHBox"]
+[node name="Label" type="Label" parent="UnitTooltip/VBox/Grid/RangeHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 text = "Rng:"
 
-[node name="Value" type="Label" parent="VBox/Grid/RangeHBox"]
+[node name="Value" type="Label" parent="UnitTooltip/VBox/Grid/RangeHBox"]
 layout_mode = 2
 text = "64"
 
-[node name="SpeedHBox" type="HBoxContainer" parent="VBox/Grid"]
+[node name="SpeedHBox" type="HBoxContainer" parent="UnitTooltip/VBox/Grid"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/Grid/SpeedHBox"]
+[node name="Label" type="Label" parent="UnitTooltip/VBox/Grid/SpeedHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 text = "Spd:"
 
-[node name="Value" type="Label" parent="VBox/Grid/SpeedHBox"]
+[node name="Value" type="Label" parent="UnitTooltip/VBox/Grid/SpeedHBox"]
 layout_mode = 2
 text = "10"
