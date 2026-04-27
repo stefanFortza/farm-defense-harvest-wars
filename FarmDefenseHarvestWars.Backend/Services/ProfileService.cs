@@ -4,6 +4,8 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using Microsoft.EntityFrameworkCore;
 
+using System.Text.Json;
+
 namespace FarmDefenseHarvestWars.Backend.Services;
 
 public class ProfileService : IProfileService
@@ -71,6 +73,8 @@ public class ProfileService : IProfileService
             UserId = user.Id,
             Role = role.Value,
             UnitType = unitType,
+            Level = 1,
+            Fragments = 0,
             UnlockedAt = DateTime.UtcNow
         });
 
@@ -103,9 +107,97 @@ public class ProfileService : IProfileService
         return unlockedUnits.ToHashSet();
     }
 
+    public async Task<(PlayerProfileDto Profile, List<UnitUnlockDto> Rewards)> OpenChestAsync(ApplicationUser user, string chestId, CancellationToken cancellationToken = default)
+    {
+        var chestsJson = string.IsNullOrWhiteSpace(user.ChestsJson) ? "[]" : user.ChestsJson;
+        var chests = JsonSerializer.Deserialize<List<ChestDto>>(chestsJson) ?? new();
+        var chest = chests.FirstOrDefault(c => c.Id == chestId);
+        
+        if (chest == null)
+        {
+            throw new InvalidOperationException("Chest not found.");
+        }
+
+        chests.Remove(chest);
+        user.ChestsJson = JsonSerializer.Serialize(chests);
+
+        // Logic for rewards: give fragments for 1-2 random units that the player has unlocked
+        var unlocks = await _db.UnitUnlocks
+            .Where(u => u.UserId == user.Id)
+            .ToListAsync(cancellationToken);
+
+        if (!unlocks.Any())
+        {
+            // Fallback if somehow no units are unlocked (shouldn't happen due to EnsureDefaultUnlocksAsync)
+            await _defaultUnitUnlockService.EnsureDefaultUnlocksAsync(user.Id, cancellationToken);
+            unlocks = await _db.UnitUnlocks
+                .Where(u => u.UserId == user.Id)
+                .ToListAsync(cancellationToken);
+        }
+
+        var random = new Random();
+        var rewards = new List<UnitUnlockDto>();
+        
+        // Give rewards for 1 or 2 units
+        int rewardCount = random.Next(1, 3);
+        var shuffledUnlocks = unlocks.OrderBy(x => random.Next()).Take(rewardCount).ToList();
+
+        foreach (var unlock in shuffledUnlocks)
+        {
+            int fragmentAmount = random.Next(5, 15);
+            unlock.Fragments += fragmentAmount;
+            
+            rewards.Add(new UnitUnlockDto
+            {
+                UnitType = unlock.UnitType,
+                Level = unlock.Level,
+                Fragments = fragmentAmount // Here we send the amount found, not total
+            });
+        }
+
+        await _db.SaveChangesAsync(cancellationToken);
+        var profile = await BuildPlayerProfileAsync(user, cancellationToken);
+        
+        return (profile, rewards);
+    }
+
+    public async Task<PlayerProfileDto> UpgradeUnitAsync(ApplicationUser user, UnitType unitType, CancellationToken cancellationToken = default)
+    {
+        var unlock = await _db.UnitUnlocks
+            .FirstOrDefaultAsync(u => u.UserId == user.Id && u.UnitType == unitType, cancellationToken);
+
+        if (unlock == null)
+        {
+            throw new InvalidOperationException("Unit not unlocked.");
+        }
+
+        int fragmentsRequired = unlock.Level * 10;
+        int goldCost = unlock.Level * 100;
+
+        if (unlock.Fragments < fragmentsRequired)
+        {
+            throw new InvalidOperationException($"Not enough fragments. Required: {fragmentsRequired}, available: {unlock.Fragments}.");
+        }
+
+        if (user.Gold < goldCost)
+        {
+            throw new InvalidOperationException($"Not enough gold. Required: {goldCost}, available: {user.Gold}.");
+        }
+
+        user.Gold -= goldCost;
+        unlock.Fragments -= fragmentsRequired;
+        unlock.Level++;
+
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return await BuildPlayerProfileAsync(user, cancellationToken);
+    }
+
     private async Task<PlayerProfileDto> BuildPlayerProfileAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         PlayerUnlockedUnitsDto unlockedUnits = await GetUnlockedUnitsDtoAsync(user.Id, cancellationToken);
+        var chestsJson = string.IsNullOrWhiteSpace(user.ChestsJson) ? "[]" : user.ChestsJson;
+        var chests = JsonSerializer.Deserialize<List<ChestDto>>(chestsJson) ?? new();
 
         return new PlayerProfileDto
         {
@@ -114,7 +206,8 @@ public class ProfileService : IProfileService
             Level = user.Level,
             Xp = user.Xp,
             AvatarIndex = user.AvatarIndex,
-            UnlockedUnits = unlockedUnits
+            UnlockedUnits = unlockedUnits,
+            Chests = chests
         };
     }
 
@@ -129,16 +222,24 @@ public class ProfileService : IProfileService
         {
             DefenderUnits = unlocks
                 .Where(unlock => unlock.Role == PlayerRole.Defender)
-                .Select(unlock => unlock.UnitType)
-                .Distinct()
-                .OrderBy(unit => unit)
-                .ToArray(),
+                .Select(unlock => new UnitUnlockDto
+                {
+                    UnitType = unlock.UnitType,
+                    Level = unlock.Level,
+                    Fragments = unlock.Fragments
+                })
+                .OrderBy(u => u.UnitType)
+                .ToList(),
             AttackerUnits = unlocks
                 .Where(unlock => unlock.Role == PlayerRole.Attacker)
-                .Select(unlock => unlock.UnitType)
-                .Distinct()
-                .OrderBy(unit => unit)
-                .ToArray()
+                .Select(unlock => new UnitUnlockDto
+                {
+                    UnitType = unlock.UnitType,
+                    Level = unlock.Level,
+                    Fragments = unlock.Fragments
+                })
+                .OrderBy(u => u.UnitType)
+                .ToList()
         };
     }
 

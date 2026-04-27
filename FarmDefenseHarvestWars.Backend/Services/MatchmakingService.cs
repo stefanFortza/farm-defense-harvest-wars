@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using System.Text.Json;
+
 namespace FarmDefenseHarvestWars.Backend.Services;
 
 public class MatchmakingService : IMatchmakingService
@@ -217,6 +219,13 @@ public class MatchmakingService : IMatchmakingService
 
         if (!isDefender && !isAttacker) return null;
 
+        ChestDto? droppedChest = null;
+        string? droppedChestJson = isDefender ? result.DefenderDroppedChestJson : result.AttackerDroppedChestJson;
+        if (!string.IsNullOrEmpty(droppedChestJson))
+        {
+            droppedChest = JsonSerializer.Deserialize<ChestDto>(droppedChestJson);
+        }
+
         return new MatchRewardDto
         {
             MatchId = matchId,
@@ -227,7 +236,8 @@ public class MatchmakingService : IMatchmakingService
             XpEarned = isDefender ? result.DefenderXpEarned : result.AttackerXpEarned,
             TotalGoldNow = user.Gold,
             TotalXpNow = user.Xp,
-            TotalLevelNow = user.Level
+            TotalLevelNow = user.Level,
+            DroppedChest = droppedChest
         };
     }
 
@@ -283,6 +293,10 @@ public class MatchmakingService : IMatchmakingService
             attacker.Level++;
         }
 
+        // Chest dropping logic
+        string? defChestJson = TryDropChest(defender);
+        string? atkChestJson = TryDropChest(attacker);
+
         var result = new MatchResult
         {
             MatchId = matchId,
@@ -294,6 +308,8 @@ public class MatchmakingService : IMatchmakingService
             DefenderXpEarned = defXp,
             AttackerGoldEarned = atkGold,
             AttackerXpEarned = atkXp,
+            DefenderDroppedChestJson = defChestJson,
+            AttackerDroppedChestJson = atkChestJson,
             CompletedAtUtc = DateTimeOffset.UtcNow
         };
 
@@ -301,6 +317,27 @@ public class MatchmakingService : IMatchmakingService
         await db.SaveChangesAsync();
         await userManager.UpdateAsync(defender);
         await userManager.UpdateAsync(attacker);
+    }
+
+    private string? TryDropChest(ApplicationUser user)
+    {
+        var chestsJson = string.IsNullOrWhiteSpace(user.ChestsJson) ? "[]" : user.ChestsJson;
+        var chests = JsonSerializer.Deserialize<List<ChestDto>>(chestsJson) ?? new();
+        if (chests.Count >= 5)
+        {
+            return null;
+        }
+
+        var newChest = new ChestDto
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            Name = "Wooden Chest",
+            AcquiredAt = DateTime.UtcNow
+        };
+
+        chests.Add(newChest);
+        user.ChestsJson = JsonSerializer.Serialize(chests);
+        return JsonSerializer.Serialize(newChest);
     }
 
     private bool TryGetActiveMatch(string userId, out MatchmakingStatusDto status)

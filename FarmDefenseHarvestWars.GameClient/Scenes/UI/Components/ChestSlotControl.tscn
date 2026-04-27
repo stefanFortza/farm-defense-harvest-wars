@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://bqj8hpx6k1m1a"]
+
+[ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/UI/Components/ChestSlotControl.cs" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_frames"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bg"]
+atlas = ExtResource("2_frames")
+region = Rect2(1019, 107, 26, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bg"]
+texture = SubResource("AtlasTexture_bg")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chest"]
+atlas = ExtResource("2_frames")
+region = Rect2(440, 208, 16, 16)
+
+[node name="ChestSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_emptyLabel")]
+custom_minimum_size = Vector2(24, 24)
+offset_right = 24.0
+offset_bottom = 24.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_bg")
+script = ExtResource("1_script")
+_icon = NodePath("Icon")
+_emptyLabel = NodePath("Empty")
+_chestTexture = SubResource("AtlasTexture_chest")
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Empty" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 8
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -80,4 +80,44 @@ public class ProfileController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPost("chest/{chestId}/open")]
+    public async Task<ActionResult<ChestOpenResultDto>> OpenChest(string chestId, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized("User not found.");
+        }
+
+        try
+        {
+            var result = await _profileService.OpenChestAsync(user, chestId, cancellationToken);
+            return Ok(new ChestOpenResultDto { Profile = result.Profile, Rewards = result.Rewards });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("unit/{unitType}/upgrade")]
+    public async Task<ActionResult<PlayerProfileDto>> UpgradeUnit(UnitType unitType, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized("User not found.");
+        }
+
+        try
+        {
+            var profile = await _profileService.UpgradeUnitAsync(user, unitType, cancellationToken);
+            return Ok(profile);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

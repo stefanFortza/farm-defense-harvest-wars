@@ -9,5 +9,7 @@ public class UnitUnlock
     public ApplicationUser User { get; set; } = null!;
     public PlayerRole Role { get; set; }
     public UnitType UnitType { get; set; }
+    public int Level { get; set; } = 1;
+    public int Fragments { get; set; } = 0;
     public DateTime UnlockedAt { get; set; }
 }

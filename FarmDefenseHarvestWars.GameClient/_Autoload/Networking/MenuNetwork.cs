@@ -110,6 +110,20 @@ public partial class MenuNetwork : Node
         return profile;
     }
 
+    public async Task<ChestOpenResultDto> OpenChestAsync(string chestId)
+    {
+        var result = await NetworkBootstrap.Instance.ApiClient.OpenChestAsync(chestId);
+        GameState.Instance.SetProfile(result.Profile);
+        return result;
+    }
+
+    public async Task<PlayerProfileDto> UpgradeUnitAsync(UnitType unitType)
+    {
+        var profile = await NetworkBootstrap.Instance.ApiClient.UpgradeUnitAsync(unitType);
+        GameState.Instance.SetProfile(profile);
+        return profile;
+    }
+
     public async Task QueueForMatchAsync(PlayerRole preferredRole = PlayerRole.Any)
     {
         if (IsMatchmakingActive)

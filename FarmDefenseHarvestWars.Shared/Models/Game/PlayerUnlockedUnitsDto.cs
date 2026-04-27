@@ -5,6 +5,6 @@ namespace FarmDefenseHarvestWars.Shared.Models.Game;
 
 public class PlayerUnlockedUnitsDto
 {
-    public IReadOnlyList<UnitType> DefenderUnits { get; set; } = [];
-    public IReadOnlyList<UnitType> AttackerUnits { get; set; } = [];
+    public IReadOnlyList<UnitUnlockDto> DefenderUnits { get; set; } = [];
+    public IReadOnlyList<UnitUnlockDto> AttackerUnits { get; set; } = [];
 }

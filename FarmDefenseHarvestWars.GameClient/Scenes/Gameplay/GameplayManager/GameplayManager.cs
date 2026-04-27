@@ -3,9 +3,11 @@ using FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
 
@@ -92,7 +94,7 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 		}
 	}
 
-	private void SpawnDeckUnits(GridSystem grid, IReadOnlyList<UnitType> deck, PlayerRole role)
+	private void SpawnDeckUnits(GridSystem grid, IReadOnlyList<UnitUnlockDto> deck, PlayerRole role)
 	{
 		if (deck == null || deck.Count == 0)
 		{
@@ -106,9 +108,9 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 		int rowOffset = 0;
 		int maxRowsPerColumn = 5; // To distribute units across the 5 lanes (Y: 3-7)
 
-		GD.Print($"[GameplayManager] Spawning {role} deck: {string.Join(", ", deck)}");
+		GD.Print($"[GameplayManager] Spawning {role} deck: {string.Join(", ", deck.Select(u => u.UnitType))}");
 
-		foreach (UnitType unit in deck)
+		foreach (var unlock in deck)
 		{
 			// Calculate grid position
 			int x = startX + (rowOffset / maxRowsPerColumn);
@@ -122,12 +124,12 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 
 			try
 			{
-				_unitFactory.Server_SpawnUnit(unit, spawnPos, grid);
-				GD.Print($"[GameplayManager] Spawned {unit} at {spawnPos} for {role}");
+				_unitFactory.Server_SpawnUnit(unlock.UnitType, spawnPos, grid, unlock.Level);
+				GD.Print($"[GameplayManager] Spawned {unlock.UnitType} (Lvl {unlock.Level}) at {spawnPos} for {role}");
 			}
 			catch (Exception ex)
 			{
-				GD.PrintErr($"[GameplayManager] Failed to spawn {unit} at {spawnPos}: {ex.Message}");
+				GD.PrintErr($"[GameplayManager] Failed to spawn {unlock.UnitType} at {spawnPos}: {ex.Message}");
 			}
 
 			rowOffset++;

@@ -42,6 +42,20 @@ public partial class BaseUnit : CharacterBody2D
     public virtual UnitType Type => Data?.Type ?? UnitType.None;
     public int MaxHealth => Data?.MaxHealth ?? 0;
 
+    [Export] public int Level { get; private set; } = 1;
+
+    public int ScaledMaxHealth => (int)(MaxHealth * (1 + (Level - 1) * 0.1f));
+    public int ScaledDamage => (int)((Data?.Damage ?? 0) * (1 + (Level - 1) * 0.1f));
+
+    public void SetLevel(int level)
+    {
+        Level = level;
+        if (HealthComponent != null && IsInsideTree())
+        {
+            HealthComponent.Initialize(ScaledMaxHealth);
+        }
+    }
+
 
     public Node2D? ProjectileContainer { get; set; }
 
@@ -59,7 +73,7 @@ public partial class BaseUnit : CharacterBody2D
         HealthComponent.Died += Die;
         _eventsBound = true;
 
-        HealthComponent.Initialize(MaxHealth);
+        HealthComponent.Initialize(ScaledMaxHealth);
         HurtboxComponent.Initialize(HealthComponent);
         MovementComponent.Initialize((this, Data.Speed));
 

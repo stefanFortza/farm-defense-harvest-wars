@@ -2,6 +2,8 @@ using Godot;
 using System;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
+using FarmDefenseHarvestWars.Shared.Models.Game;
+using System.Collections.Generic;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Menus.MainMenu.MainMenuPages;
 
@@ -11,13 +13,18 @@ public partial class MatchmakingPageRight : MarginContainer
     [Export] private Label _levelLabel = null!;
     [Export] private Label _goldLabel = null!;
     [Export] private TextureRect _avatarTexture = null!;
+    [Export] private Container _chestContainer = null!;
+    [Export] private PackedScene _chestSlotScene = null!;
     [Export] private Button _prevBtn = null!;
     [Export] private Button _nextBtn = null!;
 
     [Export] private Texture2D[] _avatars = Array.Empty<Texture2D>();
 
+    private readonly List<ChestSlotControl> _chestSlots = new();
+
     public override void _Ready()
     {
+        InitializeChestSlots();
         UpdateUI();
         if (GameState.Instance != null)
         {
@@ -106,6 +113,36 @@ public partial class MatchmakingPageRight : MarginContainer
         {
             GD.Print($"[MatchmakingPageRight] Setting avatar index: {profile.AvatarIndex}");
             _avatarTexture.Texture = _avatars[profile.AvatarIndex];
+        }
+
+        UpdateChestSlots(profile.Chests);
+    }
+
+    private void InitializeChestSlots()
+    {
+        if (_chestContainer == null || _chestSlotScene == null) return;
+
+        foreach (var child in _chestContainer.GetChildren())
+        {
+            child.QueueFree();
+        }
+
+        _chestSlots.Clear();
+        for (int i = 0; i < 5; i++)
+        {
+            var slot = _chestSlotScene.Instantiate<ChestSlotControl>();
+            _chestContainer.AddChild(slot);
+            _chestSlots.Add(slot);
+            slot.Setup(null);
+        }
+    }
+
+    private void UpdateChestSlots(IReadOnlyList<ChestDto> chests)
+    {
+        for (int i = 0; i < _chestSlots.Count; i++)
+        {
+            var chest = i < chests.Count ? chests[i] : null;
+            _chestSlots[i].Setup(chest);
         }
     }
 

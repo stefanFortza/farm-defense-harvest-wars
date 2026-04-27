@@ -22,7 +22,7 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 		IsInitialized = true;
 	}
 
-	public void Server_SpawnUnit(UnitType type, Vector2I gridPos, GridSystem grid)
+	public void Server_SpawnUnit(UnitType type, Vector2I gridPos, GridSystem grid, int level = 1)
 	{
 		if (!Multiplayer.IsServer()) return;
 
@@ -44,6 +44,7 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 
 		var unit = scene.Instantiate<BaseUnit>();
 		unit.ProjectileContainer = _projectileContainer;
+		unit.SetLevel(level);
 
 		// 3. Setăm datele critice
 		var worldPos = grid.GetWorldPosition(gridPos);

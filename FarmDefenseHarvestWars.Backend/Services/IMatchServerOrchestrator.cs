@@ -1,4 +1,4 @@
-using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 
 namespace FarmDefenseHarvestWars.Backend.Services;
 
@@ -6,8 +6,8 @@ public interface IMatchServerOrchestrator
 {
     Task<MatchServerEndpoint> StartMatchServerAsync(
         string matchId,
-        IReadOnlyCollection<UnitType> defenderDeck,
-        IReadOnlyCollection<UnitType> attackerDeck,
+        IReadOnlyCollection<UnitUnlockDto> defenderDeck,
+        IReadOnlyCollection<UnitUnlockDto> attackerDeck,
         CancellationToken cancellationToken = default);
 }
 

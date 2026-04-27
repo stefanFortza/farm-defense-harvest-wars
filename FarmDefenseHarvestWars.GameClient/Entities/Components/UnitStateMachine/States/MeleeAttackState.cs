@@ -75,8 +75,8 @@ public class MeleeAttackState : IState
 
     private void Attack(HurtboxComponent target)
     {
-        GD.Print($"{_unit.Name} melee attacks target for {_unit.Data.Damage} damage.");
-        target.ReceiveHit(_unit.Data.Damage);
+        GD.Print($"{_unit.Name} melee attacks target for {_unit.ScaledDamage} damage.");
+        target.ReceiveHit(_unit.ScaledDamage);
         // Trigger attack animation here via _unit.Visuals if available
     }
 }

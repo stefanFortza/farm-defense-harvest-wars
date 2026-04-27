@@ -6,6 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FarmDefenseHarvestWars.Shared.Enums;
 
+using FarmDefenseHarvestWars.Shared.Models.Game;
+
 namespace FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
 public static class CmdArgs
@@ -17,8 +19,8 @@ public static class CmdArgs
     public static string? MatchId { get; private set; }
     public static string? BackendBaseUrl { get; private set; }
     public static string? MatchServerCallbackKey { get; private set; }
-    public static IReadOnlyList<UnitType>? DefenderDeck { get; private set; }
-    public static IReadOnlyList<UnitType>? AttackerDeck { get; private set; }
+    public static IReadOnlyList<UnitUnlockDto>? DefenderDeck { get; private set; }
+    public static IReadOnlyList<UnitUnlockDto>? AttackerDeck { get; private set; }
 
     private static readonly JsonSerializerOptions DeckSerializerOptions = new()
     {
@@ -131,7 +133,7 @@ public static class CmdArgs
         {
             try
             {
-                DefenderDeck = JsonSerializer.Deserialize<List<UnitType>>(defenderDeckJson, DeckSerializerOptions);
+                DefenderDeck = JsonSerializer.Deserialize<List<UnitUnlockDto>>(defenderDeckJson, DeckSerializerOptions);
             }
             catch (Exception ex)
             {
@@ -146,7 +148,7 @@ public static class CmdArgs
         {
             try
             {
-                AttackerDeck = JsonSerializer.Deserialize<List<UnitType>>(attackerDeckJson, DeckSerializerOptions);
+                AttackerDeck = JsonSerializer.Deserialize<List<UnitUnlockDto>>(attackerDeckJson, DeckSerializerOptions);
             }
             catch (Exception ex)
             {

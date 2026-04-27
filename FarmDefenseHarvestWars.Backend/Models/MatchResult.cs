@@ -20,5 +20,8 @@ public class MatchResult
     public int AttackerGoldEarned { get; set; }
     public int AttackerXpEarned { get; set; }
     
+    public string? DefenderDroppedChestJson { get; set; }
+    public string? AttackerDroppedChestJson { get; set; }
+    
     public DateTimeOffset CompletedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }

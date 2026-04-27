@@ -70,10 +70,23 @@ public class DeckService : IDeckService
         return ToDeckDto(deck);
     }
 
-    public async Task<IReadOnlyList<UnitType>> GetUnitCompositionAsync(string userId, PlayerRole role, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<UnitUnlockDto>> GetUnitCompositionAsync(string userId, PlayerRole role, CancellationToken cancellationToken = default)
     {
         Deck deck = await GetOrCreateDeckInternalAsync(userId, role, cancellationToken);
-        return DeserializeUnits(deck.UnitCompositionJson);
+        var unitTypes = DeserializeUnits(deck.UnitCompositionJson);
+        
+        var unlocks = await _db.UnitUnlocks
+            .Where(u => u.UserId == userId && unitTypes.Contains(u.UnitType))
+            .ToListAsync(cancellationToken);
+            
+        return unitTypes.Select(type => {
+            var unlock = unlocks.FirstOrDefault(u => u.UnitType == type);
+            return new UnitUnlockDto {
+                UnitType = type,
+                Level = unlock?.Level ?? 1,
+                Fragments = unlock?.Fragments ?? 0
+            };
+        }).ToList();
     }
 
     private async Task<Deck> GetOrCreateDeckInternalAsync(string userId, PlayerRole role, CancellationToken cancellationToken)

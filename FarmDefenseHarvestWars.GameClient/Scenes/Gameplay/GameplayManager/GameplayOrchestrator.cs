@@ -1,7 +1,9 @@
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using Godot;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
+using System.Linq;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay.GameplayManagers;
 
@@ -63,7 +65,21 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 		}
 
 		// 3. Execuție
-		_unitFactory.Server_SpawnUnit(type, gridPos, _gridSystem);
+		int unitLevel = 1;
+		
+		// Find level from the match deck of the player who requested it
+		var network = GetNode<GameplayNetwork>("/root/GameplayNetwork");
+		if (network.TryGetRoleForPeer(CurrentSender, out var role))
+		{
+			var deck = GameState.Instance.GetMatchDeckForRole(role);
+			var unlock = deck.FirstOrDefault(u => u.UnitType == type);
+			if (unlock != null)
+			{
+				unitLevel = unlock.Level;
+			}
+		}
+
+		_unitFactory.Server_SpawnUnit(type, gridPos, _gridSystem, unitLevel);
 		ResolvePlacementForSender(requestId, type, true, "OK", gridPos);
 	}
 

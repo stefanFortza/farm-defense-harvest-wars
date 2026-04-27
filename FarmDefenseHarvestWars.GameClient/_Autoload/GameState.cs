@@ -9,7 +9,7 @@ using System;
 
 public partial class GameState : Node
 {
-    private static readonly IReadOnlyList<UnitType> EmptyDeck = [];
+    private static readonly IReadOnlyList<UnitUnlockDto> EmptyUnlockDeck = [];
 
     // Singleton
     public static GameState Instance { get; private set; } = null!;
@@ -20,8 +20,8 @@ public partial class GameState : Node
 
     // Match configuration for active game (server loads it from cmd args, clients receive it via RPC)
     public string? MatchId { get; private set; }
-    public IReadOnlyList<UnitType>? DefenderDeck { get; private set; }
-    public IReadOnlyList<UnitType>? AttackerDeck { get; private set; }
+    public IReadOnlyList<UnitUnlockDto>? DefenderDeck { get; private set; }
+    public IReadOnlyList<UnitUnlockDto>? AttackerDeck { get; private set; }
 
     // Computed Property - Ești logat dacă ai un profil încărcat
     public bool IsLoggedIn => CurrentProfile != null;
@@ -87,7 +87,7 @@ public partial class GameState : Node
         }
     }
 
-    public void SetMatchDecks(string matchId, IReadOnlyList<UnitType> defenderDeck, IReadOnlyList<UnitType> attackerDeck)
+    public void SetMatchDecks(string matchId, IReadOnlyList<UnitUnlockDto> defenderDeck, IReadOnlyList<UnitUnlockDto> attackerDeck)
     {
         MatchId = matchId;
         DefenderDeck = [.. defenderDeck];
@@ -95,26 +95,18 @@ public partial class GameState : Node
         EmitSignal(SignalName.MatchConfigurationLoaded);
     }
 
-    public IReadOnlyList<UnitType> GetMatchDeckForRole(PlayerRole role)
+    public IReadOnlyList<UnitUnlockDto> GetMatchDeckForRole(PlayerRole role)
     {
-
-        GD.Print($"Retrieving match deck for role {role} | DefenderDeck: {(DefenderDeck != null ? string.Join(", ", DefenderDeck) : "null")} | AttackerDeck: {(AttackerDeck != null ? string.Join(", ", AttackerDeck) : "null")}");
-        // if (!IsMatchConfigured)
-        // {
-        //     return EmptyDeck;
-        // }
-
-
         return role == PlayerRole.Defender
-            ? DefenderDeck ?? EmptyDeck
-            : AttackerDeck ?? EmptyDeck;
+            ? DefenderDeck ?? EmptyUnlockDeck
+            : AttackerDeck ?? EmptyUnlockDeck;
     }
 
-    public IReadOnlyList<UnitType> GetMyMatchDeck()
+    public IReadOnlyList<UnitUnlockDto> GetMyMatchDeck()
     {
         if (!AssignedRole.HasValue)
         {
-            return EmptyDeck;
+            return EmptyUnlockDeck;
         }
 
         return GetMatchDeckForRole(AssignedRole.Value);
@@ -122,17 +114,21 @@ public partial class GameState : Node
 
     public bool IsUnitUnlocked(PlayerRole role, UnitType unitType)
     {
+        return GetUnitUnlock(role, unitType) != null;
+    }
+
+    public UnitUnlockDto? GetUnitUnlock(PlayerRole role, UnitType unitType)
+    {
         if (CurrentProfile?.UnlockedUnits == null)
         {
-            return false;
+            return null;
         }
 
-        return role switch
-        {
-            PlayerRole.Defender => CurrentProfile.UnlockedUnits.DefenderUnits.Contains(unitType),
-            PlayerRole.Attacker => CurrentProfile.UnlockedUnits.AttackerUnits.Contains(unitType),
-            _ => false
-        };
+        var list = role == PlayerRole.Defender
+            ? CurrentProfile.UnlockedUnits.DefenderUnits
+            : CurrentProfile.UnlockedUnits.AttackerUnits;
+
+        return list.FirstOrDefault(u => u.UnitType == unitType);
     }
 
     public void SetDeckForRole(PlayerRole role, IReadOnlyCollection<UnitType> units)

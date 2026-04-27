@@ -31,8 +31,8 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
 
     public Task<MatchServerEndpoint> StartMatchServerAsync(
         string matchId,
-        IReadOnlyCollection<UnitType> defenderDeck,
-        IReadOnlyCollection<UnitType> attackerDeck,
+        IReadOnlyCollection<UnitUnlockDto> defenderDeck,
+        IReadOnlyCollection<UnitUnlockDto> attackerDeck,
         CancellationToken cancellationToken = default)
     {
         string executablePath = _configuration["GodotServer:ExecutablePath"] ?? string.Empty;

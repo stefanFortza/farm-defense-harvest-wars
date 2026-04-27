@@ -55,6 +55,14 @@ public interface IGameApi
     [Headers("Authorization: Bearer")]
     Task<MatchRewardDto> GetMatchRewardAsync([AliasAs("matchId")] string matchId);
 
+    [Post(ApiRoutes.OpenChest)]
+    [Headers("Authorization: Bearer")]
+    Task<ChestOpenResultDto> OpenChestAsync([AliasAs("chestId")] string chestId);
+
+    [Post(ApiRoutes.UpgradeUnit)]
+    [Headers("Authorization: Bearer")]
+    Task<PlayerProfileDto> UpgradeUnitAsync([AliasAs("unitType")] UnitType unitType);
+
     [Post(ApiRoutes.MatchComplete)]
     Task CompleteMatchAsync(
         [AliasAs("matchId")] string matchId,

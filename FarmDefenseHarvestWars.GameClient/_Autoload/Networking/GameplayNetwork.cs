@@ -3,6 +3,7 @@ using FarmDefenseHarvestWars.Shared.Enums;
 using System.Collections.Generic;
 using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 using System.Threading.Tasks;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 
 public partial class GameplayNetwork : Node
 {
@@ -137,13 +138,19 @@ public partial class GameplayNetwork : Node
         if (_connectedPlayers.Count == MaxPlayers)
         {
             GD.Print("Match Ready! Starting in 1s...");
-            
+
             // Wait 1 second so clients can see the "Connected" status
             await Task.Delay(1000);
-            
+
             if (!IsInsideTree()) return;
 
-            Rpc(nameof(SyncMatchDecksToClient), CmdArgs.MatchId ?? "", BuildDeckPayload(CmdArgs.DefenderDeck), BuildDeckPayload(CmdArgs.AttackerDeck));
+            var defPayload = BuildDeckPayload(CmdArgs.DefenderDeck);
+            var atkPayload = BuildDeckPayload(CmdArgs.AttackerDeck);
+
+            Rpc(nameof(SyncMatchDecksToClient),
+                CmdArgs.MatchId ?? "",
+                defPayload.Types, defPayload.Levels,
+                atkPayload.Types, atkPayload.Levels);
             Rpc(nameof(StartGameScene));
         }
     }
@@ -166,19 +173,29 @@ public partial class GameplayNetwork : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncMatchDecksToClient(string matchId, Godot.Collections.Array<int> defenderDeck, Godot.Collections.Array<int> attackerDeck)
+    private void SyncMatchDecksToClient(string matchId,
+        Godot.Collections.Array<int> defenderTypes, Godot.Collections.Array<int> defenderLevels,
+        Godot.Collections.Array<int> attackerTypes, Godot.Collections.Array<int> attackerLevels)
     {
-        List<UnitType> defenderUnits = [];
-        List<UnitType> attackerUnits = [];
+        List<UnitUnlockDto> defenderUnits = [];
+        List<UnitUnlockDto> attackerUnits = [];
 
-        foreach (int unitType in defenderDeck)
+        for (int i = 0; i < defenderTypes.Count; i++)
         {
-            defenderUnits.Add((UnitType)unitType);
+            defenderUnits.Add(new UnitUnlockDto
+            {
+                UnitType = (UnitType)defenderTypes[i],
+                Level = defenderLevels[i]
+            });
         }
 
-        foreach (int unitType in attackerDeck)
+        for (int i = 0; i < attackerTypes.Count; i++)
         {
-            attackerUnits.Add((UnitType)unitType);
+            attackerUnits.Add(new UnitUnlockDto
+            {
+                UnitType = (UnitType)attackerTypes[i],
+                Level = attackerLevels[i]
+            });
         }
 
         GameState.Instance?.SetMatchDecks(matchId, defenderUnits, attackerUnits);
@@ -242,21 +259,23 @@ public partial class GameplayNetwork : Node
         FailClientJoin("Timed out waiting for match server response.");
     }
 
-    private static Godot.Collections.Array<int> BuildDeckPayload(IReadOnlyList<UnitType>? units)
+    private static (Godot.Collections.Array<int> Types, Godot.Collections.Array<int> Levels) BuildDeckPayload(IReadOnlyList<UnitUnlockDto>? units)
     {
-        Godot.Collections.Array<int> payload = [];
+        Godot.Collections.Array<int> types = [];
+        Godot.Collections.Array<int> levels = [];
 
         if (units == null)
         {
-            return payload;
+            return (types, levels);
         }
 
-        foreach (UnitType unitType in units)
+        foreach (var unlock in units)
         {
-            payload.Add((int)unitType);
+            types.Add((int)unlock.UnitType);
+            levels.Add(unlock.Level);
         }
 
-        return payload;
+        return (types, levels);
     }
 
     private void FailClientJoin(string reason)

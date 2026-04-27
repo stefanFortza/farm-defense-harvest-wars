@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://dp3jyvx5x8y1n"]
+
+[ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/UI/Components/ChestRewardItemControl.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_frames"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bg"]
+atlas = ExtResource("3_frames")
+region = Rect2(1019, 107, 26, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_item"]
+texture = SubResource("AtlasTexture_bg")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[node name="ChestRewardItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_amountLabel")]
+custom_minimum_size = Vector2(40, 50)
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxTexture_item")
+script = ExtResource("1_script")
+_icon = NodePath("VBox/Icon")
+_amountLabel = NodePath("VBox/Amount")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="VBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Amount" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "+10"
+horizontal_alignment = 1

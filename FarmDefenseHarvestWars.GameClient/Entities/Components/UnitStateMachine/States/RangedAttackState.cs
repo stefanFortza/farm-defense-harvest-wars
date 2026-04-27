@@ -94,7 +94,7 @@ public class RangedAttackState : IState
         if (projectile is BaseProjectile baseProj)
         {
             baseProj.Initialize((
-                Damage: _unit.Data.Damage,
+                Damage: _unit.ScaledDamage,
                 Direction: _unit.GetForwardVector()
             ));
         }

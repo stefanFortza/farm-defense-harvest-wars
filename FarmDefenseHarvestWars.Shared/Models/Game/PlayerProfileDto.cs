@@ -8,4 +8,5 @@ public class PlayerProfileDto
     public int Xp { get; set; }
     public int AvatarIndex { get; set; }
     public PlayerUnlockedUnitsDto UnlockedUnits { get; set; } = new();
+    public IReadOnlyList<ChestDto> Chests { get; set; } = [];
 }

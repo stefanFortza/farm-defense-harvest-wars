@@ -16,4 +16,6 @@ public class MatchRewardDto
     public int TotalGoldNow { get; set; }
     public int TotalXpNow { get; set; }
     public int TotalLevelNow { get; set; }
+    
+    public ChestDto? DroppedChest { get; set; }
 }

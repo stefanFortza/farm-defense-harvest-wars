@@ -2,14 +2,18 @@ using Godot;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
+using FarmDefenseHarvestWars.Shared.Enums;
 
 public partial class DeckLibraryItemControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
     [Export] private Label _statusLabel = null!;
+    [Export] private Label _levelLabel = null!;
+    [Export] private Button _infoButton = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
     [Export] private PackedScene _tooltipScene = null!;
-    
+    [Export] private PackedScene _upgradePopupScene = null!;
+
     private UnitData? _unitData;
     private int _unitTypeValue;
     private bool _canDrag;
@@ -21,13 +25,21 @@ public partial class DeckLibraryItemControl : PanelContainer
         MouseFilter = MouseFilterEnum.Pass;
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
+        this.EnsureNotNull(_levelLabel, nameof(_levelLabel));
+        this.EnsureNotNull(_infoButton, nameof(_infoButton));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
         this.EnsureNotNull(_tooltipScene, nameof(_tooltipScene));
 
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
-        
+
         _statusLabel.Hide();
+
+        if (_infoButton != null)
+        {
+            _infoButton.Pressed += OnInfoButtonPressed;
+            _infoButton.Hide();
+        }
     }
 
     public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
@@ -39,7 +51,26 @@ public partial class DeckLibraryItemControl : PanelContainer
         _canDrag = !alreadyInDeck && isUnlocked && !isUnlocking && !isDeckSaving;
 
         _icon.Texture = unitData.Icon;
-        
+
+        // Level display
+        if (isUnlocked)
+        {
+            var unlock = GameState.Instance?.GetUnitUnlock(unitData.Role, unitData.Type);
+            if (unlock != null)
+            {
+                _levelLabel.Text = $"Lvl {unlock.Level}";
+                _levelLabel.Show();
+            }
+            else
+            {
+                _levelLabel.Hide();
+            }
+        }
+        else
+        {
+            _levelLabel.Hide();
+        }
+
         // Status display
         if (!isUnlocked)
         {
@@ -87,6 +118,8 @@ public partial class DeckLibraryItemControl : PanelContainer
 
     public void OnMouseEntered()
     {
+        if (_infoButton != null && _isUnlocked) _infoButton.Show();
+
         if (!_isUnlocked && !_isUnlocking)
         {
             UIAnimations.TryAnimateScale(this, new Vector2(1.05f, 1.05f), 0.15);
@@ -98,7 +131,20 @@ public partial class DeckLibraryItemControl : PanelContainer
 
     public void OnMouseExited()
     {
+        if (_infoButton != null) _infoButton.Hide();
         UIAnimations.TryAnimateScaleDown(this, 0.15);
+    }
+
+    private void OnInfoButtonPressed()
+    {
+        if (_unitData == null || _upgradePopupScene == null) return;
+
+        var unlock = GameState.Instance?.GetUnitUnlock(_unitData.Role, _unitData.Type);
+        if (unlock == null) return;
+
+        var popup = _upgradePopupScene.Instantiate<UpgradePopup>();
+        GetTree().Root.AddChild(popup);
+        popup.Setup(_unitData, unlock);
     }
 
 

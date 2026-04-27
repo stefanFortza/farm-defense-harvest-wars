@@ -106,8 +106,8 @@ public class HybridRangedAttackState : IState
             return;
         }
 
-        GD.Print($"{_unit.Name} hybrid melee attacks for {_unit.Data.Damage} damage.");
-        target.ReceiveHit(_unit.Data.Damage);
+        GD.Print($"{_unit.Name} hybrid melee attacks for {_unit.ScaledDamage} damage.");
+        target.ReceiveHit(_unit.ScaledDamage);
     }
 
     private void AttackRanged()
@@ -139,7 +139,7 @@ public class HybridRangedAttackState : IState
         if (projectile is BaseProjectile baseProjectile)
         {
             baseProjectile.Initialize((
-                Damage: _unit.Data.Damage,
+                Damage: _unit.ScaledDamage,
                 Direction: (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right
             ));
         }

@@ -248,9 +248,9 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 
         if (selectedUnits != null)
         {
-            foreach (var unitType in selectedUnits)
+            foreach (var unlock in selectedUnits)
             {
-                UnitData unitData = _unitRegistry.GetUnitData(unitType);
+                UnitData unitData = _unitRegistry.GetUnitData(unlock.UnitType);
                 if (unitData != null && unitData.Role == role)
                 {
                     result.Add(unitData);
