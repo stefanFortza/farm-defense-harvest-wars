@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://bplupdgixgj3q"]
+[gd_scene load_steps=62 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://dsvfb7100saow" path="res://Assets/Avatars/Fisherman_Fin.png" id="8_4q10u"]
 [ext_resource type="Texture2D" uid="uid://bo3mhsq4l0vx0" path="res://Assets/Avatars/Lumberjack_Jack.png" id="9_sei41"]
 [ext_resource type="Texture2D" uid="uid://b4yuobqsinbsv" path="res://Assets/Avatars/Miner_Mike.png" id="10_3lx0l"]
+[ext_resource type="PackedScene" uid="uid://bqj8hpx6k1m1a" path="res://Scenes/UI/Components/ChestSlotControl.tscn" id="11_chest_slot"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pegx7"]
 atlas = ExtResource("3_mpwkp")
@@ -199,7 +200,7 @@ texture = SubResource("AtlasTexture_24jni")
 atlas = ExtResource("3_tu18y")
 region = Rect2(1112, 8, 32, 32)
 
-[node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel", "_avatarTexture", "_prevBtn", "_nextBtn")]
+[node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel", "_avatarTexture", "_chestContainer", "_prevBtn", "_nextBtn")]
 custom_minimum_size = Vector2(120, 150)
 offset_right = 120.0
 offset_bottom = 163.0
@@ -213,6 +214,8 @@ _emailLabel = NodePath("VBox/Margin/HBox/VBox/Email")
 _levelLabel = NodePath("VBox/StatsPanel/Margin/Grid/LevelValue")
 _goldLabel = NodePath("VBox/StatsPanel/Margin/Grid/GoldValue")
 _avatarTexture = NodePath("VBox/Margin/HBox/AvatarSelection/AvatarFrame/Avatar")
+_chestContainer = NodePath("VBox/ChestContainer")
+_chestSlotScene = ExtResource("11_chest_slot")
 _prevBtn = NodePath("VBox/Margin/HBox/AvatarSelection/PrevBtn")
 _nextBtn = NodePath("VBox/Margin/HBox/AvatarSelection/NextBtn")
 _avatars = [SubResource("AtlasTexture_pegx7"), SubResource("AtlasTexture_reuvb"), SubResource("AtlasTexture_lucoy"), SubResource("AtlasTexture_a8nwv"), SubResource("AtlasTexture_sqyo7"), SubResource("AtlasTexture_k1a7s"), SubResource("AtlasTexture_kg75a"), SubResource("AtlasTexture_tp3xp")]
@@ -368,3 +371,9 @@ theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_font_sizes/font_size = 8
 text = "0"
 horizontal_alignment = 2
+
+[node name="ChestContainer" type="HBoxContainer" parent="VBox"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1

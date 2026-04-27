@@ -5,7 +5,7 @@ using FarmDefenseHarvestWars.Shared.Models.Game;
 using FarmDefenseHarvestWars.Shared.Enums;
 using System;
 
-public partial class UpgradePopup : Control
+public partial class UpgradePopup : CanvasLayer
 {
     [Export] private TextureRect _unitIcon = null!;
     [Export] private Label _unitName = null!;
@@ -15,7 +15,7 @@ public partial class UpgradePopup : Control
     [Export] private Label _costLabel = null!;
     [Export] private Button _upgradeButton = null!;
     [Export] private Button _closeButton = null!;
-    
+
     private UnitData? _unitData;
     private UnitUnlockDto? _unlock;
 
@@ -32,13 +32,17 @@ public partial class UpgradePopup : Control
 
         _closeButton.Pressed += () => QueueFree();
         _upgradeButton.Pressed += OnUpgradePressed;
-        
+
         // Background click to close
-        GuiInput += (ev) => {
-            if (ev is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
-                QueueFree();
-        };
-    }
+        var backgroundControl = GetNodeOrNull<Control>("Control");
+        if (backgroundControl != null)
+        {
+            backgroundControl.GuiInput += (ev) => {
+                if (ev is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
+                    QueueFree();
+            };
+        }
+        }
 
     public void Setup(UnitData unitData, UnitUnlockDto unlock)
     {
@@ -54,19 +58,19 @@ public partial class UpgradePopup : Control
         _unitIcon.Texture = _unitData.Icon;
         _unitName.Text = _unitData.Name;
         _levelLabel.Text = $"Level {_unlock.Level}";
-        
+
         int required = _unlock.FragmentsRequiredForNextLevel;
         _fragmentsLabel.Text = $"{_unlock.Fragments} / {required}";
         _fragmentsBar.MaxValue = required;
         _fragmentsBar.Value = Math.Min(_unlock.Fragments, required);
-        
+
         _costLabel.Text = $"{_unlock.UpgradeCost} Gold";
-        
+
         bool canAfford = GameState.Instance?.CurrentProfile?.Gold >= _unlock.UpgradeCost;
         bool hasFragments = _unlock.Fragments >= required;
-        
+
         _upgradeButton.Disabled = !canAfford || !hasFragments;
-        
+
         if (!hasFragments)
             _upgradeButton.TooltipText = "Not enough fragments!";
         else if (!canAfford)
@@ -86,7 +90,7 @@ public partial class UpgradePopup : Control
             // After upgrade, find the new unlock data for this unit
             var role = _unitData.Role;
             var newUnlock = GameState.Instance?.GetUnitUnlock(role, _unitData.Type);
-            
+
             if (newUnlock != null)
             {
                 _unlock = newUnlock;

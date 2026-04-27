@@ -24,6 +24,12 @@ public partial class MatchmakingPageRight : MarginContainer
 
     public override void _Ready()
     {
+        _chestContainer ??= GetNodeOrNull<Container>("VBox/ChestContainer");
+        if (_chestSlotScene == null && ResourceLoader.Exists("res://Scenes/UI/Components/ChestSlotControl.tscn"))
+        {
+            _chestSlotScene = GD.Load<PackedScene>("res://Scenes/UI/Components/ChestSlotControl.tscn");
+        }
+
         InitializeChestSlots();
         UpdateUI();
         if (GameState.Instance != null)
