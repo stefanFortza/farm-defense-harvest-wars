@@ -85,9 +85,9 @@ public class ProfileService : IProfileService
 
     public async Task<PlayerProfileDto> UpdateAvatarAsync(ApplicationUser user, int avatarIndex, CancellationToken cancellationToken = default)
     {
-        if (avatarIndex < 1 || avatarIndex > 8)
+        if (avatarIndex < 0 || avatarIndex > 7)
         {
-            throw new ArgumentException("Avatar index must be between 1 and 8.");
+            throw new ArgumentException("Avatar index must be between 0 and 7.");
         }
 
         user.AvatarIndex = avatarIndex;
@@ -112,7 +112,7 @@ public class ProfileService : IProfileService
         var chestsJson = string.IsNullOrWhiteSpace(user.ChestsJson) ? "[]" : user.ChestsJson;
         var chests = JsonSerializer.Deserialize<List<ChestDto>>(chestsJson) ?? new();
         var chest = chests.FirstOrDefault(c => c.Id == chestId);
-        
+
         if (chest == null)
         {
             throw new InvalidOperationException("Chest not found.");
@@ -137,7 +137,7 @@ public class ProfileService : IProfileService
 
         var random = new Random();
         var rewards = new List<UnitUnlockDto>();
-        
+
         // Give rewards for 1 or 2 units
         int rewardCount = random.Next(1, 3);
         var shuffledUnlocks = unlocks.OrderBy(x => random.Next()).Take(rewardCount).ToList();
@@ -146,7 +146,7 @@ public class ProfileService : IProfileService
         {
             int fragmentAmount = random.Next(5, 15);
             unlock.Fragments += fragmentAmount;
-            
+
             rewards.Add(new UnitUnlockDto
             {
                 UnitType = unlock.UnitType,
@@ -157,7 +157,7 @@ public class ProfileService : IProfileService
 
         await _db.SaveChangesAsync(cancellationToken);
         var profile = await BuildPlayerProfileAsync(user, cancellationToken);
-        
+
         return (profile, rewards);
     }
 
