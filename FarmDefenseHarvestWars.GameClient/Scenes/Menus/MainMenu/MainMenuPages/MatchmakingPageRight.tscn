@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://bplupdgixgj3q"]
+[gd_scene load_steps=61 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
@@ -225,6 +225,7 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Title" type="Label" parent="VBox"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0.439216, 1)
 theme_override_colors/font_outline_color = Color(0.2, 0.1, 0, 1)
@@ -240,7 +241,7 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_jap17")
 [node name="HBox" type="VBoxContainer" parent="VBox/Margin"]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 0
 
 [node name="AvatarSelection" type="HBoxContainer" parent="VBox/Margin/HBox"]
 layout_mode = 2
@@ -305,9 +306,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Email" type="Label" parent="VBox/Margin/HBox/VBox"]
+custom_minimum_size = Vector2(20, 10)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 6
 text = "mail@example.com"
 horizontal_alignment = 1
 vertical_alignment = 1

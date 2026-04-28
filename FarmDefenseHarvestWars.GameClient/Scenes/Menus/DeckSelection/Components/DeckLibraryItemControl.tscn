@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6ybv7pnl1wvj"]
+[gd_scene load_steps=18 format=3 uid="uid://c6ybv7pnl1wvj"]
 
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_ct1rl"]
 [ext_resource type="Script" uid="uid://dpsyc1dw3mv6r" path="res://Scenes/Menus/DeckSelection/Components/DeckLibraryItemControl.cs" id="1_script"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bg42jkxh1y32g" path="res://Scenes/Menus/DeckSelection/Components/DragPreview/DeckLibraryItemDragPreview.tscn" id="2_dragpreview"]
 [ext_resource type="PackedScene" uid="uid://cunittooltip0" path="res://Scenes/UI/Components/UnitTooltip.tscn" id="3_tooltip"]
 [ext_resource type="PackedScene" uid="uid://cm3jyvx5x8y1n" path="res://Scenes/UI/Components/UpgradePopup.tscn" id="4_upgrade"]
+[ext_resource type="Script" uid="uid://c60k8mfvdff5o" path="res://Scripts/Core/UI/BaseButtonUI.cs" id="7_x73uj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6k0ts"]
 atlas = ExtResource("2_5ass7")
@@ -23,10 +24,25 @@ texture_margin_right = 6.0
 texture_margin_bottom = 9.0
 region_rect = Rect2(0, 0, 30, 34)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_placeholder"]
+region = Rect2(11, 10, 13, 12)
+
 [sub_resource type="LabelSettings" id="LabelSettings_status"]
 font_size = 8
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17x6c"]
+atlas = ExtResource("2_5ass7")
+region = Rect2(586, 10, 28, 28)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mlepj"]
+texture = SubResource("AtlasTexture_17x6c")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(0, 0, 28, 28)
 
 [sub_resource type="LabelSettings" id="LabelSettings_level"]
 font_size = 6
@@ -34,19 +50,16 @@ font_color = Color(1, 0.9, 0.4, 1)
 outline_size = 2
 outline_color = Color(0.2, 0.1, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info_test"]
-bg_color = Color(0.8, 0.4, 0, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l57fl"]
+load_path = "res://.godot/imported/UI_Buttons.png-61ed5781c7ff83c1dcddd48eef3a55ea.ctex"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_placeholder"]
-region = Rect2(11, 10, 13, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_x73uj"]
+atlas = SubResource("CompressedTexture2D_l57fl")
+region = Rect2(481, 177, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_17x6c"]
+texture = SubResource("AtlasTexture_x73uj")
+region_rect = Rect2(0, 0, 14, 14)
 
 [node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_statusLabel", "_levelLabel", "_infoButton")]
 custom_minimum_size = Vector2(32, 32)
@@ -59,9 +72,9 @@ theme = ExtResource("1_ct1rl")
 theme_override_styles/panel = SubResource("StyleBoxTexture_l57fl")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
-_statusLabel = NodePath("StatusLabel")
-_levelLabel = NodePath("LevelLabel")
-_infoButton = NodePath("InfoButton")
+_statusLabel = NodePath("Control/StatusLabel")
+_levelLabel = NodePath("Control/LevelLabel")
+_infoButton = NodePath("Control/InfoButton")
 _dragPreviewScene = ExtResource("2_dragpreview")
 _tooltipScene = ExtResource("3_tooltip")
 _upgradePopupScene = ExtResource("4_upgrade")
@@ -76,27 +89,44 @@ texture = SubResource("AtlasTexture_placeholder")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="Control" type="Control" parent="."]
 layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = -4.0
+offset_top = -4.0
+offset_bottom = 4.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "L"
 label_settings = SubResource("LabelSettings_status")
 horizontal_alignment = 2
 
-[node name="LevelLabel" type="Label" parent="."]
-layout_mode = 2
+[node name="LevelLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 15.0
+offset_right = 19.0
+offset_bottom = 28.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_mlepj")
 text = "Lvl 1"
 label_settings = SubResource("LabelSettings_level")
 
-[node name="InfoButton" type="Button" parent="."]
+[node name="InfoButton" type="Button" parent="Control"]
 custom_minimum_size = Vector2(12, 12)
-layout_mode = 2
+layout_mode = 0
+offset_left = 16.0
+offset_top = -7.0
+offset_right = 28.0
+offset_bottom = 5.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
-mouse_filter = 0
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = SubResource("StyleBoxFlat_info_test")
-text = "i"
+theme_override_styles/normal = SubResource("StyleBoxTexture_17x6c")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_17x6c")
+theme_override_styles/hover = SubResource("StyleBoxTexture_17x6c")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_17x6c")
+theme_override_styles/focus = SubResource("StyleBoxTexture_17x6c")
+script = ExtResource("7_x73uj")

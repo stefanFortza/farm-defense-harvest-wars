@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://5nbc448mpv87"]
+[gd_scene load_steps=10 format=3 uid="uid://5nbc448mpv87"]
 
 [ext_resource type="Script" uid="uid://cxi5qo2kvn3sv" path="res://Scenes/UI/Components/ChestRewardPopup.cs" id="2_opuvx"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_frames"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/Components/ChestRewardItemControl.tscn" id="4_item"]
+[ext_resource type="PackedScene" uid="uid://lnrec5bnr504" path="res://Scenes/UI/Components/ChestRewardItemControl.tscn" id="4_item"]
+[ext_resource type="Texture2D" uid="uid://sii8tit3s0hv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Buttons.png" id="5_2lfdd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bg"]
 atlas = ExtResource("3_frames")
@@ -19,14 +20,15 @@ texture_margin_bottom = 8.0
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_close"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_close"]
-atlas = ExtResource("3_frames")
-region = Rect2(849, 11, 14, 14)
+atlas = ExtResource("5_2lfdd")
+region = Rect2(721, 1, 14, 14)
 
-[node name="ChestRewardPopup" type="CanvasLayer" node_paths=PackedStringArray("_rewardContainer", "_closeButton")]
+[node name="ChestRewardPopup" type="CanvasLayer" node_paths=PackedStringArray("_rewardContainer", "_panel", "_closeButton")]
 layer = 110
 script = ExtResource("2_opuvx")
 _rewardContainer = NodePath("Control/Panel/Margin/VBox/RewardHBox")
 _rewardItemScene = ExtResource("4_item")
+_panel = NodePath("Control/Panel")
 _closeButton = NodePath("Control/Panel/Margin/VBox/CloseBtn")
 
 [node name="Control" type="Control" parent="."]
@@ -45,6 +47,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 color = Color(0, 0, 0, 0.7)
 
 [node name="Panel" type="PanelContainer" parent="Control"]
@@ -61,10 +64,12 @@ offset_right = 100.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxTexture_popup")
 
 [node name="Margin" type="MarginContainer" parent="Control/Panel"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -72,24 +77,28 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBox" type="VBoxContainer" parent="Control/Panel/Margin"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Title" type="Label" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.843137, 0.439216, 1)
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(1, 0.92844146, 0.82419646, 1)
 theme_override_font_sizes/font_size = 14
 text = "CHEST REWARDS"
 horizontal_alignment = 1
 
 [node name="RewardHBox" type="HBoxContainer" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 alignment = 1
 
 [node name="CloseBtn" type="Button" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_horizontal = 8
 focus_mode = 0
+theme = ExtResource("2_theme")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_close")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_close")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_close")

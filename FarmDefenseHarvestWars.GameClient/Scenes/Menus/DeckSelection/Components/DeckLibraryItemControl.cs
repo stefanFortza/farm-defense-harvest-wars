@@ -24,12 +24,6 @@ public partial class DeckLibraryItemControl : PanelContainer
 	{
 		MouseFilter = MouseFilterEnum.Pass;
 
-		// Dynamic discovery if not linked in inspector
-		_icon ??= GetNodeOrNull<TextureRect>("Icon");
-		_statusLabel ??= GetNodeOrNull<Label>("StatusLabel");
-		_levelLabel ??= GetNodeOrNull<Label>("LevelLabel");
-		_infoButton ??= GetNodeOrNull<Button>("InfoButton");
-
 		this.EnsureNotNull(_icon, nameof(_icon));
 		this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
 		// We don't fail-fast on level and info yet to allow legacy scenes to work
@@ -127,7 +121,11 @@ public partial class DeckLibraryItemControl : PanelContainer
 
 	public void OnMouseEntered()
 	{
-		if (_infoButton != null && _isUnlocked) _infoButton.Show();
+		if (_isUnlocked)
+		{
+			_infoButton.Show();
+			UIAnimations.AnimatePop(_infoButton);
+		}
 
 		if (!_isUnlocked && !_isUnlocking)
 		{
@@ -146,7 +144,8 @@ public partial class DeckLibraryItemControl : PanelContainer
 			return;
 		}
 
-		if (_infoButton != null) _infoButton.Hide();
+		_infoButton.Hide();
+		UIAnimations.AnimateShrink(_infoButton);
 		UIAnimations.TryAnimateScaleDown(this, 0.15);
 	}
 

@@ -134,7 +134,7 @@ public partial class MatchmakingPageRight : MarginContainer
         }
 
         _chestSlots.Clear();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 4; i++)
         {
             var slot = _chestSlotScene.Instantiate<ChestSlotControl>();
             _chestContainer.AddChild(slot);

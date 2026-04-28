@@ -1,8 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://cm3jyvx5x8y1n"]
+[gd_scene load_steps=14 format=3 uid="uid://cm3jyvx5x8y1n"]
 
 [ext_resource type="Script" uid="uid://1u3c382xniu8" path="res://Scenes/UI/Components/UpgradePopup.cs" id="2_ouanb"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="3_frames"]
+[ext_resource type="Texture2D" uid="uid://sii8tit3s0hv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Buttons.png" id="4_dfwbj"]
+[ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="4_x8slh"]
+[ext_resource type="Script" uid="uid://c60k8mfvdff5o" path="res://Scripts/Core/UI/BaseButtonUI.cs" id="5_x8slh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bg"]
 atlas = ExtResource("3_frames")
@@ -38,13 +41,17 @@ corner_radius_top_right = 1
 corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_dsvyl"]
+atlas = ExtResource("4_x8slh")
+region = Rect2(210, 49, 12, 14)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_close"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_close"]
-atlas = ExtResource("3_frames")
-region = Rect2(849, 11, 14, 14)
+[sub_resource type="AtlasTexture" id="AtlasTexture_jvpih"]
+atlas = ExtResource("4_dfwbj")
+region = Rect2(721, 1, 14, 14)
 
-[node name="UpgradePopup" type="CanvasLayer" node_paths=PackedStringArray("_unitIcon", "_unitName", "_levelLabel", "_fragmentsLabel", "_fragmentsBar", "_costLabel", "_upgradeButton", "_closeButton")]
+[node name="UpgradePopup" type="CanvasLayer" node_paths=PackedStringArray("_unitIcon", "_unitName", "_levelLabel", "_fragmentsLabel", "_fragmentsBar", "_costLabel", "_upgradeButton", "_closeButton", "_panel")]
 layer = 100
 script = ExtResource("2_ouanb")
 _unitIcon = NodePath("Control/Panel/Margin/VBox/Header/IconFrame/Icon")
@@ -54,7 +61,8 @@ _fragmentsLabel = NodePath("Control/Panel/Margin/VBox/Progress/FragLabel")
 _fragmentsBar = NodePath("Control/Panel/Margin/VBox/Progress/Bar")
 _costLabel = NodePath("Control/Panel/Margin/VBox/UpgradeSection/Cost")
 _upgradeButton = NodePath("Control/Panel/Margin/VBox/UpgradeSection/UpgradeBtn")
-_closeButton = NodePath("Control/Panel/Margin/VBox/CloseBtn")
+_closeButton = NodePath("Control/Panel/Control/CloseBtn")
+_panel = NodePath("Control/Panel")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -72,6 +80,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 color = Color(0, 0, 0, 0.6)
 
 [node name="Panel" type="PanelContainer" parent="Control"]
@@ -83,15 +92,17 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -90.0
-offset_top = -60.0
+offset_top = -80.0
 offset_right = 90.0
-offset_bottom = 60.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxTexture_popup")
 
 [node name="Margin" type="MarginContainer" parent="Control/Panel"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -99,45 +110,54 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBox" type="VBoxContainer" parent="Control/Panel/Margin"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/separation = 12
 
 [node name="Header" type="HBoxContainer" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/separation = 10
 
 [node name="IconFrame" type="PanelContainer" parent="Control/Panel/Margin/VBox/Header"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+theme = ExtResource("2_theme")
 
 [node name="Icon" type="TextureRect" parent="Control/Panel/Margin/VBox/Header/IconFrame"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Info" type="VBoxContainer" parent="Control/Panel/Margin/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("2_theme")
 alignment = 1
 
 [node name="Name" type="Label" parent="Control/Panel/Margin/VBox/Header/Info"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 12
 text = "Unit Name"
 
 [node name="Level" type="Label" parent="Control/Panel/Margin/VBox/Header/Info"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 8
 text = "Level 1"
 
 [node name="Progress" type="VBoxContainer" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/separation = 4
 
 [node name="Bar" type="ProgressBar" parent="Control/Panel/Margin/VBox/Progress"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_styles/background = SubResource("StyleBoxFlat_progress_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_progress_fill")
 value = 50.0
@@ -145,34 +165,67 @@ show_percentage = false
 
 [node name="FragLabel" type="Label" parent="Control/Panel/Margin/VBox/Progress"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_font_sizes/font_size = 8
 text = "10 / 20 fragments"
 horizontal_alignment = 1
 
 [node name="UpgradeSection" type="VBoxContainer" parent="Control/Panel/Margin/VBox"]
 layout_mode = 2
+theme = ExtResource("2_theme")
 theme_override_constants/separation = 6
 
 [node name="Cost" type="Label" parent="Control/Panel/Margin/VBox/UpgradeSection"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(1, 0.98941416, 0.97906405, 1)
 theme_override_font_sizes/font_size = 10
 text = "100 Gold"
 horizontal_alignment = 1
 
+[node name="TextureRect" type="TextureRect" parent="Control/Panel/Margin/VBox/UpgradeSection/Cost"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -7.0
+offset_right = -38.0
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = SubResource("AtlasTexture_dsvyl")
+
 [node name="UpgradeBtn" type="Button" parent="Control/Panel/Margin/VBox/UpgradeSection"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
+theme = ExtResource("2_theme")
 text = "UPGRADE"
+script = ExtResource("5_x8slh")
 
-[node name="CloseBtn" type="Button" parent="Control/Panel/Margin/VBox"]
+[node name="Control" type="Control" parent="Control/Panel"]
 layout_mode = 2
+
+[node name="CloseBtn" type="Button" parent="Control/Panel/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -5.0
+offset_top = -11.0
+offset_right = 9.0
+offset_bottom = 3.0
+grow_horizontal = 0
 size_flags_horizontal = 8
 focus_mode = 0
+theme = ExtResource("2_theme")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_close")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_close")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_close")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_close")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_close")
-icon = SubResource("AtlasTexture_close")
+icon = SubResource("AtlasTexture_jvpih")
 flat = true
+script = ExtResource("5_x8slh")
