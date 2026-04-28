@@ -14,12 +14,12 @@ namespace FarmDefenseHarvestWars.Backend.Services;
 public class MatchmakingService : IMatchmakingService
 {
     private readonly object _queueLock = new();
-    
+
     // Separate queues for each role preference
     private readonly Queue<string> _defenderQueue = [];
     private readonly Queue<string> _attackerQueue = [];
     private readonly Queue<string> _anyQueue = [];
-    
+
     private readonly HashSet<string> _queuedUsers = [];
     private readonly Dictionary<string, MatchmakingStatusDto> _activeMatches = [];
     private readonly Dictionary<string, (string DefenderId, string AttackerId)> _matchParticipants = [];
@@ -190,7 +190,7 @@ public class MatchmakingService : IMatchmakingService
                 defenderId = participants.DefenderId;
                 attackerId = participants.AttackerId;
             }
-            
+
             _completedMatchIds.Add(matchId);
             RemoveActiveMatchEntriesByMatchIdInternal(matchId);
             _matchParticipants.Remove(matchId);
@@ -323,7 +323,7 @@ public class MatchmakingService : IMatchmakingService
     {
         var chestsJson = string.IsNullOrWhiteSpace(user.ChestsJson) ? "[]" : user.ChestsJson;
         var chests = JsonSerializer.Deserialize<List<ChestDto>>(chestsJson) ?? new();
-        if (chests.Count >= 5)
+        if (chests.Count >= 3)
         {
             return null;
         }

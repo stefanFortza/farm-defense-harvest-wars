@@ -31,7 +31,13 @@ expand_margin_top = 3.0
 expand_margin_bottom = 3.0
 region_rect = Rect2(0, 0, 30, 4)
 
-[node name="MarginContainer" type="MarginContainer" node_paths=PackedStringArray("_nameLabel", "_costLabel", "_healthLabel", "_damageLabel", "_rangeLabel", "_speedLabel", "_iconRect")]
+[sub_resource type="LabelSettings" id="LabelSettings_level"]
+font_size = 8
+font_color = Color(1, 0.901961, 0.4, 1)
+outline_size = 2
+outline_color = Color(0.2, 0.101961, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" node_paths=PackedStringArray("_nameLabel", "_costLabel", "_healthLabel", "_damageLabel", "_rangeLabel", "_speedLabel", "_iconRect", "_levelLabel")]
 offset_right = 102.0
 offset_bottom = 84.0
 theme_override_constants/margin_left = 6
@@ -46,6 +52,7 @@ _damageLabel = NodePath("UnitTooltip/VBox/Grid/DamageHBox/Value")
 _rangeLabel = NodePath("UnitTooltip/VBox/Grid/RangeHBox/Value")
 _speedLabel = NodePath("UnitTooltip/VBox/Grid/SpeedHBox/Value")
 _iconRect = NodePath("UnitTooltip/VBox/TitleHBox/Icon")
+_levelLabel = NodePath("UnitTooltip/VBox/TitleHBox/LevelLabel")
 
 [node name="UnitTooltip" type="PanelContainer" parent="."]
 layout_mode = 2
@@ -73,6 +80,13 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.843137, 0, 1)
 theme_override_font_sizes/font_size = 12
 text = "Unit Name"
+
+[node name="LevelLabel" type="Label" parent="UnitTooltip/VBox/TitleHBox"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Lvl 1"
+label_settings = SubResource("LabelSettings_level")
+horizontal_alignment = 2
 
 [node name="HSeparator" type="HSeparator" parent="UnitTooltip/VBox"]
 layout_mode = 2

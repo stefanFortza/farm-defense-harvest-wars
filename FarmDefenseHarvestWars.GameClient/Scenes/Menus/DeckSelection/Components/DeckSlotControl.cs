@@ -12,6 +12,7 @@ public partial class DeckSlotControl : PanelContainer
     [Export] public int SlotIndex = 0;
 
     [Export] private TextureRect _icon = null!;
+    [Export] private Label _levelLabel = null!;
     [Export] private Control _emptyIcon = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
     [Export] private PackedScene _tooltipScene = null!;
@@ -24,6 +25,8 @@ public partial class DeckSlotControl : PanelContainer
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_emptyIcon, nameof(_emptyIcon));
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
+
+        if (_levelLabel != null) _levelLabel.Hide();
 
         if (_tooltipScene == null)
         {
@@ -60,6 +63,15 @@ public partial class DeckSlotControl : PanelContainer
         _unitType = unitData.Type;
         _icon.Texture = unitData.Icon;
         TooltipText = unitData.Name;
+
+        if (_levelLabel != null)
+        {
+            var unlock = GameState.Instance?.GetUnitUnlock(unitData.Role, unitData.Type);
+            _levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
+            _levelLabel.Show();
+            _levelLabel.ZIndex = 10;
+            GD.Print($"[DeckSlot] SetUnit for {unitData.Name}: {_levelLabel.Text}");
+        }
         
         // Juiciness: Pop effect when setting a unit
         UIAnimations.AnimatePop(this);
@@ -72,6 +84,7 @@ public partial class DeckSlotControl : PanelContainer
         _unitData = null;
         _unitType = null;
         _icon.Texture = null;
+        if (_levelLabel != null) _levelLabel.Hide();
         UpdateVisual();
     }
 
@@ -80,7 +93,8 @@ public partial class DeckSlotControl : PanelContainer
         if (_unitData == null || _tooltipScene == null) return null!;
 
         var tooltip = _tooltipScene.Instantiate<UnitTooltip>();
-        tooltip.Setup(_unitData);
+        var unlock = GameState.Instance?.GetUnitUnlock(_unitData.Role, _unitData.Type);
+        tooltip.Setup(_unitData, unlock);
         return tooltip;
     }
 

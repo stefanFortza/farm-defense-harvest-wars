@@ -124,6 +124,14 @@ public partial class GameState : Node
             return null;
         }
 
+        if (role == PlayerRole.Any)
+        {
+            var defenderUnlock = CurrentProfile.UnlockedUnits.DefenderUnits.FirstOrDefault(u => u.UnitType == unitType);
+            if (defenderUnlock != null) return defenderUnlock;
+            
+            return CurrentProfile.UnlockedUnits.AttackerUnits.FirstOrDefault(u => u.UnitType == unitType);
+        }
+
         var list = role == PlayerRole.Defender
             ? CurrentProfile.UnlockedUnits.DefenderUnits
             : CurrentProfile.UnlockedUnits.AttackerUnits;

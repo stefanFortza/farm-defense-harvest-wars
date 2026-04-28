@@ -37,14 +37,14 @@ public partial class DeckLibraryItemControl : PanelContainer
 
 		_statusLabel.Hide();
 
-		if (_levelLabel != null) _levelLabel.Hide();
-
 		if (_infoButton != null)
 		{
 			_infoButton.Pressed += OnInfoButtonPressed;
+			_infoButton.MouseExited += OnMouseExited;
 			_infoButton.Hide();
 		}
 	}
+
 	public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
 	{
 		_unitData = unitData;
@@ -54,25 +54,6 @@ public partial class DeckLibraryItemControl : PanelContainer
 		_canDrag = !alreadyInDeck && isUnlocked && !isUnlocking && !isDeckSaving;
 
 		_icon.Texture = unitData.Icon;
-
-		// Level display
-		if (isUnlocked && _levelLabel != null)
-		{
-			var unlock = GameState.Instance?.GetUnitUnlock(unitData.Role, unitData.Type);
-			if (unlock != null)
-			{
-				_levelLabel.Text = $"Lvl {unlock.Level}";
-				_levelLabel.Show();
-			}
-			else
-			{
-				_levelLabel.Hide();
-			}
-		}
-		else if (_levelLabel != null)
-		{
-			_levelLabel.Hide();
-		}
 
 		// Status display
 		if (!isUnlocked)
@@ -111,20 +92,37 @@ public partial class DeckLibraryItemControl : PanelContainer
 				: isUnlocked
 				? CursorShape.Forbidden
 				: CursorShape.PointingHand;
+
+		// Level display (at the very end to ensure it stays visible)
+		if (_levelLabel != null)
+		{
+			var unlock = GameState.Instance?.GetUnitUnlock(unitData.Role, unitData.Type);
+			_levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
+			_levelLabel.Show();
+			_levelLabel.ZIndex = 10; // Ensure it's on top
+			GD.Print($"[DeckLibraryItem] FINAL Setup level for {unitData.Name}: {_levelLabel.Text} (Visible: {_levelLabel.Visible}, Unlocked: {isUnlocked}, Pos: {_levelLabel.Position})");
+		}
 	}
 
 	public override void _ExitTree()
 	{
 		MouseEntered -= OnMouseEntered;
 		MouseExited -= OnMouseExited;
+		if (_infoButton != null)
+		{
+			_infoButton.MouseExited -= OnMouseExited;
+		}
 	}
 
 	public void OnMouseEntered()
 	{
 		if (_isUnlocked)
 		{
-			_infoButton.Show();
-			UIAnimations.AnimatePop(_infoButton);
+			if (!_infoButton.Visible)
+			{
+				_infoButton.Show();
+				UIAnimations.AnimatePop(_infoButton);
+			}
 		}
 
 		if (!_isUnlocked && !_isUnlocking)
@@ -138,16 +136,22 @@ public partial class DeckLibraryItemControl : PanelContainer
 
 	public void OnMouseExited()
 	{
-		// Don't hide if the mouse is actually still inside the control (e.g. over the button)
-		if (GetGlobalRect().HasPoint(GetGlobalMousePosition()))
+		// Don't hide if the mouse is actually still inside the control OR over the info button (which might protrude)
+		var mousePos = GetGlobalMousePosition();
+		if (GetGlobalRect().HasPoint(mousePos) || (_infoButton != null && _infoButton.Visible && _infoButton.GetGlobalRect().HasPoint(mousePos)))
 		{
 			return;
 		}
 
-		_infoButton.Hide();
-		UIAnimations.AnimateShrink(_infoButton);
+		if (_infoButton != null && _infoButton.Visible)
+		{
+			_infoButton.Hide();
+			UIAnimations.AnimateShrink(_infoButton);
+		}
+
 		UIAnimations.TryAnimateScaleDown(this, 0.15);
 	}
+
 
 	private void OnInfoButtonPressed()
 	{
@@ -200,7 +204,8 @@ public partial class DeckLibraryItemControl : PanelContainer
 		if (_unitData == null || _tooltipScene == null) return null!;
 
 		var tooltip = _tooltipScene.Instantiate<UnitTooltip>();
-		tooltip.Setup(_unitData);
+		var unlock = GameState.Instance?.GetUnitUnlock(_unitData.Role, _unitData.Type);
+		tooltip.Setup(_unitData, unlock);
 		return tooltip;
 	}
 

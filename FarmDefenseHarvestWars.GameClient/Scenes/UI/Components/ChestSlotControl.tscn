@@ -1,24 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://bqj8hpx6k1m1a"]
+[gd_scene load_steps=10 format=3 uid="uid://bqj8hpx6k1m1a"]
 
 [ext_resource type="Script" uid="uid://bpvfsprwxqaup" path="res://Scenes/UI/Components/ChestSlotControl.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_theme"]
 [ext_resource type="Texture2D" uid="uid://dp6ae7xwekvwc" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Frames.png" id="2_5ass7"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/Components/ChestRewardPopup.tscn" id="2_reward"]
+[ext_resource type="PackedScene" uid="uid://5nbc448mpv87" path="res://Scenes/UI/Components/ChestRewardPopup.tscn" id="2_reward"]
+[ext_resource type="Texture2D" uid="uid://dp5ml2cgqijll" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Buildings/House_Decor/Golden_Chest_Anim.png" id="5_7kb2c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_slot"]
 atlas = ExtResource("2_5ass7")
-region = Rect2(681, 10, 30, 30)
+region = Rect2(681, 8, 30, 34)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot"]
 texture = SubResource("AtlasTexture_slot")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture_margin_left = 6.0
+texture_margin_top = 7.0
+texture_margin_right = 6.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(0, 0, 30, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chest"]
-atlas = ExtResource("2_5ass7")
-region = Rect2(504, 272, 16, 16)
+atlas = ExtResource("5_7kb2c")
+region = Rect2(0, 0, 16, 14)
 
 [sub_resource type="LabelSettings" id="LabelSettings_time"]
 font_size = 6
@@ -29,23 +31,33 @@ outline_color = Color(0, 0, 0, 1)
 [node name="ChestSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_emptyLabel")]
 custom_minimum_size = Vector2(24, 24)
 offset_right = 24.0
-offset_bottom = 24.0
+offset_bottom = 26.0
 theme = ExtResource("1_theme")
 theme_override_styles/panel = SubResource("StyleBoxTexture_slot")
 script = ExtResource("1_script")
 _icon = NodePath("Icon")
-_emptyLabel = NodePath("StatusLabel")
+_emptyLabel = NodePath("Control/StatusLabel")
+_chestTexture = SubResource("AtlasTexture_chest")
 _chestRewardPopupScene = ExtResource("2_reward")
 
 [node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(12, 12)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = SubResource("AtlasTexture_chest")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="Control" type="Control" parent="."]
 layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 12.0
+offset_bottom = 19.0
 size_flags_vertical = 8
 text = "0s"
 label_settings = SubResource("LabelSettings_time")
 horizontal_alignment = 1
+vertical_alignment = 2

@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=3 uid="uid://bplupdgixgj3q"]
+[gd_scene load_steps=65 format=3 uid="uid://bplupdgixgj3q"]
 
 [ext_resource type="Script" uid="uid://efxqt1mpn2y" path="res://Scenes/Menus/MainMenu/MainMenuPages/MatchmakingPageRight.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="2_theme"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bo3mhsq4l0vx0" path="res://Assets/Avatars/Lumberjack_Jack.png" id="9_sei41"]
 [ext_resource type="Texture2D" uid="uid://b4yuobqsinbsv" path="res://Assets/Avatars/Miner_Mike.png" id="10_3lx0l"]
 [ext_resource type="PackedScene" uid="uid://bqj8hpx6k1m1a" path="res://Scenes/UI/Components/ChestSlotControl.tscn" id="11_chest_slot"]
+[ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="15_iqxka"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pegx7"]
 atlas = ExtResource("3_mpwkp")
@@ -200,6 +201,17 @@ texture = SubResource("AtlasTexture_24jni")
 atlas = ExtResource("3_tu18y")
 region = Rect2(1112, 8, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_ro6pc"]
+atlas = ExtResource("15_iqxka")
+region = Rect2(145, 49, 14, 14)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2tbmo"]
+load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gwfay"]
+atlas = SubResource("CompressedTexture2D_2tbmo")
+region = Rect2(210, 49, 12, 14)
+
 [node name="MatchmakingPageRight" type="MarginContainer" node_paths=PackedStringArray("_emailLabel", "_levelLabel", "_goldLabel", "_avatarTexture", "_chestContainer", "_prevBtn", "_nextBtn")]
 custom_minimum_size = Vector2(120, 150)
 offset_right = 120.0
@@ -222,7 +234,7 @@ _avatars = [SubResource("AtlasTexture_pegx7"), SubResource("AtlasTexture_reuvb")
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 1
 
 [node name="Title" type="Label" parent="VBox"]
 visible = false
@@ -342,8 +354,7 @@ theme_override_constants/margin_bottom = 6
 
 [node name="Grid" type="GridContainer" parent="VBox/StatsPanel/Margin"]
 layout_mode = 2
-theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 6
+theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="LevelLabel" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
@@ -354,11 +365,31 @@ text = "Level:"
 
 [node name="LevelValue" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 8
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 8
 text = "0"
 horizontal_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBox/StatsPanel/Margin/Grid/LevelValue"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -5.0
+offset_right = -22.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 10
+theme = ExtResource("2_theme")
+texture = SubResource("AtlasTexture_ro6pc")
+expand_mode = 1
+stretch_mode = 3
 
 [node name="GoldLabel" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
@@ -368,14 +399,42 @@ text = "Gold:"
 
 [node name="GoldValue" type="Label" parent="VBox/StatsPanel/Margin/Grid"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0.9999997, 0.95588404, 0.92696565, 1)
 theme_override_font_sizes/font_size = 8
 text = "0"
 horizontal_alignment = 2
+
+[node name="TextureRect2" type="TextureRect" parent="VBox/StatsPanel/Margin/Grid/GoldValue"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -5.0
+offset_right = -22.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+texture = SubResource("AtlasTexture_gwfay")
+expand_mode = 1
+stretch_mode = 3
 
 [node name="ChestContainer" type="HBoxContainer" parent="VBox"]
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 theme_override_constants/separation = 2
 alignment = 1
+
+[node name="ChestSlotControl" parent="VBox/ChestContainer" instance=ExtResource("11_chest_slot")]
+layout_mode = 2
+
+[node name="ChestSlotControl2" parent="VBox/ChestContainer" instance=ExtResource("11_chest_slot")]
+layout_mode = 2
+
+[node name="ChestSlotControl3" parent="VBox/ChestContainer" instance=ExtResource("11_chest_slot")]
+layout_mode = 2

@@ -226,7 +226,7 @@ public abstract partial class DeckSelectionRight : Control
         foreach (var unitData in compatible)
         {
             bool alreadyInDeck = currentDeck.Contains(unitData.Type);
-            bool isUnlocked = state?.IsUnitUnlocked(role, unitData.Type) ?? false;
+            bool isUnlocked = unitData.IsDefaultUnlocked || (state?.IsUnitUnlocked(role, unitData.Type) ?? false);
             bool isUnlocking = _unlockInFlight.Contains(unitData.Type);
             DeckLibraryItemControl? item = _libraryItemScene.Instantiate<DeckLibraryItemControl>();
             if (item == null)
@@ -236,6 +236,7 @@ public abstract partial class DeckSelectionRight : Control
             }
 
             item.Setup(unitData, alreadyInDeck, isUnlocked, isUnlocking, _isSavingDeck);
+            GD.Print($"[DeckSelectionRight] Instantiated {unitData.Name} (Unlocked: {isUnlocked}, Default: {unitData.IsDefaultUnlocked})");
             _libraryContainer.AddChild(item);
             _libraryItems.Add(item);
         }
