@@ -19,6 +19,7 @@ public partial class UpgradePopup : CanvasLayer
 
     private UnitData? _unitData;
     private UnitUnlockDto? _unlock;
+    private PlayerRole _contextRole;
 
     public override void _Ready()
     {
@@ -54,10 +55,11 @@ public partial class UpgradePopup : CanvasLayer
         }
     }
 
-    public void Setup(UnitData unitData, UnitUnlockDto unlock)
+    public void Setup(UnitData unitData, UnitUnlockDto unlock, PlayerRole contextRole = PlayerRole.Any)
     {
         _unitData = unitData;
         _unlock = unlock;
+        _contextRole = contextRole;
         UpdateUI();
     }
 
@@ -96,19 +98,25 @@ public partial class UpgradePopup : CanvasLayer
         _upgradeButton.Disabled = true;
         try
         {
-            var newProfile = await NetworkBootstrap.Instance.Menu.UpgradeUnitAsync(_unitData.Type);
-            // After upgrade, find the new unlock data for this unit
-            var role = _unitData.Role;
-            var newUnlock = GameState.Instance?.GetUnitUnlock(role, _unitData.Type);
+            await NetworkBootstrap.Instance.Menu.UpgradeUnitAsync(_unitData.Type);
+            
+            // After upgrade, find the new unlock data for this unit using effective role
+            var effectiveRole = (_unitData.Role == PlayerRole.Any) ? _contextRole : _unitData.Role;
+            var newUnlock = GameState.Instance?.GetUnitUnlock(effectiveRole, _unitData.Type);
 
             if (newUnlock != null)
             {
                 _unlock = newUnlock;
                 UpdateUI();
                 GD.Print($"Successfully upgraded {_unitData.Name} to level {_unlock.Level}!");
+                
+                // Signal global state that a unit was upgraded
+                GameState.Instance?.EmitSignal(GameState.SignalName.UnitUpgraded, (int)_unitData.Type, _unlock.Level);
             }
             else
             {
+                // If it was a default unit without explicit unlock, it should have been created now
+                // but if we still can't find it, we might just need to close the popup
                 QueueFree();
             }
         }

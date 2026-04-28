@@ -207,6 +207,7 @@ script = ExtResource("5_x8slh")
 
 [node name="Control" type="Control" parent="Control/Panel"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="CloseBtn" type="Button" parent="Control/Panel/Control"]
 layout_mode = 1

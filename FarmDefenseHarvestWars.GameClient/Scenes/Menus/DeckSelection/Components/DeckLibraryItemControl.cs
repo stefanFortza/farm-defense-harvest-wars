@@ -3,6 +3,7 @@ using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
 using FarmDefenseHarvestWars.Shared.Enums;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 
 public partial class DeckLibraryItemControl : PanelContainer
 {
@@ -16,6 +17,7 @@ public partial class DeckLibraryItemControl : PanelContainer
 
 	private UnitData? _unitData;
 	private int _unitTypeValue;
+	private PlayerRole _contextRole;
 	private bool _canDrag;
 	private bool _isUnlocked;
 	private bool _isUnlocking;
@@ -43,12 +45,15 @@ public partial class DeckLibraryItemControl : PanelContainer
 			_infoButton.MouseExited += OnMouseExited;
 			_infoButton.Hide();
 		}
+
+		GameState.Instance.UnitUpgraded += OnUnitUpgraded;
 	}
 
-	public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving)
+	public void Setup(UnitData unitData, bool alreadyInDeck, bool isUnlocked, bool isUnlocking, bool isDeckSaving, PlayerRole contextRole = PlayerRole.Any)
 	{
 		_unitData = unitData;
 		_unitTypeValue = (int)unitData.Type;
+		_contextRole = contextRole;
 		_isUnlocked = isUnlocked;
 		_isUnlocking = isUnlocking;
 		_canDrag = !alreadyInDeck && isUnlocked && !isUnlocking && !isDeckSaving;
@@ -96,11 +101,12 @@ public partial class DeckLibraryItemControl : PanelContainer
 		// Level display (at the very end to ensure it stays visible)
 		if (_levelLabel != null)
 		{
-			var unlock = GameState.Instance?.GetUnitUnlock(unitData.Role, unitData.Type);
+			var effectiveRole = (unitData.Role == PlayerRole.Any) ? _contextRole : unitData.Role;
+			var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, unitData.Type);
 			_levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
 			_levelLabel.Show();
 			_levelLabel.ZIndex = 10; // Ensure it's on top
-			GD.Print($"[DeckLibraryItem] FINAL Setup level for {unitData.Name}: {_levelLabel.Text} (Visible: {_levelLabel.Visible}, Unlocked: {isUnlocked}, Pos: {_levelLabel.Position})");
+			GD.Print($"[DeckLibraryItem] FINAL Setup level for {unitData.Name}: {_levelLabel.Text} (Visible: {_levelLabel.Visible}, Unlocked: {isUnlocked}, Context: {_contextRole})");
 		}
 	}
 
@@ -112,13 +118,17 @@ public partial class DeckLibraryItemControl : PanelContainer
 		{
 			_infoButton.MouseExited -= OnMouseExited;
 		}
+		if (GameState.Instance != null)
+		{
+			GameState.Instance.UnitUpgraded -= OnUnitUpgraded;
+		}
 	}
 
 	public void OnMouseEntered()
 	{
 		if (_isUnlocked)
 		{
-			if (!_infoButton.Visible)
+			if (_infoButton != null && !_infoButton.Visible)
 			{
 				_infoButton.Show();
 				UIAnimations.AnimatePop(_infoButton);
@@ -152,17 +162,42 @@ public partial class DeckLibraryItemControl : PanelContainer
 		UIAnimations.TryAnimateScaleDown(this, 0.15);
 	}
 
+	private void OnUnitUpgraded(int unitType, int newLevel)
+	{
+		if (_unitData != null && (int)_unitData.Type == unitType)
+		{
+			if (_levelLabel != null)
+			{
+				_levelLabel.Text = $"Lvl {newLevel}";
+				UIAnimations.AnimatePop(_levelLabel);
+			}
+		}
+	}
+
 
 	private void OnInfoButtonPressed()
 	{
 		if (_unitData == null || _upgradePopupScene == null) return;
 
-		var unlock = GameState.Instance?.GetUnitUnlock(_unitData.Role, _unitData.Type);
+		var effectiveRole = (_unitData.Role == PlayerRole.Any) ? _contextRole : _unitData.Role;
+		var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, _unitData.Type);
+		
+		// If unit is unlocked (e.g. default) but no unlock data in profile, create a dummy Lvl 1
+		if (unlock == null && _isUnlocked)
+		{
+			unlock = new UnitUnlockDto
+			{
+				UnitType = _unitData.Type,
+				Level = 1,
+				Fragments = 0
+			};
+		}
+
 		if (unlock == null) return;
 
 		var popup = _upgradePopupScene.Instantiate<UpgradePopup>();
 		GetTree().Root.AddChild(popup);
-		popup.Setup(_unitData, unlock);
+		popup.Setup(_unitData, unlock, _contextRole);
 	}
 
 

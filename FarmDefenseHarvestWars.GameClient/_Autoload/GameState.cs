@@ -39,6 +39,7 @@ public partial class GameState : Node
     [Signal] public delegate void DeckUpdatedEventHandler(int role);
     [Signal] public delegate void DeckSaveStatusChangedEventHandler(int role, bool isSaving, bool isSuccess, string message);
     [Signal] public delegate void MatchConfigurationLoadedEventHandler();
+    [Signal] public delegate void UnitUpgradedEventHandler(int unitType, int newLevel);
 
     private readonly HashSet<PlayerRole> _deckSavesInFlight = [];
     private readonly object _deckStateSync = new();

@@ -91,6 +91,7 @@ stretch_mode = 5
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="LevelLabel" type="Label" parent="Control"]
 layout_mode = 0

@@ -3,6 +3,7 @@ using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Scripts.Data;
 using FarmDefenseHarvestWars.Shared.Enums;
 using FarmDefenseHarvestWars.GameClient.Scenes.UI.Components;
+using FarmDefenseHarvestWars.Shared.Models.Game;
 
 public partial class DeckSlotControl : PanelContainer
 {
@@ -16,8 +17,11 @@ public partial class DeckSlotControl : PanelContainer
     [Export] private Control _emptyIcon = null!;
     [Export] private PackedScene _dragPreviewScene = null!;
     [Export] private PackedScene _tooltipScene = null!;
+    [Export] private PackedScene _upgradePopupScene = null!;
+    [Export] private Button _infoButton = null!;
     private UnitData? _unitData;
     private UnitType? _unitType;
+    private PlayerRole _contextRole;
 
     public override void _Ready()
     {
@@ -27,6 +31,14 @@ public partial class DeckSlotControl : PanelContainer
         this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
 
         if (_levelLabel != null) _levelLabel.Hide();
+
+        if (_infoButton != null)
+        {
+            _infoButton.Pressed += OnInfoButtonPressed;
+            _infoButton.Hide();
+        }
+
+        GameState.Instance.UnitUpgraded += OnUnitUpgraded;
 
         if (_tooltipScene == null)
         {
@@ -45,32 +57,54 @@ public partial class DeckSlotControl : PanelContainer
     {
         MouseEntered -= OnMouseEntered;
         MouseExited -= OnMouseExited;
+        if (GameState.Instance != null)
+        {
+            GameState.Instance.UnitUpgraded -= OnUnitUpgraded;
+        }
     }
 
     public void OnMouseEntered()
     {
+        if (_unitData != null && _infoButton != null)
+        {
+            _infoButton.Show();
+            UIAnimations.AnimatePop(_infoButton);
+        }
         UIAnimations.TryAnimateScale(this, new Vector2(1.1f, 1.1f), 0.15);
     }
 
     public void OnMouseExited()
     {
+        var mousePos = GetGlobalMousePosition();
+        if (GetGlobalRect().HasPoint(mousePos) || (_infoButton != null && _infoButton.Visible && _infoButton.GetGlobalRect().HasPoint(mousePos)))
+        {
+            return;
+        }
+
+        if (_infoButton != null)
+        {
+            _infoButton.Hide();
+            UIAnimations.AnimateShrink(_infoButton);
+        }
         UIAnimations.TryAnimateScale(this, Vector2.One, 0.15);
     }
 
-    public void SetUnit(UnitData unitData)
+    public void SetUnit(UnitData unitData, PlayerRole contextRole = PlayerRole.Any)
     {
         _unitData = unitData;
         _unitType = unitData.Type;
+        _contextRole = contextRole;
         _icon.Texture = unitData.Icon;
         TooltipText = unitData.Name;
 
         if (_levelLabel != null)
         {
-            var unlock = GameState.Instance?.GetUnitUnlock(unitData.Role, unitData.Type);
+            var effectiveRole = (unitData.Role == PlayerRole.Any) ? _contextRole : unitData.Role;
+            var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, unitData.Type);
             _levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
             _levelLabel.Show();
             _levelLabel.ZIndex = 10;
-            GD.Print($"[DeckSlot] SetUnit for {unitData.Name}: {_levelLabel.Text}");
+            GD.Print($"[DeckSlot] SetUnit for {unitData.Name}: {_levelLabel.Text} (Context: {_contextRole})");
         }
         
         // Juiciness: Pop effect when setting a unit
@@ -85,7 +119,43 @@ public partial class DeckSlotControl : PanelContainer
         _unitType = null;
         _icon.Texture = null;
         if (_levelLabel != null) _levelLabel.Hide();
+        if (_infoButton != null) _infoButton.Hide();
         UpdateVisual();
+    }
+
+    private void OnInfoButtonPressed()
+    {
+        if (_unitData == null || _upgradePopupScene == null) return;
+
+        var effectiveRole = (_unitData.Role == PlayerRole.Any) ? _contextRole : _unitData.Role;
+        var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, _unitData.Type);
+        
+        // If unit is unlocked but no unlock data in profile, create a dummy Lvl 1
+        if (unlock == null)
+        {
+            unlock = new UnitUnlockDto
+            {
+                UnitType = _unitData.Type,
+                Level = 1,
+                Fragments = 0
+            };
+        }
+
+        var popup = _upgradePopupScene.Instantiate<UpgradePopup>();
+        GetTree().Root.AddChild(popup);
+        popup.Setup(_unitData, unlock, _contextRole);
+    }
+
+    private void OnUnitUpgraded(int unitType, int newLevel)
+    {
+        if (_unitData != null && (int)_unitData.Type == unitType)
+        {
+            if (_levelLabel != null)
+            {
+                _levelLabel.Text = $"Lvl {newLevel}";
+                UIAnimations.AnimatePop(_levelLabel);
+            }
+        }
     }
 
     public override Control _MakeCustomTooltip(string forText)
@@ -93,7 +163,8 @@ public partial class DeckSlotControl : PanelContainer
         if (_unitData == null || _tooltipScene == null) return null!;
 
         var tooltip = _tooltipScene.Instantiate<UnitTooltip>();
-        var unlock = GameState.Instance?.GetUnitUnlock(_unitData.Role, _unitData.Type);
+        var effectiveRole = (_unitData.Role == PlayerRole.Any) ? _contextRole : _unitData.Role;
+        var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, _unitData.Type);
         tooltip.Setup(_unitData, unlock);
         return tooltip;
     }

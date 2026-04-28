@@ -87,8 +87,8 @@ public partial class MatchmakingPageRight : MarginContainer
         int currentIndex = GameState.Instance.CurrentProfile.AvatarIndex;
         int nextIndex = currentIndex + direction;
 
-        if (nextIndex < 1) nextIndex = 8;
-        if (nextIndex > 8) nextIndex = 1;
+        if (nextIndex < 0) nextIndex = 7;
+        if (nextIndex > 7) nextIndex = 0;
 
         OnAvatarSelected(nextIndex);
     }

@@ -44,7 +44,7 @@ font_color = Color(1, 0.9, 0.4, 1)
 outline_size = 2
 outline_color = Color(0.2, 0.1, 0, 1)
 
-[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_levelLabel", "_emptyIcon")]
+[node name="DeckSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_levelLabel", "_emptyIcon", "_infoButton")]
 custom_minimum_size = Vector2(28, 28)
 offset_right = 28.0
 offset_bottom = 28.0
@@ -57,6 +57,7 @@ _levelLabel = NodePath("Control/LevelLabel")
 _emptyIcon = NodePath("EmptyIcon")
 _dragPreviewScene = ExtResource("4_dragpreview")
 _tooltipScene = ExtResource("5_tooltip")
+_infoButton = NodePath("")
 
 [node name="EmptyIcon" type="Label" parent="."]
 layout_mode = 2
@@ -77,6 +78,7 @@ stretch_mode = 5
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="LevelLabel" type="Label" parent="Control"]
 layout_mode = 0

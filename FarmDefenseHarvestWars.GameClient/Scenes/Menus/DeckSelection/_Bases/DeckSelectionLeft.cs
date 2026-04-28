@@ -226,7 +226,7 @@ public abstract partial class DeckSelectionLeft : Control
             {
                 UnitType type = deck[i];
                 var unitData = _unitRegistry.GetUnitData(type);
-                _slots[i].SetUnit(unitData);
+                _slots[i].SetUnit(unitData, role);
             }
             else
             {
