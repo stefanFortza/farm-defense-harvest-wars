@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bqj8hpx6k1m1a"]
+[gd_scene load_steps=13 format=3 uid="uid://bqj8hpx6k1m1a"]
 
 [ext_resource type="Script" uid="uid://bpvfsprwxqaup" path="res://Scenes/UI/Components/ChestSlotControl.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="1_theme"]
@@ -22,6 +22,21 @@ region_rect = Rect2(0, 0, 30, 34)
 atlas = ExtResource("5_7kb2c")
 region = Rect2(0, 0, 16, 14)
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7kb2c"]
+load_path = "res://.godot/imported/UI_Frames.png-21140d82c9563a0266a13edd30297243.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oc5je"]
+atlas = SubResource("CompressedTexture2D_7kb2c")
+region = Rect2(586, 10, 28, 28)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_71p0v"]
+texture = SubResource("AtlasTexture_oc5je")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(0, 0, 28, 28)
+
 [sub_resource type="LabelSettings" id="LabelSettings_time"]
 font_size = 6
 font_color = Color(0.8, 1, 0.8, 1)
@@ -29,7 +44,7 @@ outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
 [node name="ChestSlotControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_emptyLabel")]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(30, 24)
 offset_right = 24.0
 offset_bottom = 26.0
 theme = ExtResource("1_theme")
@@ -54,9 +69,10 @@ layout_mode = 2
 [node name="StatusLabel" type="Label" parent="Control"]
 layout_mode = 0
 offset_top = 12.0
-offset_right = 12.0
-offset_bottom = 19.0
+offset_right = 18.0
+offset_bottom = 25.0
 size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_71p0v")
 text = "0s"
 label_settings = SubResource("LabelSettings_time")
 horizontal_alignment = 1
