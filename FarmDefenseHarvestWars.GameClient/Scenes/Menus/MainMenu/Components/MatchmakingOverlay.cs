@@ -33,7 +33,7 @@ public partial class MatchmakingOverlay : CanvasLayer
             {
                 _spinner.Rotation += (float)delta * 5.0f;
             }
-            
+
             if (_statusLabel != null)
             {
                 float pulse = (Mathf.Sin((float)Time.GetTicksMsec() * 0.005f) + 1.0f) * 0.5f;
@@ -48,7 +48,7 @@ public partial class MatchmakingOverlay : CanvasLayer
 
         _isClosing = false;
         Visible = true;
-        
+
         if (_contentToHide != null)
         {
             _contentToHide.Visible = false;
@@ -83,8 +83,10 @@ public partial class MatchmakingOverlay : CanvasLayer
             string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
             int port = status.ServerPort ?? 7777;
 
+            await Task.Delay(500);
+
             NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
-            
+
             // Wait a tiny bit for connection to start before switching scene
             await Task.Delay(500);
             GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
@@ -123,7 +125,7 @@ public partial class MatchmakingOverlay : CanvasLayer
     {
         Visible = false;
         _isClosing = true;
-        
+
         if (_contentToHide != null)
         {
             _contentToHide.Visible = true;

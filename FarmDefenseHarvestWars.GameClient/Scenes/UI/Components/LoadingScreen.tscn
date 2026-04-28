@@ -11,8 +11,11 @@ region = Rect2(1112, 8, 32, 32)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bg"]
 texture = SubResource("AtlasTexture_bg")
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+region_rect = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_spinner"]
 atlas = ExtResource("4_icons")

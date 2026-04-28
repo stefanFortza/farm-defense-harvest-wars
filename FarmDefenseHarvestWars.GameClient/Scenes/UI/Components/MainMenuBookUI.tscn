@@ -111,9 +111,8 @@ size_flags_horizontal = 10
 [node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("10_matchmaking_right")]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/margin_top = 16
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 10
 
 [node name="DeckSelectionAttacker" parent="ContentOverlay/RightZone" index="1" instance=ExtResource("8_right_attacker")]
 visible = false

@@ -218,7 +218,7 @@ offset_right = 120.0
 offset_bottom = 163.0
 theme = ExtResource("2_theme")
 theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 12
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 6
 script = ExtResource("1_script")
@@ -432,9 +432,18 @@ alignment = 1
 
 [node name="ChestSlotControl" parent="VBox/ChestContainer" instance=ExtResource("11_chest_slot")]
 layout_mode = 2
+_woodTexture = null
+_silverTexture = null
+_goldTexture = null
 
 [node name="ChestSlotControl2" parent="VBox/ChestContainer" instance=ExtResource("11_chest_slot")]
 layout_mode = 2
+_woodTexture = null
+_silverTexture = null
+_goldTexture = null
 
 [node name="ChestSlotControl3" parent="VBox/ChestContainer" instance=ExtResource("11_chest_slot")]
 layout_mode = 2
+_woodTexture = null
+_silverTexture = null
+_goldTexture = null
