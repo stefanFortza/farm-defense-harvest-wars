@@ -332,17 +332,17 @@ public class MatchmakingService : IMatchmakingService
         int roll = random.Next(100);
 
         string name = "Wooden Chest";
-        int duration = 180; // 3 minutes for wooden chest (good for testing/starting)
+        int duration = 10; // 10 seconds for wooden chest
 
         if (roll > 90)
         {
             name = "Golden Chest";
-            duration = 3600 * 8; // 8 hours
+            duration = 120; // 2 minutes
         }
         else if (roll > 70)
         {
             name = "Silver Chest";
-            duration = 3600 * 3; // 3 hours
+            duration = 60; // 1 minute
         }
 
         var newChest = new ChestDto

@@ -7,7 +7,12 @@ public partial class ChestSlotControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
     [Export] private Label _statusLabel = null!; // Renamed from _emptyLabel for clarity in code
-    [Export] private Texture2D _chestTexture = null!;
+    
+    [ExportGroup("Chest Textures")]
+    [Export] private Texture2D _woodTexture = null!;
+    [Export] private Texture2D _silverTexture = null!;
+    [Export] private Texture2D _goldTexture = null!;
+    
     [Export] private PackedScene _chestRewardPopupScene = null!;
     
     private ChestDto? _chest;
@@ -45,7 +50,7 @@ public partial class ChestSlotControl : PanelContainer
     {
         if (_chest != null)
         {
-            _icon.Texture = _chestTexture;
+            _icon.Texture = GetTextureForChest(_chest.Name);
             _icon.Show();
             _statusLabel.Show();
             MouseDefaultCursorShape = CursorShape.PointingHand;
@@ -82,6 +87,16 @@ public partial class ChestSlotControl : PanelContainer
         }
     }
 
+    private Texture2D GetTextureForChest(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return _woodTexture;
+        
+        if (name.Contains("Gold", StringComparison.OrdinalIgnoreCase)) return _goldTexture;
+        if (name.Contains("Silver", StringComparison.OrdinalIgnoreCase)) return _silverTexture;
+        
+        return _woodTexture;
+    }
+
     private string FormatTime(double seconds)
     {
         if (seconds < 0) seconds = 0;
@@ -113,14 +128,20 @@ public partial class ChestSlotControl : PanelContainer
             // Start Unlock
             try
             {
-                var profile = await NetworkBootstrap.Instance.Menu.StartUnlockChestAsync(_chest.Id);
-                // The setup will be called again via the profile update in MainMenuPages or similar
-                // But we can update locally for instant feedback if needed
+                await NetworkBootstrap.Instance.Menu.StartUnlockChestAsync(_chest.Id);
                 GD.Print("Started unlocking chest.");
             }
             catch (Exception ex)
             {
                 GD.PrintErr($"Failed to start unlock: {ex.Message}");
+                // Show red toast notification
+                ToastNotifications.TryError("Another chest is already unlocking!", 2.5);
+                
+                // Optional: Animate a "shake" effect to indicate error
+                UIAnimations.TryAnimateScale(this, new Vector2(1.1f, 1.1f), 0.1);
+                var tween = GetTree().CreateTween();
+                tween.TweenProperty(this, "modulate", new Color(1, 0.5f, 0.5f), 0.1);
+                tween.TweenProperty(this, "modulate", new Color(1, 1, 1), 0.1);
             }
         }
         else
