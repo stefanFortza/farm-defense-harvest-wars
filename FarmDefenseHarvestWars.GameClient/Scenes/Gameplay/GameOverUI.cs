@@ -118,11 +118,8 @@ public partial class GameOverUI : CanvasLayer
             GameState.Instance.SetMatchDecks("", [], []);
         }
 
-        // Cleanup networking before leaving
-        if (Multiplayer.MultiplayerPeer != null)
-        {
-            Multiplayer.MultiplayerPeer.Close();
-        }
+        // Cleanup networking before leaving (usually already done by MatchManager)
+        NetworkBootstrap.Instance?.Gameplay?.Disconnect();
         
         GetTree().ChangeSceneToFile("res://Scenes/Menus/MainMenu/MainMenu.tscn");
     }

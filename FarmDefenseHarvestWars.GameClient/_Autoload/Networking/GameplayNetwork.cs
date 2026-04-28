@@ -81,7 +81,7 @@ public partial class GameplayNetwork : Node
 
     public void JoinGameServer(string ip = "127.0.0.1", int port = DefaultPort)
     {
-        ResetClientJoinState();
+        Disconnect();
         _peer = new ENetMultiplayerPeer();
         var error = _peer.CreateClient(ip, port);
         if (error != Error.Ok)
@@ -337,15 +337,10 @@ public partial class GameplayNetwork : Node
         return (types, levels);
     }
 
-    private void FailClientJoin(string reason)
+    public void Disconnect()
     {
-        GD.PrintErr($"[GameplayNetwork] {reason}");
-        ResetClientJoinState();
-        EmitSignal(SignalName.ClientJoinStateChanged, false, reason);
-    }
-
-    private void ResetClientJoinState()
-    {
+        GD.Print("[GameplayNetwork] Disconnecting and resetting state.");
+        _isMatchStarted = false;
         _awaitingServerStart = false;
         _gameSceneLoadRequested = false;
         _connectedPlayers.Clear();
@@ -358,5 +353,12 @@ public partial class GameplayNetwork : Node
 
         _peer?.Close();
         _peer = null;
+    }
+
+    private void FailClientJoin(string reason)
+    {
+        GD.PrintErr($"[GameplayNetwork] {reason}");
+        Disconnect();
+        EmitSignal(SignalName.ClientJoinStateChanged, false, reason);
     }
 }

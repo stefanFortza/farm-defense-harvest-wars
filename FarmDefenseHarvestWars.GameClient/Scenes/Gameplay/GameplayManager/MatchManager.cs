@@ -176,7 +176,7 @@ public partial class MatchManager : Node
 
     public override void _Process(double delta)
     {
-        if (!Multiplayer.IsServer()) return;
+        if (Multiplayer.MultiplayerPeer == null || !Multiplayer.IsServer()) return;
 
         if (_currentState == MatchState.Ended)
         {
@@ -541,6 +541,14 @@ public partial class MatchManager : Node
         _currentState = MatchState.Ended;
         EmitSignal(SignalName.MatchStateChanged, (int)_currentState);
         EmitSignal(SignalName.MatchEnded, winnerRole);
+
+        // If we are a client, we no longer need the Godot server connection.
+        // The rewards will be fetched from the .NET Backend API.
+        if (!Multiplayer.IsServer())
+        {
+            SetProcess(false);
+            NetworkBootstrap.Instance?.Gameplay?.Disconnect();
+        }
     }
 
     public MatchState GetCurrentState() => _currentState;
