@@ -117,6 +117,13 @@ public partial class MenuNetwork : Node
         return result;
     }
 
+    public async Task<PlayerProfileDto> StartUnlockChestAsync(string chestId)
+    {
+        var profile = await NetworkBootstrap.Instance.ApiClient.StartUnlockChestAsync(chestId);
+        GameState.Instance.SetProfile(profile);
+        return profile;
+    }
+
     public async Task<PlayerProfileDto> UpgradeUnitAsync(UnitType unitType)
     {
         var profile = await NetworkBootstrap.Instance.ApiClient.UpgradeUnitAsync(unitType);

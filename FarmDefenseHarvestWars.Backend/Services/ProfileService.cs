@@ -118,6 +118,17 @@ public class ProfileService : IProfileService
             throw new InvalidOperationException("Chest not found.");
         }
 
+        if (!chest.UnlockStartTime.HasValue)
+        {
+            throw new InvalidOperationException("Chest is not being unlocked.");
+        }
+
+        var unlockTimeElapsed = DateTime.UtcNow - chest.UnlockStartTime.Value;
+        if (unlockTimeElapsed.TotalSeconds < chest.UnlockDurationSeconds)
+        {
+            throw new InvalidOperationException("Chest is still unlocking.");
+        }
+
         chests.Remove(chest);
         user.ChestsJson = JsonSerializer.Serialize(chests);
 
@@ -159,6 +170,38 @@ public class ProfileService : IProfileService
         var profile = await BuildPlayerProfileAsync(user, cancellationToken);
 
         return (profile, rewards);
+    }
+
+    public async Task<PlayerProfileDto> StartUnlockChestAsync(ApplicationUser user, string chestId, CancellationToken cancellationToken = default)
+    {
+        var chestsJson = string.IsNullOrWhiteSpace(user.ChestsJson) ? "[]" : user.ChestsJson;
+        var chests = JsonSerializer.Deserialize<List<ChestDto>>(chestsJson) ?? new();
+        var chest = chests.FirstOrDefault(c => c.Id == chestId);
+
+        if (chest == null)
+        {
+            throw new InvalidOperationException("Chest not found.");
+        }
+
+        if (chest.UnlockStartTime.HasValue)
+        {
+            throw new InvalidOperationException("Chest is already unlocking.");
+        }
+
+        // Rule: Only one chest can be unlocked at a time
+        if (chests.Any(c => c.UnlockStartTime.HasValue))
+        {
+            // Optional: check if any is already finished. If not, throw.
+            // For now, simple: only one allowed in the unlocking state.
+            throw new InvalidOperationException("Another chest is already unlocking.");
+        }
+
+        chest.UnlockStartTime = DateTime.UtcNow;
+        user.ChestsJson = JsonSerializer.Serialize(chests);
+
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return await BuildPlayerProfileAsync(user, cancellationToken);
     }
 
     public async Task<PlayerProfileDto> UpgradeUnitAsync(ApplicationUser user, UnitType unitType, CancellationToken cancellationToken = default)

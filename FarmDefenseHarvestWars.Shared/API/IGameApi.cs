@@ -59,6 +59,10 @@ public interface IGameApi
     [Headers("Authorization: Bearer")]
     Task<ChestOpenResultDto> OpenChestAsync([AliasAs("chestId")] string chestId);
 
+    [Post(ApiRoutes.StartUnlockChest)]
+    [Headers("Authorization: Bearer")]
+    Task<PlayerProfileDto> StartUnlockChestAsync([AliasAs("chestId")] string chestId);
+
     [Post(ApiRoutes.UpgradeUnit)]
     [Headers("Authorization: Bearer")]
     Task<PlayerProfileDto> UpgradeUnitAsync([AliasAs("unitType")] UnitType unitType);

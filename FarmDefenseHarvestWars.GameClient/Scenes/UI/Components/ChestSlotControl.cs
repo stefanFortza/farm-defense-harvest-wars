@@ -6,16 +6,17 @@ using FarmDefenseHarvestWars.GameClient.Core.Utils;
 public partial class ChestSlotControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
-    [Export] private Label _emptyLabel = null!;
+    [Export] private Label _statusLabel = null!; // Renamed from _emptyLabel for clarity in code
     [Export] private Texture2D _chestTexture = null!;
     [Export] private PackedScene _chestRewardPopupScene = null!;
     
     private ChestDto? _chest;
+    private double _updateTimer = 0.0;
 
     public override void _Ready()
     {
         this.EnsureNotNull(_icon, nameof(_icon));
-        this.EnsureNotNull(_emptyLabel, nameof(_emptyLabel));
+        this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
         
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
@@ -24,21 +25,72 @@ public partial class ChestSlotControl : PanelContainer
     public void Setup(ChestDto? chest)
     {
         _chest = chest;
-        if (chest != null)
+        UpdateUI();
+    }
+
+    public override void _Process(double delta)
+    {
+        if (_chest != null && _chest.UnlockStartTime.HasValue)
+        {
+            _updateTimer += delta;
+            if (_updateTimer >= 1.0)
+            {
+                _updateTimer = 0.0;
+                UpdateUI();
+            }
+        }
+    }
+
+    private void UpdateUI()
+    {
+        if (_chest != null)
         {
             _icon.Texture = _chestTexture;
             _icon.Show();
-            _emptyLabel.Hide();
-            TooltipText = $"Chest: {chest.Name}\nAcquired: {chest.AcquiredAt.ToLocalTime():g}\nClick to open!";
+            _statusLabel.Show();
             MouseDefaultCursorShape = CursorShape.PointingHand;
+
+            if (_chest.UnlockStartTime.HasValue)
+            {
+                var unlockTimeElapsed = DateTime.UtcNow - _chest.UnlockStartTime.Value;
+                var remaining = _chest.UnlockDurationSeconds - unlockTimeElapsed.TotalSeconds;
+
+                if (remaining <= 0)
+                {
+                    _statusLabel.Text = "OPEN";
+                    TooltipText = $"Chest: {_chest.Name}\nReady to open!";
+                }
+                else
+                {
+                    _statusLabel.Text = FormatTime(remaining);
+                    TooltipText = $"Chest: {_chest.Name}\nUnlocking...\nTime left: {FormatTime(remaining)}";
+                }
+            }
+            else
+            {
+                _statusLabel.Text = "UNLOCK";
+                TooltipText = $"Chest: {_chest.Name}\nClick to start unlocking ({FormatTime(_chest.UnlockDurationSeconds)})";
+            }
         }
         else
         {
             _icon.Hide();
-            _emptyLabel.Show();
+            _statusLabel.Text = "EMPTY";
+            _statusLabel.Show();
             TooltipText = "Empty Slot";
             MouseDefaultCursorShape = CursorShape.Arrow;
         }
+    }
+
+    private string FormatTime(double seconds)
+    {
+        if (seconds < 0) seconds = 0;
+        var t = TimeSpan.FromSeconds(seconds);
+        if (t.TotalHours >= 1)
+            return $"{(int)t.TotalHours}h {t.Minutes}m";
+        if (t.TotalMinutes >= 1)
+            return $"{t.Minutes}m {t.Seconds}s";
+        return $"{t.Seconds}s";
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -47,7 +99,40 @@ public partial class ChestSlotControl : PanelContainer
         {
             if (_chest != null)
             {
+                HandleChestClick();
+            }
+        }
+    }
+
+    private async void HandleChestClick()
+    {
+        if (_chest == null) return;
+
+        if (!_chest.UnlockStartTime.HasValue)
+        {
+            // Start Unlock
+            try
+            {
+                var profile = await NetworkBootstrap.Instance.Menu.StartUnlockChestAsync(_chest.Id);
+                // The setup will be called again via the profile update in MainMenuPages or similar
+                // But we can update locally for instant feedback if needed
+                GD.Print("Started unlocking chest.");
+            }
+            catch (Exception ex)
+            {
+                GD.PrintErr($"Failed to start unlock: {ex.Message}");
+            }
+        }
+        else
+        {
+            var unlockTimeElapsed = DateTime.UtcNow - _chest.UnlockStartTime.Value;
+            if (unlockTimeElapsed.TotalSeconds >= _chest.UnlockDurationSeconds)
+            {
                 OpenChest();
+            }
+            else
+            {
+                GD.Print("Chest is still unlocking...");
             }
         }
     }

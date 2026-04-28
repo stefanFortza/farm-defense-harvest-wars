@@ -14,5 +14,6 @@ public static class ApiRoutes
     public const string MatchComplete = "/api/game/matchmaking/match/{matchId}/complete";
     public const string MatchReward = "/api/game/matchmaking/match/{matchId}/reward";
     public const string OpenChest = "/api/game/chest/{chestId}/open";
+    public const string StartUnlockChest = "/api/game/chest/{chestId}/start-unlock";
     public const string UpgradeUnit = "/api/game/unit/{unitType}/upgrade";
 }

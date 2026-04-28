@@ -328,11 +328,29 @@ public class MatchmakingService : IMatchmakingService
             return null;
         }
 
+        var random = new Random();
+        int roll = random.Next(100);
+
+        string name = "Wooden Chest";
+        int duration = 180; // 3 minutes for wooden chest (good for testing/starting)
+
+        if (roll > 90)
+        {
+            name = "Golden Chest";
+            duration = 3600 * 8; // 8 hours
+        }
+        else if (roll > 70)
+        {
+            name = "Silver Chest";
+            duration = 3600 * 3; // 3 hours
+        }
+
         var newChest = new ChestDto
         {
             Id = Guid.NewGuid().ToString("N"),
-            Name = "Wooden Chest",
-            AcquiredAt = DateTime.UtcNow
+            Name = name,
+            AcquiredAt = DateTime.UtcNow,
+            UnlockDurationSeconds = duration
         };
 
         chests.Add(newChest);

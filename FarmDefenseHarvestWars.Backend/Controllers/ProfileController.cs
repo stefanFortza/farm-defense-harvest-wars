@@ -101,6 +101,26 @@ public class ProfileController : ControllerBase
         }
     }
 
+    [HttpPost("chest/{chestId}/start-unlock")]
+    public async Task<ActionResult<PlayerProfileDto>> StartUnlockChest(string chestId, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized("User not found.");
+        }
+
+        try
+        {
+            var profile = await _profileService.StartUnlockChestAsync(user, chestId, cancellationToken);
+            return Ok(profile);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost("unit/{unitType}/upgrade")]
     public async Task<ActionResult<PlayerProfileDto>> UpgradeUnit(UnitType unitType, CancellationToken cancellationToken)
     {
