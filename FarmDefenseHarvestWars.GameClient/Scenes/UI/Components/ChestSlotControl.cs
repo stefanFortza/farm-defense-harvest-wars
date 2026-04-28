@@ -7,14 +7,14 @@ public partial class ChestSlotControl : PanelContainer
 {
     [Export] private TextureRect _icon = null!;
     [Export] private Label _statusLabel = null!; // Renamed from _emptyLabel for clarity in code
-    
+
     [ExportGroup("Chest Textures")]
     [Export] private Texture2D _woodTexture = null!;
     [Export] private Texture2D _silverTexture = null!;
     [Export] private Texture2D _goldTexture = null!;
-    
+
     [Export] private PackedScene _chestRewardPopupScene = null!;
-    
+
     private ChestDto? _chest;
     private double _updateTimer = 0.0;
 
@@ -22,7 +22,7 @@ public partial class ChestSlotControl : PanelContainer
     {
         this.EnsureNotNull(_icon, nameof(_icon));
         this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
-        
+
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
     }
@@ -90,10 +90,10 @@ public partial class ChestSlotControl : PanelContainer
     private Texture2D GetTextureForChest(string name)
     {
         if (string.IsNullOrEmpty(name)) return _woodTexture;
-        
+
         if (name.Contains("Gold", StringComparison.OrdinalIgnoreCase)) return _goldTexture;
         if (name.Contains("Silver", StringComparison.OrdinalIgnoreCase)) return _silverTexture;
-        
+
         return _woodTexture;
     }
 
@@ -136,7 +136,7 @@ public partial class ChestSlotControl : PanelContainer
                 GD.PrintErr($"Failed to start unlock: {ex.Message}");
                 // Show red toast notification
                 ToastNotifications.TryError("Another chest is already unlocking!", 2.5);
-                
+
                 // Optional: Animate a "shake" effect to indicate error
                 UIAnimations.TryAnimateScale(this, new Vector2(1.1f, 1.1f), 0.1);
                 var tween = GetTree().CreateTween();
@@ -161,11 +161,11 @@ public partial class ChestSlotControl : PanelContainer
     private async void OpenChest()
     {
         if (_chest == null) return;
-        
+
         try
         {
             var result = await NetworkBootstrap.Instance.Menu.OpenChestAsync(_chest.Id);
-            
+
             if (_chestRewardPopupScene != null)
             {
                 var popup = _chestRewardPopupScene.Instantiate<ChestRewardPopup>();
