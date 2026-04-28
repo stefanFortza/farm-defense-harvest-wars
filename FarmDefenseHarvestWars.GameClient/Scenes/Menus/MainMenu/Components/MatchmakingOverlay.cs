@@ -83,12 +83,11 @@ public partial class MatchmakingOverlay : CanvasLayer
             string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
             int port = status.ServerPort ?? 7777;
 
-            await Task.Delay(500);
 
             NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
 
             // Wait a tiny bit for connection to start before switching scene
-            await Task.Delay(500);
+            // await Task.Delay(500);
             GetTree().ChangeSceneToFile("res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
         }
         catch (Exception ex)
