@@ -13,8 +13,9 @@ Data = ExtResource("2_jfyid")
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = ExtResource("2_4oxit")
-animation = &"IdleSide"
+animation = &"Chew"
 autoplay = "IdleSide"
+frame_progress = 0.162503
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -5)

@@ -156,17 +156,22 @@ public partial class UnitVisualsComponent : Node
             return;
 
         var spriteAnimationName = GetSpriteAnimationName(state);
-        GD.Print($"[{nameof(UnitVisualsComponent)}] Playing sprite animation '{spriteAnimationName}' for state '{state}' on unit '{_unit.Name}'.");
         if (GodotObject.IsInstanceValid(_animatedSprite) && !string.IsNullOrWhiteSpace(spriteAnimationName))
         {
-            if (_animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(spriteAnimationName))
+            if (_animatedSprite.SpriteFrames != null)
             {
-                _animatedSprite.Play(spriteAnimationName);
-            }
-            else
-            {
-                string unitName = GodotObject.IsInstanceValid(_unit) ? _unit.Name : "Unknown";
-                GD.PushWarning($"[{nameof(UnitVisualsComponent)}] Missing sprite animation '{spriteAnimationName}' on unit '{unitName}'.");
+                if (_animatedSprite.SpriteFrames.HasAnimation(spriteAnimationName))
+                {
+                    _animatedSprite.Play(spriteAnimationName);
+                }
+                else
+                {
+                    // Fallback to "default" or first available animation without pushing warnings every frame
+                    if (_animatedSprite.SpriteFrames.HasAnimation("default"))
+                        _animatedSprite.Play("default");
+                    else if (_animatedSprite.SpriteFrames.GetAnimationNames().Length > 0)
+                        _animatedSprite.Play(_animatedSprite.SpriteFrames.GetAnimationNames()[0]);
+                }
             }
         }
 

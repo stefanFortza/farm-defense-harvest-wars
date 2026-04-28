@@ -20,6 +20,7 @@ public partial class GameplayNetwork : Node
     private bool _gameSceneLoadRequested;
 
     [Signal] public delegate void ClientJoinStateChangedEventHandler(bool isConnecting, string message);
+    [Signal] public delegate void MatchStartedEventHandler();
 
     // Proprietate helper pentru a afla rolul meu curent rapid
     public PlayerRole? MyRole =>
@@ -72,6 +73,10 @@ public partial class GameplayNetwork : Node
         Multiplayer.PeerDisconnected += OnPlayerDisconnected;
 
         GD.Print("Server Started. Waiting for players...");
+
+        // Fix: Use CallDeferred to avoid "busy adding/removing children" error
+        _gameSceneLoadRequested = true;
+        GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, "res://Scenes/Gameplay/GameWorld/GameWorld.tscn");
     }
 
     public void JoinGameServer(string ip = "127.0.0.1", int port = DefaultPort)
@@ -137,13 +142,8 @@ public partial class GameplayNetwork : Node
     {
         if (_connectedPlayers.Count == MaxPlayers)
         {
-            GD.Print("Match Ready! Starting in 1s...");
-
-            // Wait 1 second so clients can see the "Connected" status
-            await Task.Delay(1000);
-
-            if (!IsInsideTree()) return;
-
+            GD.Print("Match Ready! Sending StartGameScene RPC...");
+            
             var defPayload = BuildDeckPayload(CmdArgs.DefenderDeck);
             var atkPayload = BuildDeckPayload(CmdArgs.AttackerDeck);
 
@@ -152,7 +152,57 @@ public partial class GameplayNetwork : Node
                 defPayload.Types, defPayload.Levels,
                 atkPayload.Types, atkPayload.Levels);
             Rpc(nameof(StartGameScene));
+
+            // Wait for all clients to be ready (load scene + handshake)
+            int maxWaitAttempts = 100; // 10 seconds max
+            MatchManager? mm = null;
+
+            while (maxWaitAttempts > 0)
+            {
+                var matchManagerNode = GetTree().Root.FindChild("MatchManager", true, false);
+                if (matchManagerNode is MatchManager foundMm)
+                {
+                    mm = foundMm;
+                    // Check if all connected peers (excluding server) are in the ready list
+                    bool allReady = true;
+                    foreach (var peerId in Multiplayer.GetPeers())
+                    {
+                        // We check the internal ready set of MatchManager
+                        // Using reflection or making it public. Let's assume we add a helper method.
+                        if (!mm.IsClientReady(peerId))
+                        {
+                            allReady = false;
+                            break;
+                        }
+                    }
+
+                    if (allReady && Multiplayer.GetPeers().Length >= MaxPlayers)
+                    {
+                        GD.Print("[GameplayNetwork] All clients reported ready. Starting match!");
+                        Rpc(nameof(BroadcastMatchStart));
+                        return;
+                    }
+                }
+
+                await Task.Delay(100);
+                maxWaitAttempts--;
+            }
+
+            GD.PrintErr("[GameplayNetwork] Timeout waiting for clients to be ready!");
+            // Fallback: try starting anyway
+            Rpc(nameof(BroadcastMatchStart));
         }
+    }
+
+    private bool _isMatchStarted;
+    public bool IsMatchStarted => _isMatchStarted;
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void BroadcastMatchStart()
+    {
+        GD.Print("[GameplayNetwork] Global Match Start received.");
+        _isMatchStarted = true;
+        EmitSignal(SignalName.MatchStarted);
     }
 
     // --- CLIENT RPCs ---

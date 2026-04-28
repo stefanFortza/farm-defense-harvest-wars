@@ -48,11 +48,16 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 	}
 
 
+	private GridSystem? _grid;
+	private bool _initialUnitsSpawned = false;
+
 	public void Initialize(GameWorldContext data)
 	{
 		if (IsInitialized) return;
 
 		ValidateDependencies();
+		_grid = data.Grid;
+		_initialUnitsSpawned = false;
 
 		var gameplayContext = new GameplayContext(
 			Orchestrator: _orchestrator,
@@ -69,12 +74,36 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 		_orchestrator.Initialize(gameplayContext);
 		_inputController.Initialize(gameplayContext);
 
-		if (Multiplayer.IsServer())
-		{
-			SpawnInitialUnits(data.Grid);
-		}
+		// Subscribe to match state changes
+		_matchManager.MatchStateChanged += OnMatchStateChanged;
 
 		IsInitialized = true;
+	}
+
+	public override void _ExitTree()
+	{
+		if (_matchManager != null)
+		{
+			_matchManager.MatchStateChanged -= OnMatchStateChanged;
+		}
+	}
+
+	private void OnMatchStateChanged(int newStateInt)
+	{
+		var newState = (MatchManager.MatchState)newStateInt;
+		
+		if (newState == MatchManager.MatchState.Playing && Multiplayer.IsServer() && !_initialUnitsSpawned)
+		{
+			if (_grid != null)
+			{
+				_initialUnitsSpawned = true;
+				SpawnInitialUnits(_grid);
+			}
+			else
+			{
+				GD.PrintErr("[GameplayManager] Cannot spawn initial units: Grid is null!");
+			}
+		}
 	}
 
 	private void SpawnInitialUnits(GridSystem grid)

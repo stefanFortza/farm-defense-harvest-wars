@@ -35,11 +35,24 @@ public partial class GameOverUI : CanvasLayer
         var gameState = GameState.Instance;
         if (gameState == null || string.IsNullOrEmpty(gameState.MatchId))
         {
-            GD.PrintErr("[GameOverUI] MatchId missing in GameState.");
+            GD.PrintErr($"[GameOverUI] MatchId missing or invalid in GameState. Current ID: '{gameState?.MatchId ?? "null"}'");
             return;
         }
 
-        GD.Print($"[GameOverUI] Fetching rewards for match: {gameState.MatchId}");
+        // Try to get token from GameState first, then fallback to NetworkBootstrap
+        string token = gameState.AccessToken;
+        if (string.IsNullOrEmpty(token))
+        {
+            token = NetworkBootstrap.Instance?.AccessToken ?? "";
+        }
+
+        GD.Print($"[GameOverUI] Fetching rewards for match: {gameState.MatchId} (Token present: {!string.IsNullOrEmpty(token)})");
+        
+        // Ensure NetworkBootstrap has the token for its internal ApiClient
+        if (NetworkBootstrap.Instance != null && !string.IsNullOrEmpty(token))
+        {
+            NetworkBootstrap.Instance.AccessToken = token;
+        }
 
         int maxRetries = 5;
         int delayMs = 1500;

@@ -17,9 +17,35 @@ public partial class GameState : Node
     // Datele jucătorului
     public PlayerProfileDto? CurrentProfile { get; private set; }
     public SelectedDeckData? CurrentDeck { get; private set; }
+    public string? AccessToken { get; set; }
 
     // Match configuration for active game (server loads it from cmd args, clients receive it via RPC)
-    public string? MatchId { get; private set; }
+    private string? _matchId;
+    public string? MatchId 
+    { 
+        get => _matchId; 
+        private set 
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                _matchId = value;
+                return;
+            }
+
+            // Defensive check: If the ID looks like a file path or namespace, it's corrupted
+            if (value.Contains("/") || value.Contains(".tscn") || value.Length > 64)
+            {
+                GD.PrintErr($"[GameState] REJECTED corrupted MatchId: '{value}'. This looks like a scene path, not a GUID.");
+                return;
+            }
+
+            if (_matchId != value)
+            {
+                GD.Print($"[GameState] MatchId changing from '{_matchId}' to '{value}'");
+                _matchId = value;
+            }
+        }
+    }
     public IReadOnlyList<UnitUnlockDto>? DefenderDeck { get; private set; }
     public IReadOnlyList<UnitUnlockDto>? AttackerDeck { get; private set; }
 

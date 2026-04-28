@@ -35,6 +35,7 @@ public partial class MatchManager : Node
     // PeerID -> Money
     private readonly Dictionary<long, int> _playerMoney = new();
     private readonly Dictionary<PlayerRole, ulong> _disconnectRoleTokens = new();
+    private readonly HashSet<long> _readyClients = new();
 
     [Signal] public delegate void MatchStateChangedEventHandler(int newState);
     [Signal] public delegate void MoneyChangedEventHandler(long peerId, int newAmount);
@@ -46,24 +47,70 @@ public partial class MatchManager : Node
     {
         this.EnsureNotNull(BaseHealthComponent, nameof(BaseHealthComponent));
 
+        // Connect to global signal from Autoload
+        NetworkBootstrap.Instance.Gameplay.MatchStarted += OnGlobalMatchStarted;
+
         if (Multiplayer.IsServer())
         {
             Multiplayer.PeerConnected += OnPeerConnected;
             Multiplayer.PeerDisconnected += OnPeerDisconnected;
-            
+
             BaseHealthComponent.HealthChanged += OnBaseHealthChanged;
             BaseHealthComponent.Died += OnBaseDestroyed;
-            
-            ResetMatch();
+
+            _readyClients.Clear();
             return;
         }
 
+        // Check if match already started globally before we loaded
+        if (NetworkBootstrap.Instance.Gameplay.IsMatchStarted)
+        {
+            OnGlobalMatchStarted();
+        }
+
         SetProcess(false);
+        // Notify server that this client has loaded the scene
+        RpcId(1, nameof(NotifyClientReady));
         CallDeferred(nameof(RequestFullSync));
+    }
+
+    private void OnGlobalMatchStarted()
+    {
+        _readyClients.Clear();
+        if (Multiplayer.IsServer())
+        {
+            ResetMatch();
+        }
+        else
+        {
+            _currentState = MatchState.Playing;
+            SetProcess(true);
+            Logger.Info("MatchManager: Match Started via Global Signal");
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void NotifyClientReady()
+    {
+        if (!Multiplayer.IsServer()) return;
+
+        long senderId = Multiplayer.GetRemoteSenderId();
+        _readyClients.Add(senderId);
+        Logger.Info($"[MatchManager] Client {senderId} is ready.");
+    }
+
+    public bool IsClientReady(long peerId)
+    {
+        return _readyClients.Contains(peerId);
     }
 
     public override void _ExitTree()
     {
+        if (NetworkBootstrap.Instance?.Gameplay != null)
+        {
+            NetworkBootstrap.Instance.Gameplay.MatchStarted -= OnGlobalMatchStarted;
+        }
+
         if (BaseHealthComponent != null)
         {
             BaseHealthComponent.HealthChanged -= OnBaseHealthChanged;
@@ -71,7 +118,7 @@ public partial class MatchManager : Node
         }
 
         // Check if multiplayer is still active and valid before unbinding network events
-        if (Multiplayer != null && Multiplayer.MultiplayerPeer != null && 
+        if (Multiplayer != null && Multiplayer.MultiplayerPeer != null &&
             Multiplayer.MultiplayerPeer.GetConnectionStatus() != MultiplayerPeer.ConnectionStatus.Disconnected)
         {
             if (Multiplayer.IsServer())
@@ -91,9 +138,9 @@ public partial class MatchManager : Node
 
         _currentState = MatchState.Playing;
         _timeRemaining = MatchDurationSeconds;
-        
+
         BaseHealthComponent.Initialize(MaxBaseHealth);
-        
+
         _playerMoney.Clear();
         _disconnectRoleTokens.Clear();
         _incomeTimer = 0f;
@@ -125,18 +172,33 @@ public partial class MatchManager : Node
     }
 
     private float _quitDelayTimer = 2.0f; // Give clients some time to receive final RPCs
+    private float _forceQuitTimer = 20.0f; // Safety timeout if reporting fails
 
     public override void _Process(double delta)
     {
         if (!Multiplayer.IsServer()) return;
 
-        if (_currentState == MatchState.Ended && _completionReported)
+        if (_currentState == MatchState.Ended)
         {
-            _quitDelayTimer -= (float)delta;
-            if (_quitDelayTimer <= 0)
+            // Normal quit logic after successful reporting
+            if (_completionReported)
             {
-                GD.Print("Match ended, completion reported and delay expired. Quitting server.");
-                GetTree().Quit();
+                _quitDelayTimer -= (float)delta;
+                if (_quitDelayTimer <= 0)
+                {
+                    GD.Print("Match ended, completion reported and delay expired. Quitting server.");
+                    GetTree().Quit();
+                }
+            }
+            else
+            {
+                // Safety quit logic if reporting is stuck or failing
+                _forceQuitTimer -= (float)delta;
+                if (_forceQuitTimer <= 0)
+                {
+                    GD.PrintErr("Match ended, but completion report is stuck. Force quitting server for safety.");
+                    GetTree().Quit();
+                }
             }
             return;
         }
@@ -279,6 +341,25 @@ public partial class MatchManager : Node
         if (Multiplayer.IsServer())
         {
             SendFullSyncToPeer(1);
+            return;
+        }
+
+        // Fix: Check if peer is actually connected before sending RPC
+        var peer = Multiplayer.MultiplayerPeer;
+        if (peer == null || peer.GetConnectionStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+        {
+            Logger.Info("MatchManager: Deferring RequestFullSync until connected to server...");
+
+            // Use Action for C# signal events
+            Action onConnected = null;
+            onConnected = () =>
+            {
+                Logger.Info("MatchManager: Connected to server, sending deferred RequestFullSync.");
+                RpcId(1, nameof(RequestFullSyncRpc));
+                Multiplayer.ConnectedToServer -= onConnected;
+            };
+
+            Multiplayer.ConnectedToServer += onConnected;
             return;
         }
 

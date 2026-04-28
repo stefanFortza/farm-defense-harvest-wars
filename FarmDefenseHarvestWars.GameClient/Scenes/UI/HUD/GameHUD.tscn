@@ -60,6 +60,8 @@ theme_override_constants/separation = 10
 
 [node name="ResourcePanel" parent="Margin/TopBar/LeftGroup" instance=ExtResource("2_resource_panel")]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="DeckContainer" type="HBoxContainer" parent="Margin/TopBar/LeftGroup"]
 custom_minimum_size = Vector2(100, 30)
@@ -67,6 +69,24 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_constants/separation = 8
+
+[node name="UnitCard" parent="Margin/TopBar/LeftGroup/DeckContainer" instance=ExtResource("3_card_scene")]
+layout_mode = 2
+
+[node name="UnitCard2" parent="Margin/TopBar/LeftGroup/DeckContainer" instance=ExtResource("3_card_scene")]
+layout_mode = 2
+
+[node name="UnitCard3" parent="Margin/TopBar/LeftGroup/DeckContainer" instance=ExtResource("3_card_scene")]
+layout_mode = 2
+
+[node name="UnitCard4" parent="Margin/TopBar/LeftGroup/DeckContainer" instance=ExtResource("3_card_scene")]
+layout_mode = 2
+
+[node name="UnitCard5" parent="Margin/TopBar/LeftGroup/DeckContainer" instance=ExtResource("3_card_scene")]
+layout_mode = 2
+
+[node name="UnitCard6" parent="Margin/TopBar/LeftGroup/DeckContainer" instance=ExtResource("3_card_scene")]
+layout_mode = 2
 
 [node name="RightGroup" type="HBoxContainer" parent="Margin/TopBar"]
 layout_mode = 2

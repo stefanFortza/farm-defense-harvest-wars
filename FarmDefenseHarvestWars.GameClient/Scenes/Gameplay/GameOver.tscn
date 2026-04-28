@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://gameover1"]
 
 [ext_resource type="Script" path="res://Scenes/Gameplay/GameOverUI.cs" id="1_script"]
-[ext_resource type="Theme" uid="uid://be87780p8v7p8" path="res://Resources/PixelTheme.tres" id="2_theme"]
+[ext_resource type="Theme" path="res://Resources/PixelTheme.tres" id="2_theme"]
 
 [node name="GameOver" type="CanvasLayer" node_paths=PackedStringArray("_winnerLabel", "_rewardLabel", "_rewardContainer")]
 layer = 10

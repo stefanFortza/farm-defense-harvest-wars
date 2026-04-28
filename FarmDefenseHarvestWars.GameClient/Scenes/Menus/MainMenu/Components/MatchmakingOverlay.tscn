@@ -92,7 +92,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 5.0
+"speed": 10.0
 }]
 
 [node name="MatchmakingOverlay" type="CanvasLayer" node_paths=PackedStringArray("_statusLabel", "_spinner", "_cancelButton")]
@@ -159,6 +159,7 @@ position = Vector2(16, 1)
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_7rom0")
 autoplay = "default"
+frame_progress = 0.6732278
 
 [node name="Label" type="Label" parent="Control/ColorRect/CenterContainer/VBoxContainer"]
 layout_mode = 2

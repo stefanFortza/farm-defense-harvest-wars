@@ -38,6 +38,8 @@ public static class CmdArgs
         string[] engineArgs = OS.GetCmdlineArgs();
         string[] userArgs = OS.GetCmdlineUserArgs();
 
+        GD.Print($"[CmdArgs] Engine args: {string.Join(" ", engineArgs)}");
+        GD.Print($"[CmdArgs] User args: {string.Join(" ", userArgs)}");
 
         IsServer = engineArgs.Contains("--server") || userArgs.Contains("--server");
 

@@ -17,6 +17,7 @@ public partial class AuthService : Node
 
         // Store access token for future requests
         NetworkBootstrap.Instance.AccessToken = loginRes.AccessToken;
+        GameState.Instance.AccessToken = loginRes.AccessToken;
 
         // Fetch profile using the authenticated client
         var profile = await api.GetProfileAsync();
@@ -56,6 +57,7 @@ public partial class AuthService : Node
     public void Logout()
     {
         NetworkBootstrap.Instance.AccessToken = "";
+        GameState.Instance.AccessToken = "";
         GameState.Instance.ClearState();
     }
 }
