@@ -36,7 +36,6 @@ public partial class TabsManager : Control
 		BuildPagesFromZones();
 
 		var debugChildren = GetChildren().OfType<TabButton>().Select(t => t.Name).ToArray();
-		// GD.Print($"[TabsManager] Found TabButtons: {string.Join(", ", debugChildren)}");
 
 		// Initialize visibility based on the currently active tab (if any)
 		var activeTab = GetChildren().OfType<TabButton>().FirstOrDefault(t => t.ButtonPressed);
@@ -126,7 +125,6 @@ public partial class TabsManager : Control
 
 	private void ShowTabByKey(string key)
 	{
-		// GD.Print($"[TabsManager] Showing pages for key: {key}");
 
 		if (string.IsNullOrEmpty(key))
 		{

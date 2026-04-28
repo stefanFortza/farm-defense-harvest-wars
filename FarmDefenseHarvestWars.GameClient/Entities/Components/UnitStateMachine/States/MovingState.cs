@@ -21,13 +21,11 @@ public class MovingState : IState
 
     public void Enter()
     {
-        GD.Print($"{_unit.Name} entered WalkState.");
         _movement.IsMoving = true;
     }
 
     public void Exit()
     {
-        GD.Print($"{_unit.Name} exited WalkState.");
         _movement.Stop();
     }
 
@@ -43,7 +41,6 @@ public class MovingState : IState
         // 2. Check for targets in back - ONLY FOR DEFENDERS
         if (_unit.Data.Role == PlayerRole.Defender && _unit.SecondaryVisionComponent != null && _unit.SecondaryVisionComponent.GetFirstValidEnemy() != null)
         {
-            GD.Print($"{_unit.Name} (Defender) detected enemy in BACK vision while moving. Flipping!");
             _unit.Flip();
             _unit.StateMachine.RequestStateChange(UnitStateEnum.Attacking);
             return;

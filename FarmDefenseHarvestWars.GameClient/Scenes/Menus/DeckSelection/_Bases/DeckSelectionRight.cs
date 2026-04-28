@@ -236,7 +236,6 @@ public abstract partial class DeckSelectionRight : Control
             }
 
             item.Setup(unitData, alreadyInDeck, isUnlocked, isUnlocking, _isSavingDeck, role);
-            GD.Print($"[DeckSelectionRight] Instantiated {unitData.Name} (Unlocked: {isUnlocked}, Default: {unitData.IsDefaultUnlocked})");
             _libraryContainer.AddChild(item);
             _libraryItems.Add(item);
         }

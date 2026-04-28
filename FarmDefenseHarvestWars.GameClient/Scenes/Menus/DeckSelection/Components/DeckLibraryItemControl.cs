@@ -106,7 +106,6 @@ public partial class DeckLibraryItemControl : PanelContainer
 			_levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
 			_levelLabel.Show();
 			_levelLabel.ZIndex = 10; // Ensure it's on top
-			GD.Print($"[DeckLibraryItem] FINAL Setup level for {unitData.Name}: {_levelLabel.Text} (Visible: {_levelLabel.Visible}, Unlocked: {isUnlocked}, Context: {_contextRole})");
 		}
 	}
 
@@ -181,7 +180,7 @@ public partial class DeckLibraryItemControl : PanelContainer
 
 		var effectiveRole = (_unitData.Role == PlayerRole.Any) ? _contextRole : _unitData.Role;
 		var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, _unitData.Type);
-		
+
 		// If unit is unlocked (e.g. default) but no unlock data in profile, create a dummy Lvl 1
 		if (unlock == null && _isUnlocked)
 		{

@@ -19,13 +19,11 @@ public class IdleState : IState
 
 	public void Enter()
 	{
-		GD.Print($"{_unit.Type} entered Idle State.");
 		_unit.Velocity = Vector2.Zero; // Stop movement
 	}
 
 	public void Exit()
 	{
-		GD.Print($"{_unit.Type} exiting Idle State.");
 	}
 
 	public void Update(double delta)
@@ -46,7 +44,6 @@ public class IdleState : IState
 		// 2. Check for targets in back - ONLY FOR DEFENDERS
 		if (_unit.Data.Role == PlayerRole.Defender && _unit.SecondaryVisionComponent != null && _unit.SecondaryVisionComponent.GetFirstValidEnemy() != null)
 		{
-			GD.Print($"{_unit.Name} (Defender) detected enemy in BACK vision while idling. Flipping!");
 			_unit.Flip();
 			_unit.StateMachine.RequestStateChange(UnitStateEnum.Attacking);
 			return;

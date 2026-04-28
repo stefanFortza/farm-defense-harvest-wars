@@ -190,6 +190,10 @@ public class MatchmakingService : IMatchmakingService
                 defenderId = participants.DefenderId;
                 attackerId = participants.AttackerId;
             }
+            else
+            {
+                _logger.LogWarning("CompleteMatchAsync: Match {MatchId} not found in participants map.", matchId);
+            }
 
             _completedMatchIds.Add(matchId);
             RemoveActiveMatchEntriesByMatchIdInternal(matchId);
@@ -198,7 +202,12 @@ public class MatchmakingService : IMatchmakingService
 
         if (defenderId != null && attackerId != null)
         {
+            _logger.LogInformation("CompleteMatchAsync: Processing rewards for match {MatchId}. Def={DefenderId}, Atk={AttackerId}", matchId, defenderId, attackerId);
             await ProcessMatchRewardsAsync(matchId, defenderId, attackerId, request);
+        }
+        else
+        {
+            _logger.LogWarning("CompleteMatchAsync: Could not process rewards for match {MatchId} because participants were not resolved.", matchId);
         }
     }
 
@@ -243,80 +252,94 @@ public class MatchmakingService : IMatchmakingService
 
     private async Task ProcessMatchRewardsAsync(string matchId, string defenderId, string attackerId, MatchCompletionRequestDto request)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-        var defender = await userManager.FindByIdAsync(defenderId);
-        var attacker = await userManager.FindByIdAsync(attackerId);
-
-        if (defender == null || attacker == null) return;
-
-        // Simple reward logic:
-        // Win: 50 Gold, 100 XP
-        // Loss: 20 Gold, 40 XP
-        // Draw/Abort: 10 Gold, 20 XP
-
-        int defGold = 10;
-        int defXp = 20;
-        int atkGold = 10;
-        int atkXp = 20;
-
-        if (!request.IsAborted && request.WinnerRole.HasValue)
+        try
         {
-            if (request.WinnerRole == PlayerRole.Defender)
+            using var scope = _serviceProvider.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var defender = await userManager.FindByIdAsync(defenderId);
+            var attacker = await userManager.FindByIdAsync(attackerId);
+
+            if (defender == null || attacker == null)
             {
-                defGold = 50; defXp = 100;
-                atkGold = 20; atkXp = 40;
+                _logger.LogWarning("ProcessMatchRewardsAsync: One or both participants not found in DB. Def={DefenderId}, Atk={AttackerId}", defenderId, attackerId);
+                return;
             }
-            else
+
+            // Simple reward logic:
+            // Win: 50 Gold, 100 XP
+            // Loss: 20 Gold, 40 XP
+            // Draw/Abort: 10 Gold, 20 XP
+
+            int defGold = 10;
+            int defXp = 20;
+            int atkGold = 10;
+            int atkXp = 20;
+
+            if (!request.IsAborted && request.WinnerRole.HasValue)
             {
-                atkGold = 50; atkXp = 100;
-                defGold = 20; defXp = 40;
+                if (request.WinnerRole == PlayerRole.Defender)
+                {
+                    defGold = 50; defXp = 100;
+                    atkGold = 20; atkXp = 40;
+                }
+                else
+                {
+                    atkGold = 50; atkXp = 100;
+                    defGold = 20; defXp = 40;
+                }
             }
+
+            defender.Gold += defGold;
+            defender.Xp += defXp;
+            // Level up logic: 1000 XP per level
+            if (defender.Xp >= defender.Level * 1000)
+            {
+                defender.Xp -= defender.Level * 1000;
+                defender.Level++;
+            }
+
+            attacker.Gold += atkGold;
+            attacker.Xp += atkXp;
+            if (attacker.Xp >= attacker.Level * 1000)
+            {
+                attacker.Xp -= attacker.Level * 1000;
+                attacker.Level++;
+            }
+
+            // Chest dropping logic
+            string? defChestJson = TryDropChest(defender);
+            string? atkChestJson = TryDropChest(attacker);
+
+            var result = new MatchResult
+            {
+                MatchId = matchId,
+                DefenderUserId = defenderId,
+                AttackerUserId = attackerId,
+                WinnerRole = request.WinnerRole,
+                IsAborted = request.IsAborted,
+                DefenderGoldEarned = defGold,
+                DefenderXpEarned = defXp,
+                AttackerGoldEarned = atkGold,
+                AttackerXpEarned = atkXp,
+                DefenderDroppedChestJson = defChestJson,
+                AttackerDroppedChestJson = atkChestJson,
+                CompletedAtUtc = DateTimeOffset.UtcNow
+            };
+
+            db.MatchResults.Add(result);
+            await db.SaveChangesAsync();
+            await userManager.UpdateAsync(defender);
+            await userManager.UpdateAsync(attacker);
+
+            _logger.LogInformation("ProcessMatchRewardsAsync: Successfully saved match results for {MatchId}.", matchId);
         }
-
-        defender.Gold += defGold;
-        defender.Xp += defXp;
-        // Level up logic: 1000 XP per level
-        if (defender.Xp >= defender.Level * 1000)
+        catch (Exception ex)
         {
-            defender.Xp -= defender.Level * 1000;
-            defender.Level++;
+            _logger.LogError(ex, "ProcessMatchRewardsAsync: Failed to process rewards for match {MatchId}.", matchId);
+            throw; // Rethrow to ensure the controller knows about the failure
         }
-
-        attacker.Gold += atkGold;
-        attacker.Xp += atkXp;
-        if (attacker.Xp >= attacker.Level * 1000)
-        {
-            attacker.Xp -= attacker.Level * 1000;
-            attacker.Level++;
-        }
-
-        // Chest dropping logic
-        string? defChestJson = TryDropChest(defender);
-        string? atkChestJson = TryDropChest(attacker);
-
-        var result = new MatchResult
-        {
-            MatchId = matchId,
-            DefenderUserId = defenderId,
-            AttackerUserId = attackerId,
-            WinnerRole = request.WinnerRole,
-            IsAborted = request.IsAborted,
-            DefenderGoldEarned = defGold,
-            DefenderXpEarned = defXp,
-            AttackerGoldEarned = atkGold,
-            AttackerXpEarned = atkXp,
-            DefenderDroppedChestJson = defChestJson,
-            AttackerDroppedChestJson = atkChestJson,
-            CompletedAtUtc = DateTimeOffset.UtcNow
-        };
-
-        db.MatchResults.Add(result);
-        await db.SaveChangesAsync();
-        await userManager.UpdateAsync(defender);
-        await userManager.UpdateAsync(attacker);
     }
 
     private string? TryDropChest(ApplicationUser user)

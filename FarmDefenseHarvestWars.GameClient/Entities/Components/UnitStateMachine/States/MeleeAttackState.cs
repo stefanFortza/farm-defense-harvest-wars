@@ -20,7 +20,6 @@ public class MeleeAttackState : IState
 
     public void Enter()
     {
-        GD.Print($"{_unit.Name} entered MeleeAttackState.");
         _attackTimer = 1.0 / _unit.Data.AttackSpeed; // Start with cooldown? or immediate?
         // Let's start ready to attack if the timer is 0.
         _attackTimer = 0.0;
@@ -28,7 +27,6 @@ public class MeleeAttackState : IState
 
     public void Exit()
     {
-        GD.Print($"{_unit.Name} exited MeleeAttackState.");
     }
 
     public void PhysicsUpdate(double delta)
@@ -41,7 +39,6 @@ public class MeleeAttackState : IState
             if (target != null)
             {
                 // Instant flip to face the rear enemy
-                GD.Print($"{_unit.Name} (Defender) detected enemy in REAR vision. Flipping!");
                 _unit.Flip();
             }
         }
@@ -75,7 +72,6 @@ public class MeleeAttackState : IState
 
     private void Attack(HurtboxComponent target)
     {
-        GD.Print($"{_unit.Name} melee attacks target for {_unit.ScaledDamage} damage.");
         target.ReceiveHit(_unit.ScaledDamage);
         // Trigger attack animation here via _unit.Visuals if available
     }

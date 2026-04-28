@@ -51,7 +51,6 @@ public partial class RegisterUI : Control
 
             // 4. Success
             ShowMessage("Account created successfully!", Colors.Green);
-            GD.Print("User registered.");
 
             // Navigate back to login
             EmitSignal(SignalName.RegisterSuccess);

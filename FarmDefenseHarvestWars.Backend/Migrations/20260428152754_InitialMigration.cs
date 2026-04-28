@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FarmDefenseHarvestWars.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,7 +33,9 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                     Gold = table.Column<int>(type: "INTEGER", nullable: false),
                     Level = table.Column<int>(type: "INTEGER", nullable: false),
                     Xp = table.Column<int>(type: "INTEGER", nullable: false),
+                    AvatarIndex = table.Column<int>(type: "INTEGER", nullable: false),
                     UnlockedUnits = table.Column<string>(type: "TEXT", nullable: false),
+                    ChestsJson = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -52,6 +54,28 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MatchResults",
+                columns: table => new
+                {
+                    MatchId = table.Column<string>(type: "TEXT", nullable: false),
+                    DefenderUserId = table.Column<string>(type: "TEXT", nullable: false),
+                    AttackerUserId = table.Column<string>(type: "TEXT", nullable: false),
+                    WinnerRole = table.Column<int>(type: "INTEGER", nullable: true),
+                    IsAborted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DefenderGoldEarned = table.Column<int>(type: "INTEGER", nullable: false),
+                    DefenderXpEarned = table.Column<int>(type: "INTEGER", nullable: false),
+                    AttackerGoldEarned = table.Column<int>(type: "INTEGER", nullable: false),
+                    AttackerXpEarned = table.Column<int>(type: "INTEGER", nullable: false),
+                    DefenderDroppedChestJson = table.Column<string>(type: "TEXT", nullable: true),
+                    AttackerDroppedChestJson = table.Column<string>(type: "TEXT", nullable: true),
+                    CompletedAtUtc = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchResults", x => x.MatchId);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,6 +215,8 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     Role = table.Column<int>(type: "INTEGER", nullable: false),
                     UnitType = table.Column<int>(type: "INTEGER", nullable: false),
+                    Level = table.Column<int>(type: "INTEGER", nullable: false),
+                    Fragments = table.Column<int>(type: "INTEGER", nullable: false),
                     UnlockedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -279,6 +305,9 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Decks");
+
+            migrationBuilder.DropTable(
+                name: "MatchResults");
 
             migrationBuilder.DropTable(
                 name: "UnitUnlocks");

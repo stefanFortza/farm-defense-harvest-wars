@@ -28,10 +28,10 @@ public partial class BaseUnit : CharacterBody2D
 
     private int _facingDirection = 1;
     [Export]
-    public int FacingDirection 
-    { 
+    public int FacingDirection
+    {
         get => _facingDirection;
-        set 
+        set
         {
             _facingDirection = value;
             ApplyFacing();
@@ -166,7 +166,6 @@ public partial class BaseUnit : CharacterBody2D
     protected virtual void Die()
     {
         EmitSignal(SignalName.Died);
-        GD.Print($"{Type} died!");
         QueueFree();
     }
 }

@@ -20,7 +20,6 @@ public class RangedAttackState : IState
 
     public void Enter()
     {
-        GD.Print($"{_unit.Name} entered RangedAttackState.");
         _attackTimer = _unit.Data.AttackSpeed > 0
             ? 1.0 / _unit.Data.AttackSpeed
             : 1.0;
@@ -28,7 +27,6 @@ public class RangedAttackState : IState
 
     public void Exit()
     {
-        GD.Print($"{_unit.Name} exited RangedAttackState.");
     }
 
     public void PhysicsUpdate(double delta)
@@ -99,6 +97,5 @@ public class RangedAttackState : IState
             ));
         }
 
-        GD.Print($"{_unit.Name} fired a projectile.");
     }
 }

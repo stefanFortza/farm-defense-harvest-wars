@@ -59,14 +59,13 @@ public partial class GameplayOrchestrator : Node, IInitializable<GameplayContext
 		// 2. Validare Economică (MatchManager)
 		if (!_matchManager.TryBuyUnit(CurrentSender, stats))
 		{
-			GD.Print($"Player {CurrentSender} is broke! Needs {stats.MatchCost} Gold.");
 			ResolvePlacementForSender(requestId, type, false, "INSUFFICIENT_GOLD", gridPos);
 			return;
 		}
 
 		// 3. Execuție
 		int unitLevel = 1;
-		
+
 		// Find level from the match deck of the player who requested it
 		var network = NetworkBootstrap.Instance?.Gameplay;
 		if (network != null && network.TryGetRoleForPeer(CurrentSender, out var role))
