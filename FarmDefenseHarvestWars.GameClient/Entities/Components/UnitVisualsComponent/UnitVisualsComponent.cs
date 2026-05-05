@@ -41,6 +41,16 @@ public partial class UnitVisualsComponent : Node
             return;
         }
 
+        // Ensure Attack animations do NOT loop, so they play exactly once per RPC call.
+        // This prevents the 'stutter' when a looping animation is reset by the next attack cycle.
+        if (GodotObject.IsInstanceValid(_animatedSprite) && _animatedSprite.SpriteFrames != null)
+        {
+            if (_animatedSprite.SpriteFrames.HasAnimation(AttackAnimation))
+            {
+                _animatedSprite.SpriteFrames.SetAnimationLoop(AttackAnimation, false);
+            }
+        }
+
         if (!GodotObject.IsInstanceValid(HealthBar))
         {
             GD.PushWarning($"[{nameof(UnitVisualsComponent)}] HealthBar reference missing on node '{Name}'.");
@@ -180,14 +190,16 @@ public partial class UnitVisualsComponent : Node
         bool isDefender = _unit.Data.Role == FarmDefenseHarvestWars.Shared.Enums.PlayerRole.Defender;
         bool hasAttackAnimation = _animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(AttackAnimation);
 
-        if (isDefender)
-        {
-            PlayProceduralAttackAnimation();
-        }
-        else if (hasAttackAnimation)
+        if (hasAttackAnimation)
         {
             _animatedSprite.Stop();
             _animatedSprite.Play(AttackAnimation);
+        }
+        
+        // Play procedural on top or as fallback if it's a defender
+        if (isDefender)
+        {
+            PlayProceduralAttackAnimation();
         }
     }
 
@@ -354,22 +366,41 @@ public partial class UnitVisualsComponent : Node
         {
             if (_animatedSprite.SpriteFrames != null)
             {
-                if (_animatedSprite.SpriteFrames.HasAnimation(spriteAnimationName))
-                {
-                    if (state == UnitStateEnum.Attacking)
-                    {
-                        _animatedSprite.SpeedScale = (float)_unit.Data.AttackSpeed;
-                    }
-                    else
-                    {
-                        _animatedSprite.SpeedScale = 1.0f; // Reset speed for other states
-                    }
+                bool hasTargetAnim = _animatedSprite.SpriteFrames.HasAnimation(spriteAnimationName);
 
+                if (state == UnitStateEnum.Attacking)
+                {
+                    _animatedSprite.SpeedScale = (float)_unit.Data.AttackSpeed;
+                    
+                    // Logic for "Waiting for hit" pose:
+                    // 1. If we have an Idle animation, use it.
+                    // 2. If no Idle (typical for Attackers), use frame 0 of Attack as a "ready" pose.
+                    // 3. Fallback to Move if nothing else exists.
+                    if (_animatedSprite.SpriteFrames.HasAnimation(IdleAnimation))
+                    {
+                        _animatedSprite.Play(IdleAnimation);
+                    }
+                    else if (hasTargetAnim) // target is AttackAnimation
+                    {
+                        _animatedSprite.Play(AttackAnimation);
+                        _animatedSprite.Stop(); // Pause on first frame
+                        _animatedSprite.Frame = 0;
+                    }
+                    else if (_animatedSprite.SpriteFrames.HasAnimation(MoveAnimation))
+                    {
+                        _animatedSprite.Play(MoveAnimation);
+                    }
+                    return;
+                }
+
+                if (hasTargetAnim)
+                {
+                    _animatedSprite.SpeedScale = 1.0f; // Reset speed for other states
                     _animatedSprite.Play(spriteAnimationName);
                 }
                 else
                 {
-                    // Fallback to "default" or first available animation without pushing warnings every frame
+                    // Fallback to "default" or first available
                     if (_animatedSprite.SpriteFrames.HasAnimation("default"))
                         _animatedSprite.Play("default");
                     else if (_animatedSprite.SpriteFrames.GetAnimationNames().Length > 0)
