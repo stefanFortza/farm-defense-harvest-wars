@@ -14,10 +14,10 @@ public partial class MatchManager : Node
     public enum MatchState { Waiting, Playing, Ended }
 
     [Export] public float MatchDurationSeconds = 300f; // 5 minutes
-    [Export] public int StartingMoney = 100;
-    [Export] public int PassiveIncomeAmount = 5;
+    [Export] public int StartingMoney = 150;
+    [Export] public int PassiveIncomeAmount = 10;
     [Export] public float PassiveIncomeInterval = 1.0f;
-    [Export] public int MaxBaseHealth = 100;
+    [Export] public int MaxBaseHealth = 500;
     [Export] public float StateSyncInterval = 0.2f;
     [Export] public float DisconnectGraceSeconds = 30f;
 

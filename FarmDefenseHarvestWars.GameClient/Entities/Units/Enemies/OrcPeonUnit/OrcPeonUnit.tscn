@@ -10,9 +10,6 @@ radius = 8.0
 [node name="OrcPeonUnit" instance=ExtResource("1_mfdsh")]
 Data = ExtResource("2_pbhp2")
 
-[node name="UnitVisualsComponent" parent="LogicComponents" index="2" node_paths=PackedStringArray("HealthBar")]
-HealthBar = NodePath("")
-
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -11)
 sprite_frames = ExtResource("2_r1uym")
