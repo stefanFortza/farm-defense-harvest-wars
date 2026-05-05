@@ -49,8 +49,6 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		// Respinge inputul dacă nu ești într-o stare validă (opțional, poți verifica GameState)
-
 		if (@event is InputEventMouseButton mouseBtn && mouseBtn.Pressed)
 		{
 			if (mouseBtn.ButtonIndex == MouseButton.Left)
@@ -59,7 +57,15 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 			}
 			else if (mouseBtn.ButtonIndex == MouseButton.Right)
 			{
-				CancelPlacement(); // Click dreapta anulează tot
+				CancelPlacement();
+			}
+		}
+		else if (@event.IsActionPressed("ui_cancel") || (@event is InputEventKey keyEvent && keyEvent.Pressed && keyEvent.Keycode == Key.Escape))
+		{
+			if (_currentState == LocalInputState.PlacingUnit)
+			{
+				CancelPlacement();
+				GetViewport().SetInputAsHandled();
 			}
 		}
 	}
@@ -74,11 +80,17 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	// --- STATE MANAGEMENT ---
 
-	// Metoda asta o apelezi din UI (Butonul de "Cumpără Vacă")
 	public void StartPlacingUnit(UnitType type)
 	{
 		if (_pendingRequestId > 0)
 		{
+			return;
+		}
+
+		// Toggle off if clicking the same unit again
+		if (_currentState == LocalInputState.PlacingUnit && _pendingUnitType == type)
+		{
+			CancelPlacement();
 			return;
 		}
 
@@ -97,7 +109,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 
 	private void UpdateGhostPosition()
 	{
-		Vector2 mousePos = GetViewport().GetMousePosition();
+		Vector2 mousePos = _ghostCursor.GetGlobalMousePosition();
 
 		// 1. Snap la Grid
 		Vector2I gridPos = _gridSystem.GetGridPosition(mousePos);
@@ -135,7 +147,7 @@ public partial class InputController : Node, IInitializable<GameplayContext>
 			return;
 		}
 
-		Vector2 mousePos = GetViewport().GetMousePosition();
+		Vector2 mousePos = _ghostCursor.GetGlobalMousePosition();
 		Vector2I gridPos = _gridSystem.GetGridPosition(mousePos);
 
 		if (IsPlacementValid(gridPos))
