@@ -24,7 +24,7 @@ position = Vector2(0, -6)
 sprite_frames = ExtResource("2_4oxit")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.7582436
+frame_progress = 0.32381952
 
 [node name="FakeLight" parent="Visuals" index="1"]
 BaseColor = Color(1, 1, 0.8, 0.4)
@@ -34,6 +34,12 @@ IsOval = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_4oxit")
+
+[node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]
+target_position = Vector2(20, 0)
+
+[node name="SecondaryVisionComponent" parent="Visuals/SpatialComponents" index="2"]
+target_position = Vector2(-20, 0)
 
 [node name="HealthBar" parent="Visuals" index="3"]
 offset_left = -20.0

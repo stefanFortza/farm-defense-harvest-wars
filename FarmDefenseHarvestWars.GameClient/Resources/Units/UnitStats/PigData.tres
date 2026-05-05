@@ -13,4 +13,6 @@ Type = 4
 Name = "Pig"
 Icon = SubResource("AtlasTexture_ydo0q")
 UnitScenePath = "uid://vwvflu0isd8c"
+AttackRange = 20.0
+AttackSpeed = 0.8
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

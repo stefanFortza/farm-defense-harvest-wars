@@ -7,7 +7,7 @@ namespace FarmDefenseHarvestWars.GameClient.Entities.Components;
 
 public partial class UnitVisualsComponent : Node
 {
-    [Export] private ProgressBar HealthBar { get; set; } = null!;
+    [Export] private Range HealthBar { get; set; } = null!;
     [Export] private BaseUnit _unit = null!;
     [Export] private AnimatedSprite2D _animatedSprite = null!;
     [Export] private AnimationPlayer? _animationPlayer;
@@ -247,13 +247,15 @@ public partial class UnitVisualsComponent : Node
         float recoveryTime = totalDuration * 0.5f;
 
         Vector2 originalPos = _animatedSprite.Position;
-        Vector2 forwardVector = _unit.GetForwardVector();
-        Vector2 forwardOffset = forwardVector * 12f;
+
+        // Use base forward without FacingDirection, because the parent node handles the flip scale
+        Vector2 baseForward = (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right;
+        Vector2 forwardOffset = baseForward * 12f;
 
         // 1. Anticipation: Un squash foarte subtil (5%)
         _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(0.95f, 1.05f), antTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
-        _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos - forwardVector * 2f, antTime)
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos - baseForward * 2f, antTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
 
         // 2. Strike: Un stretch ferm, dar controlat (10%)
@@ -261,9 +263,9 @@ public partial class UnitVisualsComponent : Node
             .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
         _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.1f, 0.9f), strikeTime)
             .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
-        
-        // Subtle lean into the hit
-        float rotationAngle = Mathf.DegToRad(8f) * (_unit.FacingDirection);
+
+        // Lean into the hit (Positive rotation leans forward relative to natural face)
+        float rotationAngle = Mathf.DegToRad(8f);
         _attackTween.Parallel().TweenProperty(_animatedSprite, "rotation", rotationAngle, strikeTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
 
@@ -279,25 +281,32 @@ public partial class UnitVisualsComponent : Node
     private void PlayProceduralRangedAttack(float totalDuration)
     {
         // Ranged "Recoil":
-        // 0% - 50%: Build up/Charge. Lean forward slightly.
-        // 50%: Flash + Fire + Snap Back (Recoil)
+        // 0% - 50%: Build up/Charge. Lean forward slightly in the direction of the shot.
+        // 50%: Flash + Fire + Snap Back (Recoil opposite to shot direction)
         // 50% - 100%: Recovery return
-        float chargeTime = totalDuration * 0.5f; 
+        float chargeTime = totalDuration * 0.5f;
         float recoveryTime = totalDuration * 0.5f;
 
         Vector2 originalPos = _animatedSprite.Position;
-        Vector2 forwardVector = _unit.GetForwardVector();
-        Vector2 recoilOffset = -forwardVector * 6f; // Recoil backward
 
-        // 1. Charge Up: Subtle squash (10%) and lean forward slightly (anticipation)
+        // Use base forward without FacingDirection, because the parent node handles the flip scale
+        Vector2 baseForward = (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right;
+
+        // Offset in the direction of the target (forward)
+        Vector2 anticipationOffset = baseForward * 2f;
+        // Offset away from the target (backward)
+        Vector2 recoilOffset = -baseForward * 6f;
+
+        // 1. Charge Up: Subtle squash (10%) and lean forward (anticipation)
         _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.1f, 0.9f), chargeTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
-        _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos + forwardVector * 2f + new Vector2(0, 1f), chargeTime)
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos + anticipationOffset + new Vector2(0, 1f), chargeTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
-        
+
         // 2. Action at 50%: Flash (Immediately after chargeTime finishes)
-        _attackTween.TweenCallback(Callable.From(() => {
-            _animatedSprite.Modulate = new Color(2f, 2f, 2f, 1f); 
+        _attackTween.TweenCallback(Callable.From(() =>
+        {
+            _animatedSprite.Modulate = new Color(2f, 2f, 2f, 1f);
             var flashTween = CreateTween();
             flashTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.2f);
         }));
@@ -324,7 +333,7 @@ public partial class UnitVisualsComponent : Node
         _hurtTween?.Kill();
         _hurtTween = CreateTween();
 
-        _animatedSprite.Modulate = new Color(2f, 0.7f, 0.7f, 1f); 
+        _animatedSprite.Modulate = new Color(2f, 0.7f, 0.7f, 1f);
         _hurtTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.15f);
 
         // Un "Ouch!" mult mai scurt și reținut (5% diferență)

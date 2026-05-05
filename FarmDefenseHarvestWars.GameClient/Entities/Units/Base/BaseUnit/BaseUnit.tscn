@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=15 format=3 uid="uid://cag1tn1qrlacf"]
 
 [ext_resource type="Script" uid="uid://ooy0frnw8g0t" path="res://Entities/Units/Base/BaseUnit/BaseUnit.cs" id="1_sqjxt"]
 [ext_resource type="PackedScene" uid="uid://bbnlu4vbkcbtu" path="res://Scenes/Components/FakeLight/FakeLight.tscn" id="2_0cqh2"]
@@ -8,7 +8,19 @@
 [ext_resource type="PackedScene" uid="uid://bhq0pc1om5070" path="res://Entities/Components/MovementComponent/MovementComponent.tscn" id="5_0cqh2"]
 [ext_resource type="PackedScene" uid="uid://ycst6x1wgv7e" path="res://Entities/Components/HurtboxComponent/HurtboxComponent.tscn" id="6_0cqh2"]
 [ext_resource type="PackedScene" uid="uid://cu6ab578n8aqy" path="res://Entities/Components/VisionComponent/VisionComponent.tscn" id="8_0cqh2"]
+[ext_resource type="Texture2D" uid="uid://bwv1ohy88lmwn" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Bars.png" id="9_2oqxh"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="9_bghst"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_bghst"]
+load_path = "res://.godot/imported/UI_Bars.png-6b81e423ab573a38c87455926b496537.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvg21"]
+atlas = SubResource("CompressedTexture2D_bghst")
+region = Rect2(81, 81, 14, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hhi68"]
+atlas = ExtResource("9_2oqxh")
+region = Rect2(83, 90, 10, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
 properties/0/path = NodePath(".:position")
@@ -38,18 +50,17 @@ Visuals = NodePath("Visuals")
 [node name="LogicComponents" type="Node" parent="."]
 
 [node name="UnitStateMachine" parent="LogicComponents" instance=ExtResource("2_j2i82")]
+SyncedStateIndex = 0
 
 [node name="HealthComponent" parent="LogicComponents" instance=ExtResource("4_o6myl")]
-CurrentHealth = null
 
 [node name="UnitVisualsComponent" parent="LogicComponents" node_paths=PackedStringArray("HealthBar", "_unit", "_animatedSprite", "_animationPlayer") instance=ExtResource("4_4cha2")]
-HealthBar = NodePath("../../Visuals/HealthBar")
+HealthBar = NodePath("../../Visuals/TextureProgressBar")
 _unit = NodePath("../..")
 _animatedSprite = NodePath("../../Visuals/AnimatedSprite2D")
 _animationPlayer = NodePath("../../AnimationPlayer")
 
 [node name="MovementComponent" parent="LogicComponents" node_paths=PackedStringArray("_parent") instance=ExtResource("5_0cqh2")]
-IsMoving = null
 _parent = NodePath("../..")
 
 [node name="Visuals" type="Node2D" parent="."]
@@ -59,9 +70,6 @@ _parent = NodePath("../..")
 [node name="FakeLight" parent="Visuals" instance=ExtResource("2_0cqh2")]
 visible = false
 scale = Vector2(0.5, 0.5)
-BaseColor = null
-RadiusMultiplier = null
-IsOval = null
 
 [node name="SpatialComponents" type="Node2D" parent="Visuals"]
 
@@ -72,14 +80,24 @@ HealthComponent = NodePath("../../../LogicComponents/HealthComponent")
 position = Vector2(0, -7)
 collide_with_areas = true
 
-[node name="HealthBar" type="ProgressBar" parent="Visuals"]
-offset_left = -6.0
-offset_top = -15.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Visuals"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -16.0
 offset_right = 7.0
-offset_bottom = -11.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
 theme = ExtResource("9_bghst")
-value = 100.0
-show_percentage = false
+value = 50.0
+texture_under = SubResource("AtlasTexture_cvg21")
+texture_progress = SubResource("AtlasTexture_hhi68")
+texture_progress_offset = Vector2(2, 2)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
