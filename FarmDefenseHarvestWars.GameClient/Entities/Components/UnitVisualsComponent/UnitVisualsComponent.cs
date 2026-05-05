@@ -238,54 +238,81 @@ public partial class UnitVisualsComponent : Node
 
     private void PlayProceduralMeleeAttack(float totalDuration)
     {
-        // Melee Lunge: Fast forward strike (Peak at 50%)
-        float peakTime = totalDuration * 0.5f;
+        // Melee Lunge: 
+        // 0% - 20%: Anticipation (Subtle Squash)
+        // 20% - 50%: Lunge forward (Subtle Stretch). Peak at 50%.
+        // 50% - 100%: Recovery (Back)
+        float antTime = totalDuration * 0.2f;
+        float strikeTime = totalDuration * 0.3f; // Ends at 50%
         float recoveryTime = totalDuration * 0.5f;
 
         Vector2 originalPos = _animatedSprite.Position;
         Vector2 forwardVector = _unit.GetForwardVector();
         Vector2 forwardOffset = forwardVector * 12f;
 
-        // 1. Strike (Snap forward to peak at 50%)
-        _attackTween.TweenProperty(_animatedSprite, "position", originalPos + forwardOffset, peakTime)
+        // 1. Anticipation: Un squash foarte subtil (5%)
+        _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(0.95f, 1.05f), antTime)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos - forwardVector * 2f, antTime)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+
+        // 2. Strike: Un stretch ferm, dar controlat (10%)
+        _attackTween.TweenProperty(_animatedSprite, "position", originalPos + forwardOffset, strikeTime)
+            .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.1f, 0.9f), strikeTime)
             .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
         
-        // 2. Squash and Stretch during strike
-        _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.25f, 0.75f), peakTime)
-            .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        // Subtle lean into the hit
+        float rotationAngle = Mathf.DegToRad(8f) * (_unit.FacingDirection);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "rotation", rotationAngle, strikeTime)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
 
-        // 3. Recovery (Return at 50%)
+        // 3. Recovery: Fără Elastic. Folosim Back pentru o revenire cu un singur rebound.
         _attackTween.TweenProperty(_animatedSprite, "position", originalPos, recoveryTime)
             .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
-        
         _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), recoveryTime)
-            .SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
+            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "rotation", 0f, recoveryTime)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
     }
 
     private void PlayProceduralRangedAttack(float totalDuration)
     {
-        // Ranged "Power Leap": Anticipation until 50%, then recovery
-        float prepTime = totalDuration * 0.5f; 
+        // Ranged "Recoil":
+        // 0% - 50%: Build up/Charge. Lean forward slightly.
+        // 50%: Flash + Fire + Snap Back (Recoil)
+        // 50% - 100%: Recovery return
+        float chargeTime = totalDuration * 0.5f; 
         float recoveryTime = totalDuration * 0.5f;
 
         Vector2 originalPos = _animatedSprite.Position;
         Vector2 forwardVector = _unit.GetForwardVector();
-        Vector2 hopOffset = forwardVector * 6f;
+        Vector2 recoilOffset = -forwardVector * 6f; // Recoil backward
 
-        // 1. Anticipation/Charge (Peak at 50%)
-        _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.2f, 0.8f), prepTime)
+        // 1. Charge Up: Subtle squash (10%) and lean forward slightly (anticipation)
+        _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.1f, 0.9f), chargeTime)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos + forwardVector * 2f + new Vector2(0, 1f), chargeTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
         
-        // 2. Flash White exactly at 50%
-        _attackTween.Parallel().TweenCallback(Callable.From(() => {
-            _animatedSprite.Modulate = new Color(1.5f, 1.5f, 1.5f, 1f);
+        // 2. Action at 50%: Flash
+        _attackTween.TweenCallback(Callable.From(() => {
+            _animatedSprite.Modulate = new Color(2f, 2f, 2f, 1f); 
             var flashTween = CreateTween();
-            flashTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.15f);
-        })).SetDelay(prepTime);
+            flashTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.2f);
+        })).SetDelay(chargeTime);
 
-        // 3. Recovery (Start after 50%)
-        _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), recoveryTime)
-            .SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
+        // 3. Fire Response (Recoil): Snap Backward + Subtle Stretch (5%)
+        _attackTween.TweenProperty(_animatedSprite, "position", originalPos + recoilOffset, recoveryTime * 0.2f)
+            .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(0.95f, 1.05f), recoveryTime * 0.2f)
+            .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+
+        // 4. Recovery: Return to original position using Back for a clean finish
+        _attackTween.TweenProperty(_animatedSprite, "position", originalPos, recoveryTime * 0.8f)
+            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), recoveryTime * 0.8f)
+            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
     }
 
     public void PlayHurtAnimation()
@@ -297,15 +324,14 @@ public partial class UnitVisualsComponent : Node
         _hurtTween?.Kill();
         _hurtTween = CreateTween();
 
-        // Flash Red - intense
         _animatedSprite.Modulate = new Color(2f, 0.7f, 0.7f, 1f); 
         _hurtTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.15f);
 
-        // Scale Shiver (Ouch! Squash vertically)
-        _hurtTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.15f, 0.8f), 0.05f)
+        // Un "Ouch!" mult mai scurt și reținut (5% diferență)
+        _hurtTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.05f, 0.95f), 0.05f)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
         _hurtTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), 0.1f)
-            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
     }
 
     private void PlayStateAnimation(UnitStateEnum state)

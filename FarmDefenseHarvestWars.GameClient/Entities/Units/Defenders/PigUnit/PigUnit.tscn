@@ -10,12 +10,26 @@ radius = 8.0
 [node name="PigUnit" instance=ExtResource("1_xiiqo")]
 Data = ExtResource("2_jfyid")
 
+[node name="UnitStateMachine" parent="LogicComponents" index="0"]
+SyncedStateIndex = 0
+
+[node name="HealthComponent" parent="LogicComponents" index="1"]
+CurrentHealth = 0
+
+[node name="MovementComponent" parent="LogicComponents" index="3"]
+IsMoving = true
+
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = ExtResource("2_4oxit")
-animation = &"Chew"
-autoplay = "IdleSide"
-frame_progress = 0.162503
+animation = &"Eat"
+autoplay = "idle"
+frame_progress = 0.23336373
+
+[node name="FakeLight" parent="Visuals" index="1"]
+BaseColor = Color(1, 1, 0.8, 0.4)
+RadiusMultiplier = 1.0
+IsOval = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -5)
