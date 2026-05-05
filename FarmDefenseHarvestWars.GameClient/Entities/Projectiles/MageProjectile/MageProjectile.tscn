@@ -1,0 +1,89 @@
+[gd_scene load_steps=15 format=3 uid="uid://cujp1pjbww226"]
+
+[ext_resource type="PackedScene" uid="uid://du8ko4ocrwacs" path="res://Entities/Projectiles/BaseProjectile/BaseProjectile.tscn" id="1_epgph"]
+[ext_resource type="Script" uid="uid://dsu0n5d4i4g44" path="res://Entities/Projectiles/ProjectileConfig.cs" id="2_c0aqj"]
+[ext_resource type="Texture2D" uid="uid://cfeub5u4aho1g" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Other/Skeleton_Mage_Projectile.png" id="3_lgnpa"]
+
+[sub_resource type="Resource" id="Resource_lgnpa"]
+script = ExtResource("2_c0aqj")
+metadata/_custom_type_script = "uid://dsu0n5d4i4g44"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lgnpa"]
+radius = 3.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bae3e"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2op2h"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g60sg"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_doixx"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ly0r"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8idl0"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ipiqt"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bwt2f"]
+atlas = ExtResource("3_lgnpa")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c0aqj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bae3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2op2h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g60sg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_doixx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ly0r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8idl0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ipiqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bwt2f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="MageProjectile" instance=ExtResource("1_epgph")]
+Config = SubResource("Resource_lgnpa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent" index="0"]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_lgnpa")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visuals" index="1"]
+position = Vector2(0, -5)
+sprite_frames = SubResource("SpriteFrames_c0aqj")
+autoplay = "default"
+frame_progress = 0.28373325

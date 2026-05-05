@@ -1,14 +1,25 @@
-[gd_scene load_steps=5 format=3 uid="uid://da45x0td82lu1"]
+[gd_scene load_steps=6 format=3 uid="uid://da45x0td82lu1"]
 
 [ext_resource type="PackedScene" uid="uid://dxtxhtnhthoma" path="res://Entities/Units/Base/AttackerUnit/AttackerUnit.tscn" id="1_kle5s"]
 [ext_resource type="Resource" uid="uid://dtnhbyump40a" path="res://Resources/Units/UnitStats/SkeletonMageData.tres" id="2_3k76f"]
 [ext_resource type="SpriteFrames" uid="uid://xyn10pi008hy" path="res://Entities/Units/Enemies/SkeletonMageUnit/SkeletonMage.tres" id="2_3xt32"]
+[ext_resource type="Script" uid="uid://v0xfk2p74e4d" path="res://Entities/Units/Base/HybridRangedUnit/HybridRangedUnit.cs" id="2_imhr5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3k76f"]
 radius = 7.0
 
 [node name="SkeletonMageUnit" instance=ExtResource("1_kle5s")]
+script = ExtResource("2_imhr5")
 Data = ExtResource("2_3k76f")
+
+[node name="UnitStateMachine" parent="LogicComponents" index="0"]
+SyncedStateIndex = 0
+
+[node name="HealthComponent" parent="LogicComponents" index="1"]
+CurrentHealth = 0
+
+[node name="MovementComponent" parent="LogicComponents" index="3"]
+IsMoving = true
 
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -7)
@@ -18,6 +29,9 @@ autoplay = "move"
 
 [node name="FakeLight" parent="Visuals" index="1"]
 position = Vector2(0, -8)
+BaseColor = Color(1, 1, 0.8, 0.4)
+RadiusMultiplier = 1.0
+IsOval = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -7)
