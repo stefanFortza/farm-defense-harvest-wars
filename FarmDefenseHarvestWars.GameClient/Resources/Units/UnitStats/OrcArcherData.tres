@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://duncipcvc17go"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://duncipcvc17go"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_fkhoe"]
 [ext_resource type="Texture2D" uid="uid://c8x47xs6jh4op" path="res://Assets/Icons/OrcArcherIcon.png" id="1_y85tk"]
+[ext_resource type="PackedScene" uid="uid://eukwjiqqt4ab" path="res://Entities/Projectiles/ArrowProjectile/ArrowProjectile.tscn" id="2_jv1tf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jv1tf"]
 atlas = ExtResource("1_y85tk")
@@ -15,5 +16,6 @@ Name = "OrcArcher"
 Icon = SubResource("AtlasTexture_jv1tf")
 MatchCost = 50
 UnitScenePath = "res://Entities/Units/Enemies/OrcArcherUnit/OrcArcherUnit.tscn"
+ProjectileScene = ExtResource("2_jv1tf")
 Speed = 50.0
 AttackSpeed = 1.0

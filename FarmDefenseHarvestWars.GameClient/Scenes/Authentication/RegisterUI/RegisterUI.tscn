@@ -34,14 +34,12 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 theme = ExtResource("1_fbgkp")
-theme_type_variation = &"AuthEditInput"
 placeholder_text = "Email"
 
 [node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
 custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 theme = ExtResource("1_fbgkp")
-theme_type_variation = &"AuthEditInput"
 placeholder_text = "Password"
 secret = true
 
@@ -49,7 +47,6 @@ secret = true
 custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 theme = ExtResource("1_fbgkp")
-theme_type_variation = &"AuthEditInput"
 placeholder_text = "Confirm Password"
 secret = true
 

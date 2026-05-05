@@ -188,6 +188,7 @@ CheckButton/styles/normal = SubResource("StyleBoxTexture_5cse7")
 CheckButton/styles/pressed = SubResource("StyleBoxTexture_p4d4a")
 Label/font_sizes/font_size = 9
 Label/fonts/font = ExtResource("1_6h47m")
+LineEdit/colors/font_color = Color(1, 1, 1, 1)
 LineEdit/font_sizes/font_size = 8
 LineEdit/fonts/font = ExtResource("1_6h47m")
 LineEdit/styles/focus = SubResource("StyleBoxEmpty_nwdoh")
