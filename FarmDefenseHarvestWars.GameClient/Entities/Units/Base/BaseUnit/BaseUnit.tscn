@@ -37,6 +37,7 @@ properties/3/spawn = true
 properties/3/replication_mode = 1
 
 [node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent", "Visuals")]
+y_sort_enabled = true
 script = ExtResource("1_sqjxt")
 StateMachine = NodePath("LogicComponents/UnitStateMachine")
 HealthComponent = NodePath("LogicComponents/HealthComponent")

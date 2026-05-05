@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=3 uid="uid://cuvouiyt7ahos"]
+[gd_resource type="Theme" load_steps=35 format=3 uid="uid://cuvouiyt7ahos"]
 
 [ext_resource type="FontFile" uid="uid://bh07rtt0cay5h" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/alagard.ttf" id="1_6h47m"]
 [ext_resource type="FontFile" uid="uid://c8emf24bmv5nv" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/Fonts/pixel_operator/PixelOperator8.ttf" id="2_508ev"]
@@ -91,6 +91,25 @@ texture_margin_top = 8.0
 texture_margin_right = 8.0
 texture_margin_bottom = 8.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nwdoh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cfr7d"]
+atlas = ExtResource("3_nwdoh")
+region = Rect2(1116, 107, 24, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8ohpv"]
+texture = SubResource("AtlasTexture_cfr7d")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sw4cq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nwdoh"]
@@ -152,10 +171,6 @@ texture_margin_bottom = 2.0
 expand_margin_left = 1.0
 
 [resource]
-AuthEditInput/base_type = &"LineEdit"
-AuthEditInput/font_sizes/font_size = 9
-AuthEditInput/fonts/font = ExtResource("1_6h47m")
-AuthEditInput/styles/focus = null
 Button/font_sizes/font_size = 9
 Button/fonts/font = ExtResource("2_508ev")
 Button/styles/disabled = SubResource("StyleBoxTexture_c5gfv")
@@ -173,6 +188,10 @@ CheckButton/styles/normal = SubResource("StyleBoxTexture_5cse7")
 CheckButton/styles/pressed = SubResource("StyleBoxTexture_p4d4a")
 Label/font_sizes/font_size = 9
 Label/fonts/font = ExtResource("1_6h47m")
+LineEdit/font_sizes/font_size = 8
+LineEdit/fonts/font = ExtResource("1_6h47m")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_nwdoh")
+LineEdit/styles/normal = SubResource("StyleBoxTexture_8ohpv")
 ProgressBar/font_sizes/font_size = 9
 ProgressBar/fonts/font = ExtResource("1_6h47m")
 TabContainer/fonts/font = ExtResource("1_6h47m")

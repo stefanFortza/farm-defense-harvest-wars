@@ -13,6 +13,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     [Export] private ResourcePanel _resourcePanel = null!;
     [Export] private HBoxContainer _deckContainer = null!;
     [Export] private ProgressBar _timerBar = null!;
+    [Export] private Label _timerLabel = null!; // Optional: Numeric display
     [Export] private ProgressBar _baseHealthBar = null!;
     [Export] private PackedScene _cardScene = null!;
 
@@ -64,6 +65,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         this.EnsureNotNull(_resourcePanel, nameof(_resourcePanel));
         this.EnsureNotNull(_deckContainer, nameof(_deckContainer));
         this.EnsureNotNull(_timerBar, nameof(_timerBar));
+        this.EnsureNotNull(_timerLabel, nameof(_timerLabel));
 
         _localPeerId = Multiplayer.GetUniqueId();
         _isReady = true;
@@ -157,9 +159,26 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 
     private void OnTimerUpdated(float timeRemaining)
     {
-
         float elapsed = Mathf.Clamp(_matchDuration - timeRemaining, 0f, _matchDuration);
         _timerBar.Value = elapsed;
+
+        if (GodotObject.IsInstanceValid(_timerLabel))
+        {
+            int totalSeconds = Mathf.CeilToInt(timeRemaining);
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            _timerLabel.Text = $"{minutes:00}:{seconds:00}";
+
+            // Visual feedback: color the timer red when time is running out (< 30s)
+            if (timeRemaining < 30f)
+            {
+                _timerLabel.AddThemeColorOverride("font_color", Colors.Crimson);
+            }
+            else
+            {
+                _timerLabel.RemoveThemeColorOverride("font_color");
+            }
+        }
     }
 
     private void OnBaseHealthChanged(int currentHealth, int maxHealth)

@@ -33,8 +33,6 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 theme = ExtResource("1_e0aq5")
-theme_type_variation = &"AuthEditInput"
-theme_override_font_sizes/font_size = 9
 placeholder_text = "Email"
 
 [node name="PasswordInput" type="LineEdit" parent="VBoxContainer"]
@@ -42,8 +40,6 @@ custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme = ExtResource("1_e0aq5")
-theme_type_variation = &"AuthEditInput"
-theme_override_font_sizes/font_size = 9
 placeholder_text = "Password"
 secret = true
 
@@ -57,6 +53,7 @@ text = "Login"
 custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 theme = ExtResource("1_e0aq5")
+theme_override_font_sizes/font_size = 6
 horizontal_alignment = 1
 
 [connection signal="pressed" from="VBoxContainer/LoginButton" to="." method="OnLoginPressed"]
