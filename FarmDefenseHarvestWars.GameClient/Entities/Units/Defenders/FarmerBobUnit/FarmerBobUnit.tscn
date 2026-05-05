@@ -124,3 +124,7 @@ target_position = Vector2(18, 0)
 
 [node name="SecondaryVisionComponent" parent="Visuals/SpatialComponents" index="2"]
 target_position = Vector2(-18, 0)
+
+[node name="TextureProgressBar" parent="Visuals" index="3"]
+offset_top = -26.0
+offset_bottom = -20.0

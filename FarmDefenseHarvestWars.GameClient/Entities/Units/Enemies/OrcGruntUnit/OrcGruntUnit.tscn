@@ -23,3 +23,7 @@ shape = SubResource("CircleShape2D_r23r3")
 
 [node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]
 target_position = Vector2(-25, 0)
+
+[node name="TextureProgressBar" parent="Visuals" index="3"]
+offset_top = -31.0
+offset_bottom = -25.0

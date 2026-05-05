@@ -20,3 +20,7 @@ frame_progress = 0.48457488
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_4c355")
+
+[node name="TextureProgressBar" parent="Visuals" index="3"]
+offset_top = -21.0
+offset_bottom = -15.0

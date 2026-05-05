@@ -23,8 +23,6 @@ frame_progress = 0.9002668
 position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_pbiwv")
 
-[node name="HealthBar" parent="Visuals" index="3"]
-offset_left = -13.0
-offset_top = -26.5
-offset_right = 13.0
-offset_bottom = -22.5
+[node name="TextureProgressBar" parent="Visuals" index="3"]
+offset_top = -25.0
+offset_bottom = -19.0

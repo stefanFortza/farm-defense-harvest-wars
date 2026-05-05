@@ -23,3 +23,7 @@ shape = SubResource("CircleShape2D_nekob")
 
 [node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]
 target_position = Vector2(-20, 0)
+
+[node name="TextureProgressBar" parent="Visuals" index="3"]
+offset_top = -27.0
+offset_bottom = -21.0
