@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=3 format=3 uid="uid://c0v1bgx5gqp2t"]
+
+[ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_ngnn6"]
+[ext_resource type="Texture2D" uid="uid://c7y68d2iqtmcs" path="res://Assets/Icons/FarmerBobIcon.png" id="1_ujc2q"]
+
+[resource]
+script = ExtResource("1_ngnn6")
+Type = 14
+Name = "FarmerBob"
+Icon = ExtResource("1_ujc2q")
+MatchCost = 50
+UnitScenePath = "res://Entities/Units/Defenders/FarmerBobUnit/FarmerBobUnit.tscn"
+AttackRange = 18.0
+AttackSpeed = 1.0

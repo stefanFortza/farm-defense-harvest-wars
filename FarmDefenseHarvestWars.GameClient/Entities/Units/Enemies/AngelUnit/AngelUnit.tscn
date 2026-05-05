@@ -13,10 +13,13 @@ Data = ExtResource("2_0cs5a")
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -5)
 sprite_frames = ExtResource("3_yv7xt")
-animation = &"move"
+animation = &"attack"
 autoplay = "move"
-frame_progress = 0.22471873
+frame_progress = 0.5849388
 
 [node name="CollisionPolygon2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_nekob")
+
+[node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]
+target_position = Vector2(-20, 0)

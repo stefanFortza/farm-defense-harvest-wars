@@ -122,14 +122,6 @@ region = Rect2(0, 32, 32, 32)
 atlas = ExtResource("1_udijl")
 region = Rect2(32, 32, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v2fke"]
-atlas = ExtResource("1_udijl")
-region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_a07hb"]
-atlas = ExtResource("1_udijl")
-region = Rect2(32, 0, 32, 32)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_osgvw"]
 atlas = ExtResource("1_udijl")
 region = Rect2(0, 64, 32, 32)
@@ -330,6 +322,14 @@ region = Rect2(192, 160, 32, 32)
 atlas = ExtResource("1_udijl")
 region = Rect2(224, 160, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_v2fke"]
+atlas = ExtResource("1_udijl")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a07hb"]
+atlas = ExtResource("1_udijl")
+region = Rect2(32, 0, 32, 32)
+
 [resource]
 resource_name = "SheepUnitSpriteFrames.tres"
 animations = [{
@@ -451,17 +451,6 @@ animations = [{
 }],
 "loop": true,
 "name": &"IdleDown",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v2fke")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_a07hb")
-}],
-"loop": true,
-"name": &"IdleSide",
 "speed": 5.0
 }, {
 "frames": [{
@@ -657,5 +646,16 @@ animations = [{
 "frames": [],
 "loop": true,
 "name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v2fke")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a07hb")
+}],
+"loop": true,
+"name": &"idle",
 "speed": 5.0
 }]

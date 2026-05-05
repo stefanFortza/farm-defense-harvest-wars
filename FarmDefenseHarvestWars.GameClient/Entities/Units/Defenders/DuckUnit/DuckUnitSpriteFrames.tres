@@ -122,14 +122,6 @@ region = Rect2(0, 32, 32, 32)
 atlas = ExtResource("1_d2uii")
 region = Rect2(32, 32, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6y11b"]
-atlas = ExtResource("1_d2uii")
-region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n2lo2"]
-atlas = ExtResource("1_d2uii")
-region = Rect2(32, 0, 32, 32)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_sudur"]
 atlas = ExtResource("1_d2uii")
 region = Rect2(0, 64, 32, 32)
@@ -330,6 +322,14 @@ region = Rect2(192, 160, 32, 32)
 atlas = ExtResource("1_d2uii")
 region = Rect2(224, 160, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_6y11b"]
+atlas = ExtResource("1_d2uii")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n2lo2"]
+atlas = ExtResource("1_d2uii")
+region = Rect2(32, 0, 32, 32)
+
 [resource]
 resource_name = "Duck.tres"
 animations = [{
@@ -451,17 +451,6 @@ animations = [{
 }],
 "loop": true,
 "name": &"IdleDown",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6y11b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n2lo2")
-}],
-"loop": true,
-"name": &"IdleSide",
 "speed": 5.0
 }, {
 "frames": [{
@@ -657,5 +646,16 @@ animations = [{
 "frames": [],
 "loop": true,
 "name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6y11b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n2lo2")
+}],
+"loop": true,
+"name": &"idle",
 "speed": 5.0
 }]

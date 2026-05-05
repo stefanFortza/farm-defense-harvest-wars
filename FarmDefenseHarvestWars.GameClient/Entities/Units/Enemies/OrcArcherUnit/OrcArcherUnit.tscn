@@ -14,7 +14,7 @@ Data = ExtResource("2_6pb82")
 position = Vector2(0, -15)
 sprite_frames = ExtResource("2_meix2")
 animation = &"attack"
-autoplay = "walk"
+autoplay = "move"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(-2, -9)

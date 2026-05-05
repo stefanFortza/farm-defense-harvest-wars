@@ -15,5 +15,5 @@ Name = "Spearman"
 Icon = SubResource("AtlasTexture_35123")
 UnitScenePath = "uid://bfvjkk7prgsm6"
 Speed = 7.0
-AttackRange = 44.34
+AttackRange = 18.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

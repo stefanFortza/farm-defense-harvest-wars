@@ -23,7 +23,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_wawsn")
 }],
 "loop": true,
-"name": &"IdleSide",
+"name": &"idle",
 "speed": 5.0
 }]
 
@@ -36,9 +36,8 @@ Data = ExtResource("2_f1uhc")
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_y05vm")
-animation = &"IdleSide"
-autoplay = "IdleSide"
-frame_progress = 0.8690765
+animation = &"idle"
+autoplay = "idle"
 
 [node name="FakeLight" parent="Visuals" index="1"]
 position = Vector2(0, -3)

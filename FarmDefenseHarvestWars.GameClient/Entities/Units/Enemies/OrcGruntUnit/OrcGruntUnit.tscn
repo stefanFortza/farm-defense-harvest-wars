@@ -14,9 +14,12 @@ Data = ExtResource("2_1eucx")
 position = Vector2(0, -13)
 sprite_frames = ExtResource("3_r23r3")
 animation = &"attack"
-autoplay = "walk"
-frame_progress = 0.84548986
+autoplay = "move"
+frame_progress = 0.8138948
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(1, -9)
 shape = SubResource("CircleShape2D_r23r3")
+
+[node name="VisionComponent" parent="Visuals/SpatialComponents" index="1"]
+target_position = Vector2(-25, 0)

@@ -13,8 +13,8 @@ Data = ExtResource("2_3jhfb")
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = ExtResource("2_hamfq")
-animation = &"IdleSide"
-autoplay = "IdleSide"
+animation = &"idle"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -7)

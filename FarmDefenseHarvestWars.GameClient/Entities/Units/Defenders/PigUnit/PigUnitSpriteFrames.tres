@@ -114,14 +114,6 @@ region = Rect2(0, 32, 32, 32)
 atlas = ExtResource("1_263pj")
 region = Rect2(32, 32, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_bghh2"]
-atlas = ExtResource("1_263pj")
-region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mb5w3"]
-atlas = ExtResource("1_263pj")
-region = Rect2(32, 0, 32, 32)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_88hsv"]
 atlas = ExtResource("1_263pj")
 region = Rect2(0, 64, 32, 32)
@@ -322,6 +314,14 @@ region = Rect2(192, 160, 32, 32)
 atlas = ExtResource("1_263pj")
 region = Rect2(224, 160, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bghh2"]
+atlas = ExtResource("1_263pj")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mb5w3"]
+atlas = ExtResource("1_263pj")
+region = Rect2(32, 0, 32, 32)
+
 [resource]
 resource_name = "Pig_04.tres"
 animations = [{
@@ -437,17 +437,6 @@ animations = [{
 }],
 "loop": true,
 "name": &"IdleDown",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bghh2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mb5w3")
-}],
-"loop": true,
-"name": &"IdleSide",
 "speed": 5.0
 }, {
 "frames": [{
@@ -638,5 +627,16 @@ animations = [{
 }],
 "loop": true,
 "name": &"WalkUp",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bghh2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mb5w3")
+}],
+"loop": true,
+"name": &"idle",
 "speed": 5.0
 }]

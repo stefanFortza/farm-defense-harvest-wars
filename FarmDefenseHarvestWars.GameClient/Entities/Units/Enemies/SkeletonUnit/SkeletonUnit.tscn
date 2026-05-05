@@ -15,11 +15,9 @@ Data = ExtResource("3_pbiwv")
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -8)
 sprite_frames = ExtResource("4_pbiwv")
-animation = &"idle"
-autoplay = "walk"
-
-[node name="UnitVisualsComponent" parent="LogicComponents" index="2" node_paths=PackedStringArray("_animatedSprite")]
-_animatedSprite = NodePath("../../Visuals/AnimatedSprite2D")
+animation = &"attack"
+autoplay = "move"
+frame_progress = 0.9002668
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -10)

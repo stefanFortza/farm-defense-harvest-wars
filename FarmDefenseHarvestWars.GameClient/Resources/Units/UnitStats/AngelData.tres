@@ -16,4 +16,5 @@ Icon = SubResource("AtlasTexture_6doda")
 MatchCost = 50
 UnitScenePath = "res://Entities/Units/Enemies/AngelUnit/AngelUnit.tscn"
 Speed = 50.0
+AttackRange = 20.0
 AttackSpeed = 1.0

@@ -16,4 +16,5 @@ Icon = SubResource("AtlasTexture_i6lce")
 MatchCost = 50
 UnitScenePath = "res://Entities/Units/Enemies/GoblinMacemanUnit/GoblinMacemanUnit.tscn"
 Speed = 50.0
+AttackRange = 15.0
 AttackSpeed = 1.0

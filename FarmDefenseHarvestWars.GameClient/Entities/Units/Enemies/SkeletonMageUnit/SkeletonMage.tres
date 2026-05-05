@@ -1,6 +1,38 @@
-[gd_resource type="SpriteFrames" load_steps=14 format=3 uid="uid://xyn10pi008hy"]
+[gd_resource type="SpriteFrames" load_steps=22 format=3 uid="uid://xyn10pi008hy"]
 
 [ext_resource type="Texture2D" uid="uid://n2fgajflguhm" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Enemies/Skeleton/Skeleton_Mage.png" id="1_sbllt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sbllt"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(0, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_10n76"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(32, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_80u37"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(64, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p85hv"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(96, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lndrv"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(128, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hljqs"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(160, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j0nmu"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(192, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pb80x"]
+atlas = ExtResource("1_sbllt")
+region = Rect2(224, 224, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7i6kl"]
 atlas = ExtResource("1_sbllt")
@@ -53,9 +85,33 @@ region = Rect2(160, 128, 32, 32)
 [resource]
 resource_name = "SkeletonMage.tres"
 animations = [{
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sbllt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_10n76")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_80u37")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p85hv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lndrv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hljqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j0nmu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pb80x")
+}],
 "loop": true,
-"name": &"default",
+"name": &"attack",
 "speed": 5.0
 }, {
 "frames": [{
@@ -101,6 +157,6 @@ animations = [{
 "texture": SubResource("AtlasTexture_ecgkx")
 }],
 "loop": true,
-"name": &"walk",
+"name": &"move",
 "speed": 5.0
 }]

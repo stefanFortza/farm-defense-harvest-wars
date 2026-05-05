@@ -15,4 +15,5 @@ Name = "SkeletonMage"
 Icon = SubResource("AtlasTexture_lxm8o")
 UnitScenePath = "uid://da45x0td82lu1"
 Speed = 10.0
+AttackRange = 50.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"
