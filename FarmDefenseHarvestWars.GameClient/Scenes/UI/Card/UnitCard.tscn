@@ -36,9 +36,9 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 
 [node name="UnitCard" type="PanelContainer" node_paths=PackedStringArray("_icon", "_costLabel", "_cooldownOverlay", "_cooldownLabel")]
-custom_minimum_size = Vector2(24, 24)
-offset_right = 26.0
-offset_bottom = 36.0
+custom_minimum_size = Vector2(20, 20)
+offset_right = 22.0
+offset_bottom = 30.0
 mouse_filter = 1
 theme = ExtResource("1_vt2l0")
 theme_override_styles/panel = SubResource("StyleBoxTexture_gf3f7")
@@ -60,7 +60,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_fjgki")
 
 [node name="Icon" type="TextureRect" parent="VBox/Panel"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(12, 12)
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("1_vt2l0")
@@ -70,6 +70,7 @@ stretch_mode = 5
 [node name="CostLabel" type="Label" parent="VBox"]
 layout_mode = 2
 theme = ExtResource("1_vt2l0")
+theme_override_font_sizes/font_size = 6
 text = "25"
 horizontal_alignment = 1
 vertical_alignment = 1
