@@ -163,7 +163,8 @@ public class HybridRangedAttackState : IState
         {
             baseProjectile.Initialize((
                 Damage: _unit.ScaledDamage,
-                Direction: (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right
+                Direction: (_unit is AttackerUnit) ? Vector2.Left : Vector2.Right,
+                IsFromAttacker: _unit is AttackerUnit
             ));
         }
 

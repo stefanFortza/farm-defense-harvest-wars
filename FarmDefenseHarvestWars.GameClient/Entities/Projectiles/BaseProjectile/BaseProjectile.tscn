@@ -14,8 +14,7 @@ HitboxComponent = NodePath("HitboxComponent")
 Sprite2D = NodePath("Visuals/Sprite2D")
 
 [node name="HitboxComponent" parent="." instance=ExtResource("2_hitbox")]
-collision_layer = 16
-collision_mask = 4
+collision_layer = 8
 
 [node name="Visuals" type="Node2D" parent="."]
 

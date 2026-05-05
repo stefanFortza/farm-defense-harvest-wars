@@ -1,11 +1,16 @@
-[gd_scene load_steps=15 format=3 uid="uid://cujp1pjbww226"]
+[gd_scene load_steps=16 format=3 uid="uid://cujp1pjbww226"]
 
 [ext_resource type="PackedScene" uid="uid://du8ko4ocrwacs" path="res://Entities/Projectiles/BaseProjectile/BaseProjectile.tscn" id="1_epgph"]
 [ext_resource type="Script" uid="uid://dsu0n5d4i4g44" path="res://Entities/Projectiles/ProjectileConfig.cs" id="2_c0aqj"]
+[ext_resource type="Script" path="res://Entities/Projectiles/MageProjectile/MageProjectile.cs" id="2_mage"]
 [ext_resource type="Texture2D" uid="uid://cfeub5u4aho1g" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Other/Skeleton_Mage_Projectile.png" id="3_lgnpa"]
 
 [sub_resource type="Resource" id="Resource_lgnpa"]
 script = ExtResource("2_c0aqj")
+Piercing = false
+PierceCount = 1
+AoeRadius = 0.0
+Homing = false
 metadata/_custom_type_script = "uid://dsu0n5d4i4g44"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lgnpa"]
@@ -76,6 +81,7 @@ animations = [{
 }]
 
 [node name="MageProjectile" instance=ExtResource("1_epgph")]
+script = ExtResource("2_mage")
 Config = SubResource("Resource_lgnpa")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent" index="0"]

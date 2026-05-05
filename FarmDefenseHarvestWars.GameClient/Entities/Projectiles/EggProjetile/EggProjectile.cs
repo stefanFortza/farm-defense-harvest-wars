@@ -14,4 +14,9 @@ public partial class EggProjectile : BaseProjectile
 			tween.TweenProperty(Sprite2D, "rotation", Mathf.Tau, 0.5f).AsRelative();
 		}
 	}
+
+	protected override Color GetImpactColor()
+	{
+		return new Color(1.0f, 0.9f, 0.3f); // Egg yolk yellow
+	}
 }

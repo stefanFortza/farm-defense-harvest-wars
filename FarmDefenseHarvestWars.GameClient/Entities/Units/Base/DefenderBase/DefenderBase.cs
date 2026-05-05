@@ -86,7 +86,7 @@ public partial class DefenderBase : Node2D, IInitializable<HealthComponent>
         _previousHealth = current;
     }
 
-    private void PlayHitEffect()
+    public void PlayHitEffect()
     {
         _hitTween?.Kill();
         _hitTween = CreateTween();

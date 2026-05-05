@@ -6,7 +6,7 @@ using FarmDefenseHarvestWars.GameClient.Core.Utils;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Projectiles;
 
-public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector2 Direction)>
+public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector2 Direction, bool IsFromAttacker)>
 {
     [Export] public HitboxComponent HitboxComponent { get; set; } = null!;
     [Export] public Sprite2D Sprite2D { get; set; } = null!;
@@ -15,6 +15,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     [Export] public Vector2 Direction { get; set; } = Vector2.Left;
     [Export] public int Damage { get; set; } = 10;
     [Export] public float MaxLifetime { get; set; } = 5.0f;
+    [Export] public bool IsFromAttacker { get; set; }
 
 
     public bool IsInitialized { get; private set; } = false;
@@ -39,12 +40,13 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     /// adding the projectile to the scene tree so HitboxComponent.DamageAmount is set
     /// correctly (avoiding the stale-default timing issue that existed before).
     /// </summary>
-    public void Initialize((int Damage, Vector2 Direction) data)
+    public void Initialize((int Damage, Vector2 Direction, bool IsFromAttacker) data)
     {
         if (IsInitialized) return;
 
         Damage = data.Damage;
         Direction = data.Direction;
+        IsFromAttacker = data.IsFromAttacker;
 
         HitboxComponent.DamageAmount = data.Damage;
 
@@ -67,27 +69,6 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
             {
                 OnHit(hurtbox);
             }
-            else
-            {
-                // Client-side visual only: Trigger hurt animation on hit
-                TriggerVisualHurt(hurtbox);
-            }
-        }
-    }
-
-    private void TriggerVisualHurt(HurtboxComponent hurtbox)
-    {
-        var targetUnit = hurtbox.GetParent() as BaseUnit;
-        if (GodotObject.IsInstanceValid(targetUnit))
-        {
-            foreach (var child in targetUnit.GetChildren())
-            {
-                if (child is UnitVisualsComponent visuals)
-                {
-                    visuals.PlayHurtAnimation();
-                    break;
-                }
-            }
         }
     }
 
@@ -99,7 +80,97 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     protected virtual void OnHit(HurtboxComponent target)
     {
         ApplyAreaDamage(target);
+        
+        // Broadcast visuals to all peers
+        Rpc(nameof(PlayImpactVisualsRPC), target.GlobalPosition, IsFromAttacker);
+        
         QueueFree();
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void PlayImpactVisualsRPC(Vector2 impactPoint, bool isFromAttacker)
+    {
+        float aoeRadius = Config?.AoeRadius ?? 0f;
+        
+        // Show impact effect for everyone, even non-AOE (use small radius)
+        float visualRadius = aoeRadius > 0 ? aoeRadius : 6.0f;
+
+        var effect = new AoeExplosionEffect
+        {
+            Radius = visualRadius,
+            Color = GetImpactColor(),
+            GlobalPosition = impactPoint
+        };
+        
+        // Add to parent to stay in the world coordinate system (e.g., ProjectileContainer)
+        if (GetParent() != null)
+        {
+            GetParent().AddChild(effect);
+        }
+        else
+        {
+            GetTree().Root.AddChild(effect);
+        }
+
+        // Trigger hurt animation on hit targets for visual feedback
+        TriggerVisualHurtAtPoint(impactPoint, aoeRadius, isFromAttacker);
+    }
+
+    protected virtual Color GetImpactColor() => Colors.White;
+
+    private void TriggerVisualHurtAtPoint(Vector2 impactPoint, float radius, bool isFromAttacker)
+    {
+        // 1. Check Units
+        foreach (Node node in GetTree().GetNodesInGroup("Units"))
+        {
+            if (node is not BaseUnit unit) continue;
+            
+            // Only play hurt for enemies
+            bool isUnitAttacker = unit is AttackerUnit;
+            if (isUnitAttacker == isFromAttacker) continue;
+
+            TryPlayHurtOnUnit(unit, impactPoint, radius);
+        }
+
+        // 2. Check DefenderBase if from attacker
+        if (isFromAttacker)
+        {
+            foreach (Node node in GetTree().GetNodesInGroup("DefenderBase"))
+            {
+                if (node is not DefenderBase defBase) continue;
+                
+                float distance = defBase.GlobalPosition.DistanceTo(impactPoint);
+                if (radius > 0)
+                {
+                    if (distance <= radius) defBase.PlayHitEffect();
+                }
+                else if (distance < 24f)
+                {
+                    defBase.PlayHitEffect();
+                }
+            }
+        }
+    }
+
+    private void TryPlayHurtOnUnit(BaseUnit unit, Vector2 impactPoint, float radius)
+    {
+        float distance = unit.GlobalPosition.DistanceTo(impactPoint);
+        // If radius is 0 (direct hit), we check if the unit contains the impact point roughly
+        if (radius > 0)
+        {
+            if (distance <= radius)
+            {
+                unit.Visuals?.GetNodeOrNull<UnitVisualsComponent>("UnitVisualsComponent")?.PlayHurtAnimation();
+            }
+        }
+        else
+        {
+            // Direct hit fallback - if it's very close to unit center
+            if (distance < 16f) 
+            {
+                unit.Visuals?.GetNodeOrNull<UnitVisualsComponent>("UnitVisualsComponent")?.PlayHurtAnimation();
+            }
+        }
     }
 
     private void ApplyAreaDamage(HurtboxComponent directHitTarget)
@@ -117,25 +188,39 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
 
         Vector2 impactPoint = directHitTarget.GlobalPosition;
 
+        // 1. Apply to Units
         foreach (Node node in GetTree().GetNodesInGroup("Units"))
         {
-            if (node is not BaseUnit unit)
-            {
-                continue;
-            }
+            if (node is not BaseUnit unit) continue;
+
+            // Only damage enemies
+            bool isUnitAttacker = unit is AttackerUnit;
+            if (isUnitAttacker == IsFromAttacker) continue;
 
             var hurtbox = unit.HurtboxComponent;
-            if (hurtbox == null || !GodotObject.IsInstanceValid(hurtbox) || hurtbox == directHitTarget)
-            {
-                continue;
-            }
+            if (hurtbox == null || !GodotObject.IsInstanceValid(hurtbox) || hurtbox == directHitTarget) continue;
 
-            if (hurtbox.GlobalPosition.DistanceTo(impactPoint) > aoeRadius)
+            if (hurtbox.GlobalPosition.DistanceTo(impactPoint) <= aoeRadius)
             {
-                continue;
+                hurtbox.ReceiveHit(Damage);
             }
+        }
 
-            hurtbox.ReceiveHit(Damage);
+        // 2. Apply to DefenderBase if from attacker
+        if (IsFromAttacker)
+        {
+            foreach (Node node in GetTree().GetNodesInGroup("DefenderBase"))
+            {
+                if (node is not DefenderBase defBase) continue;
+                
+                var hurtbox = defBase.HurtboxComponent;
+                if (hurtbox == null || !GodotObject.IsInstanceValid(hurtbox) || hurtbox == directHitTarget) continue;
+
+                if (hurtbox.GlobalPosition.DistanceTo(impactPoint) <= aoeRadius)
+                {
+                    hurtbox.ReceiveHit(Damage);
+                }
+            }
         }
     }
 }

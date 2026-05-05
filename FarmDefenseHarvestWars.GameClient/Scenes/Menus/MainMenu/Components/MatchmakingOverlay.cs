@@ -65,13 +65,13 @@ public partial class MatchmakingOverlay : CanvasLayer
 
             if (status == null || !status.MatchFound)
             {
-                ToastNotifications.TryInfo("No match found.", 3.0);
+                ToastNotifications.TryInfo("No match found.", 1.5);
                 Close();
                 return;
             }
 
             _statusLabel.Text = "Match Found! Connecting...";
-            ToastNotifications.TrySuccess("Match Found! Connecting...", 3.0);
+            ToastNotifications.TrySuccess("Match Found! Connecting...", 1.5);
             _cancelButton.Disabled = true;
 
             // Show Loading Screen
