@@ -24,12 +24,11 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
         this.EnsureNotNull(HitboxComponent, nameof(HitboxComponent));
         this.EnsureNotNull(Sprite2D, nameof(Sprite2D));
 
+        // Wire up hit detection on all instances (Server for damage, Client for visuals)
+        HitboxComponent.AreaEntered += OnHitboxAreaEntered;
 
         if (!IsMultiplayerAuthority())
             return;
-
-        // Wire up the signal; damage is applied via Initialize() after AddChild.
-        HitboxComponent.AreaEntered += OnHitboxAreaEntered;
 
         // Auto-destroy after MaxLifetime seconds so missed projectiles don't linger.
         GetTree().CreateTimer(MaxLifetime).Timeout += QueueFree;
@@ -64,7 +63,31 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     {
         if (area is HurtboxComponent hurtbox)
         {
-            OnHit(hurtbox);
+            if (IsMultiplayerAuthority())
+            {
+                OnHit(hurtbox);
+            }
+            else
+            {
+                // Client-side visual only: Trigger hurt animation on hit
+                TriggerVisualHurt(hurtbox);
+            }
+        }
+    }
+
+    private void TriggerVisualHurt(HurtboxComponent hurtbox)
+    {
+        var targetUnit = hurtbox.GetParent() as BaseUnit;
+        if (GodotObject.IsInstanceValid(targetUnit))
+        {
+            foreach (var child in targetUnit.GetChildren())
+            {
+                if (child is UnitVisualsComponent visuals)
+                {
+                    visuals.PlayHurtAnimation();
+                    break;
+                }
+            }
         }
     }
 

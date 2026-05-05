@@ -13,6 +13,8 @@ public class HybridRangedAttackState : IState
     private readonly MovementComponent _movement;
 
     private double _attackTimer;
+    private double _windUpTimer = -1.0;
+    private HurtboxComponent? _currentTarget;
 
     public HybridRangedAttackState(BaseUnit unit)
     {
@@ -23,18 +25,29 @@ public class HybridRangedAttackState : IState
 
     public void Enter()
     {
-        GD.Print($"{_unit.Name} entered HybridRangedAttackState.");
         _attackTimer = 0.0;
+        _windUpTimer = -1.0;
+        _currentTarget = null;
     }
 
     public void Exit()
     {
-        GD.Print($"{_unit.Name} exited HybridRangedAttackState.");
         _movement.Stop();
     }
 
     public void PhysicsUpdate(double delta)
     {
+        // 1. Handle Active Melee Wind-up
+        if (_windUpTimer > 0)
+        {
+            _windUpTimer -= delta;
+            if (_windUpTimer <= 0)
+            {
+                ApplyMeleeHit();
+            }
+            return;
+        }
+
         var target = _vision.GetFirstValidEnemy();
         if (target == null)
         {
@@ -46,6 +59,7 @@ public class HybridRangedAttackState : IState
         if (_attackTimer > 0)
         {
             _attackTimer -= delta;
+            return;
         }
 
         var distanceToTarget = _unit.GlobalPosition.DistanceTo(target.GlobalPosition);
@@ -61,26 +75,14 @@ public class HybridRangedAttackState : IState
         if (distanceToTarget <= meleeRange)
         {
             _movement.Stop();
-
-            if (_attackTimer <= 0)
-            {
-                AttackMelee(target);
-                _attackTimer = GetAttackCooldown();
-            }
-
+            StartMeleeSequence(target);
             return;
         }
 
         if (distanceToTarget <= attackRange)
         {
             _movement.Stop();
-
-            if (_attackTimer <= 0)
-            {
-                AttackRanged();
-                _attackTimer = GetAttackCooldown();
-            }
-
+            StartRangedSequence();
             return;
         }
 
@@ -99,18 +101,34 @@ public class HybridRangedAttackState : IState
     {
     }
 
-    private void AttackMelee(HurtboxComponent target)
+    private void StartMeleeSequence(HurtboxComponent target)
     {
-        if (!_unit.Multiplayer.IsServer())
-        {
-            return;
-        }
+        if (!_unit.Multiplayer.IsServer()) return;
 
-        GD.Print($"{_unit.Name} hybrid melee attacks for {_unit.ScaledDamage} damage.");
-        target.ReceiveHit(_unit.ScaledDamage);
+        double attackCycle = 1.0 / Mathf.Max(0.1f, _unit.Data.AttackSpeed);
+        _currentTarget = target;
+        _windUpTimer = attackCycle * 0.5; // Always 50% of the cycle
+        _attackTimer = GetAttackCooldown();
+
+        _unit.Rpc(nameof(BaseUnit.NotifyAttackStartedRPC));
     }
 
-    private void AttackRanged()
+    private void ApplyMeleeHit()
+    {
+        if (!_unit.Multiplayer.IsServer()) return;
+        _windUpTimer = -1.0;
+
+        if (GodotObject.IsInstanceValid(_currentTarget))
+        {
+            GD.Print($"{_unit.Name} hybrid melee hits for {_unit.ScaledDamage} damage.");
+            _currentTarget!.ReceiveHit(_unit.ScaledDamage);
+            _unit.Rpc(nameof(BaseUnit.NotifyHitImpactRPC), _currentTarget.GetParent().GetPath());
+        }
+
+        _currentTarget = null;
+    }
+
+    private void StartRangedSequence()
     {
         if (_unit.Data.ProjectileScene == null)
         {
@@ -122,6 +140,11 @@ public class HybridRangedAttackState : IState
         {
             return;
         }
+
+        _attackTimer = GetAttackCooldown();
+
+        _unit.Rpc(nameof(BaseUnit.NotifyAttackStartedRPC));
+        _unit.Rpc(nameof(BaseUnit.NotifyHitImpactRPC), new NodePath());
 
         var projectile = _unit.Data.ProjectileScene.Instantiate<Node2D>();
 

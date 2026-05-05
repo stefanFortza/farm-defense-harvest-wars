@@ -16,6 +16,20 @@ public partial class BaseUnit : CharacterBody2D
 
     [Signal] public delegate void HealthChangedEventHandler(int newHealth, int maxHealth);
     [Signal] public delegate void DiedEventHandler();
+    [Signal] public delegate void AttackStartedEventHandler();
+    [Signal] public delegate void HitImpactEventHandler(NodePath targetPath);
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    public void NotifyAttackStartedRPC()
+    {
+        EmitSignal(SignalName.AttackStarted);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    public void NotifyHitImpactRPC(NodePath targetPath)
+    {
+        EmitSignal(SignalName.HitImpact, targetPath);
+    }
 
     [Export] public UnitData Data { get; private set; } = null!;
     [Export] public UnitStateMachine StateMachine { get; private set; } = null!;

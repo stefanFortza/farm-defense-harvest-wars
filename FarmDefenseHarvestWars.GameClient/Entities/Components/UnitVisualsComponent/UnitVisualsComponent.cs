@@ -26,7 +26,12 @@ public partial class UnitVisualsComponent : Node
     private UnitStateMachine? _boundStateMachine;
     private bool _boundBaseHealthSignal;
 
-    // TODO sync animations with attack speed
+    private int _previousHealth;
+    private Tween? _attackTween;
+    private Tween? _hurtTween;
+    private double _lastHurtTime;
+    private const double HurtCooldown = 0.1;
+
     public override void _Ready()
     {
         ResolveRuntimeReferences();
@@ -40,6 +45,9 @@ public partial class UnitVisualsComponent : Node
         {
             GD.PushWarning($"[{nameof(UnitVisualsComponent)}] HealthBar reference missing on node '{Name}'.");
         }
+
+        _unit.AttackStarted += OnUnitAttackStarted;
+        _unit.HitImpact += OnUnitHitImpact;
 
         _boundStateMachine = _unit.StateMachine;
         if (GodotObject.IsInstanceValid(_boundStateMachine))
@@ -57,6 +65,7 @@ public partial class UnitVisualsComponent : Node
         if (GodotObject.IsInstanceValid(_boundHealthComponent))
         {
             _boundHealthComponent!.HealthChanged += OnHealthChanged;
+            _previousHealth = _boundHealthComponent.CurrentHealth;
             // Initialize bar
             OnHealthChanged(_boundHealthComponent.CurrentHealth, _boundHealthComponent.MaxHealth);
         }
@@ -65,6 +74,7 @@ public partial class UnitVisualsComponent : Node
             // Fallback to BaseUnit signals
             _unit.HealthChanged += OnHealthChanged;
             _boundBaseHealthSignal = true;
+            _previousHealth = _unit.MaxHealth;
             OnHealthChanged(_unit.MaxHealth, _unit.MaxHealth);
         }
     }
@@ -115,6 +125,12 @@ public partial class UnitVisualsComponent : Node
 
     public override void _ExitTree()
     {
+        if (GodotObject.IsInstanceValid(_unit))
+        {
+            _unit.AttackStarted -= OnUnitAttackStarted;
+            _unit.HitImpact -= OnUnitHitImpact;
+        }
+
         if (GodotObject.IsInstanceValid(_boundHealthComponent))
         {
             _boundHealthComponent!.HealthChanged -= OnHealthChanged;
@@ -130,6 +146,9 @@ public partial class UnitVisualsComponent : Node
         {
             _boundStateMachine!.StateChanged -= OnUnitStateChanged;
         }
+
+        _attackTween?.Kill();
+        _hurtTween?.Kill();
     }
 
     private void OnHealthChanged(int newHealth, int maxHealth)
@@ -142,11 +161,151 @@ public partial class UnitVisualsComponent : Node
         HealthBar.MaxValue = maxHealth;
         HealthBar.Value = newHealth;
         HealthBar.Visible = newHealth < maxHealth; // Hide if full
+
+        if (newHealth < _previousHealth)
+        {
+            // Fallback for damage not triggered by direct Melee RPC (e.g. status effects)
+            double currentTime = Time.GetTicksMsec() / 1000.0;
+            if (currentTime - _lastHurtTime > HurtCooldown)
+            {
+                PlayHurtAnimation();
+            }
+        }
+
+        _previousHealth = newHealth;
+    }
+
+    private void OnUnitAttackStarted()
+    {
+        bool isDefender = _unit.Data.Role == FarmDefenseHarvestWars.Shared.Enums.PlayerRole.Defender;
+        bool hasAttackAnimation = _animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(AttackAnimation);
+
+        if (isDefender)
+        {
+            PlayProceduralAttackAnimation();
+        }
+        else if (hasAttackAnimation)
+        {
+            _animatedSprite.Stop();
+            _animatedSprite.Play(AttackAnimation);
+        }
+    }
+
+    private void OnUnitHitImpact(NodePath targetPath)
+    {
+        if (targetPath.IsEmpty) return;
+
+        var target = GetNodeOrNull(targetPath);
+        if (target is BaseUnit targetUnit && GodotObject.IsInstanceValid(targetUnit))
+        {
+            foreach (var child in targetUnit.GetChildren())
+            {
+                if (child is UnitVisualsComponent targetVisuals)
+                {
+                    targetVisuals.PlayHurtAnimation();
+                    break;
+                }
+            }
+        }
     }
 
     private void OnUnitStateChanged(int previousState, int newState)
     {
         PlayStateAnimation((UnitStateEnum)newState);
+    }
+
+    private void PlayProceduralAttackAnimation()
+    {
+        if (!GodotObject.IsInstanceValid(_animatedSprite)) return;
+
+        bool isRanged = _unit.Data.ProjectileScene != null;
+
+        _attackTween?.Kill();
+        _attackTween = CreateTween();
+
+        float attackSpeed = (float)Mathf.Max(0.1f, _unit.Data.AttackSpeed);
+        float totalDuration = 1.0f / attackSpeed;
+
+        if (isRanged)
+        {
+            PlayProceduralRangedAttack(totalDuration);
+        }
+        else
+        {
+            PlayProceduralMeleeAttack(totalDuration);
+        }
+    }
+
+    private void PlayProceduralMeleeAttack(float totalDuration)
+    {
+        // Melee Lunge: Fast forward strike (Peak at 50%)
+        float peakTime = totalDuration * 0.5f;
+        float recoveryTime = totalDuration * 0.5f;
+
+        Vector2 originalPos = _animatedSprite.Position;
+        Vector2 forwardVector = _unit.GetForwardVector();
+        Vector2 forwardOffset = forwardVector * 12f;
+
+        // 1. Strike (Snap forward to peak at 50%)
+        _attackTween.TweenProperty(_animatedSprite, "position", originalPos + forwardOffset, peakTime)
+            .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        
+        // 2. Squash and Stretch during strike
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.25f, 0.75f), peakTime)
+            .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+
+        // 3. Recovery (Return at 50%)
+        _attackTween.TweenProperty(_animatedSprite, "position", originalPos, recoveryTime)
+            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+        
+        _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), recoveryTime)
+            .SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
+    }
+
+    private void PlayProceduralRangedAttack(float totalDuration)
+    {
+        // Ranged "Power Leap": Anticipation until 50%, then recovery
+        float prepTime = totalDuration * 0.5f; 
+        float recoveryTime = totalDuration * 0.5f;
+
+        Vector2 originalPos = _animatedSprite.Position;
+        Vector2 forwardVector = _unit.GetForwardVector();
+        Vector2 hopOffset = forwardVector * 6f;
+
+        // 1. Anticipation/Charge (Peak at 50%)
+        _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.2f, 0.8f), prepTime)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+        
+        // 2. Flash White exactly at 50%
+        _attackTween.Parallel().TweenCallback(Callable.From(() => {
+            _animatedSprite.Modulate = new Color(1.5f, 1.5f, 1.5f, 1f);
+            var flashTween = CreateTween();
+            flashTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.15f);
+        })).SetDelay(prepTime);
+
+        // 3. Recovery (Start after 50%)
+        _attackTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), recoveryTime)
+            .SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
+    }
+
+    public void PlayHurtAnimation()
+    {
+        if (!GodotObject.IsInstanceValid(_animatedSprite)) return;
+
+        _lastHurtTime = Time.GetTicksMsec() / 1000.0;
+
+        _hurtTween?.Kill();
+        _hurtTween = CreateTween();
+
+        // Flash Red - intense
+        _animatedSprite.Modulate = new Color(2f, 0.7f, 0.7f, 1f); 
+        _hurtTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.15f);
+
+        // Scale Shiver (Ouch! Squash vertically)
+        _hurtTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.15f, 0.8f), 0.05f)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+        _hurtTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), 0.1f)
+            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
     }
 
     private void PlayStateAnimation(UnitStateEnum state)
@@ -162,6 +321,15 @@ public partial class UnitVisualsComponent : Node
             {
                 if (_animatedSprite.SpriteFrames.HasAnimation(spriteAnimationName))
                 {
+                    if (state == UnitStateEnum.Attacking)
+                    {
+                        _animatedSprite.SpeedScale = (float)_unit.Data.AttackSpeed;
+                    }
+                    else
+                    {
+                        _animatedSprite.SpeedScale = 1.0f; // Reset speed for other states
+                    }
+
                     _animatedSprite.Play(spriteAnimationName);
                 }
                 else
