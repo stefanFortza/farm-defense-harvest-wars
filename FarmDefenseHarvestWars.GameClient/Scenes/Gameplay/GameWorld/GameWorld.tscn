@@ -84,28 +84,31 @@ _unitRegistry = ExtResource("3_1re74")
 
 [node name="ProjectileContainer" type="Node2D" parent="."]
 
-[node name="DefenderBase" type="Node2D" parent="." node_paths=PackedStringArray("HurtboxComponent")]
+[node name="DefenderBase" type="Node2D" parent="." node_paths=PackedStringArray("HurtboxComponent", "VisualsContainer")]
 position = Vector2(52, 88)
 script = ExtResource("7_base")
 HurtboxComponent = NodePath("HurtboxComponent")
+VisualsContainer = NodePath("Visuals")
 
-[node name="House1LimestoneBaseBlack" type="Sprite2D" parent="DefenderBase"]
+[node name="Visuals" type="Node2D" parent="DefenderBase"]
+
+[node name="House1LimestoneBaseBlack" type="Sprite2D" parent="DefenderBase/Visuals"]
 position = Vector2(0, -14)
 texture = ExtResource("5_ragko")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="DefenderBase"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="DefenderBase/Visuals"]
 position = Vector2(26, -57)
 sprite_frames = SubResource("SpriteFrames_psut0")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.7274519
 
-[node name="PointLight2D" type="PointLight2D" parent="DefenderBase"]
+[node name="PointLight2D" type="PointLight2D" parent="DefenderBase/Visuals"]
 position = Vector2(0, -11)
 texture = ExtResource("6_xghf8")
 texture_scale = 0.5
 
-[node name="PointLight2D2" type="PointLight2D" parent="DefenderBase"]
+[node name="PointLight2D2" type="PointLight2D" parent="DefenderBase/Visuals"]
 position = Vector2(16, 19)
 texture = ExtResource("6_xghf8")
 texture_scale = 0.5

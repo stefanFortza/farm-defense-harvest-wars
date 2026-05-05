@@ -1,54 +1,6 @@
-[gd_resource type="SpriteFrames" load_steps=16 format=3 uid="uid://bisv0tuhio3bc"]
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://bisv0tuhio3bc"]
 
 [ext_resource type="Texture2D" uid="uid://bqpm5exmt3okm" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Animals/Pig/Pig_04.png" id="1_263pj"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8l5qb"]
-atlas = ExtResource("1_263pj")
-region = Rect2(0, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xbilj"]
-atlas = ExtResource("1_263pj")
-region = Rect2(32, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8gs7h"]
-atlas = ExtResource("1_263pj")
-region = Rect2(64, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_eh07k"]
-atlas = ExtResource("1_263pj")
-region = Rect2(96, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fcpy2"]
-atlas = ExtResource("1_263pj")
-region = Rect2(128, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_n1qxf"]
-atlas = ExtResource("1_263pj")
-region = Rect2(160, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_53ms8"]
-atlas = ExtResource("1_263pj")
-region = Rect2(192, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8bmr3"]
-atlas = ExtResource("1_263pj")
-region = Rect2(224, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bm6p7"]
-atlas = ExtResource("1_263pj")
-region = Rect2(0, 384, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kksrt"]
-atlas = ExtResource("1_263pj")
-region = Rect2(32, 384, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cba11"]
-atlas = ExtResource("1_263pj")
-region = Rect2(64, 384, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wf1kf"]
-atlas = ExtResource("1_263pj")
-region = Rect2(96, 384, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bghh2"]
 atlas = ExtResource("1_263pj")
@@ -61,52 +13,6 @@ region = Rect2(32, 0, 32, 32)
 [resource]
 resource_name = "Pig_04.tres"
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8l5qb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xbilj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8gs7h")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_eh07k")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fcpy2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_n1qxf")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_53ms8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8bmr3")
-}],
-"loop": true,
-"name": &"Eat",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bm6p7")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kksrt")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cba11")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wf1kf")
-}],
-"loop": true,
-"name": &"HurtSide",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bghh2")

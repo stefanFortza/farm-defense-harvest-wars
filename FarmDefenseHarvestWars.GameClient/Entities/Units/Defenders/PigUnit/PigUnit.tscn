@@ -22,9 +22,9 @@ IsMoving = true
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = ExtResource("2_4oxit")
-animation = &"Eat"
+animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.23336373
+frame_progress = 0.7582436
 
 [node name="FakeLight" parent="Visuals" index="1"]
 BaseColor = Color(1, 1, 0.8, 0.4)
@@ -34,3 +34,11 @@ IsOval = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_4oxit")
+
+[node name="HealthBar" parent="Visuals" index="3"]
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+offset_bottom = -35.0
+theme = null
+value = 0.0

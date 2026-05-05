@@ -522,6 +522,12 @@ public partial class MatchManager : Node
         _timeRemaining = Math.Max(0f, timeRemaining);
         _syncedBaseHealth = Math.Clamp(baseHealth, 0, maxBaseHealth);
 
+        // Sync the local component so visual entities (like DefenderBase) can listen to it
+        if (!Multiplayer.IsServer() && BaseHealthComponent != null)
+        {
+            BaseHealthComponent.SetHealthSilently(_syncedBaseHealth, maxBaseHealth);
+        }
+
         EmitSignal(SignalName.MatchStateChanged, state);
         EmitSignal(SignalName.TimerUpdated, _timeRemaining);
         EmitSignal(SignalName.BaseHealthChanged, _syncedBaseHealth, maxBaseHealth);

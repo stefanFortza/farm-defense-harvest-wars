@@ -70,4 +70,16 @@ public partial class HealthComponent : Node
             CurrentHealth = MaxHealth;
         }
     }
+
+    /// <summary>
+    /// Setează viața fără a verifica autoritatea. Folosit pentru sincronizare pe clienți.
+    /// </summary>
+    public void SetHealthSilently(int current, int max)
+    {
+        MaxHealth = max;
+        // Folosim câmpul privat pentru a evita verificările de autoritate din TakeDamage, 
+        // dar setter-ul public se ocupă de emiterea semnalelor dacă valoarea se schimbă.
+        _currentHealth = Math.Clamp(current, 0, MaxHealth);
+        EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
+    }
 }

@@ -80,7 +80,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         {
             _matchManager.MoneyChanged -= OnMoneyChanged;
             _matchManager.TimerUpdated -= OnTimerUpdated;
-            _matchManager.BaseHealthComponent.HealthChanged -= OnBaseHealthChanged;
+            _matchManager.BaseHealthChanged -= OnBaseHealthChanged;
             _inputController.PlacementResolved -= OnPlacementResolved;
         }
 
@@ -113,10 +113,10 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     {
         _matchManager.MoneyChanged += OnMoneyChanged;
         _matchManager.TimerUpdated += OnTimerUpdated;
-        _matchManager.BaseHealthComponent.HealthChanged += OnBaseHealthChanged;
+        _matchManager.BaseHealthChanged += OnBaseHealthChanged;
 
         // Initialize display
-        OnBaseHealthChanged(_matchManager.BaseHealthComponent.CurrentHealth, _matchManager.BaseHealthComponent.MaxHealth);
+        OnBaseHealthChanged(_matchManager.GetBaseHealth(), _matchManager.MaxBaseHealth);
 
         _matchDuration = Mathf.Max(_matchManager.MatchDurationSeconds, 1f);
 
