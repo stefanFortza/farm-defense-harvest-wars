@@ -33,6 +33,15 @@ radius = 6.0
 [node name="ChickenUnit" instance=ExtResource("1_2c4l4")]
 Data = ExtResource("2_f1uhc")
 
+[node name="UnitStateMachine" parent="LogicComponents" index="0"]
+SyncedStateIndex = 0
+
+[node name="HealthComponent" parent="LogicComponents" index="1"]
+CurrentHealth = 0
+
+[node name="MovementComponent" parent="LogicComponents" index="3"]
+IsMoving = true
+
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_y05vm")
@@ -41,6 +50,9 @@ autoplay = "idle"
 
 [node name="FakeLight" parent="Visuals" index="1"]
 position = Vector2(0, -3)
+BaseColor = Color(1, 1, 0.8, 0.4)
+RadiusMultiplier = 1.0
+IsOval = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]
 position = Vector2(0, -6)

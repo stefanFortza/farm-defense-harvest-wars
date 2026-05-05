@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cag1tn1qrlacf"]
+[gd_scene load_steps=11 format=3 uid="uid://cag1tn1qrlacf"]
 
 [ext_resource type="Script" uid="uid://ooy0frnw8g0t" path="res://Entities/Units/Base/BaseUnit/BaseUnit.cs" id="1_sqjxt"]
 [ext_resource type="PackedScene" uid="uid://bbnlu4vbkcbtu" path="res://Scenes/Components/FakeLight/FakeLight.tscn" id="2_0cqh2"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bhq0pc1om5070" path="res://Entities/Components/MovementComponent/MovementComponent.tscn" id="5_0cqh2"]
 [ext_resource type="PackedScene" uid="uid://ycst6x1wgv7e" path="res://Entities/Components/HurtboxComponent/HurtboxComponent.tscn" id="6_0cqh2"]
 [ext_resource type="PackedScene" uid="uid://cu6ab578n8aqy" path="res://Entities/Components/VisionComponent/VisionComponent.tscn" id="8_0cqh2"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="9_bghst"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
 properties/0/path = NodePath(".:position")
@@ -72,10 +73,12 @@ position = Vector2(0, -7)
 collide_with_areas = true
 
 [node name="HealthBar" type="ProgressBar" parent="Visuals"]
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-offset_bottom = -35.0
+offset_left = -6.0
+offset_top = -15.0
+offset_right = 7.0
+offset_bottom = -11.0
+theme = ExtResource("9_bghst")
+value = 100.0
 show_percentage = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

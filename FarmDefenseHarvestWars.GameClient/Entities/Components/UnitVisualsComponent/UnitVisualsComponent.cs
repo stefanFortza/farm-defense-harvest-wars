@@ -295,12 +295,12 @@ public partial class UnitVisualsComponent : Node
         _attackTween.Parallel().TweenProperty(_animatedSprite, "position", originalPos + forwardVector * 2f + new Vector2(0, 1f), chargeTime)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
         
-        // 2. Action at 50%: Flash
+        // 2. Action at 50%: Flash (Immediately after chargeTime finishes)
         _attackTween.TweenCallback(Callable.From(() => {
             _animatedSprite.Modulate = new Color(2f, 2f, 2f, 1f); 
             var flashTween = CreateTween();
             flashTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.2f);
-        })).SetDelay(chargeTime);
+        }));
 
         // 3. Fire Response (Recoil): Snap Backward + Subtle Stretch (5%)
         _attackTween.TweenProperty(_animatedSprite, "position", originalPos + recoilOffset, recoveryTime * 0.2f)
