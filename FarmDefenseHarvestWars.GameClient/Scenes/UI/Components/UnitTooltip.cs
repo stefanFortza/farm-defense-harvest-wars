@@ -23,17 +23,17 @@ public partial class UnitTooltip : MarginContainer
     public void Setup(UnitData data, UnitUnlockDto? unlock = null)
     {
         _nameLabel.Text = data.Name;
-        
+
         if (_levelLabel != null)
         {
             // If we have explicit unlock data, use it. 
             // Otherwise, if it's default unlocked or we know it's unlocked from context, show Lvl 1
             bool isUnlocked = unlock != null || data.IsDefaultUnlocked;
-            
+
             if (isUnlocked)
             {
-                int level = unlock?.Level ?? 1;
-                _levelLabel.Text = $"Lvl {level}";
+                int _level = unlock?.Level ?? 1;
+                _levelLabel.Text = $"Lvl {_level}";
                 _levelLabel.Show();
             }
             else
@@ -42,9 +42,13 @@ public partial class UnitTooltip : MarginContainer
             }
         }
 
+        int level = unlock?.Level ?? 1;
+        int scaledMaxHealth = (int)(data.MaxHealth * (1 + (level - 1) * 0.1f));
+        int scaledDamage = (int)(data.Damage * (1 + (level - 1) * 0.1f));
+
         _costLabel.Text = data.MatchCost.ToString();
-        _healthLabel.Text = data.MaxHealth.ToString();
-        _damageLabel.Text = data.Damage.ToString();
+        _healthLabel.Text = scaledMaxHealth.ToString();
+        _damageLabel.Text = scaledDamage.ToString();
         _rangeLabel.Text = data.AttackRange.ToString();
         _speedLabel.Text = data.Speed > 0 ? data.Speed.ToString() : "Static";
 

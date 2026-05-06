@@ -36,6 +36,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     // Setează lungimea minimă (Default e 6, poți pune 1 sau 3 pentru teste)
     options.Password.RequiredLength = 3;
+
+    options.User.RequireUniqueEmail = true; // Opțional: Cere email unic pentru fiecare utilizator
 });
 
 // 3. Controllere

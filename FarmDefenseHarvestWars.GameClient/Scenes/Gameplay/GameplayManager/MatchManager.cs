@@ -14,8 +14,9 @@ public partial class MatchManager : Node
     public enum MatchState { Waiting, Playing, Ended }
 
     [Export] public float MatchDurationSeconds = 300f; // 5 minutes
-    [Export] public int StartingMoney = 150;
-    [Export] public int PassiveIncomeAmount = 10;
+    [Export] public int StartingMoney = 50;
+    [Export] public int BasePassiveIncome = 5;
+    [Export] public int DoublePassiveIncome = 10; // Last 60 seconds
     [Export] public float PassiveIncomeInterval = 1.0f;
     [Export] public int MaxBaseHealth = 500;
     [Export] public float StateSyncInterval = 0.2f;
@@ -241,10 +242,11 @@ public partial class MatchManager : Node
 
     private void AddPassiveIncome()
     {
+        int amount = _timeRemaining <= 60f ? DoublePassiveIncome : BasePassiveIncome;
         var peerIds = new List<long>(_playerMoney.Keys);
         foreach (var id in peerIds)
         {
-            AddMoney(id, PassiveIncomeAmount);
+            AddMoney(id, amount);
         }
     }
 
