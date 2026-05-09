@@ -181,6 +181,9 @@ public partial class BaseUnit : CharacterBody2D
     protected virtual void Die()
     {
         EmitSignal(SignalName.Died);
-        StateMachine.RequestStateChange(UnitStateEnum.Dying);
+        if (Multiplayer.IsServer())
+        {
+            StateMachine.RequestStateChange(UnitStateEnum.Dying);
+        }
     }
 }
