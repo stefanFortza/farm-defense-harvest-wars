@@ -10,9 +10,6 @@ radius = 9.055386
 [node name="OrcArcherUnit" instance=ExtResource("1_base")]
 Data = ExtResource("2_6pb82")
 
-[node name="UnitVisualsComponent" parent="LogicComponents" index="2" node_paths=PackedStringArray("HealthBar")]
-HealthBar = NodePath("../../Visuals/HealthBar")
-
 [node name="AnimatedSprite2D" parent="Visuals" index="0"]
 position = Vector2(0, -15)
 sprite_frames = ExtResource("2_meix2")
@@ -23,13 +20,6 @@ autoplay = "move"
 position = Vector2(-2, -9)
 shape = SubResource("CircleShape2D_6pb82")
 
-[node name="HealthBar" type="ProgressBar" parent="Visuals" index="3"]
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-offset_bottom = -35.0
-show_percentage = false
-
-[node name="TextureProgressBar" parent="Visuals" index="4"]
+[node name="TextureProgressBar" parent="Visuals" index="3"]
 offset_top = -27.0
 offset_bottom = -21.0
