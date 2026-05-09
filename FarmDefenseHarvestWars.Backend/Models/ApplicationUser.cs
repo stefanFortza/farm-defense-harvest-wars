@@ -10,9 +10,6 @@ public class ApplicationUser : IdentityUser
     public int Xp { get; set; } = 0;
     public int AvatarIndex { get; set; } = 1; // Default avatar index (1-8)
 
-    // Putem salva deck-ul ca un string JSON simplu pentru început
-    // Ex: "['cow_unit', 'chicken_unit']"
-    public string UnlockedUnits { get; set; } = "[]";
     public string ChestsJson { get; set; } = "[]"; // Max 5 chests
 
     public ICollection<Deck> Decks { get; set; } = [];

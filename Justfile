@@ -25,6 +25,10 @@ lint:
 
 # --- GODOT ---
 
+# Exportă unitățile din Godot către Backend
+sync-units:
+    {{godot_path}} --headless --path FarmDefenseHarvestWars.GameClient -s Scripts/Utils/SyncUnitsScript.cs
+
 # Deschide editorul Godot
 edit:
     {{godot_path}} -e --path FarmDefenseHarvestWars.GameClient

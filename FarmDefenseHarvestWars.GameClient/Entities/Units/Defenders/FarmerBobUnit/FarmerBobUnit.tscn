@@ -112,7 +112,7 @@ position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_qlujm")
 animation = &"attack"
 autoplay = "idle"
-frame_progress = 0.7896987
+frame_progress = 0.7046836
 flip_h = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visuals/SpatialComponents/HurtboxComponent" index="0"]

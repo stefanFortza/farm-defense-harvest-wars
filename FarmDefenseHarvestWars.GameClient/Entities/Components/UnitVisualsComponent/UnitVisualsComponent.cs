@@ -195,9 +195,9 @@ public partial class UnitVisualsComponent : Node
             _animatedSprite.Stop();
             _animatedSprite.Play(AttackAnimation);
         }
-        
+
         // Play procedural on top or as fallback if it's a defender
-        if (isDefender)
+        if (isDefender && !hasAttackAnimation)
         {
             PlayProceduralAttackAnimation();
         }
@@ -371,7 +371,7 @@ public partial class UnitVisualsComponent : Node
                 if (state == UnitStateEnum.Attacking)
                 {
                     _animatedSprite.SpeedScale = (float)_unit.Data.AttackSpeed;
-                    
+
                     // Logic for "Waiting for hit" pose:
                     // 1. If we have an Idle animation, use it.
                     // 2. If no Idle (typical for Attackers), use frame 0 of Attack as a "ready" pose.

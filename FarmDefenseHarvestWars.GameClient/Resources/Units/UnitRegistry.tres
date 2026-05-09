@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="UnitRegistry" load_steps=17 format=3 uid="uid://c86tn06s55780"]
+[gd_resource type="Resource" script_class="UnitRegistry" load_steps=18 format=3 uid="uid://c86tn06s55780"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_qaqhf"]
 [ext_resource type="Script" uid="uid://dc48lco13ubq2" path="res://Scripts/Data/UnitRegistry.cs" id="1_ras7f"]
@@ -16,8 +16,9 @@
 [ext_resource type="Resource" uid="uid://c8qupwyxareaw" path="res://Resources/Units/UnitStats/OrcGruntData.tres" id="13_p1qph"]
 [ext_resource type="Resource" uid="uid://duncipcvc17go" path="res://Resources/Units/UnitStats/OrcArcherData.tres" id="14_midpb"]
 [ext_resource type="Resource" uid="uid://dlgmkcdlo4gwr" path="res://Resources/Units/UnitStats/GoblinMacemanData.tres" id="15_6xd34"]
+[ext_resource type="Resource" uid="uid://c0v1bgx5gqp2t" path="res://Resources/Units/UnitStats/FarmerBobData.tres" id="16_p1qph"]
 
 [resource]
 script = ExtResource("1_ras7f")
-AllUnits = Array[ExtResource("1_qaqhf")]([ExtResource("1_sslj3"), ExtResource("4_tca02"), ExtResource("5_04fjh"), ExtResource("5_6gkbh"), ExtResource("6_uk6n3"), ExtResource("6_6gkbh"), ExtResource("2_qaqhf"), ExtResource("9_gm3wv"), ExtResource("10_u0t6a"), ExtResource("11_kw1wp"), ExtResource("12_2vld2"), ExtResource("13_p1qph"), ExtResource("14_midpb"), ExtResource("15_6xd34")])
+AllUnits = Array[ExtResource("1_qaqhf")]([ExtResource("1_sslj3"), ExtResource("4_tca02"), ExtResource("5_04fjh"), ExtResource("5_6gkbh"), ExtResource("6_uk6n3"), ExtResource("6_6gkbh"), ExtResource("2_qaqhf"), ExtResource("9_gm3wv"), ExtResource("10_u0t6a"), ExtResource("11_kw1wp"), ExtResource("12_2vld2"), ExtResource("13_p1qph"), ExtResource("14_midpb"), ExtResource("15_6xd34"), ExtResource("16_p1qph")])
 metadata/_custom_type_script = "uid://dc48lco13ubq2"
