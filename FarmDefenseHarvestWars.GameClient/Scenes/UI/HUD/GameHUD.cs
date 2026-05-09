@@ -16,6 +16,10 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     [Export] private Label _timerLabel = null!; // Optional: Numeric display
     [Export] private ProgressBar _baseHealthBar = null!;
     [Export] private PackedScene _cardScene = null!;
+    [Export] private TextureRect _defenderAvatar = null!;
+    [Export] private TextureRect _attackerAvatar = null!;
+    [Export] private Label _defenderNameLabel = null!;
+    [Export] private Label _attackerNameLabel = null!;
 
     private MatchManager _matchManager = null!;
     private InputController _inputController = null!;
@@ -103,12 +107,41 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         }
 
         _unitRegistry.InitializeLookup();
+        UpdatePlayerInfo();
         BindGameplaySignals();
         RebuildDeck();
         RefreshAffordability();
         _resourcePanel?.UpdateDisplay(_localMoney);
 
         _isBound = true;
+    }
+
+    private void UpdatePlayerInfo()
+    {
+        if (GameState.Instance == null) return;
+
+        int defIndex = GameState.Instance.DefenderAvatarIndex;
+        int atkIndex = GameState.Instance.AttackerAvatarIndex;
+
+        if (_defenderAvatar != null && _unitRegistry.Avatars.Count > defIndex)
+        {
+            _defenderAvatar.Texture = _unitRegistry.Avatars[defIndex];
+        }
+
+        if (_attackerAvatar != null && _unitRegistry.Avatars.Count > atkIndex)
+        {
+            _attackerAvatar.Texture = _unitRegistry.Avatars[atkIndex];
+        }
+
+        if (_defenderNameLabel != null)
+        {
+            _defenderNameLabel.Text = GameState.Instance.DefenderName;
+        }
+
+        if (_attackerNameLabel != null)
+        {
+            _attackerNameLabel.Text = GameState.Instance.AttackerName;
+        }
     }
 
     private void BindGameplaySignals()
@@ -331,6 +364,7 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
 
     private void OnMatchConfigurationLoaded()
     {
+        UpdatePlayerInfo();
         RebuildDeck();
     }
 }

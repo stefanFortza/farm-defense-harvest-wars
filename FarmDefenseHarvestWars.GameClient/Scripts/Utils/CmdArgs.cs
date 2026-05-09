@@ -21,6 +21,10 @@ public static class CmdArgs
     public static string? MatchServerCallbackKey { get; private set; }
     public static IReadOnlyList<UnitUnlockDto>? DefenderDeck { get; private set; }
     public static IReadOnlyList<UnitUnlockDto>? AttackerDeck { get; private set; }
+    public static int DefenderAvatarIndex { get; private set; } = 1;
+    public static int AttackerAvatarIndex { get; private set; } = 1;
+    public static string DefenderName { get; private set; } = "Defender";
+    public static string AttackerName { get; private set; } = "Attacker";
 
     private static readonly JsonSerializerOptions DeckSerializerOptions = new()
     {
@@ -128,6 +132,21 @@ public static class CmdArgs
         {
             MatchServerCallbackKey = callbackKeyEnv;
         }
+
+        string? defAvatarEnv = System.Environment.GetEnvironmentVariable("DEFENDER_AVATAR_INDEX");
+        if (int.TryParse(defAvatarEnv, out int defAvatar))
+        {
+            DefenderAvatarIndex = defAvatar;
+        }
+
+        string? atkAvatarEnv = System.Environment.GetEnvironmentVariable("ATTACKER_AVATAR_INDEX");
+        if (int.TryParse(atkAvatarEnv, out int atkAvatar))
+        {
+            AttackerAvatarIndex = atkAvatar;
+        }
+
+        DefenderName = System.Environment.GetEnvironmentVariable("DEFENDER_NAME") ?? "Defender";
+        AttackerName = System.Environment.GetEnvironmentVariable("ATTACKER_NAME") ?? "Attacker";
 
         // Read DEFENDER_DECK_JSON from environment
         string? defenderDeckJson = System.Environment.GetEnvironmentVariable("DEFENDER_DECK_JSON");

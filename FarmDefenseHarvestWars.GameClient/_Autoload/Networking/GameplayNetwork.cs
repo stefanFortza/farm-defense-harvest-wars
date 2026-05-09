@@ -150,7 +150,9 @@ public partial class GameplayNetwork : Node
             Rpc(nameof(SyncMatchDecksToClient),
                 CmdArgs.MatchId ?? "",
                 defPayload.Types, defPayload.Levels,
-                atkPayload.Types, atkPayload.Levels);
+                atkPayload.Types, atkPayload.Levels,
+                CmdArgs.DefenderAvatarIndex, CmdArgs.AttackerAvatarIndex,
+                CmdArgs.DefenderName, CmdArgs.AttackerName);
             Rpc(nameof(StartGameScene));
 
             // Wait for all clients to be ready (load scene + handshake)
@@ -225,7 +227,9 @@ public partial class GameplayNetwork : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncMatchDecksToClient(string matchId,
         Godot.Collections.Array<int> defenderTypes, Godot.Collections.Array<int> defenderLevels,
-        Godot.Collections.Array<int> attackerTypes, Godot.Collections.Array<int> attackerLevels)
+        Godot.Collections.Array<int> attackerTypes, Godot.Collections.Array<int> attackerLevels,
+        int defenderAvatarIndex, int attackerAvatarIndex,
+        string defenderName, string attackerName)
     {
         List<UnitUnlockDto> defenderUnits = [];
         List<UnitUnlockDto> attackerUnits = [];
@@ -248,7 +252,10 @@ public partial class GameplayNetwork : Node
             });
         }
 
-        GameState.Instance?.SetMatchDecks(matchId, defenderUnits, attackerUnits);
+        GameState.Instance?.SetMatchInfo(matchId, 
+            defenderUnits, attackerUnits, 
+            defenderAvatarIndex, attackerAvatarIndex, 
+            defenderName, attackerName);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

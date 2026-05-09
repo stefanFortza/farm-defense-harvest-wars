@@ -397,6 +397,10 @@ public class MatchmakingService : IMatchmakingService
         // Using a scope to get IDeckService since it's likely Scoped
         using var scope = _serviceProvider.CreateScope();
         var deckService = scope.ServiceProvider.GetRequiredService<IDeckService>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var defender = await userManager.FindByIdAsync(defenderUserId);
+        var attacker = await userManager.FindByIdAsync(attackerUserId);
 
         var defenderUnits = await deckService.GetUnitCompositionAsync(defenderUserId, PlayerRole.Defender, cancellationToken);
         var attackerUnits = await deckService.GetUnitCompositionAsync(attackerUserId, PlayerRole.Attacker, cancellationToken);
@@ -406,6 +410,10 @@ public class MatchmakingService : IMatchmakingService
             matchId,
             defenderUnits,
             attackerUnits,
+            defender?.AvatarIndex ?? 1,
+            attacker?.AvatarIndex ?? 1,
+            defender?.UserName ?? "Defender",
+            attacker?.UserName ?? "Attacker",
             cancellationToken);
 
         var defenderStatus = new MatchmakingStatusDto

@@ -8,6 +8,10 @@ public interface IMatchServerOrchestrator
         string matchId,
         IReadOnlyCollection<UnitUnlockDto> defenderDeck,
         IReadOnlyCollection<UnitUnlockDto> attackerDeck,
+        int defenderAvatarIndex,
+        int attackerAvatarIndex,
+        string defenderName,
+        string attackerName,
         CancellationToken cancellationToken = default);
 }
 

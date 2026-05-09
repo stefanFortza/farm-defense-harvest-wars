@@ -34,6 +34,10 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         string matchId,
         IReadOnlyCollection<UnitUnlockDto> defenderDeck,
         IReadOnlyCollection<UnitUnlockDto> attackerDeck,
+        int defenderAvatarIndex,
+        int attackerAvatarIndex,
+        string defenderName,
+        string attackerName,
         CancellationToken cancellationToken = default)
     {
         string executablePath = _configuration["GodotServer:ExecutablePath"] ?? string.Empty;
@@ -69,6 +73,10 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         startInfo.Environment["MATCH_ID"] = matchId;
         startInfo.Environment["DEFENDER_DECK_JSON"] = JsonSerializer.Serialize(defenderDeck, DeckSerializerOptions);
         startInfo.Environment["ATTACKER_DECK_JSON"] = JsonSerializer.Serialize(attackerDeck, DeckSerializerOptions);
+        startInfo.Environment["DEFENDER_AVATAR_INDEX"] = defenderAvatarIndex.ToString();
+        startInfo.Environment["ATTACKER_AVATAR_INDEX"] = attackerAvatarIndex.ToString();
+        startInfo.Environment["DEFENDER_NAME"] = defenderName;
+        startInfo.Environment["ATTACKER_NAME"] = attackerName;
         startInfo.Environment["BACKEND_BASE_URL"] = _configuration["GodotServer:BackendBaseUrl"] ?? "http://localhost:5177";
         startInfo.Environment["MATCH_SERVER_CALLBACK_KEY"] = _configuration["GodotServer:CallbackKey"] ?? string.Empty;
 

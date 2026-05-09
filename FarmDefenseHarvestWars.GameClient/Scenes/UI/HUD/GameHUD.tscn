@@ -1,26 +1,26 @@
-[gd_scene load_steps=11 format=3 uid="uid://gamehud1"]
+[gd_scene load_steps=12 format=3 uid="uid://gamehud1"]
 
 [ext_resource type="Script" uid="uid://cgb4dtyeununf" path="res://Scenes/UI/HUD/GameHUD.cs" id="1_game_hud_script"]
 [ext_resource type="PackedScene" uid="uid://c2icauiwkb3xc" path="res://Scenes/UI/Components/ResourcePanel.tscn" id="2_resource_panel"]
 [ext_resource type="PackedScene" uid="uid://cjhyi7d4vd2vf" path="res://Scenes/UI/Card/UnitCard.tscn" id="3_card_scene"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="4_p2mjx"]
-[ext_resource type="Texture2D" uid="uid://bwv1ohy88lmwn" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Bars.png" id="5_p2mjx"]
+[ext_resource type="Texture2D" uid="uid://dpdiqbfpc5aad" path="res://Assets/Avatars/AvatarFrame.png" id="5_p2mjx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j8y4w"]
 atlas = ExtResource("5_p2mjx")
-region = Rect2(82, 33, 12, 6)
+region = Rect2(6, 5, 19, 19)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_acadi"]
 texture = SubResource("AtlasTexture_j8y4w")
-texture_margin_left = 1.0
-texture_margin_top = 1.0
-texture_margin_right = 1.0
-texture_margin_bottom = 1.0
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
 expand_margin_left = 1.0
 expand_margin_top = 1.0
 expand_margin_right = 1.0
 expand_margin_bottom = 1.0
-region_rect = Rect2(0, 0, 12, 6)
+region_rect = Rect2(0, 0, 19, 19)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_p2mjx"]
 load_path = "res://.godot/imported/UI_Bars.png-6b81e423ab573a38c87455926b496537.ctex"
@@ -33,7 +33,15 @@ region = Rect2(83, 42, 10, 4)
 texture = SubResource("AtlasTexture_acadi")
 region_rect = Rect2(0, 0, 10, 4)
 
-[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_timerLabel", "_baseHealthBar")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p2mjx"]
+properties/0/path = NodePath("AvatarMargin/HBox/AttackerAvatarFrame/VBox/AttackerName:text")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("AvatarMargin/HBox/DefenderAvatarFrame/VBox/DefenderName:text")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_timerLabel", "_baseHealthBar", "_defenderAvatar", "_attackerAvatar", "_defenderNameLabel", "_attackerNameLabel")]
 script = ExtResource("1_game_hud_script")
 _resourcePanel = NodePath("Margin/TopBar/LeftGroup/ResourcePanel")
 _deckContainer = NodePath("Margin/TopBar/LeftGroup/DeckContainer")
@@ -41,6 +49,10 @@ _timerBar = NodePath("Margin/TopBar/MarginContainer/RightGroup/MatchTimerBar")
 _timerLabel = NodePath("Margin/TopBar/MarginContainer/RightGroup/TimerLabel")
 _baseHealthBar = NodePath("BottomBar/BaseHealthBar")
 _cardScene = ExtResource("3_card_scene")
+_defenderAvatar = NodePath("AvatarMargin/HBox/DefenderAvatarFrame/VBox/DefenderAvatar")
+_attackerAvatar = NodePath("AvatarMargin/HBox/AttackerAvatarFrame/VBox/AttackerAvatar")
+_defenderNameLabel = NodePath("AvatarMargin/HBox/DefenderAvatarFrame/VBox/DefenderName")
+_attackerNameLabel = NodePath("AvatarMargin/HBox/AttackerAvatarFrame/VBox/AttackerName")
 
 [node name="Margin" type="MarginContainer" parent="."]
 anchors_preset = 10
@@ -148,3 +160,78 @@ theme_override_styles/background = SubResource("StyleBoxTexture_acadi")
 theme_override_styles/fill = SubResource("StyleBoxTexture_iv6am")
 value = 85.84
 show_percentage = false
+
+[node name="AvatarMargin" type="MarginContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBox" type="HBoxContainer" parent="AvatarMargin"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DefenderAvatarFrame" type="PanelContainer" parent="AvatarMargin/HBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxTexture_acadi")
+
+[node name="VBox" type="VBoxContainer" parent="AvatarMargin/HBox/DefenderAvatarFrame"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="DefenderAvatar" type="TextureRect" parent="AvatarMargin/HBox/DefenderAvatarFrame/VBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DefenderName" type="Label" parent="AvatarMargin/HBox/DefenderAvatarFrame/VBox"]
+layout_mode = 2
+theme = ExtResource("4_p2mjx")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "Defender"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="AvatarMargin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="AttackerAvatarFrame" type="PanelContainer" parent="AvatarMargin/HBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxTexture_acadi")
+
+[node name="VBox" type="VBoxContainer" parent="AvatarMargin/HBox/AttackerAvatarFrame"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="AttackerAvatar" type="TextureRect" parent="AvatarMargin/HBox/AttackerAvatarFrame/VBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AttackerName" type="Label" parent="AvatarMargin/HBox/AttackerAvatarFrame/VBox"]
+layout_mode = 2
+theme = ExtResource("4_p2mjx")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "Attacker"
+horizontal_alignment = 1
+
+[node name="MultiplayerSpawner" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_p2mjx")

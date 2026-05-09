@@ -10,6 +10,7 @@ namespace FarmDefenseHarvestWars.GameClient.Scripts.Data;
 public partial class UnitRegistry : Resource
 {
     [Export] public Array<UnitData> AllUnits { get; set; } = [];
+    [Export] public Array<Texture2D> Avatars { get; set; } = [];
 
     // Cache intern (Runtime only)
     private System.Collections.Generic.Dictionary<UnitType, UnitData>? _lookupTable;

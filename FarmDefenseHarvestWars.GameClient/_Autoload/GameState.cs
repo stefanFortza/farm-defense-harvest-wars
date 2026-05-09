@@ -48,6 +48,10 @@ public partial class GameState : Node
     }
     public IReadOnlyList<UnitUnlockDto>? DefenderDeck { get; private set; }
     public IReadOnlyList<UnitUnlockDto>? AttackerDeck { get; private set; }
+    public int DefenderAvatarIndex { get; private set; } = 1;
+    public int AttackerAvatarIndex { get; private set; } = 1;
+    public string DefenderName { get; private set; } = "Defender";
+    public string AttackerName { get; private set; } = "Attacker";
 
     // Computed Property - Ești logat dacă ai un profil încărcat
     public bool IsLoggedIn => CurrentProfile != null;
@@ -80,6 +84,10 @@ public partial class GameState : Node
             MatchId = CmdArgs.MatchId;
             DefenderDeck = CmdArgs.DefenderDeck;
             AttackerDeck = CmdArgs.AttackerDeck;
+            DefenderAvatarIndex = CmdArgs.DefenderAvatarIndex;
+            AttackerAvatarIndex = CmdArgs.AttackerAvatarIndex;
+            DefenderName = CmdArgs.DefenderName;
+            AttackerName = CmdArgs.AttackerName;
 
             if (IsMatchConfigured)
             {
@@ -119,7 +127,38 @@ public partial class GameState : Node
         MatchId = matchId;
         DefenderDeck = [.. defenderDeck];
         AttackerDeck = [.. attackerDeck];
+        
+        // If we already have the names/avatars from CmdArgs (server side), 
+        // emitting here is fine. On client, we usually call SetMatchAvatars first now.
+        if (IsMatchConfigured)
+        {
+            EmitSignal(SignalName.MatchConfigurationLoaded);
+        }
+    }
+
+    public void SetMatchInfo(string matchId, 
+        IReadOnlyList<UnitUnlockDto> defenderDeck, IReadOnlyList<UnitUnlockDto> attackerDeck,
+        int defenderAvatar, int attackerAvatar,
+        string defenderName, string attackerName)
+    {
+        MatchId = matchId;
+        DefenderDeck = [.. defenderDeck];
+        AttackerDeck = [.. attackerDeck];
+        DefenderAvatarIndex = defenderAvatar;
+        AttackerAvatarIndex = attackerAvatar;
+        DefenderName = defenderName;
+        AttackerName = attackerName;
+
+        GD.Print($"[GameState] Match info synchronized: {DefenderName} vs {AttackerName}");
         EmitSignal(SignalName.MatchConfigurationLoaded);
+    }
+
+    public void SetMatchAvatars(int defenderAvatarIndex, int attackerAvatarIndex, string defenderName, string attackerName)
+    {
+        DefenderAvatarIndex = defenderAvatarIndex;
+        AttackerAvatarIndex = attackerAvatarIndex;
+        DefenderName = defenderName;
+        AttackerName = attackerName;
     }
 
     public IReadOnlyList<UnitUnlockDto> GetMatchDeckForRole(PlayerRole role)

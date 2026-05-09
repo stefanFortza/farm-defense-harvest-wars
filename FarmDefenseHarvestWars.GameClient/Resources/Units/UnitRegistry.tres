@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="UnitRegistry" load_steps=18 format=3 uid="uid://c86tn06s55780"]
+[gd_resource type="Resource" script_class="UnitRegistry" load_steps=34 format=3 uid="uid://c86tn06s55780"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_qaqhf"]
 [ext_resource type="Script" uid="uid://dc48lco13ubq2" path="res://Scripts/Data/UnitRegistry.cs" id="1_ras7f"]
@@ -17,8 +17,51 @@
 [ext_resource type="Resource" uid="uid://duncipcvc17go" path="res://Resources/Units/UnitStats/OrcArcherData.tres" id="14_midpb"]
 [ext_resource type="Resource" uid="uid://dlgmkcdlo4gwr" path="res://Resources/Units/UnitStats/GoblinMacemanData.tres" id="15_6xd34"]
 [ext_resource type="Resource" uid="uid://c0v1bgx5gqp2t" path="res://Resources/Units/UnitStats/FarmerBobData.tres" id="16_p1qph"]
+[ext_resource type="Texture2D" uid="uid://ctc41xhgaadwk" path="res://Assets/Avatars/Bartender_Katy.png" id="18_katy"]
+[ext_resource type="Texture2D" uid="uid://cxua66otcvt1k" path="res://Assets/Avatars/Chef_Chloe.png" id="19_chloe"]
+[ext_resource type="Texture2D" uid="uid://lj13qtwhu4sl" path="res://Assets/Avatars/Farmer_Bob.png" id="20_bob"]
+[ext_resource type="Texture2D" uid="uid://ot3m5vlefvxw" path="res://Assets/Avatars/Farmer_Buba.png" id="21_buba"]
+[ext_resource type="Texture2D" uid="uid://dsvfb7100saow" path="res://Assets/Avatars/Fisherman_Fin.png" id="22_fin"]
+[ext_resource type="Texture2D" uid="uid://bo3mhsq4l0vx0" path="res://Assets/Avatars/Lumberjack_Jack.png" id="23_jack"]
+[ext_resource type="Texture2D" uid="uid://b4yuobqsinbsv" path="res://Assets/Avatars/Miner_Mike.png" id="24_mike"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dx3hl"]
+load_path = "res://.godot/imported/Bartender_Bruno.png-53f1846d4f71431a23be52f967d0a88a.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bflu5"]
+atlas = SubResource("CompressedTexture2D_dx3hl")
+region = Rect2(26, 23, 11, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_reuvb"]
+atlas = ExtResource("18_katy")
+region = Rect2(24, 19, 15, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lucoy"]
+atlas = ExtResource("19_chloe")
+region = Rect2(25, 13, 13, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8nwv"]
+atlas = ExtResource("20_bob")
+region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqyo7"]
+atlas = ExtResource("21_buba")
+region = Rect2(23, 19, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1a7s"]
+atlas = ExtResource("22_fin")
+region = Rect2(25, 22, 13, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kg75a"]
+atlas = ExtResource("23_jack")
+region = Rect2(25, 21, 13, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tp3xp"]
+atlas = ExtResource("24_mike")
+region = Rect2(26, 21, 11, 18)
 
 [resource]
 script = ExtResource("1_ras7f")
 AllUnits = Array[ExtResource("1_qaqhf")]([ExtResource("1_sslj3"), ExtResource("4_tca02"), ExtResource("5_04fjh"), ExtResource("5_6gkbh"), ExtResource("6_uk6n3"), ExtResource("6_6gkbh"), ExtResource("2_qaqhf"), ExtResource("9_gm3wv"), ExtResource("10_u0t6a"), ExtResource("11_kw1wp"), ExtResource("12_2vld2"), ExtResource("13_p1qph"), ExtResource("14_midpb"), ExtResource("15_6xd34"), ExtResource("16_p1qph")])
+Avatars = Array[Texture2D]([SubResource("AtlasTexture_bflu5"), SubResource("AtlasTexture_reuvb"), SubResource("AtlasTexture_lucoy"), SubResource("AtlasTexture_a8nwv"), SubResource("AtlasTexture_sqyo7"), SubResource("AtlasTexture_k1a7s"), SubResource("AtlasTexture_kg75a"), SubResource("AtlasTexture_tp3xp")])
 metadata/_custom_type_script = "uid://dc48lco13ubq2"
