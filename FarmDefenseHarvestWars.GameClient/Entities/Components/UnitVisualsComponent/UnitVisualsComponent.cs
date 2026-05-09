@@ -223,7 +223,43 @@ public partial class UnitVisualsComponent : Node
 
     private void OnUnitStateChanged(int previousState, int newState)
     {
-        PlayStateAnimation((UnitStateEnum)newState);
+        var state = (UnitStateEnum)newState;
+        PlayStateAnimation(state);
+
+        if (state == UnitStateEnum.Dying)
+        {
+            bool hasDieAnimation = _animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(DieAnimation);
+            if (!hasDieAnimation)
+            {
+                PlayProceduralDieAnimation();
+            }
+        }
+    }
+
+    private void PlayProceduralDieAnimation()
+    {
+        if (!GodotObject.IsInstanceValid(_animatedSprite)) return;
+
+        _attackTween?.Kill();
+        _hurtTween?.Kill();
+        
+        var dieTween = CreateTween();
+        
+        // 1. Sink and rotate (simulating falling over)
+        Vector2 originalPos = _animatedSprite.Position;
+        Vector2 targetPos = originalPos + new Vector2(0, 4f);
+        float targetRotation = Mathf.DegToRad(_unit.FacingDirection * 90f);
+        
+        dieTween.TweenProperty(_animatedSprite, "position", targetPos, 0.4f)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+        dieTween.Parallel().TweenProperty(_animatedSprite, "rotation", targetRotation, 0.4f)
+            .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+        
+        // 2. Fade out and scale down
+        dieTween.TweenProperty(_animatedSprite, "modulate:a", 0f, 0.4f)
+            .SetTrans(Tween.TransitionType.Linear);
+        dieTween.Parallel().TweenProperty(_animatedSprite, "scale", Vector2.Zero, 0.5f)
+            .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.In);
     }
 
     private void PlayProceduralAttackAnimation()
@@ -400,11 +436,18 @@ public partial class UnitVisualsComponent : Node
                 }
                 else
                 {
-                    // Fallback to "default" or first available
-                    if (_animatedSprite.SpriteFrames.HasAnimation("default"))
-                        _animatedSprite.Play("default");
-                    else if (_animatedSprite.SpriteFrames.GetAnimationNames().Length > 0)
-                        _animatedSprite.Play(_animatedSprite.SpriteFrames.GetAnimationNames()[0]);
+                    if (state == UnitStateEnum.Dying)
+                    {
+                        _animatedSprite.Stop();
+                    }
+                    else
+                    {
+                        // Fallback to "default" or first available
+                        if (_animatedSprite.SpriteFrames.HasAnimation("default"))
+                            _animatedSprite.Play("default");
+                        else if (_animatedSprite.SpriteFrames.GetAnimationNames().Length > 0)
+                            _animatedSprite.Play(_animatedSprite.SpriteFrames.GetAnimationNames()[0]);
+                    }
                 }
             }
         }

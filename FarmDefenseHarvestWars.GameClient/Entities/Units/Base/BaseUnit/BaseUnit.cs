@@ -160,6 +160,7 @@ public partial class BaseUnit : CharacterBody2D
     protected virtual void RegisterStates()
     {
         StateMachine.RegisterState(UnitStateEnum.Idle, new IdleState(this));
+        StateMachine.RegisterState(UnitStateEnum.Dying, new DieState(this));
 
         // Register attack state based on data
         if (Data?.ProjectileScene != null)
@@ -180,6 +181,6 @@ public partial class BaseUnit : CharacterBody2D
     protected virtual void Die()
     {
         EmitSignal(SignalName.Died);
-        QueueFree();
+        StateMachine.RequestStateChange(UnitStateEnum.Dying);
     }
 }
