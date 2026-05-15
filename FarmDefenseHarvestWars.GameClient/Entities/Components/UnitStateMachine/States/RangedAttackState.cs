@@ -6,12 +6,15 @@ using FarmDefenseHarvestWars.GameClient.Scripts.Core.StateMachine;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 
-public class RangedAttackState : IState
+public class RangedAttackState : IAttackState
 {
     private readonly BaseUnit _unit = null!;
     private readonly VisionComponent _vision = null!;
     private double _cooldownTimer = 0.0;
     private double _windUpTimer = -1.0;
+
+    public double CooldownTimer => _cooldownTimer;
+    public double WindUpTimer => _windUpTimer;
 
     public RangedAttackState(BaseUnit unit)
     {
@@ -66,7 +69,7 @@ public class RangedAttackState : IState
     {
     }
 
-    private void StartAttackSequence()
+    public void StartAttackSequence()
     {
         if (!_unit.Multiplayer.IsServer()) return;
 

@@ -78,7 +78,7 @@
 \usepackage{mathtools}
 
 % Formule matematice
-\newcommand{\bigO}[1]{\symcal{O}\left(#1\right)}
+\newcommand{\bigO}[1]{\mathcal{O}\left(#1\right)}
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 
 % Suport pentru rezumat în două limbi
@@ -98,8 +98,8 @@
 \usepackage{fancyhdr}
 
 % Metadate
-\title{Titlul lucrării de licență}
-\author{Numele studentului}
+\title{FARM DEFENSE HARVEST WARS}
+\author{Țacu Darius-Ștefan}
 
 % Generează variabilele cu @
 \makeatletter
@@ -114,7 +114,7 @@
 \include{0-title}
 \restoregeometry
 \newgeometry{
-    margin=2.5cm
+  margin=2.5cm
 }
 
 \fancypagestyle{main}{
@@ -136,9 +136,23 @@
 \pagestyle{main}
 \let\ps@plain\ps@main
 
+% Capitolul 1: Viziunea și povestea jocului
 \include{1-introducere}
-\include{2-preliminarii}
-\include{3-concluzii}
+
+% Capitolul 2: Godot, C-Sharp, .NET 10, SQLite, Ubuntu
+\include{2-tehnologii}
+
+% Capitolul 3: Client-Server, Entity Framework, State Pattern, Component Pattern
+\include{3-arhitectura}
+
+% Capitolul 4: Matchmaking, Grid, Sistemul de Combat
+\include{4-algoritmi}
+
+% Capitolul 5: Input, UI, HUD
+\include{5-interfata}
+
+% Capitolul 6: Task-uri realizate și dezvoltări viitoare
+\include{6-concluzii}
 
 \printbibliography[heading=bibintoc]
 

@@ -6,7 +6,7 @@ using FarmDefenseHarvestWars.GameClient.Scripts.Core.StateMachine;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 
-public class HybridRangedAttackState : IState
+public class HybridRangedAttackState : IAttackState
 {
     private readonly BaseUnit _unit;
     private readonly VisionComponent _vision;
@@ -15,6 +15,9 @@ public class HybridRangedAttackState : IState
     private double _attackTimer;
     private double _windUpTimer = -1.0;
     private HurtboxComponent? _currentTarget;
+
+    public double CooldownTimer => _attackTimer;
+    public double WindUpTimer => _windUpTimer;
 
     public HybridRangedAttackState(BaseUnit unit)
     {
@@ -99,6 +102,11 @@ public class HybridRangedAttackState : IState
 
     public void Update(double delta)
     {
+    }
+
+    public void StartAttackSequence()
+    {
+        StartRangedSequence();
     }
 
     private void StartMeleeSequence(HurtboxComponent target)

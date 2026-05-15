@@ -1,0 +1,95 @@
+\chapter{Arhitectura Sistemului}
+\label{ch:arhitectura}
+
+În dezvoltarea sistemului software pentru proiectul \textit{Farm Defense: Harvest Wars}, a fost esențială utilizarea unor șabloane de proiectare (design patterns) consacrate și a unei arhitecturi bine structurate. Aceasta asigură o mentenabilitate ridicată și permite decuplarea componentelor, facilitând extinderea funcționalităților fără a compromite stabilitatea sistemului \cite{gof_design_patterns}.
+
+\section{Arhitectura de Ansamblu (Modelul Client-Server)}
+\label{sec:arhitectura_ansamblu}
+
+Sistemul adoptă o arhitectură de tip Client-Server hibrid, adaptată nevoilor unui joc multiplayer asincron. Comunicarea între componente se realizează prin protocoale standard, asigurând o separare clară a responsabilităților.
+
+Fluxul principal de date pornește de la clientul de joc, care interacționează cu serverul pentru autentificare, gestionarea profilului și matchmaking. Serverul validează cererile, procesează logica de afaceri și persistă datele necesare.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{arhitectura_sistem}
+    \caption{Diagrama de Arhitectură a Sistemului (Client, API, Bază de Date)}
+    \label{fig:arhitectura_sistem}
+\end{figure}
+
+Componentele majore ale sistemului sunt:
+\begin{itemize}
+    \item \textbf{Game Client (Godot):} Interfața cu utilizatorul și logica de luptă în timp real.
+    \item \textbf{REST API (ASP.NET Core):} Creierul sistemului, gestionând securitatea și logica de matchmaking.
+    \item \textbf{Database (SQLite):} Stratul de persistență unde sunt stocate datele utilizatorilor și progresul acestora.
+\end{itemize}
+
+\section{Arhitectura Clientului (Godot Engine)}
+\label{sec:arhitectura_client}
+
+Arhitectura clientului este construită pe principiul modularității, utilizând intensiv \textit{Component Pattern}. În loc să folosim clase monolitice pentru unitățile de joc, am optat pentru o compoziție de noduri specializate.
+
+Fiecare unitate (ex: \textit{ChickenUnit}) este un ansamblu de componente independente precum \texttt{HitboxComponent}, \texttt{HealthComponent} și \texttt{UnitStateMachine}. Această abordare permite reutilizarea codului și o testare facilă a fiecărei funcționalități în izolare.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.7\textwidth]{diagrama_componente}
+    \caption{Diagrama de Componente a unei Unități}
+    \label{fig:diagrama_componente}
+\end{figure}
+
+\subsection{Șablonul Stare (State Pattern)}
+\label{sec:state_pattern}
+
+Un element central în controlul comportamentului unităților de luptă este șablonul Stare (State Pattern). Într-un joc de tip strategie, o unitate tranzitează constant prin diverse stări: repaus, deplasare sau atac. Implementarea clasică prin structuri condiționale masive devine greu de întreținut odată cu creșterea complexității.
+
+Soluția implementată prin clasa \texttt{UnitStateMachine} permite decuplarea logicii fiecărui comportament. Fiecare stare este reprezentată de o clasă separată care implementează interfața \texttt{IState}.
+
+În cadrul sistemului, stările sunt gestionate după cum urmează:
+\begin{itemize}
+    \item \textbf{IdleState:} Gestionează starea de repaus și scanarea mediului pentru detectarea țintelor folosind componenta de viziune.
+    \item \textbf{MovingState:} Controlează deplasarea către un punct sau o unitate inamică, apelând sistemul de navigație.
+    \item \textbf{AttackState:} Execută secvențele de atac, gestionează timpul de reîncărcare (cooldown) și declanșează animațiile procedurale.
+\end{itemize}
+
+Această abordare elimină erorile de concurență în logica unității, asigurând o tranziție fluidă și predictibilă între comportamente.
+
+\subsubsection{Specializarea stărilor prin Moștenire}
+Pentru a gestiona diversitatea unităților (atacatori corp-la-corp vs. atacatori la distanță), a fost implementată o ierarhie de stări bazată pe polimorfism. 
+
+Deși unitățile partajează logica de bază a unei stări de atac (verificarea razei de acțiune și a timpului de reîncărcare), execuția propriu-zisă a fost abstractizată. Astfel, au fost dezvoltate clase derivate precum \texttt{MeleeAttackState}, care gestionează proximitatea fizică și aplicarea daunelor prin componente de tip Hitbox, și \texttt{RangedAttackState}, responsabilă de instanțierea și calcularea traiectoriei proiectilelor.
+
+\section{Arhitectura Backend-ului (.NET 10)}
+\label{sec:arhitectura_backend}
+
+Serverul este organizat folosind o arhitectură stratificată (Layered Architecture), asigurând o separare clară între interfața API, logica de business și accesul la date.
+
+\begin{itemize}
+    \item \textbf{Controllere:} Gestionează cererile HTTP și returnează răspunsuri formatate JSON.
+    \item \textbf{Servicii:} Conțin logica centrală, cum ar fi \texttt{MatchmakingService}, care este injectat în controllere folosind mecanismul nativ de \textit{Dependency Injection} (DI) din .NET.
+    \item \textbf{Entități:} Reprezintă structura datelor în cod și sunt mapate peste tabelele bazei de date.
+\end{itemize}
+
+Utilizarea DI permite un cuplaj slab între componente, facilitând testarea unitară și mock-uirea bazei de date sau a altor servicii externe.
+
+\section{Modelarea Datelor (Baza de Date SQLite)}
+\label{sec:database}
+
+Baza de date constituie stratul de persistență al arhitecturii. Am ales SQLite pentru simplitatea sa (serverless) și performanța adecvată pentru un proiect aflat în stadiul de prototip și dezvoltare locală.
+
+Interacțiunea cu baza de date este realizată prin \textbf{Entity Framework Core}, utilizând abordarea \textit{Code-First}. Aceasta ne permite să definim schema bazei de date direct prin clase C\#, generând ulterior migrațiile necesare.
+
+Principalele entități modelate sunt:
+\begin{itemize}
+    \item \texttt{AspNetUsers:} Extinde utilizatorul standard Identity pentru a include atribute specifice jocului, precum cantitatea de aur (\textit{Gold}), punctele de experiență (\textit{XP}) și nivelul.
+    \item \texttt{Decks:} Reprezintă seturile de unități configurate de jucător pentru luptă, având o relație de tip 1-la-N cu utilizatorul.
+    \item \texttt{UnitUnlocks:} Gestionează colecția de unități deblocate de fiecare jucător, permițând o progresie controlată în joc.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{erd_diagram}
+    \caption{Diagrama Entitate-Relație (ERD)}
+    \label{fig:erd_diagram}
+\end{figure}
+

@@ -1,0 +1,37 @@
+\chapter{Algoritmi si Mecanici Principale}
+\label{ch:algoritmi}
+
+Complexitatea unui joc de strategie hibrid consta nu doar in logica vizuala a clientului, ci si in sistemele de decizie din fundal. Acest capitol detaliaza algoritmii centrali care guverneaza functionarea sistemului, punand accent pe eficienta computationala si managementul starilor concurente.
+
+\section{Algoritmul de Matchmaking}
+\label{sec:matchmaking}
+
+Pentru a asigura o experienta de joc asincrona sau sincrona intre jucatori, a fost dezvoltat un serviciu dedicat de interconectare, implementat pe serverul ASP.NET Core prin intermediul \texttt{MatchmakingService}.
+
+Scopul algoritmului este de a prelua cererile jucatorilor care doresc sa participe la un meci, fie din postura de Aparator (Defender), fie din cea de Atacator (Attacker), si de a-i cupla intr-o instanta comuna de joc, bazata pe disponibilitate.
+
+\subsection{Logica de functionare}
+Procesul de matchmaking functioneaza ca un sistem de tip Producer-Consumer bazat pe cozi de asteptare in memorie. Algoritmul parcurge urmatoarele etape:
+\begin{enumerate}
+    \item \textbf{Inregistrarea cererii:} Cand un client initiaza cautarea unui meci, serverul genereaza un Ticket unic si adauga utilizatorul in coada specifica rolului ales.
+    \item \textbf{Bucla de verificare (Polling):} Un proces de fundal sau o apelare periodica verifica starea cozilor. Daca exista cel putin un utilizator in ambele cozi, algoritmul extrage primii doi candidati.
+    \item \textbf{Instantierea meciului:} Datele celor doi jucatori sunt coroborate, generandu-se un \texttt{MatchResult} cu un identificator unic (\texttt{MatchId}). Acest obiect este ulterior persistat in baza de date SQLite folosind Entity Framework Core.
+    \item \textbf{Confirmarea (Handshake):} Clientii care fac polling pe starea tichetului lor primesc identificatorul meciului si detaliile adversarului.
+\end{enumerate}
+
+\subsection{Analiza Complexitatii si a Concurentei}
+Din punct de vedere al complexitatii timpului, operatiunile de adaugare si extragere din cozile de asteptare se realizeaza in timp constant O(1). Astfel, algoritmul este extrem de scalabil, putand gestiona mii de cereri simultane fara o degradare a performanței.
+
+O provocare majora in acest algoritm o reprezinta concurenta. Deoarece mai multe fire de executie pot incerca sa modifice starea meciurilor simultan, s-au implementat mecanisme de blocare (locking) sau colectii thread-safe (cum ar fi \texttt{ConcurrentQueue} din .NET).
+
+\section{Sistemul de Grid si Spatializarea}
+\label{sec:grid_system}
+
+Interactiunea unitatilor cu terenul de joc este guvernata de un sistem de tip Grid, care faciliteaza atat plasarea structurilor defensive, cat si calculul distantelor pentru sistemul de combat.
+
+\subsection{Matematica Spatializarii}
+Fiecare unitate din joc are o componenta de transformare care stocheaza vectorul de pozitie $P = (x, y)$. Pentru a determina celula corespunzatoare intr-un sistem cu dimensiunea celulei $S$, se utilizeaza o functie de tip floor:
+\begin{equation}
+G_x = \lfloor x / S \rfloor, \quad G_y = \lfloor y / S \rfloor
+\end{equation}
+Aceasta simplificare matematica permite accesul in timp constant O(1) la matricea de date a hartii.

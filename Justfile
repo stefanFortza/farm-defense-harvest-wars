@@ -51,6 +51,10 @@ build-paper:
 clean-paper:
     cd paper && latexmk -c
 
+# Monitorizează schimbările și recompilează automat PDF-ul
+watch-paper:
+    cd paper && latexmk -pdfxe -pvc -shell-escape main.tex
+
 # Generează diagrame din fișiere .mmd (necesită mermaid-cli: npm install -g @mermaid-js/mermaid-cli)
 build-docs:
     #!/usr/bin/env bash

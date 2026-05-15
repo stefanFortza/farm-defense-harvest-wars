@@ -67,6 +67,7 @@ Entities/Components/
  UnitStateMachine/States/
   DieState.cs
   HybridRangedAttackState.cs
+  IAttackState.cs
   IdleState.cs
   MeleeAttackState.cs
   MovingState.cs

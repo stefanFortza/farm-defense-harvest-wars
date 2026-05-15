@@ -1,0 +1,35 @@
+\chapter{Tehnologii Utilizate}
+\label{ch:tehnologii}
+
+Dezvoltarea proiectului \textit{Farm Defense: Harvest Wars} a necesitat o selecție riguroasă a tehnologiilor, având ca obiectiv performanța ridicată, portabilitatea și un ciclu de dezvoltare eficient. Această secțiune detaliază ecosistemul software utilizat, argumentând alegerile tehnice făcute.
+
+\section{Motorul de joc Godot 4.x}
+\label{sec:godot}
+
+Pentru partea de client (Game Client), a fost ales motorul de joc Godot Engine, versiunea 4.x \cite{godot_docs}. Godot este un motor \textit{open-source} care oferă o arhitectură bazată pe noduri și scene, fiind extrem de flexibil pentru jocuri 2D și 3D. 
+
+Principalele motive pentru alegerea acestui motor sunt:
+\begin{itemize}
+    \item \textbf{Suport C\# nativ:} Permite utilizarea unui limbaj de programare modern și performant, comun cu cel utilizat pe server.
+    \item \textbf{Sistem de animație procedurală:} Facilitate esențială pentru mișcarea fluidă a unităților.
+    \item \textbf{Performanță și mărime redusă:} Motorul este optimizat pentru execuție rapidă și are o amprentă mică pe disc, facilitând distribuția.
+\end{itemize}
+
+\section{Ecosistemul .NET și Limbajul C\#}
+\label{sec:dotnet}
+
+Întregul sistem (atât clientul, cât și serverul) este dezvoltat folosind limbajul C\# (versiunea 10 și ulterioare) pe platforma .NET \cite{csharp_nutshell}. Utilizarea unui limbaj unic pe ambele părți ale aplicației a permis partajarea modelelor de date (Shared Models) și a redus timpul necesar context-switch-ului între limbaje diferite.
+
+Serverul este implementat folosind ASP.NET Core \cite{aspnet_docs}, beneficiind de performanțele ridicate ale acestui framework în gestionarea cererilor HTTP și a proceselor de fundal necesare matchmaking-ului.
+
+\section{Gestiunea Datelor: SQLite și Entity Framework Core}
+\label{sec:sqlite_ef}
+
+Pentru persistența datelor la nivel de server, s-a optat pentru SQLite \cite{sqlite_docs}, un motor de baze de date relaționale \textit{serverless}, integrat direct în aplicație. SQLite este ideal pentru acest proiect datorită simplității în configurare și portabilității bazei de date sub formă de fișier unic.
+
+Interacțiunea cu baza de date este realizată prin intermediul \textit{Object-Relational Mapper}-ului (ORM) Entity Framework Core \cite{ef_core_action}. S-a utilizat abordarea \textit{Code-First}, care permite definirea structurii bazei de date direct prin clase C\# și gestionarea evoluției schemei prin migrații controlate.
+
+\section{Mediul de Dezvoltare și Operare: Ubuntu și Linux}
+\label{sec:os}
+
+Atât mediul de dezvoltare, cât și cel de operare pentru server, sunt bazate pe sistemul de operare Ubuntu Linux. Stabilitatea și securitatea oferite de nucleul Linux, împreună cu performanța ridicată a runtime-ului .NET pe această platformă, au asigurat un mediu de lucru robust pentru întregul ciclu de viață al proiectului.

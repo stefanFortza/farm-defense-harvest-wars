@@ -6,13 +6,16 @@ using FarmDefenseHarvestWars.Shared.Enums;
 
 namespace FarmDefenseHarvestWars.GameClient.Entities.Units.Base.States;
 
-public class MeleeAttackState : IState
+public class MeleeAttackState : IAttackState
 {
     private readonly BaseUnit _unit;
     private readonly VisionComponent _vision;
     private double _cooldownTimer = 0.0;
     private double _windUpTimer = -1.0;
     private HurtboxComponent? _currentTarget;
+
+    public double CooldownTimer => _cooldownTimer;
+    public double WindUpTimer => _windUpTimer;
 
     public MeleeAttackState(BaseUnit unit)
     {
@@ -52,6 +55,40 @@ public class MeleeAttackState : IState
         }
 
         // 3. Find target to start new attack
+        _currentTarget = FindBestTarget();
+
+        if (_currentTarget == null)
+        {
+            UnitStateEnum fallbackState = _unit.Data.IsStatic ? UnitStateEnum.Idle : UnitStateEnum.Moving;
+            _unit.StateMachine.RequestStateChange(fallbackState);
+            return;
+        }
+
+        StartAttackSequence();
+    }
+
+    public void Update(double delta)
+    {
+    }
+
+    public void StartAttackSequence()
+    {
+        if (!_unit.Multiplayer.IsServer()) return;
+
+        // If no target is set, try to find one before failing
+        _currentTarget ??= FindBestTarget();
+        if (_currentTarget == null) return;
+
+        double attackCycle = 1.0 / _unit.Data.AttackSpeed;
+        _windUpTimer = attackCycle * 0.5; // Always 50% of the animation
+        _cooldownTimer = attackCycle;
+
+        // Notify clients to START the animation
+        _unit.Rpc(nameof(BaseUnit.NotifyAttackStartedRPC));
+    }
+
+    private HurtboxComponent? FindBestTarget()
+    {
         HurtboxComponent? target = null;
         if (_unit.Data.Role == PlayerRole.Defender && _unit.SecondaryVisionComponent != null)
         {
@@ -64,31 +101,7 @@ public class MeleeAttackState : IState
             target = _vision.GetFirstValidEnemy();
         }
 
-        if (target == null)
-        {
-            UnitStateEnum fallbackState = _unit.Data.IsStatic ? UnitStateEnum.Idle : UnitStateEnum.Moving;
-            _unit.StateMachine.RequestStateChange(fallbackState);
-            return;
-        }
-
-        StartAttackSequence(target);
-    }
-
-    public void Update(double delta)
-    {
-    }
-
-    private void StartAttackSequence(HurtboxComponent target)
-    {
-        if (!_unit.Multiplayer.IsServer()) return;
-
-        double attackCycle = 1.0 / _unit.Data.AttackSpeed;
-        _currentTarget = target;
-        _windUpTimer = attackCycle * 0.5; // Always 50% of the animation
-        _cooldownTimer = attackCycle;
-
-        // Notify clients to START the animation
-        _unit.Rpc(nameof(BaseUnit.NotifyAttackStartedRPC));
+        return target;
     }
 
     private void ApplyHit()
