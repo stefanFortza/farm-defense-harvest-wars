@@ -43,6 +43,14 @@ serve:
 
 # --- DOCUMENTAȚIE (Mermaid) ---
 
+# Compilați lucrarea de licență (necesită texlive-full și xelatex)
+build-paper:
+    cd paper && latexmk -pdfxe -shell-escape main.tex
+
+# Curăță fișierele temporare ale lucrării
+clean-paper:
+    cd paper && latexmk -c
+
 # Generează diagrame din fișiere .mmd (necesită mermaid-cli: npm install -g @mermaid-js/mermaid-cli)
 build-docs:
     #!/usr/bin/env bash
