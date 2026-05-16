@@ -1,28 +1,32 @@
 \chapter{Arhitectura Sistemului}
 \label{ch:arhitectura}
 
-În dezvoltarea sistemului software pentru proiectul \textit{Farm Defense: Harvest Wars}, a fost esențială utilizarea unor șabloane de proiectare (design patterns) consacrate și a unei arhitecturi bine structurate. Aceasta asigură o mentenabilitate ridicată și permite decuplarea componentelor, facilitând extinderea funcționalităților fără a compromite stabilitatea sistemului \cite{gof_design_patterns}.
+În procesuk dezvoltării sistemului software pentru proiectul \textit{Farm Defense: Harvest Wars}, a fost esențială utilizarea unor șabloane de proiectare (design patterns) consacrare și a
+unei arhitecturi bine structurate. Arhitectura aleasă asigură separarea responsabilităților și mentenabilitatea pe termen lung a codului.
 
-\section{Arhitectura de Ansamblu (Modelul Client-Server)}
-\label{sec:arhitectura_ansamblu}
+\section{Arhitectura Generală a Sistemului (Modelul C4)}
+\label{sec:arhitectura_sistem}
 
-Sistemul adoptă o arhitectură de tip Client-Server hibrid, adaptată nevoilor unui joc multiplayer asincron. Comunicarea între componente se realizează prin protocoale standard, asigurând o separare clară a responsabilităților.
+Pentru a vizualiza arhitectura sistemului distribuit \textit{Farm Defense: Harvest Wars}, a fost utilizat modelul C4 \cite{brown_c4_model} la nivelul 2, diagramă de containere (Container Level). Modelul C4 a fost creat de Simon Brown ca o alternativă modernă la diagrama clasică UML. Avantajele sale includ simplitatea și claritatea reprezentării arhitecturii software. În acest caz, sistemul este structurat precum un model client-server, unde exista decuplare clară între logica de business și faza de gameplay în timp real.
 
-Fluxul principal de date pornește de la clientul de joc, care interacționează cu serverul pentru autentificare, gestionarea profilului și matchmaking. Serverul validează cererile, procesează logica de afaceri și persistă datele necesare.
+În figura \ref{fig:c4_container}, se observă arhitectura formată din 4 containere principale:
+\begin{enumerate}
+    \item \textbf{Godot Game Client:} Reprezintă aplicația ce există pe computerul utilizatorului. Prin intermediul ei ultilizatorul interacționează atât cu logica din meniu (ex: selectarea unităților, deschidera cutiilor de recompense etc.), cât și cu faza de gameplay în timp real (ex: plasarea unităților etc.)
+    \item \textbf{ASP.NET Core Backend:} Funcționează ca un REST API și ca un orchestrator de instanțe de joc. Acesta validează autentificarea utilizatorilor prin sistemul Identity, procesează tranzacțiile de tip metagame (modificarea pachetelor de unități) și rulează algoritmul de matchmaking.
+    \item \textbf{Baza de Date SQLite:}
+          Asigură stratul de persistență a datelor, comunicarea este abstractizată prin pachetul \textbf{Entity Framework Core}, care oferă un model de programare orientat pe obiecte.
+    \item \textbf{Godot Headless Servers (Servere Dedicate):} Când se formează un meci valid, backend-ul execută un nou proces Godot rulat în mod \textit{headless} (fără interfață grafică), câruia îi sunt transmise datele despre meci si jucatori(id-ul meciului, unitătile selectate de jucatori etc.). Clientul primește datele meciului pentru a se putea conecta direct la acest server dedicat pentru faza de \textit{gameplay}.
+\end{enumerate}
+
+Această abordare micro-arhitecturală previne blocajele (bottlenecks) la nivelul API-ului web și izolează logic fiecare meci în propriul proces alocat de sistemul de operare Linux.
 
 \begin{figure}[htbp]
     \centering
-    % \includegraphics[width=0.8\textwidth]{arhitectura_sistem}
-    \caption{Diagrama de Arhitectură a Sistemului (Client, API, Bază de Date)}
-    \label{fig:arhitectura_sistem}
-\end{figure}
+    \includegraphics[width=0.7\textwidth]{DiagramaC4.png}
 
-Componentele majore ale sistemului sunt:
-\begin{itemize}
-    \item \textbf{Game Client (Godot):} Interfața cu utilizatorul și logica de luptă în timp real.
-    \item \textbf{REST API (ASP.NET Core):} Creierul sistemului, gestionând securitatea și logica de matchmaking.
-    \item \textbf{Database (SQLite):} Stratul de persistență unde sunt stocate datele utilizatorilor și progresul acestora.
-\end{itemize}
+    \caption{Diagrama de Arhitectură C4 (Nivel Container)}
+    \label{fig:c4_container}
+\end{figure}
 
 \section{Arhitectura Clientului (Godot Engine)}
 \label{sec:arhitectura_client}
@@ -55,7 +59,7 @@ Soluția implementată prin clasa \texttt{UnitStateMachine} permite decuplarea l
 Această abordare elimină erorile de concurență în logica unității, asigurând o tranziție fluidă și predictibilă între comportamente.
 
 \subsubsection{Specializarea stărilor prin Moștenire}
-Pentru a gestiona diversitatea unităților (atacatori corp-la-corp vs. atacatori la distanță), a fost implementată o ierarhie de stări bazată pe polimorfism. 
+Pentru a gestiona diversitatea unităților (atacatori corp-la-corp vs. atacatori la distanță), a fost implementată o ierarhie de stări bazată pe polimorfism.
 
 Deși unitățile partajează logica de bază a unei stări de atac (verificarea razei de acțiune și a timpului de reîncărcare), execuția propriu-zisă a fost abstractizată. Astfel, au fost dezvoltate clase derivate precum \texttt{MeleeAttackState}, care gestionează proximitatea fizică și aplicarea daunelor prin componente de tip Hitbox, și \texttt{RangedAttackState}, responsabilă de instanțierea și calcularea traiectoriei proiectilelor.
 
@@ -63,6 +67,8 @@ Deși unitățile partajează logica de bază a unei stări de atac (verificarea
 \label{sec:arhitectura_backend}
 
 Serverul este organizat folosind o arhitectură stratificată (Layered Architecture), asigurând o separare clară între interfața API, logica de business și accesul la date.
+
+Pentru gestionarea utilizatorilor și asigurarea securității datelor (hash-uirea parolelor, generarea de token-uri), sistemul backend integrează framework-ul \textit{ASP.NET Core Identity}\cite{aspnet_identity_docs}. Această soluție a fost aleasă deoarece oferă nativ o arhitectură robustă pentru autentificare și stocare securizată, compatibilă direct cu Entity Framework Core .
 
 \begin{itemize}
     \item \textbf{Controllere:} Gestionează cererile HTTP și returnează răspunsuri formatate JSON.

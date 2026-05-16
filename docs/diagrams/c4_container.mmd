@@ -1,0 +1,24 @@
+C4Container
+    %% title Diagrama de Arhitectură C4 (Nivel Container) - Farm Defense
+    
+    Person(player, "User", "Utilizează aplicația client")
+    
+    System_Boundary(farm_defense, "Sistemul Farm Defense") {
+        
+        Container(client, "Godot Game Client", "Godot Engine, C#", "Aplicația locală a jucătorului. Rulează interfața, HUD-ul și procesează input-ul.")
+        
+        System_Boundary(backend_infra, "Infrastructura Backend Core") {
+            Container(api, "ASP.NET Core REST API", ".NET 10, C#", "Gestionează autentificarea, profilurile, deck-urile și logica de Matchmaking.")
+            ContainerDb(db, "Baza de Date", "SQLite", "Stochează datele utilizatorilor și progresul.")
+        }
+        
+        System_Boundary(server_pool, "Cluster Servere Dedicate") {
+            Container(dedicated, "Godot Headless Instance [1..N]", "Godot Engine, C#", "Instanțe multiple de server autoritar spawnate dinamic de orchestrator pentru fiecare meci activ.")
+        }
+    }
+    
+    Rel(player, client, "Joacă", "Input / UI")
+    Rel(client, api, "Cereri REST", "HTTPS / JSON")
+    Rel(api, db, "Citește / Scrie", "EF Core")
+    Rel(api, dedicated, "Creează proces nou (CLI)", "ProcessMatchServerOrchestrator")
+    Rel(client, dedicated, "Sincronizare Gameplay", "UDP / TCP (Multiplayer API)")

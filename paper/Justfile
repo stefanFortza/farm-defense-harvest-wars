@@ -1,0 +1,16 @@
+
+# Default recipe
+default:
+    @just --list
+
+# Compilați lucrarea de licență (necesită texlive-full și xelatex)
+build-paper:
+    cd paper && latexmk -pdfxe -shell-escape main.tex
+
+# Curăță fișierele temporare ale lucrării
+clean-paper:
+    latexmk -c
+
+# Monitorizează schimbările și recompilează automat PDF-ul
+watch-paper:
+    latexmk -pdfxe -pvc -shell-escape main.tex
