@@ -33,7 +33,11 @@ Această abordare micro-arhitecturală previne blocajele (bottlenecks) la nivelu
 
 Clientul este construit arhitectural pe principiul modularității. Principalul design pattern utilizat este \textit{Component Pattern}\cite{nystrom_game_patterns}, adaptat la specificul motorului de joc Godot. În loc să folosim clase monolitice pentru unitățile de joc, am optat pentru o compoziție de noduri copii specializate.
 
+
+\subsection{Șablonul Component (Component Pattern)}
+
 Fiecare unitate (ex: \textit{ChickenUnit}) este un ansamblu de componente independente precum \texttt{HitboxComponent}, \texttt{HealthComponent} și \texttt{UnitStateMachine}. Această abordare permite atât reutilizarea codului cât și testarea fiecărei funcționalități în mod independent.
+
 
 \begin{figure}[htbp]
     \centering
@@ -42,26 +46,62 @@ Fiecare unitate (ex: \textit{ChickenUnit}) este un ansamblu de componente indepe
     \label{fig:diagrama_componente}
 \end{figure}
 
+Pe baza arhitecturii ilustrate, responsabilitățile din entitatea \textit{ChickenUnit} au fost împărțite, conform principiului SRP (Single Responsibility Principle) \cite{martin2003agile}, în următoarele componente:
+
+\begin{itemize}
+    \item \textbf{\texttt{UnitStateMachine}:} Reprezintă componenta care orchestrează tranzițiile între stările de idle, move, attack și die.
+    \item \textbf{\texttt{HealthComponent} și \texttt{HurtboxComponent}:} Gestionează variabila de viață a unei unități și validează coliziunile fizice ce au rol în aplicarea daunelor.
+    \item \textbf{\texttt{VisionComponent} (Principal și Secundar):} Acționează ca senzori pentru a detecta unitățile inamice. Unitățile Defender au doi senzori de viziune: unul în partea stângă și unul în partea dreaptă.
+    \item \textbf{\texttt{UnitVisualsComponent}:} Funcționează pe bază de evenimente (semnale), ascultând schimbările de stare și actualizează animațiile și HUD-ul (Health Bar).
+\end{itemize}
+
 \subsection{Șablonul Stare (State Pattern)}
 \label{sec:state_pattern}
 
-Un element central în controlul comportamentului unităților de luptă este șablonul Stare (State Pattern). Într-un joc de tip strategie, o unitate tranzitează constant prin diverse stări: repaus, deplasare sau atac. Implementarea clasică prin structuri condiționale masive devine greu de întreținut odată cu creșterea complexității.
+Comportamentul unităților de joc a fost modelat în principiu folosind șablonul de proiectare Stare (State Pattern) \cite{gof_design_patterns}. De regulă, în cadrul unui joc de tip strategie, o unitate oscilează constant între diverse stări: repaus, deplasare sau atac. Abordarea naivă pentru modelarea acestui tip de comportament presupune utilizarea unor structuri condiționale masive (ex. instrucțiuni \texttt{switch} sau \texttt{if-else} înlănțuite) în cadrul loop-ului principal de actualizare (\texttt{\_PhysicsProcess} în Godot). Această tip de abordare duce rapid la o degradare a gestionării codului, încălcând principiul de responsabilitate unică (Single Responsibility Principle).
 
-Soluția implementată prin clasa \texttt{UnitStateMachine} permite decuplarea logicii fiecărui comportament. Fiecare stare este reprezentată de o clasă separată care implementează interfața \texttt{IState}.
+Soluția este implementată cu ajutorul clasei \texttt{UnitStateMachine}, care permite decuplarea logicii fiecărui comportament. Starea este reprezentată de o singură clasă separată care implementează interfața \texttt{IState}.
 
-În cadrul sistemului, stările sunt gestionate după cum urmează:
+În acest caz particular, sunt definite trei comportamente(\ref{fig:state_transition}) de bază pentru unități, fiecare comportament fiind reprezentat de o clasă specifică:
+
+% --- PLACEHOLDER DIAGRAMA TRANZIȚIE STĂRI ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{StateDiagram.png}
+    \caption{Diagrama de tranziție a stărilor pentru unități}
+    \label{fig:state_transition}
+\end{figure}
+% --------------------------------------------
+
 \begin{itemize}
-    \item \textbf{IdleState:} Gestionează starea de repaus și scanarea mediului pentru detectarea țintelor folosind componenta de viziune.
-    \item \textbf{MovingState:} Controlează deplasarea către un punct sau o unitate inamică, apelând sistemul de navigație.
-    \item \textbf{AttackState:} Execută secvențele de atac, gestionează timpul de reîncărcare (cooldown) și declanșează animațiile procedurale.
+    \item \textbf{IdleState:} Gestionează starea în care unitatea este în repaus și scanează mediul pentru detectarea țintelor cu ajutorul componentei de viziune.
+    \item \textbf{MovingState:} Controlează deplasarea în direcția bazei inamice sau către o unitate inamică.
+    \item \textbf{AttackState:} Reprezintă componenta de luptă, este declanșată când o unitate inamică intră în raza de viziune.
 \end{itemize}
 
-Această abordare elimină erorile de concurență în logica unității, asigurând o tranziție fluidă și predictibilă între comportamente.
+\subsubsection{Specializarea stărilor prin Interfețe Derivate (Polimorfism)}
+\label{sec:state_inheritance}
 
-\subsubsection{Specializarea stărilor prin Moștenire}
-Pentru a gestiona diversitatea unităților (atacatori corp-la-corp vs. atacatori la distanță), a fost implementată o ierarhie de stări bazată pe polimorfism.
+Pentru a nu duplica logica și pentru a gestiona moduri diferite de atac (atacatori corp-la-corp vs. atacatori la distanță), s-a recurs la implementarea unei ierarhii de tipuri bazată pe interfețe.
 
-Deși unitățile partajează logica de bază a unei stări de atac (verificarea razei de acțiune și a timpului de reîncărcare), execuția propriu-zisă a fost abstractizată. Astfel, au fost dezvoltate clase derivate precum \texttt{MeleeAttackState}, care gestionează proximitatea fizică și aplicarea daunelor prin componente de tip Hitbox, și \texttt{RangedAttackState}, responsabilă de instanțierea și calcularea traiectoriei proiectilelor.
+S-a introdus interfața \texttt{IAttackState}, care acționează ca o interfață marcaj (marker interface) și extinde interfața de bază \texttt{IState}. Aceasta definește contractul strict pentru orice secvență de luptă, expunând timpii de pregătire (\texttt{WindUpTimer}), de reîncărcare (\texttt{CooldownTimer}) și metoda declanșatoare \texttt{StartAttackSequence()}.
+Arhitectura claselor care implementează acest sistem este detaliată în Figura \ref{fig:uml_attack_state}.
+
+% --- PLACEHOLDER DIAGRAMA UML CLASE ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{ClassDiagram.png}
+    \caption{Diagrama UML de clase ilustrând moștenirea interfeței IAttackState}
+    \label{fig:uml_attack_state}
+\end{figure}
+% --------------------------------------
+
+Execuția propriu-zisă a atacului este delegată claselor concrete care implementează această interfață:
+\begin{itemize}
+    \item \textbf{\texttt{MeleeAttackState}:} Implementează \texttt{IAttackState} și aplică daune directe prin intermediul componentei \textit{Hitbox}.
+    \item \textbf{\texttt{RangedAttackState}:} Implementează \texttt{IAttackState} și se ocupă de instanțierea proiectilelor.
+\end{itemize}
+
 
 \section{Arhitectura Backend-ului (.NET 10)}
 \label{sec:arhitectura_backend}
