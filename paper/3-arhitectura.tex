@@ -1,7 +1,7 @@
 \chapter{Arhitectura Sistemului}
 \label{ch:arhitectura}
 
-În procesuk dezvoltării sistemului software pentru proiectul \textit{Farm Defense: Harvest Wars}, a fost esențială utilizarea unor șabloane de proiectare (design patterns) consacrare și a
+În procesul dezvoltării sistemului software pentru proiectul \textit{Farm Defense: Harvest Wars}, a fost esențială utilizarea unor șabloane de proiectare (design patterns) consacrare și a
 unei arhitecturi bine structurate. Arhitectura aleasă asigură separarea responsabilităților și mentenabilitatea pe termen lung a codului.
 
 \section{Arhitectura Generală a Sistemului (Modelul C4)}
@@ -31,14 +31,14 @@ Această abordare micro-arhitecturală previne blocajele (bottlenecks) la nivelu
 \section{Arhitectura Clientului (Godot Engine)}
 \label{sec:arhitectura_client}
 
-Arhitectura clientului este construită pe principiul modularității, utilizând intensiv \textit{Component Pattern}. În loc să folosim clase monolitice pentru unitățile de joc, am optat pentru o compoziție de noduri specializate.
+Clientul este construit arhitectural pe principiul modularității. Principalul design pattern utilizat este \textit{Component Pattern}\cite{nystrom_game_patterns}, adaptat la specificul motorului de joc Godot. În loc să folosim clase monolitice pentru unitățile de joc, am optat pentru o compoziție de noduri copii specializate.
 
-Fiecare unitate (ex: \textit{ChickenUnit}) este un ansamblu de componente independente precum \texttt{HitboxComponent}, \texttt{HealthComponent} și \texttt{UnitStateMachine}. Această abordare permite reutilizarea codului și o testare facilă a fiecărei funcționalități în izolare.
+Fiecare unitate (ex: \textit{ChickenUnit}) este un ansamblu de componente independente precum \texttt{HitboxComponent}, \texttt{HealthComponent} și \texttt{UnitStateMachine}. Această abordare permite atât reutilizarea codului cât și testarea fiecărei funcționalități în mod independent.
 
 \begin{figure}[htbp]
     \centering
-    % \includegraphics[width=0.7\textwidth]{diagrama_componente}
-    \caption{Diagrama de Componente a unei Unități}
+    \includegraphics[width=0.9\textwidth]{ChickenC4Component.png}
+    \caption{Diagrama de Componente a unei Unități, nivel Component \cite{brown_c4_model}}
     \label{fig:diagrama_componente}
 \end{figure}
 
