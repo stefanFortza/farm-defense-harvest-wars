@@ -33,19 +33,25 @@ Aceste notițe conțin sfaturi pentru redactarea bibliografiei și citarea corec
 
 ---
 
-## 2. ASP.NET Core Identity
-
-### Citarea documentației oficiale
-```bibtex
-@manual{aspnet_identity_docs,
-  title        = {Introduction to Identity on ASP.NET Core},
-  author       = {{Microsoft Corporation}},
-  organization = {Microsoft Learn},
-  year         = {2024},
-  url          = {https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity},
-  note         = {Accesat: Mai 2026}
+@article{10.1145/320493.320489,
+author = {Bernstein, Philip A.},
+title = {Synthesizing third normal form relations from functional dependencies},
+year = {1976},
+issue_date = {Dec. 1976},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {1},
+number = {4},
+issn = {0362-5915},
+url = {https://doi.org/10.1145/320493.320489},
+doi = {10.1145/320493.320489},
+abstract = {It has been proposed that the description of a relational database can be formulated as a set of functional relationships among database attributes. These functional relationships can then be used to synthesize algorithmically a relational scheme. It is the purpose of this paper to present an effective procedure for performing such a synthesis. The schema that results from this procedure is proved to be in Codd's third normal form and to contain the fewest possible number of relations. Problems with earlier attempts to construct such a procedure are also discussed.},
+journal = {ACM Trans. Database Syst.},
+month = dec,
+pages = {277–298},
+numpages = {22},
+keywords = {third normal form, semantics of data, relational model, functional dependency, database schema}
 }
-```
 
 ### Exemplu de utilizare în text:
 > „Pentru gestionarea utilizatorilor și asigurarea securității datelor (hash-uirea parolelor, generarea de token-uri), sistemul backend integrează framework-ul \textit{ASP.NET Core Identity}. Această soluție a fost aleasă deoarece oferă nativ o arhitectură robustă pentru autentificare și stocare securizată, compatibilă direct cu Entity Framework Core \cite{aspnet_identity_docs}.”

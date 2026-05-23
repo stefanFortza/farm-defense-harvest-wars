@@ -102,21 +102,19 @@ Execuția propriu-zisă a atacului este delegată claselor concrete care impleme
     \item \textbf{\texttt{RangedAttackState}:} Implementează \texttt{IAttackState} și se ocupă de instanțierea proiectilelor.
 \end{itemize}
 
-
 \section{Arhitectura Backend-ului (.NET 10)}
 \label{sec:arhitectura_backend}
 
-Serverul este organizat folosind o arhitectură stratificată (Layered Architecture), asigurând o separare clară între interfața API, logica de business și accesul la date.
-
-Pentru gestionarea utilizatorilor și asigurarea securității datelor (hash-uirea parolelor, generarea de token-uri), sistemul backend integrează framework-ul \textit{ASP.NET Core Identity}\cite{aspnet_identity_docs}. Această soluție a fost aleasă deoarece oferă nativ o arhitectură robustă pentru autentificare și stocare securizată, compatibilă direct cu Entity Framework Core .
+Sistemul backend a fost dezvoltat utilizând framework-ul ASP.NET Core, ce adoptă o  arhitectură stratificată de tipul N-Layer. Această arhitectură asigură o decuplare optimă a responsabilităților, facilitând testarea și mentenabilitatea aplicației pe termen lung. Arhitectura aplicației este separată în trei straturi (layer) interconectate:
 
 \begin{itemize}
-    \item \textbf{Controllere:} Gestionează cererile HTTP și returnează răspunsuri formatate JSON.
-    \item \textbf{Servicii:} Conțin logica centrală, cum ar fi \texttt{MatchmakingService}, care este injectat în controllere folosind mecanismul nativ de \textit{Dependency Injection} (DI) din .NET.
-    \item \textbf{Entități:} Reprezintă structura datelor în cod și sunt mapate peste tabelele bazei de date.
+    \item \textbf{Stratul de Prezentare (API / Controllers):} Reprezintă punctul de intrare în sistem. Controllerele au rolul exclusiv de a prelua cererile HTTP primite de la client, de a valida și procesa datele de intrare și de a returna răspunsuri sub formă de documente JSON.
+    \item \textbf{Stratul Logicii de Business (Services):} Încorporează regulile specifice aplicației. Serviciile (precum \texttt{MatchmakingService}) preiau datele de la controllere și efectuează operațiunile complexe. Acestea sunt injectate în controllere prin mecanismul nativ de \textit{Dependency Injection} (DI) \cite{aspnet_docs} din .NET, elaborând un cuplaj slab.
+    \item \textbf{Stratul de Acces la Date (Data Access Layer):} Gestionează persistența și interogarea bazei de date. Acest strat utilizează framework-ul ORM \textit{Entity Framework Core} \cite{ef_core_action} care impune un model de programare orientat pe obiecte pentru a gestiona baza de date SQLite.
 \end{itemize}
 
-Utilizarea DI permite un cuplaj slab între componente, facilitând testarea unitară și mock-uirea bazei de date sau a altor servicii externe.
+Pentru gestionarea utilizatorilor și asigurarea securității (hash-uirea criptografică a parolelor, generarea de token-uri), backend-ul folosește framework-ul \textit{ASP.NET Core Identity} \cite{aspnet_identity_docs}. Această soluție a fost aleasă deoarece oferă nativ un mecanism robust pentru autentificare, fiind complet compatibilă cu stratul de acces la date prin intermediul Entity Framework Core.
+
 
 \section{Modelarea Datelor (Baza de Date SQLite)}
 \label{sec:database}
