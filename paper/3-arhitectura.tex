@@ -58,14 +58,14 @@ Pe baza arhitecturii ilustrate, responsabilitățile din entitatea \textit{Chick
 \subsection{Șablonul Stare (State Pattern)}
 \label{sec:state_pattern}
 
-Comportamentul unităților de joc a fost modelat în principiu folosind șablonul de proiectare Stare (State Pattern) \cite{gof_design_patterns}. De regulă, în cadrul unui joc de tip strategie, o unitate oscilează constant între diverse stări: repaus, deplasare sau atac. Abordarea naivă pentru modelarea acestui tip de comportament presupune utilizarea unor structuri condiționale masive (ex. instrucțiuni \texttt{switch} sau \texttt{if-else} înlănțuite) în cadrul loop-ului principal de actualizare (\texttt{\_PhysicsProcess} în Godot). Această tip de abordare duce rapid la o degradare a gestionării codului, încălcând principiul de responsabilitate unică (Single Responsibility Principle).
+Comportamentul unităților de joc a fost modelat în principiu folosind șablonul de proiectare Stare (State Pattern) \cite{gof_design_patterns}. De regulă, în cadrul unui joc de tip strategie, o unitate oscilează constant între diverse stări: repaus, deplasare sau atac. Abordarea naivă pentru modelarea acestui tip de comportament presupune utilizarea unor structuri condiționale masive (ex. instrucțiuni \texttt{switch} sau \texttt{if-else} înlănțuite) în cadrul loop-ului principal de actualizare (\texttt{\_PhysicsProcess} în Godot). Acest tip de abordare duce rapid la o degradare a gestionării codului, încălcând principiul de responsabilitate unică (Single Responsibility Principle).
 
 Soluția este implementată cu ajutorul clasei \texttt{UnitStateMachine}, care permite decuplarea logicii fiecărui comportament. Starea este reprezentată de o singură clasă separată care implementează interfața \texttt{IState}.
 
 În acest caz particular, sunt definite trei comportamente(\ref{fig:state_transition}) de bază pentru unități, fiecare comportament fiind reprezentat de o clasă specifică:
 
 % --- PLACEHOLDER DIAGRAMA TRANZIȚIE STĂRI ---
-\begin{figure}[htbp]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{StateDiagram.png}
     \caption{Diagrama de tranziție a stărilor pentru unități}
@@ -75,8 +75,9 @@ Soluția este implementată cu ajutorul clasei \texttt{UnitStateMachine}, care p
 
 \begin{itemize}
     \item \textbf{IdleState:} Gestionează starea în care unitatea este în repaus și scanează mediul pentru detectarea țintelor cu ajutorul componentei de viziune.
-    \item \textbf{MovingState:} Controlează deplasarea în direcția bazei inamice sau către o unitate inamică.
+    \item \textbf{MovingState:} Controlează deplasarea în sensul bazei inamice sau către o unitate inamică.
     \item \textbf{AttackState:} Reprezintă componenta de luptă, este declanșată când o unitate inamică intră în raza de viziune.
+    \item \textbf{DieState:} Se ocupă de momentul în care unitatea moare (când viața ajunge la zero).
 \end{itemize}
 
 \subsubsection{Specializarea stărilor prin Interfețe Derivate (Polimorfism)}
@@ -116,23 +117,25 @@ Sistemul backend a fost dezvoltat utilizând framework-ul ASP.NET Core, ce adopt
 Pentru gestionarea utilizatorilor și asigurarea securității (hash-uirea criptografică a parolelor, generarea de token-uri), backend-ul folosește framework-ul \textit{ASP.NET Core Identity} \cite{aspnet_identity_docs}. Această soluție a fost aleasă deoarece oferă nativ un mecanism robust pentru autentificare, fiind complet compatibilă cu stratul de acces la date prin intermediul Entity Framework Core.
 
 
-\section{Modelarea Datelor (Baza de Date SQLite)}
+\section{Modelarea Datelor și Normalizarea Schemei Relaționale}
 \label{sec:database}
 
-Baza de date constituie stratul de persistență al arhitecturii. Am ales SQLite pentru simplitatea sa (serverless) și performanța adecvată pentru un proiect aflat în stadiul de prototip și dezvoltare locală.
+Stratul de persistență al datelor utilizează libraria de baze de date SQLite, interacțiunea fiind realizată prin Entity Framework Core \cite{ef_core_action} (abordarea \textit{Code-First}). Pentru a evita redundanța și a preveni anomaliile de inserare sau ștergere, pentru schema bazei de date a fost aleasă normalizarea în \textbf{Forma Normală 3 (3NF)} \cite{codd_3nf_1971}, asigurându-se că toate atributele non-cheie depind direct și exclusiv de cheia primară.
 
-Interacțiunea cu baza de date este realizată prin \textbf{Entity Framework Core}, utilizând abordarea \textit{Code-First}. Aceasta ne permite să definim schema bazei de date direct prin clase C\#, generând ulterior migrațiile necesare.
-
-Principalele entități modelate sunt:
+Structura logică a schemei, reflectată în Figura \ref{fig:erd_diagram}, este definită de următoarele entități corelate:
 \begin{itemize}
-    \item \texttt{AspNetUsers:} Extinde utilizatorul standard Identity pentru a include atribute specifice jocului, precum cantitatea de aur (\textit{Gold}), punctele de experiență (\textit{XP}) și nivelul.
-    \item \texttt{Decks:} Reprezintă seturile de unități configurate de jucător pentru luptă, având o relație de tip 1-la-N cu utilizatorul.
-    \item \texttt{UnitUnlocks:} Gestionează colecția de unități deblocate de fiecare jucător, permițând o progresie controlată în joc.
+    \item \texttt{AspNetUsers:} Extinde modelul nativ ASP.NET Core Identity prin adăugarea atributelor specifice utilizatorului (\textit{Gold}, \textit{XP}, \textit{Level}), aceste valori depind strict de id-ul unic al utilizatorului.
+    \item \texttt{Decks} și \texttt{UnitUnlocks:} Implementează relații de tip $1:\mathcal{N}$ cu tabela părinte. Respectând standardul 3NF, acestea stochează doar cheile străine (\texttt{UserId}) și datele dinamice (configurația pachetului, respectiv nivelul de upgrade al unității), fără a duplica atributele statice, globale ale unităților.
+    \item \texttt{MatchResult:} Stochează istoricul jocurilor folosind două chei străine către aceeași tabelă (\texttt{AttackerUserId} și \texttt{DefenderUserId}). Pentru a menține integritatea, fără a genera ambiguități de tip \textit{multiple cascade paths} la nivelul motorului SQL, comportamentul in momentul stergerii a fost configurat explicit utilizând regula \texttt{DeleteBehavior.Restrict}.
 \end{itemize}
+
+Pentru a evita duplicarea inutilă și problemele de desincronizare, serverul Godot reprezintă sursa unică de adevăr (\textit{Source of Truth}) pentru atributele statice ale unităților (viață, cost, viteză de atac), acestea fiind salvate sub formă de fișiere \texttt{.tres} \cite{godot_docs} (Godot Resources). Serverul backend nu stochează aceste metadate în tabele relaționale, ci păstrează doar o clonă a lor în format JSON. Validările de tip metagame de pe backend se efectuează prin accesarea acestui fișier JSON, asigurând un cuplaj slab între regulile de gameplay și schema bazei de date.
+
+% Figura 3.5: Diagrama Entitate-Relație (ERD) structurată în 3NF
 
 \begin{figure}[htbp]
     \centering
-    % \includegraphics[width=0.9\textwidth]{erd_diagram}
+    \includegraphics[width=1\textwidth]{DiagramaER.png}
     \caption{Diagrama Entitate-Relație (ERD)}
     \label{fig:erd_diagram}
 \end{figure}

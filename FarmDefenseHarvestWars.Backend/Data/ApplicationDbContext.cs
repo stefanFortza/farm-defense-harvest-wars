@@ -23,6 +23,27 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         ConfigureDeck(builder.Entity<Deck>());
         ConfigureUnitUnlock(builder.Entity<UnitUnlock>());
+        ConfigureMatchResult(builder.Entity<MatchResult>());
+    }
+
+    private static void ConfigureMatchResult(EntityTypeBuilder<MatchResult> matchResult)
+    {
+        matchResult.HasKey(x => x.MatchId);
+
+        // Configurarea relației pentru Atacator (folosind shadow property pentru FK)
+        matchResult.HasOne(m => m.Attacker)
+            .WithMany() 
+            .HasForeignKey("AttackerUserId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configurarea relației pentru Apărător (folosind shadow property pentru FK)
+        matchResult.HasOne(m => m.Defender)
+            .WithMany() 
+            .HasForeignKey("DefenderUserId")
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        matchResult.Property(x => x.CompletedAtUtc)
+            .IsRequired();
     }
 
     private static void ConfigureDeck(EntityTypeBuilder<Deck> deck)

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmDefenseHarvestWars.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260428152754_InitialMigration")]
+    [Migration("20260524173438_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -81,10 +81,6 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UnlockedUnits")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -146,7 +142,6 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AttackerUserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AttackerXpEarned")
@@ -162,7 +157,6 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DefenderUserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("DefenderXpEarned")
@@ -175,6 +169,10 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("MatchId");
+
+                    b.HasIndex("AttackerUserId");
+
+                    b.HasIndex("DefenderUserId");
 
                     b.ToTable("MatchResults");
                 });
@@ -351,6 +349,23 @@ namespace FarmDefenseHarvestWars.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.MatchResult", b =>
+                {
+                    b.HasOne("FarmDefenseHarvestWars.Backend.Models.ApplicationUser", "Attacker")
+                        .WithMany()
+                        .HasForeignKey("AttackerUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FarmDefenseHarvestWars.Backend.Models.ApplicationUser", "Defender")
+                        .WithMany()
+                        .HasForeignKey("DefenderUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Attacker");
+
+                    b.Navigation("Defender");
                 });
 
             modelBuilder.Entity("FarmDefenseHarvestWars.Backend.Models.UnitUnlock", b =>

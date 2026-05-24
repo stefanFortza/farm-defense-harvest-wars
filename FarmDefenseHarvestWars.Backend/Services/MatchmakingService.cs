@@ -223,8 +223,8 @@ public class MatchmakingService : IMatchmakingService
         var user = await userManager.FindByIdAsync(userId);
         if (user == null) return null;
 
-        bool isDefender = result.DefenderUserId == userId;
-        bool isAttacker = result.AttackerUserId == userId;
+        bool isDefender = db.Entry(result).Property<string>("DefenderUserId").CurrentValue == userId;
+        bool isAttacker = db.Entry(result).Property<string>("AttackerUserId").CurrentValue == userId;
 
         if (!isDefender && !isAttacker) return null;
 
@@ -315,8 +315,8 @@ public class MatchmakingService : IMatchmakingService
             var result = new MatchResult
             {
                 MatchId = matchId,
-                DefenderUserId = defenderId,
-                AttackerUserId = attackerId,
+                Defender = defender,
+                Attacker = attacker,
                 WinnerRole = request.WinnerRole,
                 IsAborted = request.IsAborted,
                 DefenderGoldEarned = defGold,

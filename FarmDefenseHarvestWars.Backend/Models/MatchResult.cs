@@ -8,8 +8,8 @@ public class MatchResult
     [Key]
     public string MatchId { get; set; } = string.Empty;
     
-    public string DefenderUserId { get; set; } = string.Empty;
-    public string AttackerUserId { get; set; } = string.Empty;
+    public ApplicationUser Defender { get; set; } = null!;
+    public ApplicationUser Attacker { get; set; } = null!;
     
     public PlayerRole? WinnerRole { get; set; }
     public bool IsAborted { get; set; }
