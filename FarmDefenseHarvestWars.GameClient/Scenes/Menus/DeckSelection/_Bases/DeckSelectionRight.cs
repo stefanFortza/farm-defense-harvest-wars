@@ -128,10 +128,10 @@ public abstract partial class DeckSelectionRight : Control
             return false;
         }
 
-        if (GameState.Instance?.IsDeckSaveInProgress(role) == true)
-        {
-            return false;
-        }
+        // if (GameState.Instance?.IsDeckSaveInProgress(role) == true)
+        // {
+        //     return false;
+        // }
 
         if (data.VariantType != Variant.Type.Dictionary)
         {
@@ -152,10 +152,10 @@ public abstract partial class DeckSelectionRight : Control
             return;
         }
 
-        if (GameState.Instance?.IsDeckSaveInProgress(role) == true)
-        {
-            return;
-        }
+        // if (GameState.Instance?.IsDeckSaveInProgress(role) == true)
+        // {
+        //     return;
+        // }
 
         if (data.VariantType != Variant.Type.Dictionary)
         {
