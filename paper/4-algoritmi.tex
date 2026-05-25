@@ -10,35 +10,58 @@ Pentru a facilita conectarea jucătorilor într-un mediu competitiv multiplayer 
 
 Acest sistem nu numai că asigură simpla asociere a doi utilizatori din coada de așteptare ci și acționează ca un orchestrator de procese Godot, fiind responsabil de crearea și izolarea instanțelor de execuție ale serverului de joc dedicat.
 
-\subsection{Logica de Funcționare}
-Inițierea meciului are loc prin \texttt{POST /matchmaking/queue}. Serverul utilizează dicționare partajate protejate prin \texttt{lock} pentru asocierea atomică a jucătorilor, instanțiind procesul \textit{Godot headless} imediat ce perechea este completă. Clientul gestionează așteptarea printr-o buclă de \textit{polling} asincron (\texttt{GET /matchmaking/status}) la fiecare secundă (Figura \ref{fig:matchmaking_flow}). Această interogare este o operațiune de tip \textit{lookup} $O(1)$, asigurând scalabilitatea sistemului fără a suprasolicita baza de date.
+\subsection{Logica de Funcționare: Evaluare Imediată}
+Algoritmul de matchmaking este proiectat după șablonul de arhitectură \textit{Producer-Consumer}, utilizând cozi de așteptare concurente, complet decuplate de firele de execuție care deservesc cererile HTTP/WebSocket ale clienților. Fluxul algoritmic este orchestrat de o clasă ce extinde \texttt{BackgroundService} din .NET, rulând o buclă infinită non-blocantă reglată prin semnale asincrone.
+
+Etapele exacte ale algoritmului sunt descrise în continuare:
+\begin{enumerate}
+    \item \textbf{Înregistrarea Cererii (Production):} Jucătorul transmite o cerere de alocare specificând rolul dorit (\texttt{PlayerRole.Attacker} sau \texttt{PlayerRole.Defender}). Serverul validează jetonul de autentificare, generează un tichet unic de identificare și introduce referința utilizatorului în coada specifică rolului ales.
+    \item \textbf{Evaluarea Concurentă (Consumption):} Bucla de fundal a serviciului interoghează starea cozilor dedicate. Evaluarea nu utilizează un mecanism primitiv de tip \textit{busy-waiting} (care ar epuiza resursele CPU), ci este trezită de mecanisme de sincronizare asincrone atunci când ambele cozi înregistrează elemente active. Când este îndeplinită condiția de existență a cel puțin unui candidat în fiecare structură (\texttt{AttackerQueue} și \texttt{DefenderQueue}), algoritmul extrage simultan cele două entități.
+    \item \textbf{Alocarea Instanței și Pornirea Procesului Headless:} După extragerea cu succes, algoritmul generează un identificator unic global de meci (\texttt{MatchId} de tip GUID). Pentru a asigura o validare autoritară a meciului și a preveni trișarea (\textit{cheat prevention}), backend-ul nu deleagă logica către unul dintre clienți, ci instanțiază un proces separat, complet izolat, rulând executabilul Godot în mod \textit{Headless} (fără interfață grafică) pe sistemul de operare gazdă Linux/Ubuntu.
+
+          Lansarea procesului se realizează programatic prin utilizarea clasei \texttt{System.Diagnostics.Process}, transmițând parametrii de configurare direct prin argumente în linie de comandă (CLI Args):
+          \begin{itemize}
+              \item Identificatorul unic al meciului (\texttt{--match-id});
+              \item Configurația pachetelor de unități normalizate (\texttt{--defender-deck} și \texttt{--attacker-deck});
+              \item Datele de profil sincronizate ale utilizatorilor (nume, indici de avatar).
+          \end{itemize}
+    \item \textbf{Persistența și Handshake-ul:} Starea meciului și configurarea inițială sunt persistate în baza de date relațională SQLite prin intermediul contextului Entity Framework Core. Clienții aflați în faza de așteptare recepționează asincron modificarea stării tichetului propriu și adresa instanței dedicate de Godot, inițiind faza de conexiune directă (Handshake) prin protocolul de rețea de nivel transport.
+\end{enumerate}
 
 % ---------------------------------------------------------
 % PLACEHOLDER PENTRU DIAGRAMA FLOW MATCHMAKING
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{matchmaking-flow.png}
+    % \includegraphics[width=\textwidth]{images/matchmaking-flow.png}
     \caption{Diagrama arhitecturală a sistemului de Matchmaking și ciclo-geneza serverului Headless}
     \label{fig:matchmaking_flow}
 \end{figure}
 % ---------------------------------------------------------
 
-\subsection{Ciclul de Viață al Instanței și Toleranța la Eșec}
-Simularea funcționează \textit{Server-Authoritative}, fiind complet izolată de clienți pentru a preveni manipularea stării. Mecanismele de protecție includ:
+\subsection{Ciclul de Viață al Meciului și Toleranța la Eșec}
+Odată instanțiat, serverul dedicat de Godot preia controlul absolut asupra simulării, funcționând după modelul \textit{Server-Authoritative}. Starea jocului (economia internă, timpul rămas și punctele de viață ale bazei) este calculată exclusiv pe server și propagată către clienți prin apeluri procedurale la distanță (RPC), prevenind astfel riscul de trișare prin manipularea memoriei locale a clientului.
+
+Pentru a garanta robustețea sistemului în fața condițiilor reale de rețea, algoritmul de gestiune a meciului implementează multiple mecanisme de siguranță (Figura \ref{fig:matchmaking_flow}):
 \begin{itemize}
-    \item \textbf{Gestionarea Deconectărilor:} Se aplică o fereastră de grație de 30s (\texttt{DisconnectGraceSeconds}). Dacă reconectarea eșuează, meciul este declarat abandonat (\textit{forfeit}), asigurând finalizarea partidei pentru adversar.
-    \item \textbf{Raportare Securizată (IPC):} La final, instanța \textit{headless} transmite rezultatul către API-ul backend printr-un apel HTTP protejat de o cheie de autentificare (\texttt{X-Match-Server-Key}).
-    \item \textbf{Prevenirea Proceselor Zombi:} Indiferent de succesul raportării, instanța utilizează un \textit{safety timeout} (\texttt{_forceQuitTimer}) de 20s, auto-terminându-se forțat pentru a garanta eliberarea resurselor hardware (\textit{memory reclaim}) de pe serverul Linux.
+    \item \textbf{Reziliența la Deconectări (Fault Tolerance):} În cazul pierderii conexiunii unui jucător, serverul nu oprește meciul imediat, ci inițiază o fereastră de grație asincronă (\texttt{Disconnect\-Grace\-Seconds}). Dacă utilizatorul nu reușește să restabilească o conexiune de nivel transport în intervalul de 30 de secunde, sistemul declară un abandon (\textit{forfeit}) în favoarea adversarului, asigurând fluiditatea experienței pentru jucătorii activi.
+    \item \textbf{Comunicarea Inter-Procese (IPC):} La finalizarea condițiilor de victorie, instanța Headless comunică înapoi cu backend-ul ASP.NET Core printr-un apel HTTP autentificat. Raportarea rezultatului este validată folosind o cheie criptografică injectată în momentul ciclo-genezei (\texttt{MatchServerCallbackKey}), asigurând integritatea tranzacției de acordare a recompenselor (bani, experiență).
+    \item \textbf{Prevenirea Proceselor Zombi:} În eventualitatea în care API-ul principal devine indisponibil și nu poate recepționa finalizarea meciului, instanța de joc folosește un \textit{safety timeout} local (\texttt{\_forceQuitTimer}). La expirarea acestuia, procesul de pe sistemul Linux se auto-termină forțat, prevenind astfel blocarea memoriei RAM (\textit{memory leaks}) și epuizarea resurselor infrastructurii (\textit{Resource Starvation}).
 \end{itemize}
 
 \subsection{Analiza Concurenței și Atomicitatea Tranzacțiilor}
-Gestionarea stării în medii \textit{multithreaded} necesită atomicitate tranzacțională. Deoarece matchmaking-ul implică validarea și modificarea simultană a mai multor colecții (\textit{cozi de roluri}, \textit{dicționare de stare}), s-a optat pentru excluderea mutuală (\texttt{lock}) asupra unui obiect global. Aceasta transformă secvența de interogare și asociere într-o tranzacție atomică, eliminând \textit{race conditions} la un cost computațional de $O(1)$. Overhead-ul \textit{lock-ului} este neglijabil, secțiunea critică limitându-se la operațiuni de memorie fără I/O. În final, izolarea simulării în procese \textit{headless} distincte (nivel sistem de operare) garantează toleranța la eșec: prăbușirea unei instanțe de joc nu afectează integritatea backend-ului, limitând impactul erorilor de runtime la nivel local.
+Din punct de vedere computational, cozile de așteptare sunt implementate prin intermediul structurii de date \texttt{ConcurrentQueue<T>} furnizată de spațiul de nume \texttt{System.Collections.Concurrent}. Aceasta utilizează algoritmi lock-free bazați pe primitive atomice de tip \textit{Compare-And-Swap} (CAS), eliminând overhead-ul generat de blocajele tradiționale la nivel de kernel.
+
+Operațiunile de adăugare (\texttt{Enqueue}) și extragere (\texttt{TryDequeue}) din cozile de așteptare se realizează în complexitate temporală constantă, amortizată $O(1)$. Prin urmare, algoritmul de împerechere prezintă o scalabilitate liniară în raport cu numărul de cereri concurente, limitarea fiind impusă exclusiv de resursele hardware (memorie și capacitate CPU pentru procesele Godot active în paralel).
+
+Gestionarea concurenței este critică în momentul tranziției de la faza de cuplare la cea de instanțiere a procesului. Deoarece mai multe instanțe ale buclei asincrone sau cereri de anulare din partea utilizatorilor pot accesa simultan starea aceluiași tichet, operațiunile de scriere pe colecțiile de control ale stărilor active (\texttt{\_isProcessingRole}) sunt protejate prin secțiuni critice riguroase folosind mecanisme de excludere mutuală (\texttt{lock}).
+
+Izolarea completă a logicii de simulare a jocului în procese \textit{Headless} distincte la nivelul nucleului Linux asigură că prăbușirea unei instanțe de joc din cauza unei erori de runtime nu afectează integritatea backend-ului ASP.NET Core sau a altor meciuri aflate în desfășurare, garantând o toleranță ridicată la eșec a întregului ecosistem.
 
 \section{Sistemul Concurent de Sincronizare a Pachetului (Deck)}
 \label{sec:deck_sync}
 
 \subsection{Definirea Problemei și Abordarea Arhitecturală}
-În aplicațiile interactive, manipularea rapidă a resurselor (ex. în proiectul curent: modificarea pachetelor de unități prin \textit{drag-and-drop}) implică apariția unor provocări de sincronizare între client și server. Implementarea naivă ar fi recurgerea la apeluri HTTP sincrone, dar această abordare blochează interfața utilizatorului până la primirea răspunsului (Pessimistic Locking), ceea ce degradează semnificativ experiența vizuală.
+În aplicațiile interactive, manipularea rapidă a resurselor (ex. în proiectul curent: modificarea pachetelor de unități prin \textit{drag-and-drop}) implică apariția uonr provocări de sincronizare între client și server. Implementarea naivă ar fi recurgerea la apeluri HTTP sincrone, dar această abordare blochează interfața utilizatorului până la primirea răspunsului (Pessimistic Locking), ceea ce degradează semnificativ experiența vizuală.
 
 Implementarea aleasă are în vedere principiul \textit{Server-Authoritative}, unde severul validează inputurile utilizatorului și deține informațiile finale despre starea jocului. Avantajele acestei abordări includ: fluiditatea interfeței, reducerea riscului de desincronizare și o experiență lipsită de sacadări vizuale.
 
