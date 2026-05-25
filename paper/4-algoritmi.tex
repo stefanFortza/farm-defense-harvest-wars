@@ -1,42 +1,65 @@
-\chapter{Algoritmi si Mecanici Principale}
+\chapter{Algoritmi și Mecanici Principale}
 \label{ch:algoritmi}
 
-Complexitatea unui joc de strategie hibrid consta nu doar in logica vizuala a clientului, ci si in sistemele de decizie din fundal. Acest capitol detaliaza algoritmii centrali care guverneaza functionarea sistemului, punand accent pe eficienta computationala si managementul starilor concurente.
+Complexitatea unui joc de strategie asimetric nu constă doar în logica vizuală sau în randarea graficii din client, ci și în eficiența sistemelor decizionale distribuite și în orchestrarea backend-ului. Acest capitol detaliază și analizează algoritmii centrali și arhitecturile concurente care guvernează funcționarea sistemului, accent-ul se pune pe eficiența computațională, gestionarea stărilor partajate și thread-safety.
 
-\section{Algoritmul de Matchmaking}
+\section{Algoritmul de Matchmaking și Gestiunea Instanțelor}
 \label{sec:matchmaking}
 
-Pentru a asigura o experienta de joc asincrona sau sincrona intre jucatori, a fost dezvoltat un serviciu dedicat de interconectare, implementat pe serverul ASP.NET Core prin intermediul \texttt{MatchmakingService}.
+Pentru a facilita conectarea jucătorilor într-un mediu competitiv multiplayer asimetric, a fost dezvoltat un serviciu de cuplare, ce a fost implementat pe serverul backend ASP.NET Core sub forma unui singleton coordonat asincron (\texttt{MatchmakingService}).
 
-Scopul algoritmului este de a prelua cererile jucatorilor care doresc sa participe la un meci, fie din postura de Aparator (Defender), fie din cea de Atacator (Attacker), si de a-i cupla intr-o instanta comuna de joc, bazata pe disponibilitate.
+Acest sistem nu numai că asigură simpla asociere a doi utilizatori din coada de așteptare ci și acționează ca un orchestrator de procese Godot, fiind responsabil de crearea și izolarea instanțelor de execuție ale serverului de joc dedicat.
 
-\subsection{Logica de functionare}
-Procesul de matchmaking functioneaza ca un sistem de tip Producer-Consumer bazat pe cozi de asteptare in memorie. Algoritmul parcurge urmatoarele etape:
-\begin{enumerate}
-    \item \textbf{Inregistrarea cererii:} Cand un client initiaza cautarea unui meci, serverul genereaza un Ticket unic si adauga utilizatorul in coada specifica rolului ales.
-    \item \textbf{Bucla de verificare (Polling):} Un proces de fundal sau o apelare periodica verifica starea cozilor. Daca exista cel putin un utilizator in ambele cozi, algoritmul extrage primii doi candidati.
-    \item \textbf{Instantierea meciului:} Datele celor doi jucatori sunt coroborate, generandu-se un \texttt{MatchResult} cu un identificator unic (\texttt{MatchId}). Acest obiect este ulterior persistat in baza de date SQLite folosind Entity Framework Core.
-    \item \textbf{Confirmarea (Handshake):} Clientii care fac polling pe starea tichetului lor primesc identificatorul meciului si detaliile adversarului.
-\end{enumerate}
+\subsection{Logica de Funcționare}
+Inițierea meciului are loc prin \texttt{POST /matchmaking/queue}. Serverul utilizează dicționare partajate protejate prin \texttt{lock} pentru asocierea atomică a jucătorilor, instanțiind procesul \textit{Godot headless} imediat ce perechea este completă. Clientul gestionează așteptarea printr-o buclă de \textit{polling} asincron (\texttt{GET /matchmaking/status}) la fiecare secundă (Figura \ref{fig:matchmaking_flow}). Această interogare este o operațiune de tip \textit{lookup} $O(1)$, asigurând scalabilitatea sistemului fără a suprasolicita baza de date.
 
-\subsection{Analiza Complexitatii si a Concurentei}
-Din punct de vedere al complexitatii timpului, operatiunile de adaugare si extragere din cozile de asteptare se realizeaza in timp constant O(1). Astfel, algoritmul este extrem de scalabil, putand gestiona mii de cereri simultane fara o degradare a performanței.
+% ---------------------------------------------------------
+% PLACEHOLDER PENTRU DIAGRAMA FLOW MATCHMAKING
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{matchmaking-flow.png}
+    \caption{Diagrama arhitecturală a sistemului de Matchmaking și ciclo-geneza serverului Headless}
+    \label{fig:matchmaking_flow}
+\end{figure}
+% ---------------------------------------------------------
 
-O provocare majora in acest algoritm o reprezinta concurenta. Deoarece mai multe fire de executie pot incerca sa modifice starea meciurilor simultan, s-au implementat mecanisme de blocare (locking) sau colectii thread-safe (cum ar fi \texttt{ConcurrentQueue} din .NET).
+\subsection{Ciclul de Viață al Instanței și Toleranța la Eșec}
+Simularea funcționează \textit{Server-Authoritative}, fiind complet izolată de clienți pentru a preveni manipularea stării. Mecanismele de protecție includ:
+\begin{itemize}
+    \item \textbf{Gestionarea Deconectărilor:} Se aplică o fereastră de grație de 30s (\texttt{DisconnectGraceSeconds}). Dacă reconectarea eșuează, meciul este declarat abandonat (\textit{forfeit}), asigurând finalizarea partidei pentru adversar.
+    \item \textbf{Raportare Securizată (IPC):} La final, instanța \textit{headless} transmite rezultatul către API-ul backend printr-un apel HTTP protejat de o cheie de autentificare (\texttt{X-Match-Server-Key}).
+    \item \textbf{Prevenirea Proceselor Zombi:} Indiferent de succesul raportării, instanța utilizează un \textit{safety timeout} (\texttt{_forceQuitTimer}) de 20s, auto-terminându-se forțat pentru a garanta eliberarea resurselor hardware (\textit{memory reclaim}) de pe serverul Linux.
+\end{itemize}
+
+\subsection{Analiza Concurenței și Atomicitatea Tranzacțiilor}
+Gestionarea stării în medii \textit{multithreaded} necesită atomicitate tranzacțională. Deoarece matchmaking-ul implică validarea și modificarea simultană a mai multor colecții (\textit{cozi de roluri}, \textit{dicționare de stare}), s-a optat pentru excluderea mutuală (\texttt{lock}) asupra unui obiect global. Aceasta transformă secvența de interogare și asociere într-o tranzacție atomică, eliminând \textit{race conditions} la un cost computațional de $O(1)$. Overhead-ul \textit{lock-ului} este neglijabil, secțiunea critică limitându-se la operațiuni de memorie fără I/O. În final, izolarea simulării în procese \textit{headless} distincte (nivel sistem de operare) garantează toleranța la eșec: prăbușirea unei instanțe de joc nu afectează integritatea backend-ului, limitând impactul erorilor de runtime la nivel local.
 
 \section{Sistemul Concurent de Sincronizare a Pachetului (Deck)}
 \label{sec:deck_sync}
 
-Gestiunea pachetelor de unități (\textit{Decks}) reprezintă o componentă critică a metagame-ului, unde jucătorul își configurează strategia înainte de a intra în matchmaking. Din punct de vedere tehnic, acest sistem trebuie să garanteze integritatea datelor și să gestioneze accesul concurent la resurse.
+\subsection{Definirea Problemei și Abordarea Arhitecturală}
+În aplicațiile interactive, manipularea rapidă a resurselor (ex. în proiectul curent: modificarea pachetelor de unități prin \textit{drag-and-drop}) implică apariția uonr provocări de sincronizare între client și server. Implementarea naivă ar fi recurgerea la apeluri HTTP sincrone, dar această abordare blochează interfața utilizatorului până la primirea răspunsului (Pessimistic Locking), ceea ce degradează semnificativ experiența vizuală.
 
-\subsection{Definirea Problemei (Problem Statement)}
-Sincronizarea pachetului implică actualizarea unei colecții de unități salvate în baza de date SQLite prin intermediul API-ului .NET. Provocarea principală constă în prevenirea stărilor inconsistente (ex: un pachet cu mai multe sau mai puține unități decât limita impusă) în condițiile în care utilizatorul poate trimite cereri rapide de modificare din interfața grafică (Godot).
+Implementarea aleasă are în vedere principiul \textit{Server-Authoritative}, unde severul validează inputurile utilizatorului și deține informațiile finale despre starea jocului. Avantajele landmarking-ului acestei abordări includ: fluiditatea interfeței, reducerea riscului de desincronizare și o experiență lipsită de sacadări vizuale.
 
-\subsection{Gestiunea Stării și Versionarea Locală}
-Pentru a asigura o experiență fluidă, clientul Godot menține o copie locală a stării pachetului. Fiecare modificare este marcată cu un indicator de stare (ex: \textit{dirty bit}) și este trimisă către server. Serverul validează consistența pachetului (ex: verifică dacă toate unitățile selectate sunt deblocate de utilizator) înainte de a persista schimbările.
+\subsection{Coada Asincronă și Debouncing-ul Arhitectural}
+Când utilizatorul solicită o mutare în pachetul de unități, componenta grafică deleagă noua configurație către serviciul (\texttt{DeckService}). Chiar dacă interfața vizuală rămâne interactivă și permite utilizatorului să efectueze noi mutări ale unităților (interacțiune non-blocantă), pachetul nu este actualizat instantaneu, ci așteaptă confirmarea serverului.
 
-\subsection{Operațiunile de Scriere și Excluderea Mutuală}
-La nivelul backend-ului, operațiunile de scriere asupra pachetului sunt protejate prin tranzacții la nivel de bază de date. Utilizând \texttt{Entity Framework Core}, procesul de actualizare urmează un model de tip \textit{Read-Modify-Write}. Pentru a gestiona concurența, se poate utiliza \textit{Optimistic Concurrency Control}, unde serverul verifică dacă datele nu au fost modificate de o altă cerere în intervalul dintre citire și scriere.
+Pentru a preveni aglomerarea rețelei cu cereri HTTP la fiecare cadru (fenomen de \textit{spamming}) și a gestiona latența, serviciul implementează un mecanism de \textit{debouncing} cu excludere mutuală. Configurația solicitată este salvată întrun dicționar partajat (\texttt{\_pendingDeckByRole}), iar un identificator numeric de versiune (\texttt{\_latestVersionByRole}) este incrementat. Această operațiune este protejată de un blocaj \texttt{lock} (\textit{Thread Safety}).
 
-\subsection{Optimizarea Datelor și Sincronizarea de Fundal}
-Sincronizarea nu blochează execuția thread-ului principal de randare din Godot. Cererile HTTP sunt efectuate asincron folosind \texttt{HttpRequest} și procesate prin semnale. În cazul unei erori de sincronizare (ex: pierderea conexiunii), sistemul implementează o logică de reîncercare (\textit{retry logic}) pentru a asigura convergența stării locale cu cea de pe server.
+O singură buclă asincronă (\texttt{ProcessSaveLoop}) este instanțiată pentru a iniția transmiterea datelor locale și a procesa modificările ce vin de pe server. Orice acțiune rapidă,  ulterioară a utilizatorului suprascrie pachetul ce este în așteptare pentru a fi actualizat pe server, fără a genera fire de execuție concurente.
+% --- PLACEHOLDER DIAGRAMĂ DE SECVENȚĂ ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/async-debouncing-sync.png}
+    \caption{Fluxul de sincronizare asincronă non-blocantă și anularea stărilor perimate}
+    \label{fig:async_sync}
+\end{figure}
+% ----------------------------------------
+
+\subsection{Validarea Răspunsurilor și Anularea Stărilor Precedente}
+Deoarece cererile HTTP sunt procesate asincron, este prezent riscul ca răspunsurile de pe server să ajungă decalat (\textit{race conditions}). Sistemul rezolvă această problemă la finalizarea fiecărui apel (Figura \ref{fig:async_sync}).
+
+Bucla evaluează dacă versiunea din momentul inițializării cererii coincide cu ultima versiune înregistrată la momentul primirii răspunsului (\texttt{IsLatestVersion}). Dacă utilizatorul a modificat pachetul de unități între timp, versiunea globală a fost deja actualizată(incrementată). În acest scenariu, răspunsul HTTP este considerat perimat (\textit{Stale Data}) și este ignorat, fără a declanșa vreo notificare pe ecran. Bucla extrage apoi noua configurație curentă a pachetului de unități și inițiază o nouă cerere către server.
+
+Doar în momentul in care versiunile coincid, serviciul emite un semnal către clasa globală \texttt{GameState}, ce are ca scop actualizarea vizuală a interfeței grafice. Astfel, chiar dacă jucătorul a efectuat mutări/schimbări succesive rapide, UI-ul se va actualiza doar după rezultatul ultimei acțiuni, oferind o decuplare robustă și garantând că utilizatorul vede pe ecran numai starea confirmată de backend-ul \textit{ASP.NET Core}.
