@@ -38,14 +38,14 @@ Gestionarea stării în medii \textit{multithreaded} necesită atomicitate tranz
 \label{sec:deck_sync}
 
 \subsection{Definirea Problemei și Abordarea Arhitecturală}
-În aplicațiile interactive, manipularea rapidă a resurselor (ex. în proiectul curent: modificarea pachetelor de unități prin \textit{drag-and-drop}) implică apariția uonr provocări de sincronizare între client și server. Implementarea naivă ar fi recurgerea la apeluri HTTP sincrone, dar această abordare blochează interfața utilizatorului până la primirea răspunsului (Pessimistic Locking), ceea ce degradează semnificativ experiența vizuală.
+În aplicațiile interactive, manipularea rapidă a resurselor (ex. în proiectul curent: modificarea pachetelor de unități prin \textit{drag-and-drop}) implică apariția unor provocări de sincronizare între client și server. Implementarea naivă ar fi recurgerea la apeluri HTTP sincrone, dar această abordare blochează interfața utilizatorului până la primirea răspunsului (Pessimistic Locking), ceea ce degradează semnificativ experiența vizuală.
 
-Implementarea aleasă are în vedere principiul \textit{Server-Authoritative}, unde severul validează inputurile utilizatorului și deține informațiile finale despre starea jocului. Avantajele landmarking-ului acestei abordări includ: fluiditatea interfeței, reducerea riscului de desincronizare și o experiență lipsită de sacadări vizuale.
+Implementarea aleasă are în vedere principiul \textit{Server-Authoritative}, unde severul validează inputurile utilizatorului și deține informațiile finale despre starea jocului. Avantajele acestei abordări includ: fluiditatea interfeței, reducerea riscului de desincronizare și o experiență lipsită de sacadări vizuale.
 
 \subsection{Coada Asincronă și Debouncing-ul Arhitectural}
 Când utilizatorul solicită o mutare în pachetul de unități, componenta grafică deleagă noua configurație către serviciul (\texttt{DeckService}). Chiar dacă interfața vizuală rămâne interactivă și permite utilizatorului să efectueze noi mutări ale unităților (interacțiune non-blocantă), pachetul nu este actualizat instantaneu, ci așteaptă confirmarea serverului.
 
-Pentru a preveni aglomerarea rețelei cu cereri HTTP la fiecare cadru (fenomen de \textit{spamming}) și a gestiona latența, serviciul implementează un mecanism de \textit{debouncing} cu excludere mutuală. Configurația solicitată este salvată întrun dicționar partajat (\texttt{\_pendingDeckByRole}), iar un identificator numeric de versiune (\texttt{\_latestVersionByRole}) este incrementat. Această operațiune este protejată de un blocaj \texttt{lock} (\textit{Thread Safety}).
+Pentru a preveni aglomerarea rețelei cu cereri HTTP la fiecare cadru (fenomen de \textit{spamming}) și a gestiona latența, serviciul implementează un mecanism de \textit{debouncing} cu excludere mutuală. Configurația solicitată este salvată într-un dicționar partajat (\texttt{\_pendingDeckByRole}), iar un identificator numeric de versiune (\texttt{\_latestVersionByRole}) este incrementat. Această operațiune este protejată de un blocaj \texttt{lock} (\textit{Thread Safety}).
 
 O singură buclă asincronă (\texttt{ProcessSaveLoop}) este instanțiată pentru a iniția transmiterea datelor locale și a procesa modificările ce vin de pe server. Orice acțiune rapidă,  ulterioară a utilizatorului suprascrie pachetul ce este în așteptare pentru a fi actualizat pe server, fără a genera fire de execuție concurente.
 % --- PLACEHOLDER DIAGRAMĂ DE SECVENȚĂ ---
