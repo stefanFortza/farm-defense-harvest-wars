@@ -9,6 +9,8 @@ La FMI, este mai valoros să ai câteva teste reale și relevante decât o suit�
 
 ---
 
+We use XUnit because Microsoft use it to test EF Core.
+
 ## 2. Testarea Unitară pe Backend (xUnit)
 Se recomandă testarea logicii pure, cum ar fi `MatchmakingService`.
 
