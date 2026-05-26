@@ -15,13 +15,16 @@ public class DeckController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IDeckService _deckService;
+    private readonly ILogger<DeckController> _logger;
 
     public DeckController(
         UserManager<ApplicationUser> userManager,
-        IDeckService deckService)
+        IDeckService deckService,
+        ILogger<DeckController> logger)
     {
         _userManager = userManager;
         _deckService = deckService;
+        _logger = logger;
     }
 
     [HttpGet("deck/{role}")]
@@ -59,6 +62,8 @@ public class DeckController : ControllerBase
         [FromBody] UpdateDeckDto request,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation(">>> PROFILING: Received UpdateDeck request for role {Role}", role);
+
         if (role is not (PlayerRole.Defender or PlayerRole.Attacker))
         {
             return BadRequest("Role must be Defender or Attacker.");

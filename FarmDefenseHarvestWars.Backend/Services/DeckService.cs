@@ -49,6 +49,11 @@ public class DeckService : IDeckService
 
     public async Task<DeckDto> UpdateDeckAsync(string userId, PlayerRole role, UpdateDeckDto request, CancellationToken cancellationToken = default)
     {
+        // ARTIFICIAL LATENCY FOR PROFILING: Simuleaza intarzieri de retea pentru a testa rezilienta la stale data.
+        // Acest delay permite clientului sa trimita mai multe versiuni noi in timp ce prima este inca in procesare.
+        int delayMs = Random.Shared.Next(100, 1001);
+        await Task.Delay(delayMs, cancellationToken);
+
         var validationError = ValidateDeckRequest(role, request, _unitRegistryProvider);
         if (validationError != null)
         {
