@@ -16,11 +16,14 @@ Testele au fost dezvoltată folosind librăriile \textit{xUnit} și \textit{NSub
     \item[Izolarea Anulărilor:] Scenariul \texttt{CancelMatchmaking\_ShouldCleanUpState} a validat că se produce curățarea referințelor din dicționarele de stare la abandon, prevenind "stările reziduale" care ar periclita meciurile viitoare.
 \end{description}
 
+
+% TODO - add citation for profiling and functional profiling
+
 \section{Evaluarea Sincronizării Asincrone (Client-Side)}
-Pentru validarea componentei \texttt{DeckService}, testarea automată a interfețelor grafice din Godot a fost înlocuită cu o metodologie de \textit{testare prin observabilitate instrumentată} (\textit{Functional Profiling}). S-a urmărit demonstrarea reducerii traficului HTTP și eliminarea condițiilor de cursă pe interfață.
+Pentru validarea componentei \texttt{DeckService}, testarea automată a UI-ului din Godot a fost înlocuită cu o metodologie de tipul \textit{testare prin observabilitate instrumentată} (\textit{Functional Profiling}). S-a urmărit în principal demonstrarea reducerii traficului HTTP.
 
 \begin{description}
-    \item[Eficiența mecanismului de Debouncing:] S-a rulat un test de sarcină sintetică aplicând 20 de mutări rapide de unități în interfața clientului. API-ul ASP.NET a fost instrumentat pentru a intercepta traficul, generând log-uri specifice de profilare. Analiza de execuție a confirmat recepționarea a exact \textbf{două cereri HTTP} (\texttt{>>> PROFILING: Received UpdateDeck}). Prima a fost expediată imediat, iar a doua a comasat restul de 19 acțiuni sub forma stării finale. Aceasta dovedește eliminarea totală a fenomenului de \textit{spamming} și o reducere a traficului de rețea cu 90\%.
+    \item[Eficiența mecanismului de Debouncing:] S-a rulat un test de ce a aplicat 20 de mutări rapide de unități în interfața clientului. API-ul ASP.NET a fost configurat pentru a intercepta traficul, afișând log-uri specifice de profilare. S-a confirmat recepționarea a exact \textbf{două cereri HTTP} (\texttt{>>> PROFILING: Received UpdateDeck}) de catre backend. Prima a fost expediată imediat, iar a doua a comasat restul de 19 acțiuni sub forma stării finale. Aceasta dovedește eliminarea fenomenului de \textit{spamming} și o reducere a traficului de rețea cu 90\%.
 
-    \item[Reziliența la Stale Data:] S-au introdus întârzieri artificiale (latență) pe server pentru a forța recepționarea răspunsurilor HTTP într-o ordine incorectă temporal. Observațiile au validat că algoritmul clientului identifică discrepanțele dintre \texttt{\_latestVersion} și versiunea răspunsului, respingând silențios actualizările vizuale perimate. Astfel, este garantată integritatea clasei \texttt{GameState} în fața fluctuațiilor de rețea.
+    \item[Reziliența la Stale Data:] S-au introdus întârzieri artificiale (latență) pe server pentru a impune recepționarea răspunsurilor HTTP într-o ordine incorectă temporal. Observațiile au validat că algoritmul clientului identifică discrepanțele dintre \texttt{\_latestVersion} și versiunea răspunsului, respingându-se actualizările vizuale perimate. Astfel, este confirmată integritatea clasei \texttt{GameState} în fața fluctuațiilor de rețea.
 \end{description}
