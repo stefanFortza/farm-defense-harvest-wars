@@ -1,10 +1,20 @@
 \chapter{Testare și Evaluare}
 \label{ch:testare}
 
-Validarea soluției tehnice este un pas critic în dezvoltarea unui software academic riguros. În cadrul proiectului \textit{Farm Defense: Harvest Wars}, procesul de testare a fost împărțit în două direcții principale: testarea logică a backend-ului și evaluarea performanței clientului de joc.
+Pentru a valida arhitectura au fost abordate două direcții: reziliența concurentă a backend-ului (matchmaking) și eficiența sincronizării pe client (deck building).
 
-\section{Testarea unitară a serviciilor backend}
-% TODO: Descrie utilizarea xUnit/Moq pentru a testa MatchmakingService, DeckService, etc.
+% TODO - mentionează motivul alegerii xUnit și NSubstitute, xUnit in ef core
+
+\section{Testarea Unitară și Validarea Concurenței}
+Testele au fost dezvoltată folosind librăriile \textit{xUnit} și \textit{NSubstitute}, punându-se accent pe robustețea firelor de execuție (\textit{thread-safety}) și determinismul logicii de matchmaking. Scenariile au confirmat următoarele aspecte:
+
+\begin{description}
+    \item[Thread-Safety:] Testul \texttt{MassMatchmaking\_ShouldBeThreadSafe} a rulat asincron 1000 de cereri concurente (500 atacatori, 500 apărători) folosind \texttt{Task.WhenAll}. S-a demonstrat că excluderea mutuală (\texttt{lock}) previne coliziunile de memorie (\textit{race conditions}), instanțiindu-se exact 500 de meciuri valide, fără duplicate.
+
+    \item[Idempotența Cererilor:] S-a confirmat prin testul \texttt{QueueForMatchAsync\_ShouldBeIdempotent} că apelurile redundante, succesive, de înscriere în coadă sunt ignorate nativ, astfel se garantează integritatea structurii \texttt{HashSet} (\texttt{\_queuedUsers}).
+
+    \item[Izolarea Anulărilor:] Scenariul \texttt{CancelMatchmaking\_ShouldCleanUpState} a validat că se produce curățarea referințelor din dicționarele de stare la abandon, prevenind "stările reziduale" care ar periclita meciurile viitoare.
+\end{description}
 
 \section{Evaluarea performanței și testarea funcțională a clientului}
 % TODO: Analizează FPS-ul, utilizarea memoriei în diferite scenarii de gameplay (ex: multe unități pe ecran).
