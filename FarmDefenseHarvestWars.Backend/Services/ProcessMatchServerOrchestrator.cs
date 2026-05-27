@@ -32,6 +32,7 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
 
     public Task<MatchServerEndpoint> StartMatchServerAsync(
         string matchId,
+        string callbackKey,
         IReadOnlyCollection<UnitUnlockDto> defenderDeck,
         IReadOnlyCollection<UnitUnlockDto> attackerDeck,
         int defenderAvatarIndex,
@@ -69,6 +70,8 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         startInfo.ArgumentList.Add(port.ToString());
         startInfo.ArgumentList.Add("--match-id");
         startInfo.ArgumentList.Add(matchId);
+        startInfo.ArgumentList.Add("--callback-key");
+        startInfo.ArgumentList.Add(callbackKey);
 
         startInfo.Environment["MATCH_ID"] = matchId;
         startInfo.Environment["DEFENDER_DECK_JSON"] = JsonSerializer.Serialize(defenderDeck, DeckSerializerOptions);
@@ -78,7 +81,7 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         startInfo.Environment["DEFENDER_NAME"] = defenderName;
         startInfo.Environment["ATTACKER_NAME"] = attackerName;
         startInfo.Environment["BACKEND_BASE_URL"] = _configuration["GodotServer:BackendBaseUrl"] ?? "http://localhost:5177";
-        startInfo.Environment["MATCH_SERVER_CALLBACK_KEY"] = _configuration["GodotServer:CallbackKey"] ?? string.Empty;
+        startInfo.Environment["MATCH_SERVER_CALLBACK_KEY"] = callbackKey;
 
         var process = Process.Start(startInfo);
         if (process == null)

@@ -86,6 +86,15 @@ public static class CmdArgs
                 i++;
                 BackendBaseUrl = userArgs[i];
             }
+            else if (arg.StartsWith("--callback-key="))
+            {
+                MatchServerCallbackKey = arg.Substring("--callback-key=".Length);
+            }
+            else if (arg == "--callback-key" && i + 1 < userArgs.Length)
+            {
+                i++;
+                MatchServerCallbackKey = userArgs[i];
+            }
         }
     }
 

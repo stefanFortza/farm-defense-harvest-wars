@@ -23,6 +23,7 @@ public class MatchmakingService : IMatchmakingService
     private readonly HashSet<string> _queuedUsers = [];
     private readonly Dictionary<string, MatchmakingStatusDto> _activeMatches = [];
     private readonly Dictionary<string, (string DefenderId, string AttackerId)> _matchParticipants = [];
+    private readonly Dictionary<string, string> _matchCallbackKeys = [];
     private readonly HashSet<string> _completedMatchIds = [];
 
     private readonly IServiceProvider _serviceProvider;
@@ -178,13 +179,20 @@ public class MatchmakingService : IMatchmakingService
         }
     }
 
-    public async Task CompleteMatchAsync(string matchId, MatchCompletionRequestDto request)
+    public async Task CompleteMatchAsync(string matchId, string callbackKey, MatchCompletionRequestDto request)
     {
         string? defenderId = null;
         string? attackerId = null;
 
         lock (_queueLock)
         {
+            if (!_matchCallbackKeys.TryGetValue(matchId, out var expectedKey) ||
+                !string.Equals(expectedKey, callbackKey, StringComparison.Ordinal))
+            {
+                _logger.LogWarning("CompleteMatchAsync: Invalid callback key for match {MatchId}.", matchId);
+                throw new UnauthorizedAccessException("Invalid match server callback key.");
+            }
+
             if (_matchParticipants.TryGetValue(matchId, out var participants))
             {
                 defenderId = participants.DefenderId;
@@ -198,6 +206,7 @@ public class MatchmakingService : IMatchmakingService
             _completedMatchIds.Add(matchId);
             RemoveActiveMatchEntriesByMatchIdInternal(matchId);
             _matchParticipants.Remove(matchId);
+            _matchCallbackKeys.Remove(matchId);
         }
 
         if (defenderId != null && attackerId != null)
@@ -406,8 +415,11 @@ public class MatchmakingService : IMatchmakingService
         var attackerUnits = await deckService.GetUnitCompositionAsync(attackerUserId, PlayerRole.Attacker, cancellationToken);
 
         string matchId = Guid.NewGuid().ToString("N");
+        string callbackKey = Guid.NewGuid().ToString("N");
+
         var endpoint = await _matchServerOrchestrator.StartMatchServerAsync(
             matchId,
+            callbackKey,
             defenderUnits,
             attackerUnits,
             defender?.AvatarIndex ?? 1,
@@ -441,6 +453,7 @@ public class MatchmakingService : IMatchmakingService
             _activeMatches[defenderUserId] = defenderStatus;
             _activeMatches[attackerUserId] = attackerStatus;
             _matchParticipants[matchId] = (defenderUserId, attackerUserId);
+            _matchCallbackKeys[matchId] = callbackKey;
         }
     }
 

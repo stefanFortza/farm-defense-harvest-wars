@@ -6,6 +6,7 @@ public interface IMatchServerOrchestrator
 {
     Task<MatchServerEndpoint> StartMatchServerAsync(
         string matchId,
+        string callbackKey,
         IReadOnlyCollection<UnitUnlockDto> defenderDeck,
         IReadOnlyCollection<UnitUnlockDto> attackerDeck,
         int defenderAvatarIndex,

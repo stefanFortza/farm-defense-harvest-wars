@@ -92,21 +92,28 @@ public class MatchmakingController : ControllerBase
             return BadRequest("Match id is required.");
         }
 
-        if (!IsValidMatchServerCallback())
+        if (!Request.Headers.TryGetValue("X-Match-Server-Key", out StringValues providedKey))
         {
-            return Unauthorized("Missing or invalid match server callback key.");
+            return Unauthorized("Missing match server callback key.");
         }
 
-        await _matchmakingService.CompleteMatchAsync(matchId, request);
+        try
+        {
+            await _matchmakingService.CompleteMatchAsync(matchId, providedKey.ToString(), request);
 
-        _logger.LogInformation(
-            "Match {MatchId} completion callback accepted. Winner={WinnerRole}, Reason={Reason}, IsAborted={IsAborted}",
-            matchId,
-            request.WinnerRole,
-            request.TerminationReason,
-            request.IsAborted);
+            _logger.LogInformation(
+                "Match {MatchId} completion callback accepted. Winner={WinnerRole}, Reason={Reason}, IsAborted={IsAborted}",
+                matchId,
+                request.WinnerRole,
+                request.TerminationReason,
+                request.IsAborted);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ex.Message);
+        }
     }
 
     [HttpGet("matchmaking/match/{matchId}/reward")]
@@ -125,21 +132,5 @@ public class MatchmakingController : ControllerBase
         }
 
         return Ok(reward);
-    }
-
-    private bool IsValidMatchServerCallback()
-    {
-        string? expectedKey = _configuration["GodotServer:CallbackKey"];
-        if (string.IsNullOrWhiteSpace(expectedKey))
-        {
-            return true;
-        }
-
-        if (!Request.Headers.TryGetValue("X-Match-Server-Key", out StringValues providedKey))
-        {
-            return false;
-        }
-
-        return string.Equals(expectedKey, providedKey.ToString(), StringComparison.Ordinal);
     }
 }
