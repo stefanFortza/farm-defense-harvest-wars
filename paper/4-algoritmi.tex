@@ -1,5 +1,7 @@
+\singlespacing
 \chapter{Algoritmi și Mecanici Principale}
 \label{ch:algoritmi}
+\doublespacing
 
 Complexitatea unui joc de strategie asimetric nu constă doar în logica vizuală sau în randarea graficii din client, ci și în eficiența sistemelor decizionale distribuite și în orchestrarea backend-ului. Acest capitol detaliază și analizează algoritmii centrali și arhitecturile concurente care guvernează funcționarea sistemului, accent-ul se pune pe eficiența computațională, gestionarea stărilor partajate și thread-safety.
 
@@ -46,7 +48,7 @@ Gestionarea memoriei în medii \textit{multithreaded} necesită atomicitate în 
 Implementarea aleasă are în vedere principiul \textit{Server-Authoritative}, unde serverul validează inputurile utilizatorului și deține informațiile finale despre starea jocului. Avantajele acestei abordări includ: fluiditatea interfeței, reducerea riscului de desincronizare și o experiență lipsită de sacadări vizuale.
 
 \subsection{Coada Asincronă și Debouncing-ul Arhitectural}
-Când utilizatorul solicită o mutare în pachetul de unități, componenta grafică deleagă noua configurație către serviciul (\texttt{DeckService}). Chiar dacă interfața vizuală rămâne interactivă și permite utilizatorului să efectueze noi mutări ale unităților (interacțiune non-blocantă), pachetul nu este actualizat instantaneu, ci așteaptă confirmarea serverului.
+Când se solicită o mutare în pachetul de unități, componenta grafică deleagă noua configurație către serviciul (\texttt{DeckService}). Chiar dacă interfața vizuală rămâne interactivă și permite utilizatorului să efectueze noi mutări ale unităților (interacțiune non-blocantă), pachetul nu este actualizat instantaneu, ci așteaptă confirmarea serverului.
 
 Pentru a preveni aglomerarea rețelei cu cereri HTTP la fiecare cadru (fenomen de \textit{spamming}) și a gestiona latența, serviciul implementează un mecanism de \textit{debouncing} cu excludere mutuală. Configurația solicitată este salvată într-un dicționar partajat (\texttt{\_pendingDeckByRole}), iar un identificator numeric de versiune (\texttt{\_latestVersionByRole}) este incrementat. Această operațiune este protejată de un blocaj \texttt{lock} (\textit{Thread Safety}).
 
@@ -63,6 +65,6 @@ O singură buclă asincronă (\texttt{ProcessSaveLoop}) este instanțiată pentr
 \subsection{Validarea Răspunsurilor și Anularea Stărilor Precedente}
 Deoarece cererile HTTP sunt procesate asincron, este prezent riscul ca răspunsurile de pe server să ajungă decalat (\textit{race conditions}). Sistemul rezolvă această problemă la finalizarea fiecărui apel (Figura \ref{fig:async_sync}).
 
-Bucla evaluează dacă versiunea din momentul inițializării cererii coincide cu ultima versiune înregistrată la momentul primirii răspunsului (\texttt{IsLatestVersion}). Dacă utilizatorul a modificat pachetul de unități între timp, versiunea globală a fost deja actualizată(incrementată). În acest scenariu, răspunsul HTTP este considerat perimat (\textit{Stale Data}) și este ignorat, fără a declanșa vreo notificare pe ecran. Bucla extrage apoi noua configurație curentă a pachetului de unități și inițiază o nouă cerere către server.
+Bucla evaluează dacă versiunea din momentul inițializării cererii coincide cu ultima versiune înregistrată la momentul primirii răspunsului (\texttt{IsLatestVersion}). Dacă pachetul s-a modificat între timp, versiunea globală a fost deja actualizată. Astfel, răspunsul HTTP este considerat perimat și este ignorat, fără a declanșa vreo notificare pe ecran. Bucla extrage apoi noua configurație curentă a pachetului și se inițiază o cerere către server.
 
 Doar în momentul in care versiunile coincid, serviciul emite un semnal către clasa globală \texttt{GameState}, ce are ca scop actualizarea vizuală a interfeței grafice. Astfel, chiar dacă jucătorul a efectuat mutări/schimbări succesive rapide, UI-ul se va actualiza doar după rezultatul ultimei acțiuni, oferind o decuplare robustă și garantând că utilizatorul vede pe ecran numai starea confirmată de backend-ul \textit{ASP.NET Core}.

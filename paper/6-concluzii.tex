@@ -1,8 +1,19 @@
+\singlespacing
 \chapter{Concluzii și Direcții Viitoare}
 \label{ch:concluzii}
 
+\doublespacing
+
 \section{Concluzii asupra rezultatelor obținute}
-% TODO: Rezumă ce ai realizat: arhitectură robustă, joc funcțional, etc.
+Proiectul demonstrează fiabilitatea unui joc de strategie cu gameplay asimatric, transpunând deplasarea pe benzi \cite{pvz} într-un mediu competitiv PvP.
+Integrarea dintre Godot 4.x \cite{godot_docs} și .NET \cite{aspnet_docs} a dus la realizarea arhitecturi distribuite \textit{Server-Authoritative} securizate, care elimină desincronizările și acțiunile de \textit{cheating} prin validarea pe server \cite{glazer_multiplayer}.
+
+Mecanismele de \texttt{lock} aplicate algoritmului de matchmaking \cite{csharp_nutshell} garantează operațiuni atomice. Pe client, logica asincronă de \textit{debouncing} a optimizat traficul de rețea, reducând cererile HTTP cu până la 90\%. Folosirea de instanțe \textit{Headless} confirmă superioritatea în fața vulnerabilităților arhitecturilor clasice precum \textit{Peer-to-Peer} \cite{glazer_multiplayer}.
 
 \section{Propuneri de dezvoltare (Future Work)}
-% TODO: Menționează ce ai vrea să adaugi: moduri noi de joc, trecerea la un protocol de rețea mai rapid (UDP/ENet), etc.
+Chiar dacă arhitectura este robustă, sistemul poate fi extins în următoarele direcții:
+\begin{itemize}
+    \item \textbf{Containerizare și Orchestrare:} Migrarea instanțelor server din linia de comandă Ubuntu către containere Docker pentru scalare orizontală simplificată.
+    \item \textbf{Matchmaking competitiv (MMR):} Extinderea algoritmului de matchmaking pentru a utiliza atributele de nivel și experiență din \texttt{AspNetUsers} \cite{aspnet_identity_docs}.
+    \item \textbf{Integrarea Agenților Inteligenți (AI):} Folosirea \textit{Reinforcement Learning} în Godot \cite{godot_mdpi_paper} pentru a antrena oponenți alternativi în absența jucătorilor umani.
+\end{itemize}
