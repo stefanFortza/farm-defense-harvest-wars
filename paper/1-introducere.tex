@@ -1,32 +1,20 @@
 \chapter{Introducere}
+\label{ch:introducere}
 
 \section{Contextul și motivația lucrării}
-% TODO: Descrie de ce ai ales să faci acest joc, pasiunea pentru genul Tower Defense/Asymmetric, și nevoia de soluții tehnice moderne.
+În procesul dezvoltării jocurilor de strategie multiplayer în timp real se întâmpină provocări critice: menținerea unei stări de joc sincronizate și minimizarea latenței. Motivația proiectului \textit{Farm Defense: Harvest Wars} pornește de la absența pe piață a unui titlu competitiv de tipul \textit{Tower Defense} cu gameplay de asimetrie totală (unde un jucător este exclusiv atacator, iar celălalt exclusiv apărător). Soluția propusă combină acest tip de \textit{gameplay} cu o arhitectură tehnică modernă: izolarea proceselor, scalabilitate concurentă și decuplarea UI-ului de un server autoritar, prevenindu-se astfel desincronizările și manipularea datelor în scop malițios, lipsit de fair-play (\textit{cheating}).
 
 \section{Stadiul actual al domeniului (Related Work)}
+Analiza industriei evidențiază un compromis constant între mecanicile asimetrice și sistemele de progresie. De exemplu, \textit{Plants vs. Zombies} a standardizat deplasarea liniară pe benzi și gestionarea eficientă a economiei interne (\textit{in-game resource management} pentru plasarea unităților), dar rămâne o experiență strict \textit{single-player} (PvE). Pe de altă parte, \textit{Clash Royale} excelează printr-un \textit{metagame} competitiv atractiv, introducând o progresie persistentă a pachetelor de unități în afara meciurilor, spre deosebire de resetarea specifică jocurilor de tip MOBA (ex. \textit{League of Legends}). Totuși, titlurile PvP populare (inclusiv \textit{Bloons TD Battles 2}) forțează o mecanică \textit{simetrică}, în care ambii jucători atacă și se apără simultan pe aceeași arenă.
 
-În dezvoltarea jocului \textit{Farm Defense: Harvest Wars}, au fost analizate mai multe titluri de referință care combină elemente de strategie, Tower Defense și mecanici asimetrice:
-
-\begin{itemize}
-    \item \textbf{Clash Royale (Supercell):} Un succes masiv în zona jocurilor de strategie pe mobil, care utilizează o perspectivă top-down și mecanici de tip \textit{lane-based combat}. Deși oferă o experiență multiplayer în timp real excelentă, arhitectura sa este una proprietară și puternic optimizată pentru latențe mici, folosind protocoale personalizate. \textit{Farm Defense} preia conceptul de duel, dar introduce o asimetrie mai pronunțată între rolurile de atacator și apărător.
-    \item \textbf{Plants vs. Zombies (PopCap Games):} Titlul definitoriu pentru genul Tower Defense pe grid. Acesta demonstrează eficiența unui sistem de grid fix pentru gestionarea spațială a unităților. Lucrarea de față extinde acest concept prin adăugarea unei componente de \textit{pathfinding} dinamic pentru unitățile atacatoare, care nu sunt limitate la o singură bandă fixă.
-    \item \textbf{Minion Masters (Betadwarf):} Un alt exemplu de hibrid între \textit{deck-building} și \textit{real-time strategy}. Acesta oferă o perspectivă interesantă asupra modului în care unitățile interacționează automat odată plasate pe câmpul de luptă.
-\end{itemize}
-
-Această analiză evidențiază nevoia unei soluții care să permită o asimetrie totală (gameplay diferit pentru cei doi jucători), susținută de o arhitectură modernă bazată pe .NET 10 și motorul Godot 4.
+Lucrarea de față integrează economia dinamică pe benzi și progresia persistentă a unităților într-un mediu PvP competitiv cu asimetrie totală. Pentru a susține tehnic acest sistem de \textit{metagame} și a preveni manipularea progresiei sau a resurselor economice prin rețele nesigure \textit{Peer-to-Peer} (P2P), proiectul implementează o arhitectură \textit{Server-Authoritative} strictă, validată centralizat.
 
 \section{Obiectivele proiectului}
-% TODO: Definește clar ce vrei să obții: un sistem multiplayer robust, o arhitectură scalabilă, etc.
+Pentru a soluționa provocările identificate, lucrarea urmărește trei obiective arhitecturale principale:
+\begin{enumerate}
+    \item \textbf{Model Server-Authoritative strict:} Izolarea logicii decizionale în instanțe de joc \textit{Godot Headless}, garantând că backend-ul este singurul arbitru al stării jocului și al economiei.
+    \item \textbf{Matchmaking rezilient:} Construirea unui algoritm tranzacțional atomic, capabil să proceseze concurent cererile jucătorilor, eliminând coliziunile de memorie (\textit{race conditions}).
+    \item \textbf{Sincronizare asincronă non-blocantă:} Proiectarea unui mecanism de \textit{debouncing} pe client care elimină suprasolicitarea rețelei (\textit{spamming} HTTP) și maschează latența.
+\end{enumerate}
 
-\section{Structura tezei}
-
-Prezenta lucrare este structurată în șase capitole, după cum urmează:
-
-\begin{itemize}
-    \item \textbf{Capitolul 1: Introducere} – Prezintă contextul, motivația și stadiul actual al domeniului, definind obiectivele principale ale proiectului.
-    \item \textbf{Capitolul 2: Tehnologii Utilizate} – Detaliază ecosistemul software ales (Godot, .NET 10, SQLite) și argumentează selecția acestora.
-    \item \textbf{Capitolul 3: Arhitectura Sistemului} – Descrie design-ul macro și micro al aplicației, utilizând modelul C4 și șabloane de proiectare precum \textit{Component} și \textit{State}.
-    \item \textbf{Capitolul 4: Algoritmi și Mecanici Principale} – Analizează logica de matchmaking și sistemele matematice care guvernează gameplay-ul.
-    \item \textbf{Capitolul 5: Testare și Evaluare} – Expune metodele de validare a funcționalității backend-ului și a performanței clientului.
-    \item \textbf{Capitolul 6: Concluzii și Direcții Viitoare} – Sintetizează rezultatele obținute și propune direcții de dezvoltare ulterioară.
-\end{itemize}
+\textit{Notă privind structura lucrării: Teza este organizată astfel încât să reflecte fluxul decizional tehnic: Capitolul 2 justifică ecosistemul tehnologic ales, Capitolul 3 detaliază arhitectura sistemului distribuit, Capitolul 4 analizează algoritmii concurenți de matchmaking, iar Capitolul 5 validează empiric eficiența și siguranța soluției propuse.}
