@@ -1,11 +1,12 @@
 \begin{abstractpage}
 
-\begin{abstract}{romanian}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vitae eros sit amet sem ornare varius. Duis eget felis eget risus posuere luctus. Integer odio metus, eleifend at nunc vitae, rutrum fermentum leo. Quisque rutrum vitae risus nec porta. Nunc eu orci euismod, ornare risus at, accumsan augue. Ut tincidunt pharetra convallis. Maecenas ut pretium ex. Morbi tellus dui, viverra quis augue at, tincidunt hendrerit orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis sollicitudin nunc. Sed sollicitudin purus dapibus mi fringilla, nec tincidunt nunc eleifend. Nam ut molestie erat. Integer eros dolor, viverra quis massa at, auctor.
-\end{abstract}
+    \begin{abstract}{romanian}
+        Prezenta lucrare descrie proiectarea și implementarea jocului \textit{Farm Defense: Harvest Wars}, un joc multiplayer PvP din categoria \textit{Tower Defense} cu logică de joc asimetrică. Sistemul elimină vulnerabilitățile rețelelor \textit{Peer-to-Peer} implementând o arhitectură strict \textit{Server-Authoritative}. Clientul este dezvoltat în Godot 4.x, iar backend-ul este construit cu ASP.NET Core, utilizând SQLite și Entity Framework Core pentru persistența datelor. Prin testare s-a validat un mecanism de \textit{debouncing} asincron ce reduce traficul HTTP cu până la cu 90\%, alături de un algoritm de matchmaking \textit{thread-safe} capabil de orchestrarea tranzacțiilor atomice trafic intens, garantând integritatea jocului.
+    \end{abstract}
 
-\begin{abstract}{english}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vitae eros sit amet sem ornare varius. Duis eget felis eget risus posuere luctus. Integer odio metus, eleifend at nunc vitae, rutrum fermentum leo. Quisque rutrum vitae risus nec porta. Nunc eu orci euismod, ornare risus at, accumsan augue. Ut tincidunt pharetra convallis. Maecenas ut pretium ex. Morbi tellus dui, viverra quis augue at, tincidunt hendrerit orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis sollicitudin nunc. Sed sollicitudin purus dapibus mi fringilla, nec tincidunt nunc eleifend. Nam ut molestie erat. Integer eros dolor, viverra quis massa at, auctor.
-\end{abstract}
+    \begin{abstract}{english}
+        This thesis describes the design and implementation of \textit{Farm Defense: Harvest Wars}, a PvP \textit{Tower Defense} multiplayer game with asymmetric gameplay.
+        The system mitigates \textit{Peer-to-Peer} vulnerabilities by enforcing a strict \textit{Server-Authoritative} architecture. The client is developed using Godot 4.x, while the backend is built with ASP.NET Core, utilizing SQLite and Entity Framework Core for data persistence. Tests validated an asynchronous client-side \textit{debouncing} mechanism that reduces HTTP traffic by up to 90\%, alongside a \textit{thread-safe} matchmaking algorithm capable of orchestrating atomic transactions under heavy load, ensuring complete game state integrity.
+    \end{abstract}
 
 \end{abstractpage}
