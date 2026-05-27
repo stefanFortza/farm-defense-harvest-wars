@@ -79,6 +79,8 @@ public class MatchmakingController : ControllerBase
         return Ok(_matchmakingService.GetStatusForUser(userId));
     }
 
+    // TODO - Add authentication/authorization to this endpoint, ensuring only the match server can call it (e.g., via a shared secret or client certificate)
+
     [AllowAnonymous]
     [HttpPost("matchmaking/match/{matchId}/complete")]
     public async Task<ActionResult> CompleteMatch(

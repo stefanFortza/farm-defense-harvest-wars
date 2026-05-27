@@ -6,7 +6,7 @@ Pentru a valida arhitectura au fost abordate două direcții: reziliența concur
 % TODO - mentionează motivul alegerii xUnit și NSubstitute, xUnit in ef core
 
 \section{Testarea Unitară și Validarea Concurenței}
-Testele au fost dezvoltată folosind librăriile \textit{xUnit} și \textit{NSubstitute}, punându-se accent pe robustețea firelor de execuție (\textit{thread-safety}) și determinismul logicii de matchmaking. Scenariile au confirmat următoarele aspecte:
+Testele au fost dezvoltate folosind librăriile \textit{xUnit} și \textit{NSubstitute}, punându-se accent pe robustețea firelor de execuție (\textit{thread-safety}) și determinismul logicii de matchmaking. Scenariile au confirmat următoarele aspecte:
 
 \begin{description}
     \item[Thread-Safety:] Testul \texttt{MassMatchmaking\_ShouldBeThreadSafe} a rulat asincron 1000 de cereri concurente (500 atacatori, 500 apărători) folosind \texttt{Task.WhenAll}. S-a demonstrat că excluderea mutuală (\texttt{lock}) previne coliziunile de memorie (\textit{race conditions}), instanțiindu-se exact 500 de meciuri valide, fără duplicate.
