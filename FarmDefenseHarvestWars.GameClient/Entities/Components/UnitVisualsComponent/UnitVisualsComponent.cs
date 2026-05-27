@@ -201,6 +201,12 @@ public partial class UnitVisualsComponent : Node
         {
             PlayProceduralAttackAnimation();
         }
+
+        // Play Attack Sound
+        if (_unit.Data?.AttackSound != null)
+        {
+            AudioController.Instance?.PlaySfx(_unit.Data.AttackSound);
+        }
     }
 
     private void OnUnitHitImpact(NodePath targetPath)
@@ -389,6 +395,12 @@ public partial class UnitVisualsComponent : Node
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
         _hurtTween.TweenProperty(_animatedSprite, "scale", new Vector2(1.0f, 1.0f), 0.1f)
             .SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+
+        // Play Hit Sound
+        if (_unit.Data?.HitSound != null)
+        {
+            AudioController.Instance?.PlaySfx(_unit.Data.HitSound);
+        }
     }
 
     private void PlayStateAnimation(UnitStateEnum state)

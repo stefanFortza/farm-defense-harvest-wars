@@ -25,6 +25,10 @@ public partial class UnitData : Resource
     [ExportGroup("Visuals")]
     [Export(PropertyHint.File, "*.tscn")] public string UnitScenePath { get; set; } = string.Empty;
     [Export] public PackedScene ProjectileScene { get; set; } = null!;
+    
+    [ExportGroup("Audio")]
+    [Export] public AudioStream? AttackSound { get; set; }
+    [Export] public AudioStream? HitSound { get; set; }
 
     [ExportGroup("Stats")]
     public bool IsStatic => Speed == 0f;

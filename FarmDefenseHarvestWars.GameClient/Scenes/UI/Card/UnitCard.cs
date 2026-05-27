@@ -49,6 +49,14 @@ public partial class UnitCard : PanelContainer
         UpdateVisualState();
     }
 
+    public override void _Notification(int what)
+    {
+        if (what == NotificationMouseEnter)
+        {
+            AudioController.Instance?.PlaySfx("res://Assets/Audio/ui/rollover1.ogg");
+        }
+    }
+
     public override void _GuiInput(InputEvent @event)
     {
         if (@event is not InputEventMouseButton mouseButton)
@@ -66,6 +74,7 @@ public partial class UnitCard : PanelContainer
             return;
         }
 
+        AudioController.Instance?.PlaySfx("res://Assets/Audio/ui/click1.ogg");
         EmitSignal(SignalName.CardPressed, (int)_data.Type);
     }
 

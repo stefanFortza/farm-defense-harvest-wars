@@ -73,6 +73,9 @@ public partial class GameWorld : Node2D
 		_gameHUD.Initialize(hudContext);
 
 		_managers.MatchManager.MatchEnded += OnMatchEnded;
+
+		// Play Gameplay Music
+		AudioController.Instance?.PlayGameplayMusic();
 	}
 
 	public override void _ExitTree()
@@ -81,6 +84,9 @@ public partial class GameWorld : Node2D
 		{
 			_managers.MatchManager.MatchEnded -= OnMatchEnded;
 		}
+		
+		// Switch back to Menu Music when leaving the world
+		AudioController.Instance?.PlayMenuMusic();
 	}
 
 	private void OnMatchEnded(int winnerRole)

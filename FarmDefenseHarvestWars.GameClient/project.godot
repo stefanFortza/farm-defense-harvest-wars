@@ -23,6 +23,7 @@ ProfilePoller="*res://_Autoload/ProfilePoller.cs"
 DeckService="*res://_Autoload/DeckService.cs"
 ToastX="*res://addons/toastx/runtime/toastx.gd"
 UIAnimation="*res://addons/godot_ui_animations/UIAnimationHandler.tscn"
+AudioController="*res://_Autoload/AudioController.tscn"
 
 [display]
 

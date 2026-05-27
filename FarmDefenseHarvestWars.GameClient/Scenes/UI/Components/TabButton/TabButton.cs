@@ -103,6 +103,7 @@ public partial class TabButton : TextureButton
 	private void OnToggled(bool _)
 	{
 		UpdateVisualState();
+		AudioController.Instance?.PlaySfx("res://Assets/Audio/ui/switch1.ogg");
 	}
 
 	private void OnMouseEntered()
@@ -110,6 +111,7 @@ public partial class TabButton : TextureButton
 		_isHovered = true;
 		UpdateVisualState();
 		AnimateHoverShader(1.0f);
+		AudioController.Instance?.PlaySfx("res://Assets/Audio/ui/rollover1.ogg");
 	}
 
 	private void OnMouseExited()
