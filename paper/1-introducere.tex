@@ -10,11 +10,11 @@ Analiza jocurilor din industrie evidențiază un compromis constant între mecan
 În lucrarea de față se integrează economia unităților, deplasarea pe benzi și progresia persistentă a unităților într-un mediu PvP competitiv cu gameplay asimetric total. Pentru a susține tehnic acest tip de sistem \textit{metagame} și a împiedica manipularea progresiei sau a resurselor economice prin arhitecturi de rețea nesigure precum \textit{Peer-to-Peer} (P2P), în proiect se implementează o arhitectură \textit{Server-Authoritative} strictă, validată centralizat.
 
 \section{Obiectivele proiectului}
-Pentru a soluționa provocările identificate, lucrarea urmărește trei obiective arhitecturale principale:
+În acest proiect se urmăresc trei obiective arhitecturale principale pentru a soluționa provocările identificate:
 \begin{enumerate}
-    \item \textbf{Model Server-Authoritative strict:} Izolarea logicii decizionale în instanțe de joc \textit{Godot Headless}, garantând că backend-ul este singurul arbitru al stării jocului și al economiei.
-    \item \textbf{Matchmaking rezilient:} Construirea unui algoritm tranzacțional atomic, capabil să proceseze concurent cererile jucătorilor, eliminând coliziunile de memorie (\textit{race conditions}).
-    \item \textbf{Sincronizare asincronă non-blocantă:} Proiectarea unui mecanism de \textit{debouncing} pe client care elimină suprasolicitarea rețelei (\textit{spamming} HTTP) și maschează latența.
+    \item \textbf{Model Server-Authoritative strict:} Izolarea logicii decizionale în instanțe server de joc \textit{Godot Headless}, garantând că backend-ul este unica sursă de adevăr a stării jocului și a economiei.
+    \item \textbf{Matchmaking rezilient:} Construirea unui algoritm executat atomic, capabil să proceseze concurent cererile jucătorilor, eliminându-se \textit{race conditions}.
+    \item \textbf{Sincronizare asincronă non-blocantă:} Proiectarea unui sistem de \textit{debouncing} pe client care micșorează suprasolicitarea traficului rețelei (\textit{spamming} HTTP) și maschează latența.
 \end{enumerate}
 
-\textit{Notă privind structura lucrării: Teza este organizată astfel încât să reflecte fluxul decizional tehnic: Capitolul 2 justifică ecosistemul tehnologic ales, Capitolul 3 detaliază arhitectura sistemului distribuit, Capitolul 4 analizează algoritmii concurenți de matchmaking, iar Capitolul 5 validează empiric eficiența și siguranța soluției propuse.}
+\textit{Notă privind structura lucrării: Teza este organizată astfel încât să fie reflectat fluxul decizional tehnic: În Capitolul 2 se argumentează ecosistemul tehnologic ales, Capitolul 3 detaliază arhitectura sistemului distribuit, Capitolul 4 analizează algoritmii concurenți de matchmaking, iar Capitolul 5 validează empiric/practic eficiența și securitatea soluției alese.}
