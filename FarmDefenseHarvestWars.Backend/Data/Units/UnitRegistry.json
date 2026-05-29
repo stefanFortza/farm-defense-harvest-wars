@@ -45,7 +45,7 @@
       "Name": "Duck",
       "MatchCost": 25,
       "UnlockCost": 100,
-      "IsDefaultUnlocked": true,
+      "IsDefaultUnlocked": false,
       "MaxHealth": 100,
       "Damage": 10,
       "Speed": 0,

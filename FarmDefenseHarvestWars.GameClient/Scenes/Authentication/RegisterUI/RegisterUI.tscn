@@ -62,5 +62,3 @@ custom_minimum_size = Vector2(90, 16)
 layout_mode = 2
 theme = ExtResource("1_fbgkp")
 horizontal_alignment = 1
-
-[connection signal="pressed" from="VBoxContainer/RegisterButton" to="." method="OnRegisterPressed"]
