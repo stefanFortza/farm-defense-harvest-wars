@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dkb7r3vnjlb16"
+path="res://.godot/imported/Dani Maccari Asset Pack - Jester's Distraction.ogg-6457fb2b615911fa29166389f0dae8b2.oggvorbisstr"
+
+[deps]
+
+source_file="res://Assets/Audio/Dani Maccari Asset Pack - Jester's Distraction.ogg"
+dest_files=["res://.godot/imported/Dani Maccari Asset Pack - Jester's Distraction.ogg-6457fb2b615911fa29166389f0dae8b2.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

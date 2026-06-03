@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://bn3rh822yeemu"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://bn3rh822yeemu"]
 
 [ext_resource type="Texture2D" uid="uid://clvam3y3rhiwb" path="res://Assets/Icons/OrcPeonIcon.png" id="1_7sn6x"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_gle30"]
+[ext_resource type="AudioStream" uid="uid://bmx04u5rvwp06" path="res://Assets/Audio/rpg/chop.ogg" id="2_sound_attack"]
+[ext_resource type="AudioStream" uid="uid://enfmijbfsmb8" path="res://Assets/Audio/impact/impactGeneric_light_002.ogg" id="3_sound_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3khc7"]
 atlas = ExtResource("1_7sn6x")
@@ -14,6 +16,8 @@ Role = 1
 Icon = SubResource("AtlasTexture_3khc7")
 IsDefaultUnlocked = true
 UnitScenePath = "uid://c54cg7ycjmlcy"
+AttackSound = ExtResource("2_sound_attack")
+HitSound = ExtResource("3_sound_hit")
 Speed = 15.0
 AttackRange = 15.0
 metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

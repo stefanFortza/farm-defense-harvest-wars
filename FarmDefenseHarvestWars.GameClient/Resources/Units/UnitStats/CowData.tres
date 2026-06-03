@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://b8wybv5au1sf0"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://b8wybv5au1sf0"]
 
 [ext_resource type="Texture2D" uid="uid://b02y6jrw0mxtw" path="res://Assets/Icons/CowIcon.png" id="1_uihsf"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_xkykw"]
+[ext_resource type="AudioStream" uid="uid://c6xck24sglej3" path="res://Assets/Audio/impact/impactSoft_medium_001.ogg" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://h7ybfcfmktu2" path="res://Assets/Audio/impact/impactSoft_heavy_001.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u46yd"]
 atlas = ExtResource("1_uihsf")
@@ -15,6 +17,8 @@ Icon = SubResource("AtlasTexture_u46yd")
 MatchCost = 75
 IsDefaultUnlocked = true
 UnitScenePath = "uid://cnl2b6psuuhba"
+AttackSound = ExtResource("3_attack")
+HitSound = ExtResource("4_hit")
 MaxHealth = 800
 Damage = 20
 AttackRange = 25.0

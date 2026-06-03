@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://dlgmkcdlo4gwr"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://dlgmkcdlo4gwr"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_jwvad"]
 [ext_resource type="Texture2D" uid="uid://76ke8ddtaiq7" path="res://Assets/Icons/GoblinMacemanIcon.png" id="1_m8chk"]
+[ext_resource type="AudioStream" uid="uid://dyfvxwmtriqf1" path="res://Assets/Audio/impact/impactPunch_heavy_002.ogg" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://jxu0n21qh2a3" path="res://Assets/Audio/impact/impactPunch_medium_002.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i6lce"]
 atlas = ExtResource("1_m8chk")
@@ -15,6 +17,8 @@ Name = "GoblinMaceman"
 Icon = SubResource("AtlasTexture_i6lce")
 MatchCost = 55
 UnitScenePath = "res://Entities/Units/Enemies/GoblinMacemanUnit/GoblinMacemanUnit.tscn"
+AttackSound = ExtResource("3_attack")
+HitSound = ExtResource("4_hit")
 MaxHealth = 350
 Damage = 35
 Speed = 30.0

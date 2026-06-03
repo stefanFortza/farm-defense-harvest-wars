@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://duncipcvc17go"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=7 format=3 uid="uid://duncipcvc17go"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_fkhoe"]
 [ext_resource type="Texture2D" uid="uid://c8x47xs6jh4op" path="res://Assets/Icons/OrcArcherIcon.png" id="1_y85tk"]
 [ext_resource type="PackedScene" uid="uid://eukwjiqqt4ab" path="res://Entities/Projectiles/ArrowProjectile/ArrowProjectile.tscn" id="2_jv1tf"]
+[ext_resource type="AudioStream" uid="uid://bt5venk0ouin6" path="res://Assets/Audio/impact/impactGeneric_light_000.ogg" id="2_sound_attack"]
+[ext_resource type="AudioStream" uid="uid://jbuovj2yuye4" path="res://Assets/Audio/impact/impactGeneric_light_003.ogg" id="3_sound_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jv1tf"]
 atlas = ExtResource("1_y85tk")
@@ -17,5 +19,7 @@ Icon = SubResource("AtlasTexture_jv1tf")
 MatchCost = 50
 UnitScenePath = "res://Entities/Units/Enemies/OrcArcherUnit/OrcArcherUnit.tscn"
 ProjectileScene = ExtResource("2_jv1tf")
+AttackSound = ExtResource("2_sound_attack")
+HitSound = ExtResource("3_sound_hit")
 Speed = 50.0
 AttackSpeed = 1.0

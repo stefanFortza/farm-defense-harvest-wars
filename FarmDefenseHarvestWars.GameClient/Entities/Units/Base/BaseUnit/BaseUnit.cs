@@ -85,6 +85,7 @@ public partial class BaseUnit : CharacterBody2D
 
         HealthComponent.HealthChanged += OnHealthChanged;
         HealthComponent.Died += Die;
+        
         _eventsBound = true;
 
         HealthComponent.Initialize(ScaledMaxHealth);

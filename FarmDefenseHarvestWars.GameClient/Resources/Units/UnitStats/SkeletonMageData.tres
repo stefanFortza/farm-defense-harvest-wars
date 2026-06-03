@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://dtnhbyump40a"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=7 format=3 uid="uid://dtnhbyump40a"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_2n5jv"]
 [ext_resource type="Texture2D" uid="uid://btor5cpp6c5jl" path="res://Assets/Icons/SkeletonMageIcon.png" id="1_3h25t"]
 [ext_resource type="PackedScene" uid="uid://cujp1pjbww226" path="res://Entities/Projectiles/MageProjectile/MageProjectile.tscn" id="2_lxm8o"]
+[ext_resource type="AudioStream" uid="uid://c15fflxdcc1ty" path="res://Assets/Audio/impact/impactGeneric_light_001.ogg" id="2_sound_attack"]
+[ext_resource type="AudioStream" uid="uid://dvx1qob0nn0fl" path="res://Assets/Audio/impact/impactGeneric_light_004.ogg" id="3_sound_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lxm8o"]
 atlas = ExtResource("1_3h25t")
@@ -17,6 +19,8 @@ Icon = SubResource("AtlasTexture_lxm8o")
 MatchCost = 70
 UnitScenePath = "uid://da45x0td82lu1"
 ProjectileScene = ExtResource("2_lxm8o")
+AttackSound = ExtResource("2_sound_attack")
+HitSound = ExtResource("3_sound_hit")
 MaxHealth = 120
 Damage = 25
 Speed = 25.0

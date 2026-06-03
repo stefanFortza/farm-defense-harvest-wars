@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://qvrjytrjhqem"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://qvrjytrjhqem"]
 
 [ext_resource type="Texture2D" uid="uid://bbm8pffdn7sal" path="res://Assets/Icons/SheepIcon.png" id="1_cxadq"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_o0v87"]
+[ext_resource type="AudioStream" uid="uid://h25ae20wtjw8" path="res://Assets/Audio/impact/impactSoft_medium_004.ogg" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://camr34ijyxt6i" path="res://Assets/Audio/impact/impactSoft_heavy_004.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7blk3"]
 atlas = ExtResource("1_cxadq")
@@ -13,6 +15,8 @@ Type = 3
 Name = "Sheep"
 Icon = SubResource("AtlasTexture_7blk3")
 UnitScenePath = "uid://0bdd718djcwv"
+AttackSound = ExtResource("3_attack")
+HitSound = ExtResource("4_hit")
 MaxHealth = 250
 Damage = 8
 AttackRange = 24.0

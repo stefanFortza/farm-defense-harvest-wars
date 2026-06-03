@@ -84,6 +84,17 @@ public partial class AudioController : Node
         }
 
         _musicPlayer.Stop();
+        
+        // Ensure the stream loops if it's an Ogg or MP3 stream
+        if (stream is AudioStreamOggVorbis oggStream)
+        {
+            oggStream.Loop = true;
+        }
+        else if (stream is AudioStreamMP3 mp3Stream)
+        {
+            mp3Stream.Loop = true;
+        }
+
         _musicPlayer.Stream = stream;
         _musicPlayer.Play();
     }

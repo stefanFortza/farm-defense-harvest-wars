@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://b34saaikrumva"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://b34saaikrumva"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_ajajn"]
 [ext_resource type="Texture2D" uid="uid://btd2r8is1tuvq" path="res://Assets/Icons/SkeletonSwordmanIcon.png" id="1_q2cpv"]
+[ext_resource type="AudioStream" uid="uid://ca3dmpy62r0bq" path="res://Assets/Audio/rpg/drawKnife1.ogg" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://bt5venk0ouin6" path="res://Assets/Audio/impact/impactGeneric_light_000.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ajajn"]
 atlas = ExtResource("1_q2cpv")
@@ -16,6 +18,8 @@ Icon = SubResource("AtlasTexture_ajajn")
 MatchCost = 20
 IsDefaultUnlocked = true
 UnitScenePath = "uid://cnapywfs7vvi7"
+AttackSound = ExtResource("3_attack")
+HitSound = ExtResource("4_hit")
 Damage = 12
 Speed = 45.0
 AttackRange = 15.0

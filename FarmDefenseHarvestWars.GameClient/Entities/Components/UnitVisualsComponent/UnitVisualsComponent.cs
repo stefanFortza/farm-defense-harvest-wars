@@ -194,18 +194,22 @@ public partial class UnitVisualsComponent : Node
         {
             _animatedSprite.Stop();
             _animatedSprite.Play(AttackAnimation);
+
+            // For Sprite animations, we delay the sound slightly to match the typical 'swing' frame
+            if (_unit.Data?.AttackSound != null)
+            {
+                GetTree().CreateTimer(0.1f).Timeout += () =>
+                {
+                    if (GodotObject.IsInstanceValid(this))
+                        AudioController.Instance?.PlaySfx(_unit.Data.AttackSound);
+                };
+            }
         }
 
         // Play procedural on top or as fallback if it's a defender
         if (isDefender && !hasAttackAnimation)
         {
             PlayProceduralAttackAnimation();
-        }
-
-        // Play Attack Sound
-        if (_unit.Data?.AttackSound != null)
-        {
-            AudioController.Instance?.PlaySfx(_unit.Data.AttackSound);
         }
     }
 
@@ -318,6 +322,12 @@ public partial class UnitVisualsComponent : Node
         _attackTween.Parallel().TweenProperty(_animatedSprite, "scale", new Vector2(1.1f, 0.9f), strikeTime)
             .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
 
+        // Play Attack Sound during the strike
+        if (_unit.Data?.AttackSound != null)
+        {
+            _attackTween.Parallel().TweenCallback(Callable.From(() => AudioController.Instance?.PlaySfx(_unit.Data.AttackSound)));
+        }
+
         // Lean into the hit (Positive rotation leans forward relative to natural face)
         float rotationAngle = Mathf.DegToRad(8f);
         _attackTween.Parallel().TweenProperty(_animatedSprite, "rotation", rotationAngle, strikeTime)
@@ -363,6 +373,12 @@ public partial class UnitVisualsComponent : Node
             _animatedSprite.Modulate = new Color(2f, 2f, 2f, 1f);
             var flashTween = CreateTween();
             flashTween.TweenProperty(_animatedSprite, "modulate", Colors.White, 0.2f);
+            
+            // Play Attack Sound at fire moment
+            if (_unit.Data?.AttackSound != null)
+            {
+                AudioController.Instance?.PlaySfx(_unit.Data.AttackSound);
+            }
         }));
 
         // 3. Fire Response (Recoil): Snap Backward + Subtle Stretch (5%)

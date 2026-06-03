@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://bm3bptt6vqvrg"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://bm3bptt6vqvrg"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_27sli"]
 [ext_resource type="Texture2D" uid="uid://2notf8bp6jtv" path="res://Assets/Icons/AngelIcon.png" id="1_p8kat"]
+[ext_resource type="AudioStream" uid="uid://c15fflxdcc1ty" path="res://Assets/Audio/impact/impactGeneric_light_001.ogg" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://dvx1qob0nn0fl" path="res://Assets/Audio/impact/impactGeneric_light_004.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6doda"]
 atlas = ExtResource("1_p8kat")
@@ -15,6 +17,8 @@ Name = "Angel"
 Icon = SubResource("AtlasTexture_6doda")
 MatchCost = 50
 UnitScenePath = "res://Entities/Units/Enemies/AngelUnit/AngelUnit.tscn"
+AttackSound = ExtResource("3_attack")
+HitSound = ExtResource("4_hit")
 Speed = 50.0
 AttackRange = 20.0
 AttackSpeed = 1.0

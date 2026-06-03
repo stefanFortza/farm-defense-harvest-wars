@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://co8s18xfuyd3d"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://co8s18xfuyd3d"]
 
 [ext_resource type="Texture2D" uid="uid://bwhtcjn8yex8" path="res://Assets/Icons/PigIcon.png" id="1_6nb2c"]
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_p7oxb"]
+[ext_resource type="AudioStream" uid="uid://b54dq21hg21oy" path="res://Assets/Audio/impact/impactSoft_medium_003.ogg" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://bm02iassih8ns" path="res://Assets/Audio/impact/impactSoft_heavy_003.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ydo0q"]
 atlas = ExtResource("1_6nb2c")
@@ -14,6 +16,8 @@ Name = "Pig"
 Icon = SubResource("AtlasTexture_ydo0q")
 MatchCost = 40
 UnitScenePath = "uid://vwvflu0isd8c"
+AttackSound = ExtResource("3_attack")
+HitSound = ExtResource("4_hit")
 MaxHealth = 400
 Damage = 25
 AttackRange = 24.0

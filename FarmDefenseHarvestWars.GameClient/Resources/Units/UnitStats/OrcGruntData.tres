@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://c8qupwyxareaw"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://c8qupwyxareaw"]
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_8e71c"]
 [ext_resource type="Texture2D" uid="uid://wy5nru734ywk" path="res://Assets/Icons/OrcGruntIcon.png" id="1_hfbrq"]
+[ext_resource type="AudioStream" uid="uid://ca3dmpy62r0bq" path="res://Assets/Audio/rpg/drawKnife1.ogg" id="2_sound_attack"]
+[ext_resource type="AudioStream" uid="uid://c15fflxdcc1ty" path="res://Assets/Audio/impact/impactGeneric_light_001.ogg" id="3_sound_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c5dcp"]
 atlas = ExtResource("1_hfbrq")
@@ -15,5 +17,7 @@ Name = "OrcGrunt"
 Icon = SubResource("AtlasTexture_c5dcp")
 MatchCost = 50
 UnitScenePath = "res://Entities/Units/Enemies/OrcGruntUnit/OrcGruntUnit.tscn"
+AttackSound = ExtResource("2_sound_attack")
+HitSound = ExtResource("3_sound_hit")
 Speed = 50.0
 AttackSpeed = 1.0
