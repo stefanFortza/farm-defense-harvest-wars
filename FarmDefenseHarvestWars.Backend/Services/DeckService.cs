@@ -61,7 +61,9 @@ public class DeckService : IDeckService
         }
 
         HashSet<UnitType> unlockedUnits = await _profileService.GetUnlockedUnitTypesForRoleAsync(userId, role, cancellationToken);
-        if (request.Units.Any(unit => !unlockedUnits.Contains(unit)))
+        var defaultUnlocked = _unitRegistryProvider.GetDefaultUnlockedUnitsForRole(role).ToHashSet();
+
+        if (request.Units.Any(unit => !unlockedUnits.Contains(unit) && !defaultUnlocked.Contains(unit)))
         {
             throw new InvalidOperationException($"Deck contains units that are not unlocked for role {role}.");
         }

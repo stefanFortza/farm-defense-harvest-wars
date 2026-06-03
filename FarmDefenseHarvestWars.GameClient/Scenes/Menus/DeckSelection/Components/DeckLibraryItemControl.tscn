@@ -61,7 +61,7 @@ region = Rect2(481, 177, 14, 14)
 texture = SubResource("AtlasTexture_x73uj")
 region_rect = Rect2(0, 0, 14, 14)
 
-[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_statusLabel", "_levelLabel", "_infoButton")]
+[node name="DeckLibraryItemControl" type="PanelContainer" node_paths=PackedStringArray("_icon", "_statusLabel", "_levelLabel", "_unlockPriceLabel", "_infoButton")]
 custom_minimum_size = Vector2(32, 32)
 offset_right = 32.0
 offset_bottom = 32.0
@@ -74,6 +74,7 @@ script = ExtResource("1_script")
 _icon = NodePath("Icon")
 _statusLabel = NodePath("Control/StatusLabel")
 _levelLabel = NodePath("Control/LevelLabel")
+_unlockPriceLabel = NodePath("Control/UnlockPriceLabel")
 _infoButton = NodePath("Control/InfoButton")
 _dragPreviewScene = ExtResource("2_dragpreview")
 _tooltipScene = ExtResource("3_tooltip")
@@ -94,6 +95,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="LevelLabel" type="Label" parent="Control"]
+visible = false
 layout_mode = 0
 offset_top = 16.0
 offset_right = 20.0
@@ -106,14 +108,33 @@ label_settings = SubResource("LabelSettings_level")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StatusLabel" type="Label" parent="Control"]
+[node name="UnlockPriceLabel" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = -4.0
-offset_top = -4.0
-offset_bottom = 4.0
+offset_left = -7.0
+offset_top = 14.0
+offset_right = 27.0
+offset_bottom = 29.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxTexture_mlepj")
+text = "Price: 100"
+label_settings = SubResource("LabelSettings_level")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -12.0
+offset_top = -5.0
+offset_right = 13.0
+offset_bottom = 3.0
+grow_horizontal = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
-text = "L"
+text = "Locked"
 label_settings = SubResource("LabelSettings_status")
 horizontal_alignment = 2
 

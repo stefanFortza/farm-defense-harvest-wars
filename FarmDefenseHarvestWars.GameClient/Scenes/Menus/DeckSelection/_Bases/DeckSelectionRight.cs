@@ -236,8 +236,55 @@ public abstract partial class DeckSelectionRight : Control
             }
 
             item.Setup(unitData, alreadyInDeck, isUnlocked, isUnlocking, _isSavingDeck, role);
+            item.UnlockRequested += OnUnlockRequested;
             _libraryContainer.AddChild(item);
             _libraryItems.Add(item);
+        }
+    }
+
+    private async void OnUnlockRequested(int unitTypeValue)
+    {
+        var unitType = (UnitType)unitTypeValue;
+        if (_unlockInFlight.Contains(unitType))
+        {
+            return;
+        }
+
+        var unitData = _unitRegistry.GetUnitData(unitType);
+        if (unitData == null)
+        {
+            return;
+        }
+
+        var profile = GameState.Instance?.CurrentProfile;
+        if (profile == null)
+        {
+            return;
+        }
+
+        if (profile.Gold < unitData.UnlockCost)
+        {
+            ToastNotifications.TryError($"Not enough gold to unlock {unitData.Name}!", 2.0);
+            return;
+        }
+
+        _unlockInFlight.Add(unitType);
+        Refresh();
+
+        try
+        {
+            await NetworkBootstrap.Instance.Menu.UnlockUnitAsync(unitType);
+            ToastNotifications.TrySuccess($"{unitData.Name} unlocked!", 1.5);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to unlock {unitType}: {ex.Message}");
+            ToastNotifications.TryError($"Failed to unlock {unitData.Name}.", 2.5);
+        }
+        finally
+        {
+            _unlockInFlight.Remove(unitType);
+            Refresh();
         }
     }
 

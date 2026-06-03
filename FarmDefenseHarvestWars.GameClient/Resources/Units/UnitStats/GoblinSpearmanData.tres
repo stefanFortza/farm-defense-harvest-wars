@@ -13,6 +13,7 @@ Type = 7
 Role = 1
 Name = "GoblinSpearman"
 Icon = SubResource("AtlasTexture_q7lc1")
+IsDefaultUnlocked = true
 UnitScenePath = "uid://djrvfvsvhg0de"
 Speed = 10.0
 AttackRange = 15.0

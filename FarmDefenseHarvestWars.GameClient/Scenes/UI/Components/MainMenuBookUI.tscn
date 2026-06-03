@@ -84,6 +84,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="MatchMakingPage" parent="ContentOverlay/LeftZone" index="0" instance=ExtResource("5_luq8n")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -109,13 +110,13 @@ layout_mode = 2
 size_flags_horizontal = 10
 
 [node name="MatchMakingPage" parent="ContentOverlay/RightZone" index="0" instance=ExtResource("10_matchmaking_right")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 16
 
 [node name="DeckSelectionAttacker" parent="ContentOverlay/RightZone" index="1" instance=ExtResource("8_right_attacker")]
-visible = false
 layout_mode = 2
 
 [node name="DeckSelectionDefender" parent="ContentOverlay/RightZone" index="2" instance=ExtResource("9_right_defender")]

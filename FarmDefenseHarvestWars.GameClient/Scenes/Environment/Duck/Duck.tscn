@@ -37,6 +37,8 @@ animations = [{
 }]
 
 [node name="Duck" instance=ExtResource("1_2om4w")]
+MinSpeedScale = 0.5
+MaxSpeedScale = 0.8
 
 [node name="FakeLight" parent="." index="0" instance=ExtResource("3_xlxh8")]
 position = Vector2(0, -4)

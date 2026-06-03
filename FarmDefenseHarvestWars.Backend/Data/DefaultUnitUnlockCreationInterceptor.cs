@@ -68,7 +68,7 @@ public sealed class DefaultUnitUnlockCreationInterceptor : SaveChangesIntercepto
         }
     }
 
-    private static void AddMissingUnlocksForRole(
+    private void AddMissingUnlocksForRole(
         DbContext context,
         ISet<string> existingUnlockKeys,
         string userId,
@@ -78,6 +78,12 @@ public sealed class DefaultUnitUnlockCreationInterceptor : SaveChangesIntercepto
     {
         foreach (UnitType unit in units)
         {
+            var unitData = _unitRegistryProvider.GetUnit(unit);
+            if (unitData == null || !unitData.IsDefaultUnlocked)
+            {
+                continue;
+            }
+
             string key = BuildKey(userId, role, unit);
             if (!existingUnlockKeys.Add(key))
             {

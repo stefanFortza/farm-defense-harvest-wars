@@ -14,6 +14,7 @@ Role = 1
 Name = "Skeleton"
 Icon = SubResource("AtlasTexture_ajajn")
 MatchCost = 20
+IsDefaultUnlocked = true
 UnitScenePath = "uid://cnapywfs7vvi7"
 Damage = 12
 Speed = 45.0

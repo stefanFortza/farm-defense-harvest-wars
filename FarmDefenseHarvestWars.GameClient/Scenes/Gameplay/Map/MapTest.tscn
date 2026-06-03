@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://by43f2iyitjl7"]
+[gd_scene load_steps=58 format=4 uid="uid://by43f2iyitjl7"]
 
 [ext_resource type="TileSet" uid="uid://d328k3ewg0nay" path="res://Resources/DefaultTileset.tres" id="1_hdriw"]
 [ext_resource type="Script" uid="uid://i5qavmfqfft5" path="res://Scenes/Gameplay/Map/Map.cs" id="1_kspip"]
@@ -11,6 +11,12 @@
 [ext_resource type="PackedScene" uid="uid://btot2av0c6jes" path="res://Scenes/Environment/Swan/Swan.tscn" id="9_i2f6i"]
 [ext_resource type="PackedScene" uid="uid://b3fbachdbj8s4" path="res://Scenes/Environment/BigTorch/BigTorch.tscn" id="10_roe8g"]
 [ext_resource type="PackedScene" uid="uid://cno8ai6uhb5qw" path="res://Scenes/Environment/Duck/Duck.tscn" id="11_iv0cc"]
+[ext_resource type="Texture2D" uid="uid://3qxwgtss6jeq" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_1_Anim.png" id="12_gfgu5"]
+[ext_resource type="Script" uid="uid://dyr2485ubvhjv" path="res://Scenes/Environment/AnimatedDecoration/AnimatedDecoration2.cs" id="13_n84ke"]
+[ext_resource type="Texture2D" uid="uid://cxe6k8clyusad" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Flower_Animations/Not_Potted/Flowers_3_Anim.png" id="13_xnwqc"]
+[ext_resource type="Texture2D" uid="uid://bo5maiamntide" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Muschroom_Animations/muschroom_3_Anim.png" id="14_n84ke"]
+[ext_resource type="Texture2D" uid="uid://ns32e2kwklx3" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Grass_Animations/Grass_2_Anim.png" id="15_o7oax"]
+[ext_resource type="PackedScene" uid="uid://ssyrt8ajad2w" path="res://Scenes/Environment/LogWater.tscn" id="17_n84ke"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4srud"]
 shader = ExtResource("5_omu8v")
@@ -26,6 +32,270 @@ region = Rect2(336, 0, 112, 144)
 [sub_resource type="AtlasTexture" id="AtlasTexture_lcrm0"]
 atlas = ExtResource("7_78ftc")
 region = Rect2(80, 0, 80, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uquch"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(0, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_akgaq"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(16, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_di625"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(32, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0rc4q"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(48, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_webxl"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(64, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4v7xj"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(80, 112, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nv76p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uquch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akgaq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_di625")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0rc4q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_webxl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4v7xj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wcrp8"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(0, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_og32e"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(16, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nyenn"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(32, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wp76f"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(48, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwjaf"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(64, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_unebe"]
+atlas = ExtResource("12_gfgu5")
+region = Rect2(80, 80, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xq28l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wcrp8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_og32e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nyenn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wp76f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qwjaf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_unebe")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1plon"]
+atlas = ExtResource("13_xnwqc")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lwrqu"]
+atlas = ExtResource("13_xnwqc")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4o1dy"]
+atlas = ExtResource("13_xnwqc")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4siv5"]
+atlas = ExtResource("13_xnwqc")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lbk0w"]
+atlas = ExtResource("13_xnwqc")
+region = Rect2(64, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_15rbs"]
+atlas = ExtResource("13_xnwqc")
+region = Rect2(80, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bv8nd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1plon")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lwrqu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4o1dy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4siv5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lbk0w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_15rbs")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m76so"]
+atlas = ExtResource("14_n84ke")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_msxsi"]
+atlas = ExtResource("14_n84ke")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsm2k"]
+atlas = ExtResource("14_n84ke")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_81kpo"]
+atlas = ExtResource("14_n84ke")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mm5sy"]
+atlas = ExtResource("14_n84ke")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r8yng"]
+atlas = ExtResource("14_n84ke")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ml1rt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m76so")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_msxsi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsm2k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_81kpo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mm5sy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r8yng")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6q873"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_254ht"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kqust"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3pu5i"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y6qst"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8n0c"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0qbh5"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mfkse"]
+atlas = ExtResource("15_o7oax")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y0isv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6q873")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_254ht")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kqust")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3pu5i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y6qst")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8n0c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0qbh5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mfkse")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="MapTest" type="Node2D" node_paths=PackedStringArray("GridSystem")]
 script = ExtResource("1_kspip")
@@ -126,4 +396,208 @@ position = Vector2(246, 152)
 position = Vector2(246, 34)
 
 [node name="Duck" parent="Environment" instance=ExtResource("11_iv0cc")]
-position = Vector2(319, 165)
+position = Vector2(306, 159)
+
+[node name="Flower" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(229, 163)
+sprite_frames = SubResource("SpriteFrames_nv76p")
+autoplay = "default"
+frame_progress = 0.41990656
+script = ExtResource("13_n84ke")
+
+[node name="Flower2" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(118, 148)
+sprite_frames = SubResource("SpriteFrames_nv76p")
+autoplay = "default"
+frame_progress = 0.21749133
+script = ExtResource("13_n84ke")
+
+[node name="Flower3" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(112, 8)
+sprite_frames = SubResource("SpriteFrames_xq28l")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Flower4" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(272, 155)
+sprite_frames = SubResource("SpriteFrames_bv8nd")
+autoplay = "default"
+frame_progress = 0.57147163
+script = ExtResource("13_n84ke")
+
+[node name="Mushroom" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(11, 159)
+sprite_frames = SubResource("SpriteFrames_ml1rt")
+autoplay = "default"
+frame_progress = 0.120235994
+script = ExtResource("13_n84ke")
+
+[node name="Grass" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(103, 154)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass2" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(112, 160)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass3" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(195, 148)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass4" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(215, 146)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass5" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(216, 161)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass6" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(234, 149)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass7" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(248, 161)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass8" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(212, 173)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass9" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(245, 172)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass10" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(209, 28)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass11" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(222, 31)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass12" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(160, 27)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass13" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(131, 9)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass14" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(97, 11)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass15" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(74, 9)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass16" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(78, 34)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass17" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(81, 129)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass18" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(74, 117)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass19" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(78, 95)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass20" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(16, 7)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass21" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(45, 11)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass22" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(30, 13)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass23" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(57, 14)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass24" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(56, 2)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass25" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(9, 145)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="Grass26" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(23, 167)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[node name="LogWater" parent="Environment" instance=ExtResource("17_n84ke")]
+position = Vector2(299, 170)
+
+[node name="AnimatedSprite2D" parent="Environment/LogWater" index="0"]
+frame_progress = 0.33795196
+
+[node name="Grass27" type="AnimatedSprite2D" parent="Environment"]
+position = Vector2(275, 181)
+sprite_frames = SubResource("SpriteFrames_y0isv")
+autoplay = "default"
+script = ExtResource("13_n84ke")
+
+[editable path="Environment/LogWater"]

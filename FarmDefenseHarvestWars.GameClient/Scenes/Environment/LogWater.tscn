@@ -1,0 +1,75 @@
+[gd_scene load_steps=12 format=3 uid="uid://ssyrt8ajad2w"]
+
+[ext_resource type="PackedScene" uid="uid://b2g8ej6fu3j7e" path="res://Scenes/Environment/AnimatedDecoration/AnimatedDecoration.tscn" id="1_cooh5"]
+[ext_resource type="Texture2D" uid="uid://bs1j8j0hsahag" path="res://Assets/Cute_Fantasy/Cute_Fantasy/Outdoor decoration/Outdoor_Decor_Animations/Water_Decor_Animations/Other_Water_Decor/Log_2_Water_Anim.png" id="2_ggvc7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wdfrc"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(0, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ma0u4"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(32, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8hglp"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(64, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6sho5"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(96, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3ctq"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(128, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kovob"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(160, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tybhu"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(192, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o63nh"]
+atlas = ExtResource("2_ggvc7")
+region = Rect2(224, 0, 32, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hjuc3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wdfrc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ma0u4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8hglp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6sho5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3ctq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kovob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tybhu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o63nh")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="LogWater" instance=ExtResource("1_cooh5")]
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_hjuc3")
+autoplay = "default"
+frame_progress = 0.5235561

@@ -12,6 +12,7 @@ script = ExtResource("1_gle30")
 Type = 8
 Role = 1
 Icon = SubResource("AtlasTexture_3khc7")
+IsDefaultUnlocked = true
 UnitScenePath = "uid://c54cg7ycjmlcy"
 Speed = 15.0
 AttackRange = 15.0

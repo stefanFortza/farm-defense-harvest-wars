@@ -20,7 +20,7 @@ public partial class UnitData : Resource
 
     [ExportGroup("Meta Economy (Backend Shop)")]
     [Export] public int UnlockCost { get; set; } = 100;
-    [Export] public bool IsDefaultUnlocked { get; set; } = true;
+    [Export] public bool IsDefaultUnlocked { get; set; } = false;
 
     [ExportGroup("Visuals")]
     [Export(PropertyHint.File, "*.tscn")] public string UnitScenePath { get; set; } = string.Empty;

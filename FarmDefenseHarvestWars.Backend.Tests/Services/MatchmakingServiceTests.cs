@@ -43,7 +43,7 @@ public class MatchmakingServiceTests
 
         // Default mock behaviors
         _matchServerOrchestrator.StartMatchServerAsync(
-            Arg.Any<string>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(),
             Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(new MatchServerEndpoint("localhost", 1234));
 
@@ -86,7 +86,7 @@ public class MatchmakingServiceTests
 
         // Orchestrator should be called exactly 500 times
         await _matchServerOrchestrator.Received(500).StartMatchServerAsync(
-            Arg.Any<string>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(),
             Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
@@ -109,7 +109,7 @@ public class MatchmakingServiceTests
         await _sut.QueueForMatchAsync("defender1", PlayerRole.Defender);
 
         await _matchServerOrchestrator.Received(1).StartMatchServerAsync(
-            Arg.Any<string>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(), Arg.Any<IReadOnlyCollection<UnitUnlockDto>>(),
             Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 

@@ -9,6 +9,9 @@ public partial class AnimatedDecoration : Node2D
 
 	[Export] public bool RandomizeStartFrame { get; set; } = true;
 
+	[Export] public float MinSpeedScale { get; set; } = 0.9f;
+	[Export] public float MaxSpeedScale { get; set; } = 1.1f;
+
 	public override void _Ready()
 	{
 		this.EnsureNotNull(AnimSprite, nameof(AnimSprite));
@@ -22,7 +25,7 @@ public partial class AnimatedDecoration : Node2D
 			{
 				AnimSprite.Frame = (int)(GD.Randi() % frameCount);
 
-				AnimSprite.SpeedScale = (float)GD.RandRange(0.9, 1.1);
+				AnimSprite.SpeedScale = (float)GD.RandRange(MinSpeedScale, MaxSpeedScale);
 			}
 		}
 	}

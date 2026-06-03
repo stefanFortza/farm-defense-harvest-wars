@@ -13,6 +13,7 @@ Type = 1
 Name = "Cow"
 Icon = SubResource("AtlasTexture_u46yd")
 MatchCost = 75
+IsDefaultUnlocked = true
 UnitScenePath = "uid://cnl2b6psuuhba"
 MaxHealth = 800
 Damage = 20

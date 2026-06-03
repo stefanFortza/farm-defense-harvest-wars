@@ -7,9 +7,12 @@ using FarmDefenseHarvestWars.Shared.Models.Game;
 
 public partial class DeckLibraryItemControl : PanelContainer
 {
+	[Signal] public delegate void UnlockRequestedEventHandler(int unitType);
+
 	[Export] private TextureRect _icon = null!;
 	[Export] private Label _statusLabel = null!;
 	[Export] private Label _levelLabel = null!;
+	[Export] private Label _unlockPriceLabel = null!;
 	[Export] private Button _infoButton = null!;
 	[Export] private PackedScene _dragPreviewScene = null!;
 	[Export] private PackedScene _tooltipScene = null!;
@@ -24,12 +27,12 @@ public partial class DeckLibraryItemControl : PanelContainer
 
 	public override void _Ready()
 	{
-		MouseFilter = MouseFilterEnum.Pass;
-
 		this.EnsureNotNull(_icon, nameof(_icon));
 		this.EnsureNotNull(_statusLabel, nameof(_statusLabel));
+		this.EnsureNotNull(_unlockPriceLabel, nameof(_unlockPriceLabel));
 		// We don't fail-fast on level and info yet to allow legacy scenes to work
 		// this.EnsureNotNull(_levelLabel, nameof(_levelLabel)); 
+		this.EnsureNotNull(_infoButton, nameof(_infoButton));
 
 		this.EnsureNotNull(_dragPreviewScene, nameof(_dragPreviewScene));
 		this.EnsureNotNull(_tooltipScene, nameof(_tooltipScene));
@@ -37,14 +40,16 @@ public partial class DeckLibraryItemControl : PanelContainer
 		MouseEntered += OnMouseEntered;
 		MouseExited += OnMouseExited;
 
-		_statusLabel.Hide();
-
-		if (_infoButton != null)
+		if (_isUnlocked)
 		{
-			_infoButton.Pressed += OnInfoButtonPressed;
-			_infoButton.MouseExited += OnMouseExited;
-			_infoButton.Hide();
+			_statusLabel.Hide();
+			_unlockPriceLabel.Hide();
 		}
+
+
+		_infoButton.Pressed += OnInfoButtonPressed;
+		_infoButton.MouseExited += OnMouseExited;
+		_infoButton.Hide();
 
 		GameState.Instance.UnitUpgraded += OnUnitUpgraded;
 	}
@@ -63,21 +68,28 @@ public partial class DeckLibraryItemControl : PanelContainer
 		// Status display
 		if (!isUnlocked)
 		{
-			_statusLabel.Text = isUnlocking ? "..." : "L";
+			_statusLabel.Text = isUnlocking ? "..." : "Locked";
 			_statusLabel.Show();
+
+			_unlockPriceLabel.Text = $"Price: {unitData.UnlockCost}";
+			_unlockPriceLabel.Show();
+
 			_icon.Modulate = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 			SelfModulate = new Color(0.8f, 0.8f, 0.8f, 0.6f);
+			GD.Print($"Unit {unitData.Name} is locked. Unlock cost: {unitData.UnlockCost}"); // Debug log
 		}
 		else if (alreadyInDeck)
 		{
 			_statusLabel.Text = "D";
 			_statusLabel.Show();
+			_unlockPriceLabel.Hide();
 			_icon.Modulate = new Color(0.6f, 0.6f, 0.6f, 0.7f);
 			SelfModulate = new Color(0.9f, 0.9f, 0.9f, 0.8f);
 		}
 		else
 		{
 			_statusLabel.Hide();
+			_unlockPriceLabel.Hide();
 			_icon.Modulate = Colors.White;
 			SelfModulate = Colors.White;
 		}
@@ -101,11 +113,18 @@ public partial class DeckLibraryItemControl : PanelContainer
 		// Level display (at the very end to ensure it stays visible)
 		if (_levelLabel != null)
 		{
-			var effectiveRole = (unitData.Role == PlayerRole.Any) ? _contextRole : unitData.Role;
-			var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, unitData.Type);
-			_levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
-			_levelLabel.Show();
-			_levelLabel.ZIndex = 10; // Ensure it's on top
+			if (!isUnlocked)
+			{
+				_levelLabel.Hide();
+			}
+			else
+			{
+				var effectiveRole = (unitData.Role == PlayerRole.Any) ? _contextRole : unitData.Role;
+				var unlock = GameState.Instance?.GetUnitUnlock(effectiveRole, unitData.Type);
+				_levelLabel.Text = unlock != null ? $"Lvl {unlock.Level}" : "Lvl 1";
+				_levelLabel.Show();
+				_levelLabel.ZIndex = 10; // Ensure it's on top
+			}
 		}
 	}
 
@@ -217,8 +236,14 @@ public partial class DeckLibraryItemControl : PanelContainer
 			return;
 		}
 
+		if (_unitData != null)
+		{
+			EmitSignal(SignalName.UnlockRequested, (int)_unitData.Type);
+		}
+
 		AcceptEvent();
 	}
+
 
 	private Control CreateDragPreview(Texture2D texture)
 	{
