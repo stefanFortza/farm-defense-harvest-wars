@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_e0hbe"]
 [ext_resource type="Texture2D" uid="uid://cyo8sk2yelkl4" path="res://Assets/Icons/SpearmanIcon.png" id="1_y522i"]
-[ext_resource type="AudioStream" uid="uid://dg0ce3rtj2huk" path="res://Assets/Audio/rpg/knifeSlice.ogg" id="2_sound_attack"]
-[ext_resource type="AudioStream" uid="uid://dy7sxueglw1vv" path="res://Assets/Audio/impact/impactPunch_medium_000.ogg" id="3_sound_hit"]
+[ext_resource type="AudioStream" uid="uid://ca3dmpy62r0bq" path="res://Assets/Audio/rpg/drawKnife1.ogg" id="2_sound_attack"]
+[ext_resource type="AudioStream" uid="uid://bt5venk0ouin6" path="res://Assets/Audio/impact/impactGeneric_light_000.ogg" id="3_sound_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_35123"]
 atlas = ExtResource("1_y522i")
