@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://kxb7r1dqnbx5" path="res://Scripts/Data/UnitData.cs" id="1_ngnn6"]
 [ext_resource type="Texture2D" uid="uid://lj13qtwhu4sl" path="res://Assets/Avatars/Farmer_Bob.png" id="1_ujc2q"]
 [ext_resource type="AudioStream" uid="uid://bmx04u5rvwp06" path="res://Assets/Audio/rpg/chop.ogg" id="3_attack"]
-[ext_resource type="AudioStream" uid="uid://dxgk7l1dg4wqv" path="res://Assets/Audio/impact/impactPunch_medium_001.ogg" id="4_hit"]
+[ext_resource type="AudioStream" uid="uid://c4xteke148pav" path="res://Assets/Audio/impact/impactPunch_heavy_000.ogg" id="4_hit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l4yxg"]
 atlas = ExtResource("1_ujc2q")
@@ -20,3 +20,4 @@ AttackSound = ExtResource("3_attack")
 HitSound = ExtResource("4_hit")
 AttackRange = 18.0
 AttackSpeed = 1.0
+metadata/_custom_type_script = "uid://kxb7r1dqnbx5"

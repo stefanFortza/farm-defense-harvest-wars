@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3 uid="uid://1jdd3awo00oj"]
+
+[ext_resource type="Script" uid="uid://bpemgsohw1322" path="res://Scenes/UI/Components/SettingsPopup.cs" id="1_popup_script"]
+[ext_resource type="PackedScene" uid="uid://dp0g41i6fc7jq" path="res://Scenes/UI/Components/BookUI.tscn" id="2_book_base"]
+[ext_resource type="PackedScene" uid="uid://0lrcdnkk0nb4" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageLeft.tscn" id="3_settings_left"]
+[ext_resource type="PackedScene" uid="uid://4qc10cis3uyw" path="res://Scenes/Menus/MainMenu/MainMenuPages/SettingsPageRight.tscn" id="4_settings_right"]
+[ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="5_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dim"]
+bg_color = Color(0, 0, 0, 0.588235)
+
+[node name="SettingsPopup" type="Control" node_paths=PackedStringArray("_closeButton")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_theme")
+script = ExtResource("1_popup_script")
+_closeButton = NodePath("CenterContainer/BookUI/CloseButton")
+
+[node name="DimBackground" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dim")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BookUI" parent="CenterContainer" instance=ExtResource("2_book_base")]
+custom_minimum_size = Vector2(240, 160)
+layout_mode = 2
+
+[node name="Spine" parent="CenterContainer/BookUI/BookUI/BookBinder" index="1"]
+z_index = 0
+
+[node name="Content" type="HBoxContainer" parent="CenterContainer/BookUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="LeftZone" type="MarginContainer" parent="CenterContainer/BookUI/Content"]
+custom_minimum_size = Vector2(110, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsPageLeft" parent="CenterContainer/BookUI/Content/LeftZone" instance=ExtResource("3_settings_left")]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+
+[node name="RightZone" type="MarginContainer" parent="CenterContainer/BookUI/Content"]
+custom_minimum_size = Vector2(110, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsPageRight" parent="CenterContainer/BookUI/Content/RightZone" instance=ExtResource("4_settings_right")]
+layout_mode = 2
+theme_override_constants/margin_right = 16
+
+[node name="CloseButton" type="Button" parent="CenterContainer/BookUI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -25.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = 25.0
+grow_horizontal = 0
+text = "X"
+
+[editable path="CenterContainer/BookUI"]

@@ -20,6 +20,9 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
     [Export] private TextureRect _attackerAvatar = null!;
     [Export] private Label _defenderNameLabel = null!;
     [Export] private Label _attackerNameLabel = null!;
+    [Export] private Button _settingsButton = null!;
+    [Export] private Button _quitButton = null!;
+    [Export] private PackedScene _settingsPopupScene = null!;
 
     private MatchManager _matchManager = null!;
     private InputController _inputController = null!;
@@ -70,6 +73,11 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         this.EnsureNotNull(_deckContainer, nameof(_deckContainer));
         this.EnsureNotNull(_timerBar, nameof(_timerBar));
         this.EnsureNotNull(_timerLabel, nameof(_timerLabel));
+        this.EnsureNotNull(_settingsButton, nameof(_settingsButton));
+        this.EnsureNotNull(_quitButton, nameof(_quitButton));
+
+        _settingsButton.Pressed += OnSettingsPressed;
+        _quitButton.Pressed += OnQuitPressed;
 
         _localPeerId = Multiplayer.GetUniqueId();
         _isReady = true;
@@ -78,6 +86,25 @@ public partial class GameHUD : CanvasLayer, IInitializable<GameHudContext>
         {
             ApplyInitialization();
         }
+    }
+
+    private void OnSettingsPressed()
+    {
+        AudioController.Instance?.PlaySfx("res://Assets/Audio/ui/click1.ogg");
+
+        if (_settingsPopupScene != null)
+        {
+            var popup = _settingsPopupScene.Instantiate<Control>();
+            AddChild(popup);
+            UIAnimations.AnimatePop(popup);
+        }
+    }
+
+    private void OnQuitPressed()
+    {
+        AudioController.Instance?.PlaySfx("res://Assets/Audio/ui/click1.ogg");
+        NetworkBootstrap.Instance?.Gameplay?.Disconnect();
+        GetTree().ChangeSceneToFile("res://Scenes/Menus/MainMenu/MainMenu.tscn");
     }
 
     public override void _ExitTree()

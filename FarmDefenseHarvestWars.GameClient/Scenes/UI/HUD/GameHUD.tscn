@@ -1,10 +1,22 @@
-[gd_scene load_steps=13 format=3 uid="uid://gamehud1"]
+[gd_scene load_steps=17 format=3 uid="uid://gamehud1"]
 
 [ext_resource type="Script" uid="uid://cgb4dtyeununf" path="res://Scenes/UI/HUD/GameHUD.cs" id="1_game_hud_script"]
 [ext_resource type="PackedScene" uid="uid://c2icauiwkb3xc" path="res://Scenes/UI/Components/ResourcePanel.tscn" id="2_resource_panel"]
 [ext_resource type="PackedScene" uid="uid://cjhyi7d4vd2vf" path="res://Scenes/UI/Card/UnitCard.tscn" id="3_card_scene"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="4_p2mjx"]
+[ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="5_j8y4w"]
 [ext_resource type="Texture2D" uid="uid://dpdiqbfpc5aad" path="res://Assets/Avatars/AvatarFrame.png" id="5_p2mjx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iv6am"]
+atlas = ExtResource("5_j8y4w")
+region = Rect2(33, 17, 14, 14)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kyeek"]
+load_path = "res://.godot/imported/UI_Icons.png-3194a01b1f3fe4bb24c5a19b9d71fec0.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uspg8"]
+atlas = SubResource("CompressedTexture2D_kyeek")
+region = Rect2(145, 97, 14, 14)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j8y4w"]
 atlas = ExtResource("5_p2mjx")
@@ -123,6 +135,28 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 text = "05:00"
 horizontal_alignment = 2
+
+[node name="SettingsButton" type="Button" parent="Margin/TopBar/MarginContainer/RightGroup"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("4_p2mjx")
+theme_override_font_sizes/font_size = 8
+icon = SubResource("AtlasTexture_iv6am")
+icon_alignment = 1
+expand_icon = true
+
+[node name="QuitButton" type="Button" parent="Margin/TopBar/MarginContainer/RightGroup"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("4_p2mjx")
+theme_override_font_sizes/font_size = 8
+icon = SubResource("AtlasTexture_uspg8")
+icon_alignment = 1
+expand_icon = true
 
 [node name="MatchTimerBar" type="ProgressBar" parent="Margin/TopBar/MarginContainer/RightGroup"]
 visible = false
