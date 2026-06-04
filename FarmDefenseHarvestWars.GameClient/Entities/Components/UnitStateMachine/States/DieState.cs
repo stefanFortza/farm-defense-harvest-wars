@@ -64,7 +64,7 @@ public class DieState : IState
         _deathTimer -= delta;
         if (_deathTimer <= 0)
         {
-            _unit.QueueFree();
+            _unit.Rpc(nameof(_unit.NetDespawn));
         }
     }
 

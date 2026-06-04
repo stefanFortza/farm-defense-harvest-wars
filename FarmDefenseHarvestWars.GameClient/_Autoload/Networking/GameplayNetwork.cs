@@ -104,24 +104,88 @@ public partial class GameplayNetwork : Node
     {
         if (!Multiplayer.IsServer()) return;
 
-        GD.Print($"Player connected: {id}");
+        GD.Print($"Player connected (unidentified): {id}");
+        // Wait for IdentifyMyself RPC to assign role
+    }
 
-        PlayerRole newRole = _connectedPlayers.Count == 0 ? PlayerRole.Defender : PlayerRole.Attacker;
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void IdentifyMyself(string email)
+    {
+        if (!Multiplayer.IsServer()) return;
 
-        _recentlyDisconnectedPlayers.Remove(id);
-        _connectedPlayers[id] = newRole;
+        long id = Multiplayer.GetRemoteSenderId();
+        GD.Print($"Player {id} identifying as: {email}");
 
-        // 3. Trimitem noului jucător lista cu TOȚI jucătorii existenți (ca să știe cine e cine)
-        foreach (var existingId in _connectedPlayers.Keys)
+        PlayerRole role;
+        if (email == CmdArgs.DefenderName)
         {
-            RpcId(id, nameof(SyncRoleToClient), existingId, (int)_connectedPlayers[existingId]);
+            role = PlayerRole.Defender;
+        }
+        else if (email == CmdArgs.AttackerName)
+        {
+            role = PlayerRole.Attacker;
+        }
+        else
+        {
+            GD.PrintErr($"[GameplayNetwork] Unauthorized connection attempt from {email} (Peer {id})");
+            _peer?.DisconnectPeer((int)id);
+            return;
         }
 
-        // 4. Anunțăm pe ceilalți că a intrat unul nou
-        Rpc(nameof(SyncRoleToClient), id, (int)newRole);
+        // Clean up any old sessions for this role if they exist (different peer id)
+        var oldPeersWithSameRole = new List<long>();
+        foreach (var kv in _connectedPlayers)
+        {
+            if (kv.Value == role && kv.Key != id)
+            {
+                oldPeersWithSameRole.Add(kv.Key);
+            }
+        }
 
-        // 5. Verificăm Startul (Fără LINQ, doar numărăm)
-        CheckGameStart();
+        foreach (var oldPeerId in oldPeersWithSameRole)
+        {
+            GD.Print($"[GameplayNetwork] Replacing old session for {role} (Peer {oldPeerId}) with new Peer {id}");
+            _connectedPlayers.Remove(oldPeerId);
+        }
+
+        _recentlyDisconnectedPlayers.Remove(id);
+        _connectedPlayers[id] = role;
+
+        // Sync role back to the identified client
+        RpcId(id, nameof(SyncRoleToClient), id, (int)role);
+
+        // Sync other players to this client
+        foreach (var existingId in _connectedPlayers.Keys)
+        {
+            if (existingId != id)
+            {
+                RpcId(id, nameof(SyncRoleToClient), existingId, (int)_connectedPlayers[existingId]);
+            }
+        }
+
+        // Announce new identified player to others
+        Rpc(nameof(SyncRoleToClient), id, (int)role);
+
+        if (_isMatchStarted)
+        {
+            GD.Print($"[GameplayNetwork] Peer {id} reconnected to ongoing match. Sending sync RPCs...");
+            var defPayload = BuildDeckPayload(CmdArgs.DefenderDeck);
+            var atkPayload = BuildDeckPayload(CmdArgs.AttackerDeck);
+
+            RpcId(id, nameof(SyncMatchDecksToClient),
+                CmdArgs.MatchId ?? "",
+                defPayload.Types, defPayload.Levels,
+                atkPayload.Types, atkPayload.Levels,
+                CmdArgs.DefenderAvatarIndex, CmdArgs.AttackerAvatarIndex,
+                CmdArgs.DefenderName, CmdArgs.AttackerName);
+            
+            RpcId(id, nameof(StartGameScene));
+            RpcId(id, nameof(BroadcastMatchStart));
+        }
+        else
+        {
+            CheckGameStart();
+        }
     }
 
     private void OnPlayerDisconnected(long id)
@@ -132,67 +196,77 @@ public partial class GameplayNetwork : Node
         }
 
         _connectedPlayers.Remove(id);
-        GD.Print($"Player {id} disconnected.");
-
-        // Opțional: Dacă iese unul, jocul se termină sau se pune pauză
-        // networkManager.EndGame("Opponent Disconnected");
+        GD.Print($"Player {id} disconnected ({role}).");
     }
 
     private async void CheckGameStart()
     {
-        if (_connectedPlayers.Count == MaxPlayers)
+        // Count unique roles instead of just peer count to ensure both sides are ready
+        int identifiedRolesCount = 0;
+        bool hasDefender = false;
+        bool hasAttacker = false;
+
+        foreach (var role in _connectedPlayers.Values)
         {
-            GD.Print("Match Ready! Sending StartGameScene RPC...");
-            
+            if (role == PlayerRole.Defender) hasDefender = true;
+            if (role == PlayerRole.Attacker) hasAttacker = true;
+        }
+
+        if (hasDefender) identifiedRolesCount++;
+        if (hasAttacker) identifiedRolesCount++;
+
+        if (identifiedRolesCount == MaxPlayers)
+        {
             var defPayload = BuildDeckPayload(CmdArgs.DefenderDeck);
             var atkPayload = BuildDeckPayload(CmdArgs.AttackerDeck);
 
-            Rpc(nameof(SyncMatchDecksToClient),
-                CmdArgs.MatchId ?? "",
-                defPayload.Types, defPayload.Levels,
-                atkPayload.Types, atkPayload.Levels,
-                CmdArgs.DefenderAvatarIndex, CmdArgs.AttackerAvatarIndex,
-                CmdArgs.DefenderName, CmdArgs.AttackerName);
-            Rpc(nameof(StartGameScene));
-
-            // Wait for all clients to be ready (load scene + handshake)
-            int maxWaitAttempts = 100; // 10 seconds max
-            MatchManager? mm = null;
-
-            while (maxWaitAttempts > 0)
+            if (!_isMatchStarted)
             {
-                var matchManagerNode = GetTree().Root.FindChild("MatchManager", true, false);
-                if (matchManagerNode is MatchManager foundMm)
+                GD.Print("Match Ready (Both roles identified)! Sending StartGameScene RPC to everyone...");
+                
+                Rpc(nameof(SyncMatchDecksToClient),
+                    CmdArgs.MatchId ?? "",
+                    defPayload.Types, defPayload.Levels,
+                    atkPayload.Types, atkPayload.Levels,
+                    CmdArgs.DefenderAvatarIndex, CmdArgs.AttackerAvatarIndex,
+                    CmdArgs.DefenderName, CmdArgs.AttackerName);
+                Rpc(nameof(StartGameScene));
+
+                // Wait for all clients to be ready (load scene + handshake)
+                int maxWaitAttempts = 100; // 10 seconds max
+                MatchManager? mm = null;
+
+                while (maxWaitAttempts > 0)
                 {
-                    mm = foundMm;
-                    // Check if all connected peers (excluding server) are in the ready list
-                    bool allReady = true;
-                    foreach (var peerId in Multiplayer.GetPeers())
+                    var matchManagerNode = GetTree().Root.FindChild("MatchManager", true, false);
+                    if (matchManagerNode is MatchManager foundMm)
                     {
-                        // We check the internal ready set of MatchManager
-                        // Using reflection or making it public. Let's assume we add a helper method.
-                        if (!mm.IsClientReady(peerId))
+                        mm = foundMm;
+                        bool allReady = true;
+                        foreach (var peerId in Multiplayer.GetPeers())
                         {
-                            allReady = false;
-                            break;
+                            if (!mm.IsClientReady(peerId))
+                            {
+                                allReady = false;
+                                break;
+                            }
+                        }
+
+                        if (allReady && _connectedPlayers.Count >= MaxPlayers)
+                        {
+                            GD.Print("[GameplayNetwork] All clients reported ready. Starting match!");
+                            Rpc(nameof(BroadcastMatchStart));
+                            return;
                         }
                     }
 
-                    if (allReady && Multiplayer.GetPeers().Length >= MaxPlayers)
-                    {
-                        GD.Print("[GameplayNetwork] All clients reported ready. Starting match!");
-                        Rpc(nameof(BroadcastMatchStart));
-                        return;
-                    }
+                    await Task.Delay(100);
+                    maxWaitAttempts--;
                 }
 
-                await Task.Delay(100);
-                maxWaitAttempts--;
+                GD.PrintErr("[GameplayNetwork] Timeout waiting for clients to be ready!");
+                Rpc(nameof(BroadcastMatchStart));
             }
-
-            GD.PrintErr("[GameplayNetwork] Timeout waiting for clients to be ready!");
-            // Fallback: try starting anyway
-            Rpc(nameof(BroadcastMatchStart));
         }
     }
 
@@ -218,7 +292,7 @@ public partial class GameplayNetwork : Node
         if (id == Multiplayer.GetUniqueId())
         {
             GameState.Instance?.SetAssignedRole(role);
-            EmitSignal(SignalName.ClientJoinStateChanged, true, "Connected. Waiting for match start...");
+            EmitSignal(SignalName.ClientJoinStateChanged, true, $"Role {role} confirmed. Waiting for match start...");
         }
 
         GD.Print($"[Sync] Player {id} is assigned {role}");
@@ -290,7 +364,11 @@ public partial class GameplayNetwork : Node
             return;
         }
 
-        EmitSignal(SignalName.ClientJoinStateChanged, true, "Connected. Waiting for role sync...");
+        EmitSignal(SignalName.ClientJoinStateChanged, true, "Connected. Identifying...");
+        
+        string email = GameState.Instance?.CurrentProfile?.Email ?? "Anonymous";
+        GD.Print($"[GameplayNetwork] Connected to server. Identifying as {email}...");
+        RpcId(1, nameof(IdentifyMyself), email);
     }
 
     private void OnConnectionFailed()

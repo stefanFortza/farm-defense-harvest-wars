@@ -18,6 +18,12 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     [Export] public bool IsFromAttacker { get; set; }
 
 
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void NetDespawn()
+    {
+        QueueFree();
+    }
+
     public bool IsInitialized { get; private set; } = false;
 
     public override void _Ready()
@@ -32,7 +38,10 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
             return;
 
         // Auto-destroy after MaxLifetime seconds so missed projectiles don't linger.
-        GetTree().CreateTimer(MaxLifetime).Timeout += QueueFree;
+        GetTree().CreateTimer(MaxLifetime).Timeout += () => 
+        {
+            if (IsInsideTree()) Rpc(nameof(NetDespawn));
+        };
     }
 
     /// <summary>
@@ -84,7 +93,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
         // Broadcast visuals to all peers
         Rpc(nameof(PlayImpactVisualsRPC), target.GlobalPosition, IsFromAttacker);
         
-        QueueFree();
+        Rpc(nameof(NetDespawn));
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

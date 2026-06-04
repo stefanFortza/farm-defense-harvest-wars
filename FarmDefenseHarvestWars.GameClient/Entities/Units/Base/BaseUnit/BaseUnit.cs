@@ -14,6 +14,13 @@ public partial class BaseUnit : CharacterBody2D
 {
     private bool _eventsBound;
 
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void NetDespawn()
+    {
+        // Force cleanup on all clients, including reconnected ones
+        QueueFree();
+    }
+
     [Signal] public delegate void HealthChangedEventHandler(int newHealth, int maxHealth);
     [Signal] public delegate void DiedEventHandler();
     [Signal] public delegate void AttackStartedEventHandler();

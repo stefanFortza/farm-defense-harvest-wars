@@ -6,6 +6,7 @@ using Godot;
 using System;
 using FarmDefenseHarvestWars.GameClient.Core.Utils;
 using FarmDefenseHarvestWars.GameClient.Entities.Units.Base;
+using FarmDefenseHarvestWars.GameClient.Entities.Projectiles;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
 
@@ -40,6 +41,11 @@ public partial class GameWorld : Node2D
 
 	private GridSystem _gridSystem = null!;
 
+	public override void _EnterTree()
+	{
+		AutoRegisterSpawnableScenes();
+	}
+
 	public override void _Ready()
 	{
 		this.EnsureNotNull(_managers, nameof(_managers));
@@ -55,8 +61,6 @@ public partial class GameWorld : Node2D
 		this.EnsureNotNull(_gameOverScene, nameof(_gameOverScene));
 
 		_gridSystem = _map.GridSystem;
-
-		AutoRegisterSpawnableScenes();
 
 		var context = new GameWorldContext(
 			Grid: _gridSystem,
@@ -74,26 +78,309 @@ public partial class GameWorld : Node2D
 
 		_managers.MatchManager.MatchEnded += OnMatchEnded;
 
+		if (Multiplayer.IsServer())
+		{
+			Multiplayer.PeerDisconnected += OnPeerDisconnected;
+		}
+
 		// Play Gameplay Music
 		AudioController.Instance?.PlayGameplayMusic();
+
+		// Handle reconnection: Request world state immediately if we are a client
+		if (!Multiplayer.IsServer())
+		{
+			GD.Print("[GameWorld] Client detected. Checking for immediate sync...");
+			RpcId(1, nameof(RequestWorldState));
+		}
+	}
+
+	public override void _Process(double delta)
+	{
+		// Guard against null peer after match ends or disconnection
+		if (Multiplayer.MultiplayerPeer == null) 
+		{
+			SetProcess(false);
+			return;
+		}
+
+		// On server, periodically broadcast world state updates to reconnected players
+		try 
+		{
+			if (Multiplayer.IsServer() && _reconnectedPeers.Count > 0)
+			{
+				_manualSyncTimer += (float)delta;
+				if (_manualSyncTimer >= 0.1f) // 10Hz update
+				{
+					_manualSyncTimer = 0;
+					BroadcastManualSync();
+				}
+			}
+		}
+		catch (InvalidOperationException)
+		{
+			SetProcess(false);
+		}
+	}
+
+	private float _manualSyncTimer = 0f;
+	private readonly System.Collections.Generic.HashSet<long> _reconnectedPeers = new();
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	private void RequestWorldState()
+	{
+		if (Multiplayer.MultiplayerPeer == null) return;
+		
+		try 
+		{
+			if (!Multiplayer.IsServer()) return;
+		}
+		catch (InvalidOperationException) { return; }
+
+		long peerId = Multiplayer.GetRemoteSenderId();
+		GD.Print($"[GameWorld] Peer {peerId} requested world state sync. Collecting data...");
+		_reconnectedPeers.Add(peerId);
+
+		// Collect Units
+		var unitData = new Godot.Collections.Array<Godot.Collections.Dictionary>();
+		foreach (var node in _unitContainer.GetChildren())
+		{
+			if (node is BaseUnit unit)
+			{
+				var dict = new Godot.Collections.Dictionary
+				{
+					{ "name", unit.Name },
+					{ "scene", unit.SceneFilePath },
+					{ "pos", unit.Position },
+					{ "hp", unit.CurrentHealth },
+					{ "max_hp", unit.MaxHealth },
+					{ "level", unit.Level },
+					{ "facing", unit.FacingDirection },
+					{ "laneY", unit.LaneCenterY },
+					{ "state", (int)unit.StateMachine.CurrentState }
+				};
+				unitData.Add(dict);
+			}
+		}
+
+		// Collect Projectiles
+		var projData = new Godot.Collections.Array<Godot.Collections.Dictionary>();
+		foreach (var node in _projectileContainer.GetChildren())
+		{
+			if (node is BaseProjectile proj)
+			{
+				var dict = new Godot.Collections.Dictionary
+				{
+					{ "name", proj.Name },
+					{ "scene", proj.SceneFilePath },
+					{ "pos", proj.Position },
+					{ "dir", proj.Direction },
+					{ "dmg", proj.Damage },
+					{ "atk", proj.IsFromAttacker },
+					{ "speed", proj.Speed }
+				};
+				projData.Add(dict);
+			}
+		}
+
+		RpcId(peerId, nameof(SyncWorldState), unitData, projData);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	private void SyncWorldState(Godot.Collections.Array<Godot.Collections.Dictionary> units, Godot.Collections.Array<Godot.Collections.Dictionary> projectiles)
+	{
+		if (Multiplayer.MultiplayerPeer == null) return;
+		
+		GD.Print($"[GameWorld] Received world state: {units.Count} units, {projectiles.Count} projectiles.");
+
+		// Spawn Units
+		foreach (var data in units)
+		{
+			string name = (string)data["name"];
+			if (_unitContainer.HasNode(name)) continue;
+
+			string scenePath = (string)data["scene"];
+			if (string.IsNullOrEmpty(scenePath)) continue;
+
+			var scene = GD.Load<PackedScene>(scenePath);
+			var unit = scene.Instantiate<BaseUnit>();
+
+			unit.Name = name; 
+			unit.Position = (Vector2)data["pos"];
+			unit.SetLevel((int)data["level"]);
+			unit.FacingDirection = (int)data["facing"];
+			unit.LaneCenterY = (float)data["laneY"];
+			unit.ProjectileContainer = _projectileContainer;
+
+			unit.SetMultiplayerAuthority(1);
+			
+			var sync = unit.GetNodeOrNull<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+			if (sync != null)
+			{
+				sync.SetProcess(false);
+				sync.SetPhysicsProcess(false);
+				sync.PublicVisibility = false;
+			}
+
+			_unitContainer.AddChild(unit, true);
+			
+			unit.HealthComponent.SetHealthSilently((int)data["hp"], (int)data["max_hp"]);
+			unit.StateMachine.SyncedStateIndex = (int)data["state"];
+			
+			GD.Print($"[GameWorld] Manually restored unit {name}");
+		}
+
+		// Spawn Projectiles
+		foreach (var data in projectiles)
+		{
+			string name = (string)data["name"];
+			if (_projectileContainer.HasNode(name)) continue;
+
+			string scenePath = (string)data["scene"];
+			if (string.IsNullOrEmpty(scenePath)) continue;
+
+			var scene = GD.Load<PackedScene>(scenePath);
+			var proj = scene.Instantiate<BaseProjectile>();
+
+			proj.Name = name;
+			proj.Position = (Vector2)data["pos"];
+			proj.Initialize(((int)data["dmg"], (Vector2)data["dir"], (bool)data["atk"]));
+			proj.Speed = (float)data["speed"];
+			
+			proj.SetMultiplayerAuthority(1);
+			var sync = proj.GetNodeOrNull<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+			if (sync != null)
+			{
+				sync.SetProcess(false);
+				sync.SetPhysicsProcess(false);
+				sync.PublicVisibility = false;
+			}
+
+			_projectileContainer.AddChild(proj, true);
+			GD.Print($"[GameWorld] Manually restored projectile {name}");
+		}
+	}
+
+	private void BroadcastManualSync()
+	{
+		if (Multiplayer.MultiplayerPeer == null) return;
+
+		var unitUpdates = new Godot.Collections.Array<Godot.Collections.Dictionary>();
+		foreach (var node in _unitContainer.GetChildren())
+		{
+			if (node is BaseUnit unit)
+			{
+				unitUpdates.Add(new Godot.Collections.Dictionary {
+					{ "n", unit.Name },
+					{ "p", unit.Position },
+					{ "h", unit.CurrentHealth },
+					{ "s", (int)unit.StateMachine.CurrentState }
+				});
+			}
+		}
+
+		var projUpdates = new Godot.Collections.Array<Godot.Collections.Dictionary>();
+		foreach (var node in _projectileContainer.GetChildren())
+		{
+			if (node is BaseProjectile proj)
+			{
+				projUpdates.Add(new Godot.Collections.Dictionary {
+					{ "n", proj.Name },
+					{ "p", proj.Position }
+				});
+			}
+		}
+		
+		foreach (var peerId in _reconnectedPeers)
+		{
+			try 
+			{
+				RpcId(peerId, nameof(UpdateManualWorldState), unitUpdates, projUpdates);
+			}
+			catch (InvalidOperationException) { }
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+	private void UpdateManualWorldState(Godot.Collections.Array<Godot.Collections.Dictionary> unitUpdates, Godot.Collections.Array<Godot.Collections.Dictionary> projUpdates)
+	{
+		if (Multiplayer.MultiplayerPeer == null) return;
+
+		// 1. Sync & Track Units
+		var aliveUnits = new System.Collections.Generic.HashSet<string>();
+		foreach (var data in unitUpdates)
+		{
+			string name = (string)data["n"];
+			aliveUnits.Add(name);
+			var unit = _unitContainer.GetNodeOrNull<BaseUnit>(name);
+			if (unit != null)
+			{
+				unit.Position = (Vector2)data["p"];
+				unit.HealthComponent.SetHealthSilently((int)data["h"], unit.MaxHealth);
+				unit.StateMachine.SyncedStateIndex = (int)data["s"];
+			}
+		}
+
+		// 2. Sync & Track Projectiles
+		var aliveProjectiles = new System.Collections.Generic.HashSet<string>();
+		foreach (var data in projUpdates)
+		{
+			string name = (string)data["n"];
+			aliveProjectiles.Add(name);
+			var proj = _projectileContainer.GetNodeOrNull<BaseProjectile>(name);
+			if (proj != null)
+			{
+				proj.Position = (Vector2)data["p"];
+			}
+		}
+
+		// 3. Active Cleanup: Remove nodes that exist locally but are NOT in the server's update
+		// This is a safety net for reconnected clients where MultiplayerSpawner might fail to despawn.
+		foreach (var node in _unitContainer.GetChildren())
+		{
+			if (node is BaseUnit unit && !aliveUnits.Contains(unit.Name))
+			{
+				GD.Print($"[GameWorld] Manual cleanup: Removing stale unit {unit.Name}");
+				unit.QueueFree();
+			}
+		}
+
+		foreach (var node in _projectileContainer.GetChildren())
+		{
+			if (node is BaseProjectile proj && !aliveProjectiles.Contains(proj.Name))
+			{
+				GD.Print($"[GameWorld] Manual cleanup: Removing stale projectile {proj.Name}");
+				proj.QueueFree();
+			}
+		}
 	}
 
 	public override void _ExitTree()
 	{
+		if (Multiplayer.IsServer())
+		{
+			Multiplayer.PeerDisconnected -= OnPeerDisconnected;
+		}
+
 		if (_managers?.MatchManager != null)
 		{
 			_managers.MatchManager.MatchEnded -= OnMatchEnded;
 		}
-		
+
 		// Switch back to Menu Music when leaving the world
 		AudioController.Instance?.PlayMenuMusic();
+	}
+
+	private void OnPeerDisconnected(long id)
+	{
+		_reconnectedPeers.Remove(id);
 	}
 
 	private void OnMatchEnded(int winnerRole)
 	{
 		GD.Print($"[GameWorld] OnMatchEnded triggered. Winner: {(PlayerRole)winnerRole}");
 
-		// Disable input once match ends to prevent further RPC attempts
+		SetProcess(false);
+
 		var inputController = _managers._inputController;
 		if (inputController != null)
 		{
@@ -115,7 +402,6 @@ public partial class GameWorld : Node2D
 
 	private void AutoRegisterSpawnableScenes()
 	{
-		// 1. Scan Units (Defenders & Enemies)
 		string[] unitFolders = { "res://Entities/Units/Defenders", "res://Entities/Units/Enemies" };
 		var allUnitScenes = new System.Collections.Generic.List<string>();
 
@@ -124,7 +410,6 @@ public partial class GameWorld : Node2D
 			ScanFolderForScenes(folder, allUnitScenes);
 		}
 
-		// Sort to ensure identical order on client and server
 		allUnitScenes.Sort();
 
 		foreach (var scenePath in allUnitScenes)
@@ -134,7 +419,6 @@ public partial class GameWorld : Node2D
 
 		GD.Print($"[GameWorld] Auto-registered {allUnitScenes.Count} unit scenes in UnitSpawner.");
 
-		// 2. Scan Projectiles
 		string projectileFolder = "res://Entities/Projectiles";
 		var allProjectileScenes = new System.Collections.Generic.List<string>();
 		ScanFolderForScenes(projectileFolder, allProjectileScenes);
