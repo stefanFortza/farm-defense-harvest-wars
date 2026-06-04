@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://gamehud1"]
+[gd_scene load_steps=18 format=3 uid="uid://gamehud1"]
 
 [ext_resource type="Script" uid="uid://cgb4dtyeununf" path="res://Scenes/UI/HUD/GameHUD.cs" id="1_game_hud_script"]
 [ext_resource type="PackedScene" uid="uid://c2icauiwkb3xc" path="res://Scenes/UI/Components/ResourcePanel.tscn" id="2_resource_panel"]
+[ext_resource type="PackedScene" uid="uid://1jdd3awo00oj" path="res://Scenes/UI/Components/SettingsPopup.tscn" id="2_settings_popup"]
 [ext_resource type="PackedScene" uid="uid://cjhyi7d4vd2vf" path="res://Scenes/UI/Card/UnitCard.tscn" id="3_card_scene"]
 [ext_resource type="Theme" uid="uid://cuvouiyt7ahos" path="res://Resources/PixelTheme.tres" id="4_p2mjx"]
 [ext_resource type="Texture2D" uid="uid://b54tuidkyfi7f" path="res://Assets/Cute_Fantasy/Cute_Fantasy_UI/UI/UI_Icons.png" id="5_j8y4w"]
@@ -56,7 +57,7 @@ properties/1/path = NodePath("AvatarMargin/HBox/DefenderAvatarFrame/VBox/Defende
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_timerLabel", "_baseHealthBar", "_defenderAvatar", "_attackerAvatar", "_defenderNameLabel", "_attackerNameLabel")]
+[node name="GameHUD" type="CanvasLayer" node_paths=PackedStringArray("_resourcePanel", "_deckContainer", "_timerBar", "_timerLabel", "_baseHealthBar", "_defenderAvatar", "_attackerAvatar", "_defenderNameLabel", "_attackerNameLabel", "_settingsButton", "_quitButton")]
 script = ExtResource("1_game_hud_script")
 _resourcePanel = NodePath("Margin/TopBar/LeftGroup/ResourcePanel")
 _deckContainer = NodePath("Margin/TopBar/LeftGroup/DeckContainer")
@@ -68,6 +69,9 @@ _defenderAvatar = NodePath("AvatarMargin/HBox/DefenderAvatarFrame/VBox/DefenderA
 _attackerAvatar = NodePath("AvatarMargin/HBox/AttackerAvatarFrame/VBox/AttackerAvatar")
 _defenderNameLabel = NodePath("AvatarMargin/HBox/DefenderAvatarFrame/VBox/DefenderName")
 _attackerNameLabel = NodePath("AvatarMargin/HBox/AttackerAvatarFrame/VBox/AttackerName")
+_settingsButton = NodePath("Margin/TopBar/MarginContainer/RightGroup/SettingsButton")
+_quitButton = NodePath("Margin/TopBar/MarginContainer/RightGroup/QuitButton")
+_settingsPopupScene = ExtResource("2_settings_popup")
 
 [node name="Margin" type="MarginContainer" parent="."]
 anchors_preset = 10
