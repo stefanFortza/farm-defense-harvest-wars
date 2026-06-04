@@ -78,6 +78,9 @@ public partial class UnitStateMachine : Node
 
     public override void _PhysicsProcess(double delta)
     {
+        // Guard against null peer after match ends or disconnection
+        if (Multiplayer.MultiplayerPeer == null) return;
+
         // Rulează STRICT pe server (Autoritate).
         // Aici se calculează viteza, coliziunile, raycast-urile.
         if (IsMultiplayerAuthority())
