@@ -44,7 +44,7 @@ ENV ASPNETCORE_URLS=http://+:80
 
 # Configure the Orchestrator to use the exported binary.
 # We leave GodotServer__ProjectPath EMPTY because we are running an exported build.
-ENV GodotServer__ExecutablePath=./ServerExport/FarmWarsServer.x86_64
+ENV GodotServer__ExecutablePath=./ServerExport/FarmDefenseHarvestWars.GameClient.x86_64
 ENV GodotServer__ProjectPath=""
 ENV GodotServer__Host=0.0.0.0
 

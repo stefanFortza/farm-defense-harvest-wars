@@ -71,6 +71,9 @@ public partial class MatchmakingOverlay : CanvasLayer
             }
 
             _statusLabel.Text = "Match Found! Connecting...";
+            GD.Print($"[MatchmakingOverlay] Match Found! MatchId: {status.MatchId} | Role: {status.Role}");
+            GD.Print($"[MatchmakingOverlay] Server Endpoint: {status.ServerAddress}:{status.ServerPort}");
+            
             ToastNotifications.TrySuccess("Match Found! Connecting...", 1.5);
             _cancelButton.Disabled = true;
 
@@ -80,10 +83,14 @@ public partial class MatchmakingOverlay : CanvasLayer
             GetTree().Root.AddChild(loadingScreen);
             loadingScreen.SetStatus("Connecting to Battle...");
 
-            string host = string.IsNullOrWhiteSpace(status.ServerAddress) ? "127.0.0.1" : status.ServerAddress;
+            string host = status.ServerAddress;
+            if (string.IsNullOrWhiteSpace(host) || host == "0.0.0.0")
+            {
+                host = "127.0.0.1";
+            }
             int port = status.ServerPort ?? 7777;
 
-
+            GD.Print($"[MatchmakingOverlay] Final Connection Target: {host}:{port}");
             NetworkBootstrap.Instance.Gameplay.JoinGameServer(host, port);
 
             // Wait a tiny bit for connection to start before switching scene

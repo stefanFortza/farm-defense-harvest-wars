@@ -79,14 +79,29 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // 5. Pipeline HTTP
-if (app.Environment.IsDevelopment())
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    using (IServiceScope scope = app.Services.CreateScope())
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync();
+
+    // Enable WAL mode for SQLite to prevent locking issues
+    var connection = db.Database.GetDbConnection();
+    connection.Open();
+    using (var command = connection.CreateCommand())
+    {
+        command.CommandText = "PRAGMA journal_mode=WAL;";
+        command.ExecuteNonQuery();
+    }
+
+    if (app.Environment.IsDevelopment())
     {
         DevelopmentTestUserSeeder testUserSeeder = scope.ServiceProvider.GetRequiredService<DevelopmentTestUserSeeder>();
         await testUserSeeder.SeedAsync();
     }
+}
 
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }

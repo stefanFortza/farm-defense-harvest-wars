@@ -10,6 +10,7 @@ namespace FarmDefenseHarvestWars.GameClient.Scripts.Data;
 public partial class UnitRegistry : Resource
 {
     [Export] public Array<UnitData> AllUnits { get; set; } = [];
+    [Export] public Array<PackedScene> Projectiles { get; set; } = [];
     [Export] public Array<Texture2D> Avatars { get; set; } = [];
 
     // Cache intern (Runtime only)

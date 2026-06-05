@@ -32,6 +32,7 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 	[Export] public InputController _inputController = null!;
 
 	public MatchManager MatchManager => _matchManager;
+	public UnitRegistry UnitRegistry => _unitRegistry;
 
 	public bool IsInitialized { get; private set; } = false;
 

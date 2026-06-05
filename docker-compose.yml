@@ -9,11 +9,12 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/game.db
       - ASPNETCORE_ENVIRONMENT=Production
-      - GodotServer__Host=0.0.0.0
+      - GodotServer__Host=127.0.0.1
       - GodotServer__BackendBaseUrl=http://backend:80
     ports:
       - "5177:80"
-      - "7777-7800:7777-7800" # Match server ports
+      - "7777-7800:7777-7800/udp"
+      - "7777-7800:7777-7800/tcp"
     volumes:
       - farm_data:/app/data
 

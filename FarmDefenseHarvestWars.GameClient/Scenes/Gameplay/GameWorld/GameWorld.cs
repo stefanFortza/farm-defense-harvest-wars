@@ -41,11 +41,6 @@ public partial class GameWorld : Node2D
 
 	private GridSystem _gridSystem = null!;
 
-	public override void _EnterTree()
-	{
-		AutoRegisterSpawnableScenes();
-	}
-
 	public override void _Ready()
 	{
 		this.EnsureNotNull(_managers, nameof(_managers));
@@ -59,6 +54,9 @@ public partial class GameWorld : Node2D
 
 		this.EnsureNotNull(_map.GridSystem, "Map.GridSystem");
 		this.EnsureNotNull(_gameOverScene, nameof(_gameOverScene));
+
+		// Register scenes BEFORE other initialization
+		RegisterSpawnableScenesFromRegistry();
 
 		_gridSystem = _map.GridSystem;
 
@@ -400,60 +398,51 @@ public partial class GameWorld : Node2D
 		}
 	}
 
-	private void AutoRegisterSpawnableScenes()
+	private void RegisterSpawnableScenesFromRegistry()
 	{
-		string[] unitFolders = { "res://Entities/Units/Defenders", "res://Entities/Units/Enemies" };
-		var allUnitScenes = new System.Collections.Generic.List<string>();
+		var registry = _managers.UnitRegistry;
+		if (registry == null) return;
 
-		foreach (var folder in unitFolders)
+		int unitCount = 0;
+		foreach (var unit in registry.AllUnits)
 		{
-			ScanFolderForScenes(folder, allUnitScenes);
-		}
-
-		allUnitScenes.Sort();
-
-		foreach (var scenePath in allUnitScenes)
-		{
-			_unitSpawner.AddSpawnableScene(scenePath);
-		}
-
-		GD.Print($"[GameWorld] Auto-registered {allUnitScenes.Count} unit scenes in UnitSpawner.");
-
-		string projectileFolder = "res://Entities/Projectiles";
-		var allProjectileScenes = new System.Collections.Generic.List<string>();
-		ScanFolderForScenes(projectileFolder, allProjectileScenes);
-		allProjectileScenes.Sort();
-
-		foreach (var scenePath in allProjectileScenes)
-		{
-			_projectileSpawner.AddSpawnableScene(scenePath);
-		}
-
-		GD.Print($"[GameWorld] Auto-registered {allProjectileScenes.Count} projectile scenes in ProjectileSpawner.");
-	}
-
-	private void ScanFolderForScenes(string path, System.Collections.Generic.List<string> resultList)
-	{
-		using var dir = DirAccess.Open(path);
-		if (dir == null) return;
-
-		dir.ListDirBegin();
-		string fileName = dir.GetNext();
-
-		while (fileName != "")
-		{
-			if (dir.CurrentIsDir())
+			if (unit != null && !string.IsNullOrEmpty(unit.UnitScenePath))
 			{
-				if (!fileName.StartsWith("."))
-				{
-					ScanFolderForScenes(path.PathJoin(fileName), resultList);
-				}
+				_unitSpawner.AddSpawnableScene(unit.UnitScenePath);
+				unitCount++;
 			}
-			else if (fileName.EndsWith(".tscn"))
-			{
-				resultList.Add(path.PathJoin(fileName));
-			}
-			fileName = dir.GetNext();
 		}
-	}
-}
+
+		GD.Print($"[GameWorld] Registered {unitCount} unit scenes from Registry in UnitSpawner.");
+
+		// Register projectiles from Registry and from UnitData
+		var projPaths = new System.Collections.Generic.HashSet<string>();
+
+		// 1. Explicit projectiles list in registry
+		foreach (var proj in registry.Projectiles)
+		{
+			if (proj != null && !string.IsNullOrEmpty(proj.ResourcePath))
+			{
+				projPaths.Add(proj.ResourcePath);
+			}
+		}
+
+		// 2. Projectiles attached to units
+		foreach (var unit in registry.AllUnits)
+		{
+			if (unit?.ProjectileScene != null && !string.IsNullOrEmpty(unit.ProjectileScene.ResourcePath))
+			{
+				projPaths.Add(unit.ProjectileScene.ResourcePath);
+			}
+		}
+
+		int projCount = 0;
+		foreach (var path in projPaths)
+		{
+			_projectileSpawner.AddSpawnableScene(path);
+			projCount++;
+		}
+
+		GD.Print($"[GameWorld] Registered {projCount} unique projectile scenes in ProjectileSpawner.");
+		}
+		}
