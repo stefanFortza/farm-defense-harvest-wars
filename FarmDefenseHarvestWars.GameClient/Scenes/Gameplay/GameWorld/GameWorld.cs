@@ -378,6 +378,10 @@ public partial class GameWorld : Node2D
 		GD.Print($"[GameWorld] OnMatchEnded triggered. Winner: {(PlayerRole)winnerRole}");
 
 		SetProcess(false);
+		
+		// Disable unit and projectile processing to stop logic and network syncs
+		if (_unitContainer != null) _unitContainer.ProcessMode = ProcessModeEnum.Disabled;
+		if (_projectileContainer != null) _projectileContainer.ProcessMode = ProcessModeEnum.Disabled;
 
 		var inputController = _managers._inputController;
 		if (inputController != null)

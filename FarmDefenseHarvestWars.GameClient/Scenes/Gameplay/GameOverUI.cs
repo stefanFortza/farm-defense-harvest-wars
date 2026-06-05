@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using FarmDefenseHarvestWars.Shared.Models.Game;
 using Refit;
+using FarmDefenseHarvestWars.GameClient.Scripts.Utils;
 
 namespace FarmDefenseHarvestWars.GameClient.Scenes.Gameplay;
 
@@ -19,7 +20,15 @@ public partial class GameOverUI : CanvasLayer
             _rewardContainer.Hide();
         }
 
-        _ = FetchRewardsAsync();
+        // Only clients should fetch rewards. Servers don't have tokens or profiles.
+        if (!CmdArgs.IsServer)
+        {
+            _ = FetchRewardsAsync();
+        }
+        else
+        {
+            GD.Print("[GameOverUI] Running on Server - Skipping reward fetch.");
+        }
     }
 
     public void SetWinner(string winnerText)
@@ -32,6 +41,9 @@ public partial class GameOverUI : CanvasLayer
 
     private async Task FetchRewardsAsync()
     {
+        // Wait a small bit to ensure signals and state are fully settled
+        await Task.Delay(500);
+
         var gameState = GameState.Instance;
         if (gameState == null || string.IsNullOrEmpty(gameState.MatchId))
         {
@@ -46,9 +58,16 @@ public partial class GameOverUI : CanvasLayer
             token = NetworkBootstrap.Instance?.AccessToken ?? "";
         }
 
-        GD.Print($"[GameOverUI] Fetching rewards for match: {gameState.MatchId} (Token present: {!string.IsNullOrEmpty(token)})");
-        
-        // Ensure NetworkBootstrap has the token for its internal ApiClient
+        if (string.IsNullOrEmpty(token))
+        {
+            GD.PrintErr("[GameOverUI] CRITICAL: AccessToken is missing! Reward fetch will fail (401).");
+        }
+        else
+        {
+            GD.Print($"[GameOverUI] Fetching rewards for match: {gameState.MatchId} (Token present: True)");
+        }
+
+        // Sync token to NetworkBootstrap if needed (though it should already be there)
         if (NetworkBootstrap.Instance != null && !string.IsNullOrEmpty(token))
         {
             NetworkBootstrap.Instance.AccessToken = token;
@@ -63,7 +82,7 @@ public partial class GameOverUI : CanvasLayer
             {
                 GD.Print($"[GameOverUI] Attempt {i + 1} to fetch rewards...");
                 var reward = await NetworkBootstrap.Instance.ApiClient.GetMatchRewardAsync(gameState.MatchId);
-                
+
                 if (reward != null)
                 {
                     DisplayRewards(reward);
@@ -97,21 +116,21 @@ public partial class GameOverUI : CanvasLayer
         {
             string resultText = reward.IsWin ? "Victory!" : "Defeat";
             if (reward.IsAborted) resultText = "Match Aborted";
-            
+
             _rewardLabel.Text = $"{resultText}\n" +
                                $"Gold: +{reward.GoldEarned}\n" +
                                $"XP: +{reward.XpEarned}\n" +
                                $"Total Gold: {reward.TotalGoldNow}\n" +
                                $"Level: {reward.TotalLevelNow} ({reward.TotalXpNow} XP)";
         }
-        
+
         _rewardContainer?.Show();
     }
 
     public void OnBackToMenuPressed()
     {
         GD.Print("[GameOverUI] Back to Menu pressed.");
-        
+
         // Clear match state
         if (GameState.Instance != null)
         {
@@ -120,7 +139,7 @@ public partial class GameOverUI : CanvasLayer
 
         // Cleanup networking before leaving (usually already done by MatchManager)
         NetworkBootstrap.Instance?.Gameplay?.Disconnect();
-        
+
         GetTree().ChangeSceneToFile("res://Scenes/Menus/MainMenu/MainMenu.tscn");
     }
 }

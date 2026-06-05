@@ -567,7 +567,7 @@ public partial class MatchManager : Node
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncMatchEndedRpc(int winnerRole)
     {
         GD.Print($"[MatchManager] SyncMatchEndedRpc received. Winner role: {winnerRole}");
@@ -580,7 +580,8 @@ public partial class MatchManager : Node
         if (!Multiplayer.IsServer())
         {
             SetProcess(false);
-            NetworkBootstrap.Instance?.Gameplay?.Disconnect();
+            // Use CallDeferred to ensure the RPC system finishes processing before disconnecting
+            NetworkBootstrap.Instance?.Gameplay?.CallDeferred(nameof(GameplayNetwork.Disconnect));
         }
     }
 

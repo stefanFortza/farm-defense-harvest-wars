@@ -116,6 +116,7 @@ public class MatchmakingController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("matchmaking/match/{matchId}/reward")]
     public async Task<ActionResult<MatchRewardDto>> GetMatchReward(string matchId)
     {

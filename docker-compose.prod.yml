@@ -1,0 +1,21 @@
+services:
+  # Backend API + Matchmaking (Varianta de Producție pentru VPS)
+  backend:
+    image: ${DOCKER_IMAGE:-contul_tau_dockerhub/farmdefense-backend:latest}
+    container_name: farm_backend_prod
+    restart: always
+    environment:
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/game.db
+      - ASPNETCORE_ENVIRONMENT=Production
+      # NOTĂ: Aici trebuie să fie IP-ul PUBLIC al VPS-ului pentru ca jucătorii să se poată conecta!
+      - GodotServer__Host=${VPS_IP:-127.0.0.1}
+      - GodotServer__BackendBaseUrl=http://127.0.0.1:80
+    ports:
+      - "80:80"
+      - "7777-7800:7777-7800/udp"
+      - "7777-7800:7777-7800/tcp"
+    volumes:
+      - farm_data_prod:/app/data
+
+volumes:
+  farm_data_prod:

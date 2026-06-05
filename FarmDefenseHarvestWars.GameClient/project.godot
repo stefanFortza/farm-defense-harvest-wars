@@ -12,6 +12,7 @@ config_version=5
 
 config/name="FarmDefenseHarvestWars.GameClient"
 run/main_scene="uid://dvoo3488wfrwr"
+run/disable_stderr=true
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 

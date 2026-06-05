@@ -30,7 +30,16 @@ public partial class NetworkBootstrap : Node
 
         ApiClient = RestService.For<IGameApi>(backendBaseUrl, new RefitSettings
         {
-            AuthorizationHeaderValueGetter = (_, __) => Task.FromResult(AccessToken)
+            AuthorizationHeaderValueGetter = (_, __) => 
+            {
+                // Try to get token from this instance, fallback to GameState
+                string token = AccessToken;
+                if (string.IsNullOrEmpty(token) && GameState.Instance != null)
+                {
+                    token = GameState.Instance.AccessToken;
+                }
+                return Task.FromResult(token);
+            }
         });
 
         // 2. Inițializare Servicii (le adăugăm ca noduri copil pentru a putea folosi funcții Godot)
@@ -53,5 +62,13 @@ public partial class NetworkBootstrap : Node
         AddChild(Menu);
 
         GD.Print("Network Services Initialized.");
-    }
-}
+        }
+
+        public override void _ExitTree()
+        {
+            if (Instance == this)
+            {
+                Instance = null!;
+            }
+        }
+        }

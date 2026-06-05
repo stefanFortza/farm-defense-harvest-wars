@@ -28,13 +28,13 @@ properties/0/spawn = true
 properties/0/replication_mode = 2
 properties/1/path = NodePath("LogicComponents/HealthComponent:CurrentHealth")
 properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/1/replication_mode = 2
 properties/2/path = NodePath("LogicComponents/UnitStateMachine:SyncedStateIndex")
 properties/2/spawn = true
-properties/2/replication_mode = 1
+properties/2/replication_mode = 2
 properties/3/path = NodePath(".:FacingDirection")
 properties/3/spawn = true
-properties/3/replication_mode = 1
+properties/3/replication_mode = 2
 
 [node name="BaseUnit" type="CharacterBody2D" node_paths=PackedStringArray("StateMachine", "HealthComponent", "MovementComponent", "HurtboxComponent", "VisionComponent", "Visuals")]
 y_sort_enabled = true

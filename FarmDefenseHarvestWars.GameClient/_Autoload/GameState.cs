@@ -17,7 +17,20 @@ public partial class GameState : Node
     // Datele jucătorului
     public PlayerProfileDto? CurrentProfile { get; private set; }
     public SelectedDeckData? CurrentDeck { get; private set; }
-    public string? AccessToken { get; set; }
+    
+    private string _accessToken = "";
+    public string AccessToken 
+    { 
+        get => _accessToken; 
+        set 
+        {
+            _accessToken = value ?? "";
+            if (!string.IsNullOrEmpty(_accessToken))
+            {
+                GD.Print($"[GameState] AccessToken set (Length: {_accessToken.Length})");
+            }
+        }
+    }
 
     // Match configuration for active game (server loads it from cmd args, clients receive it via RPC)
     private string? _matchId;
@@ -102,6 +115,14 @@ public partial class GameState : Node
     }
 
     // Funcție apelată când primim date noi de la server
+    public override void _ExitTree()
+    {
+        if (Instance == this)
+        {
+            Instance = null!;
+        }
+    }
+
     public void SetProfile(PlayerProfileDto profile)
     {
         CurrentProfile = profile;
