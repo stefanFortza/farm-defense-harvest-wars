@@ -44,9 +44,9 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         string executablePath = _configuration["GodotServer:ExecutablePath"] ?? string.Empty;
         string projectPath = _configuration["GodotServer:ProjectPath"] ?? string.Empty;
 
-        if (string.IsNullOrWhiteSpace(executablePath) || string.IsNullOrWhiteSpace(projectPath))
+        if (string.IsNullOrWhiteSpace(executablePath))
         {
-            throw new InvalidOperationException("GodotServer:ExecutablePath and GodotServer:ProjectPath must be configured.");
+            throw new InvalidOperationException("GodotServer:ExecutablePath must be configured.");
         }
 
         string host = _configuration["GodotServer:Host"] ?? "127.0.0.1";
@@ -62,8 +62,14 @@ public sealed class ProcessMatchServerOrchestrator : IMatchServerOrchestrator
         };
 
         startInfo.ArgumentList.Add("--headless");
-        startInfo.ArgumentList.Add("--path");
-        startInfo.ArgumentList.Add(projectPath);
+
+        // Dacă avem ProjectPath, înseamnă că rulăm folosind binarul de Godot Editor (ne-exportat)
+        if (!string.IsNullOrWhiteSpace(projectPath))
+        {
+            startInfo.ArgumentList.Add("--path");
+            startInfo.ArgumentList.Add(projectPath);
+        }
+
         startInfo.ArgumentList.Add("--");
         startInfo.ArgumentList.Add("--server");
         startInfo.ArgumentList.Add("--port");

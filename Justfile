@@ -41,6 +41,20 @@ play:
 serve:
     {{godot_path}} --headless --path FarmDefenseHarvestWars.GameClient --server
 
+# --- DOCKER ---
+
+# Build și pornește tot stack-ul (Backend + DB)
+docker-up:
+    docker compose up --build -d
+
+# Oprește stack-ul Docker
+docker-down:
+    docker compose down
+
+# Vezi log-urile backend-ului
+docker-logs:
+    docker logs -f farm_backend
+
 # --- DOCUMENTAȚIE (Mermaid) ---
 
 # Compilați lucrarea de licență (necesită texlive-full și xelatex)

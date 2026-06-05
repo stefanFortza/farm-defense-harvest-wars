@@ -20,4 +20,5 @@ UnitScenePath = "res://Entities/Units/Enemies/OrcGruntUnit/OrcGruntUnit.tscn"
 AttackSound = ExtResource("2_sound_attack")
 HitSound = ExtResource("3_sound_hit")
 Speed = 50.0
+AttackRange = 20.0
 AttackSpeed = 1.0

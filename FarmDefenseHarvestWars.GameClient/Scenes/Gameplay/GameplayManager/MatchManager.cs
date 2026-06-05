@@ -33,8 +33,8 @@ public partial class MatchManager : Node
     // Local copy for clients, synced from server
     private int _syncedBaseHealth;
 
-    // PeerID -> Money
-    private readonly Dictionary<long, int> _playerMoney = new();
+    // Role -> Money (Persists across reconnections)
+    private readonly Dictionary<PlayerRole, int> _playerMoney = new();
     private readonly Dictionary<PlayerRole, ulong> _disconnectRoleTokens = new();
     private readonly HashSet<long> _readyClients = new();
 
@@ -148,14 +148,8 @@ public partial class MatchManager : Node
         _stateSyncTimer = 0f;
         _completionReported = false;
 
-        foreach (var id in Multiplayer.GetPeers())
-        {
-            _playerMoney[id] = StartingMoney;
-            EmitSignal(SignalName.MoneyChanged, id, StartingMoney);
-        }
-
-        _playerMoney[1] = StartingMoney;
-        EmitSignal(SignalName.MoneyChanged, 1L, StartingMoney);
+        _playerMoney[PlayerRole.Defender] = StartingMoney;
+        _playerMoney[PlayerRole.Attacker] = StartingMoney;
 
         EmitSignal(SignalName.BaseHealthChanged, BaseHealthComponent.CurrentHealth, MaxBaseHealth);
         EmitSignal(SignalName.MatchStateChanged, (int)_currentState);
@@ -243,26 +237,42 @@ public partial class MatchManager : Node
     private void AddPassiveIncome()
     {
         int amount = _timeRemaining <= 60f ? DoublePassiveIncome : BasePassiveIncome;
-        var peerIds = new List<long>(_playerMoney.Keys);
-        foreach (var id in peerIds)
-        {
-            AddMoney(id, amount);
-        }
+        
+        // Give to both roles regardless of connection state (so they have gold when they reconnect)
+        AddMoneyToRole(PlayerRole.Defender, amount);
+        AddMoneyToRole(PlayerRole.Attacker, amount);
     }
 
     public void AddMoney(long peerId, int amount)
     {
         if (!Multiplayer.IsServer()) return;
 
-        if (!_playerMoney.ContainsKey(peerId))
+        GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
+        if (gameplay == null || !gameplay.TryGetRoleForPeer(peerId, out PlayerRole role))
         {
-            _playerMoney[peerId] = 0;
+            return;
         }
 
-        _playerMoney[peerId] += amount;
-        int value = _playerMoney[peerId];
-        EmitSignal(SignalName.MoneyChanged, peerId, value);
-        Rpc(nameof(SyncMoneyRpc), peerId, value);
+        AddMoneyToRole(role, amount);
+    }
+
+    public void AddMoneyToRole(PlayerRole role, int amount)
+    {
+        if (!Multiplayer.IsServer()) return;
+
+        if (!_playerMoney.ContainsKey(role))
+        {
+            _playerMoney[role] = 0;
+        }
+
+        _playerMoney[role] += amount;
+        int value = _playerMoney[role];
+
+        // Emit for server-side UI if needed
+        EmitSignal(SignalName.MoneyChanged, 0L, value); 
+        
+        // Sync to all clients by role
+        Rpc(nameof(SyncMoneyByRoleRpc), (int)role, value);
     }
 
     public void DeductMoney(long peerId, int amount)
@@ -272,7 +282,12 @@ public partial class MatchManager : Node
 
     public int GetMoney(long peerId)
     {
-        return _playerMoney.GetValueOrDefault(peerId, 0);
+        GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
+        if (gameplay != null && gameplay.TryGetRoleForPeer(peerId, out PlayerRole role))
+        {
+            return _playerMoney.GetValueOrDefault(role, 0);
+        }
+        return 0;
     }
 
     public bool CanAfford(long peerId, int cost)
@@ -372,10 +387,9 @@ public partial class MatchManager : Node
     {
         if (!Multiplayer.IsServer()) return;
 
-        if (!_playerMoney.ContainsKey(id))
-        {
-            _playerMoney[id] = StartingMoney;
-        }
+        // Money is now persisted by role, so we don't initialize it here anymore.
+        // IdentifyMyself handshake in GameplayNetwork will ensure the reconnected peer
+        // gets synced later via FullSync request or BroadcastAllMoney.
 
         if (_currentState == MatchState.Playing)
         {
@@ -392,7 +406,7 @@ public partial class MatchManager : Node
     {
         if (!Multiplayer.IsServer()) return;
 
-        _playerMoney.Remove(id);
+        // Persist money - DO NOT remove entry
 
         if (_currentState != MatchState.Playing) return;
 
@@ -490,7 +504,7 @@ public partial class MatchManager : Node
         RpcId(peerId, nameof(SyncSnapshotRpc), (int)_currentState, _timeRemaining, currentHp, MaxBaseHealth);
         foreach (var kv in _playerMoney)
         {
-            RpcId(peerId, nameof(SyncMoneyRpc), kv.Key, kv.Value);
+            RpcId(peerId, nameof(SyncMoneyByRoleRpc), (int)kv.Key, kv.Value);
         }
     }
 
@@ -504,7 +518,7 @@ public partial class MatchManager : Node
     {
         foreach (var kv in _playerMoney)
         {
-            Rpc(nameof(SyncMoneyRpc), kv.Key, kv.Value);
+            Rpc(nameof(SyncMoneyByRoleRpc), (int)kv.Key, kv.Value);
         }
     }
 
@@ -536,10 +550,21 @@ public partial class MatchManager : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncMoneyRpc(long peerId, int amount)
+    private void SyncMoneyByRoleRpc(int roleInt, int amount)
     {
-        _playerMoney[peerId] = amount;
-        EmitSignal(SignalName.MoneyChanged, peerId, amount);
+        PlayerRole role = (PlayerRole)roleInt;
+        _playerMoney[role] = amount;
+
+        // Check if this money update is for ME
+        GameplayNetwork? gameplay = NetworkBootstrap.Instance?.Gameplay;
+        if (gameplay != null)
+        {
+            // Clients only care about their own money for the main HUD display
+            if (gameplay.MyRole == role)
+            {
+                EmitSignal(SignalName.MoneyChanged, Multiplayer.GetUniqueId(), amount);
+            }
+        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

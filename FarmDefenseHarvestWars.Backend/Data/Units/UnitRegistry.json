@@ -123,7 +123,7 @@
       "Name": "GoblinSpearman",
       "MatchCost": 25,
       "UnlockCost": 100,
-      "IsDefaultUnlocked": false,
+      "IsDefaultUnlocked": true,
       "MaxHealth": 100,
       "Damage": 10,
       "Speed": 10,
@@ -153,7 +153,7 @@
       "MaxHealth": 100,
       "Damage": 10,
       "Speed": 50,
-      "AttackRange": 64,
+      "AttackRange": 20,
       "AttackSpeed": 1
     },
     {

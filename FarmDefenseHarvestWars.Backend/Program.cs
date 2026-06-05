@@ -16,10 +16,14 @@ builder.Services.AddScoped<IDeckService, DeckService>();
 builder.Services.AddSingleton<IMatchmakingService, MatchmakingService>();
 builder.Services.AddScoped<DevelopmentTestUserSeeder>();
 builder.Services.AddSingleton<DefaultUnitUnlockCreationInterceptor>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=game_dev.db";
+
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
-    options
-    .UseSqlite("Data Source=game_dev.db")
-    .AddInterceptors(serviceProvider.GetRequiredService<DefaultUnitUnlockCreationInterceptor>()));
+{
+    options.UseSqlite(connectionString);
+    options.AddInterceptors(serviceProvider.GetRequiredService<DefaultUnitUnlockCreationInterceptor>());
+});
 
 // 2. Configurare Identity (Login/Register)
 builder.Services.AddAuthorization();

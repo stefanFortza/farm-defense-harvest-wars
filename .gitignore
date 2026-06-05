@@ -58,9 +58,16 @@ Desktop.ini
 *.db-wal
 
 # -------------------------
+# Build Artifacts
+# -------------------------
+build/
+ServerExport/
+
+# -------------------------
 # Secrets & Environment
 # -------------------------
 secrets.json
 .env
 .env.*
+config.cfg
 docker-compose.override.yml

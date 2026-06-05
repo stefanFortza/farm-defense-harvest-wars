@@ -35,6 +35,7 @@ public static class CmdArgs
     {
         Parse();
         ReadEnvironmentVariables();
+        ReadConfigFile();
     }
 
     public static void Parse()
@@ -115,9 +116,64 @@ public static class CmdArgs
         Port = parsedPort;
     }
 
+    private static void ReadConfigFile()
+    {
+        string[] configPaths = { "res://config.cfg", "user://config.cfg" };
+        var config = new ConfigFile();
+
+        foreach (var path in configPaths)
+        {
+            if (FileAccess.FileExists(path))
+            {
+                Error err = config.Load(path);
+                if (err != Error.Ok)
+                {
+                    GD.PrintErr($"[CmdArgs] Failed to load config file at {path}: {err}");
+                    continue;
+                }
+
+                GD.Print($"[CmdArgs] Loading config from {path}");
+
+                // Prioritize existing values (cmd args / env vars) over config file
+                BackendBaseUrl ??= (string)config.GetValue("Network", "backend_url", BackendBaseUrl);
+                Email ??= (string)config.GetValue("Auth", "email", Email);
+                Password ??= (string)config.GetValue("Auth", "password", Password);
+
+                if (Port == null)
+                {
+                    Variant portVar = config.GetValue("Server", "port");
+                    if (portVar.VariantType != Variant.Type.Nil)
+                    {
+                        Port = (int)portVar;
+                    }
+                }
+            }
+        }
+    }
+
     private static void ReadEnvironmentVariables()
     {
-        // Only read on server mode
+        // Read values from environment (higher priority than config file, lower than cmd args)
+
+        string? backendUrlEnv = System.Environment.GetEnvironmentVariable("BACKEND_BASE_URL");
+        if (!string.IsNullOrWhiteSpace(backendUrlEnv))
+        {
+            BackendBaseUrl = backendUrlEnv;
+        }
+
+        string? emailEnv = System.Environment.GetEnvironmentVariable("GAME_EMAIL");
+        if (!string.IsNullOrWhiteSpace(emailEnv))
+        {
+            Email = emailEnv;
+        }
+
+        string? passwordEnv = System.Environment.GetEnvironmentVariable("GAME_PASSWORD");
+        if (!string.IsNullOrWhiteSpace(passwordEnv))
+        {
+            Password = passwordEnv;
+        }
+
+        // Only read server-specific values on server mode
         if (!IsServer)
         {
             return;
@@ -128,12 +184,6 @@ public static class CmdArgs
         if (!string.IsNullOrWhiteSpace(matchIdEnv))
         {
             MatchId = matchIdEnv;
-        }
-
-        string? backendUrlEnv = System.Environment.GetEnvironmentVariable("BACKEND_BASE_URL");
-        if (!string.IsNullOrWhiteSpace(backendUrlEnv))
-        {
-            BackendBaseUrl = backendUrlEnv;
         }
 
         string? callbackKeyEnv = System.Environment.GetEnvironmentVariable("MATCH_SERVER_CALLBACK_KEY");
