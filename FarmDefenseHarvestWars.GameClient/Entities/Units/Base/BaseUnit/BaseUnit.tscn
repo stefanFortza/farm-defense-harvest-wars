@@ -23,7 +23,7 @@ atlas = ExtResource("9_2oqxh")
 region = Rect2(83, 90, 10, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r1xd3"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath(".:TargetPosition")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 properties/1/path = NodePath("LogicComponents/HealthComponent:CurrentHealth")

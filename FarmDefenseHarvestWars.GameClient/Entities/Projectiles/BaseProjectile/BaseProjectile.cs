@@ -17,6 +17,9 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     [Export] public float MaxLifetime { get; set; } = 5.0f;
     [Export] public bool IsFromAttacker { get; set; }
 
+    [Export] public Vector2 TargetPosition { get; set; }
+    [Export] public float InterpolationSpeed { get; set; } = 25.0f;
+
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void NetDespawn()
@@ -33,6 +36,9 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
 
         // Wire up hit detection on all instances (Server for damage, Client for visuals)
         HitboxComponent.AreaEntered += OnHitboxAreaEntered;
+
+        // Initialize target position to avoid jumping on spawn
+        TargetPosition = GlobalPosition;
 
         if (!IsMultiplayerAuthority())
             return;
@@ -64,10 +70,16 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
 
     public override void _PhysicsProcess(double delta)
     {
-        // Only the authority should drive movement; replication handles client-side position.
-        if (!IsMultiplayerAuthority()) return;
-
-        Position += Direction * Speed * (float)delta;
+        if (IsMultiplayerAuthority())
+        {
+            Position += Direction * Speed * (float)delta;
+            TargetPosition = GlobalPosition;
+        }
+        else
+        {
+            // Smoothly interpolate towards the server position
+            GlobalPosition = GlobalPosition.Lerp(TargetPosition, (float)(InterpolationSpeed * delta));
+        }
     }
 
     private void OnHitboxAreaEntered(Area2D area)

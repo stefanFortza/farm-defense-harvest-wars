@@ -65,6 +65,9 @@ public partial class BaseUnit : CharacterBody2D
 
     [Export] public int Level { get; private set; } = 1;
 
+    [Export] public Vector2 TargetPosition { get; set; }
+    [Export] public float InterpolationSpeed { get; set; } = 20.0f;
+
     public int ScaledMaxHealth => (int)(MaxHealth * (1 + (Level - 1) * 0.1f));
     public int ScaledDamage => (int)((Data?.Damage ?? 0) * (1 + (Level - 1) * 0.1f));
 
@@ -105,10 +108,26 @@ public partial class BaseUnit : CharacterBody2D
         // Initial flip state
         ApplyFacing();
 
+        // Initialize target position to avoid jumping on spawn
+        TargetPosition = GlobalPosition;
+
         // if (IsMultiplayerAuthority())
         // {
         StateMachine.Start(GetInitialState());
         // }
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if (Multiplayer.IsServer())
+        {
+            TargetPosition = GlobalPosition;
+        }
+        else
+        {
+            // Smoothly interpolate towards the server position to fix stuttering
+            GlobalPosition = GlobalPosition.Lerp(TargetPosition, (float)(InterpolationSpeed * delta));
+        }
     }
 
     public void Flip()
