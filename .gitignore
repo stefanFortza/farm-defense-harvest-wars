@@ -62,6 +62,7 @@ Desktop.ini
 # -------------------------
 build/
 ServerExport/
+ClientExport/
 
 # -------------------------
 # Secrets & Environment

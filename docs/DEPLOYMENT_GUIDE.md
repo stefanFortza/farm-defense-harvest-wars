@@ -55,8 +55,13 @@ Cea mai simplă metodă de a rula backend-ul.
 ### B. Configurare Client Godot
 Clientul are nevoie de adresa backend-ului pentru a funcționa.
 
-#### 1. Fișier `config.cfg` (Local)
-Creează un fișier numit `config.cfg` în folderul `FarmDefenseHarvestWars.GameClient/`:
+#### 1. Fișier `config.cfg` (Local și Export)
+Clientul caută acest fișier în următoarea ordine:
+1. `res://config.cfg` (În interiorul proiectului/pck-ului).
+2. `user://config.cfg` (Folderul de date al utilizatorului).
+3. **Lângă executabil** (Doar în build-urile exportate).
+
+Pentru configurare rapidă, creează un fișier numit `config.cfg` în folderul `FarmDefenseHarvestWars.GameClient/` (pentru editor) sau lângă executabil (pentru release):
 
 ```ini
 [Network]

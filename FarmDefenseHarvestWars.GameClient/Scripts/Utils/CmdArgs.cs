@@ -118,7 +118,17 @@ public static class CmdArgs
 
     private static void ReadConfigFile()
     {
-        string[] configPaths = { "res://config.cfg", "user://config.cfg" };
+        // Search order: 
+        // 1. res:// (Internal pck, if included via export filters)
+        // 2. user:// (AppData/local folders)
+        // 3. Executable directory (Portable/Exported external config)
+        var configPaths = new List<string> { "res://config.cfg", "user://config.cfg" };
+
+        if (OS.HasFeature("standalone"))
+        {
+            configPaths.Add(OS.GetExecutablePath().GetBaseDir().PathJoin("config.cfg"));
+        }
+
         var config = new ConfigFile();
 
         foreach (var path in configPaths)
