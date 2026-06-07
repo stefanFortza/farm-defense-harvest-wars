@@ -32,19 +32,19 @@
 \begin{frame}{Contextul și Obiectivele Proiectului}
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
-            \textbf{Problema identificată:}
+            \textbf{Limitările sistemelor actuale:}
             \begin{itemize}
-                \item Lipsa jocurilor Tower Defense cu asimetrie reală (Defender vs Attacker).
-                \item Vulnerabilitatea la trișat în jocurile Peer-to-Peer.
-                \item Latența critică în sincronizarea stării jocului.
+                \item Absența titlurilor Tower Defense cu asimetrie funcțională completă (Atacator vs. Apărător).
+                \item Vulnerabilități structurale de securitate (cheating) în topologiile de rețea Peer-to-Peer.
+                \item Desincronizarea stării partajate sub influența latenței.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
-            \textbf{Soluția propusă:}
+            \textbf{Soluția arhitecturală implementată:}
             \begin{itemize}
-                \item Implementarea unui model \textbf{Server-Authoritative} complet.
-                \item Sistem de matchmaking robust bazat pe ASP.NET Core.
-                \item Arhitectură modulară în Godot Engine (C\#).
+                \item Validarea și centralizarea deciziilor printr-un model \textbf{Server-Authoritative} strict.
+                \item Sistem tranzacțional de matchmaking orchestrat via ASP.NET Core.
+                \item Decuplare logică totală pe clientul Godot Engine (C\#).
             \end{itemize}
         \end{column}
     \end{columns}
@@ -60,9 +60,9 @@
         \end{column}
         \begin{column}{0.3\textwidth}
             \begin{itemize}
-                \item \textbf{Backend (ASP.NET Core):} Gestionarea autentificării, matchmaking și persistență.
-                \item \textbf{Game Server (Godot):} Autoritatea centrală pe Linux.
-                \item \textbf{Client (Godot):} Vizualizare reactivă.
+                \item \textbf{Backend API (.NET 10):} Izolează logica de business (autentificare, matchmaking).
+                \item \textbf{Game Server:} Autoritatea fizică, instanțiată dinamic pe procese Linux izolate.
+                \item \textbf{Client Godot:} Execută strict o vizualizare reactivă a stării primite de la server.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -78,9 +78,9 @@
         \end{column}
         \begin{column}{0.35\textwidth}
             \begin{itemize}
-                \item \small SQLite + EF Core pentru stocarea profilului și deblocărilor.
-                \item \small Normalizare 3NF pentru integritate.
-                \item \small Mapare automată a obiectelor DTO.
+                \item \small Persistență asigurată prin SQLite și abstractizată via Entity Framework Core.
+                \item \small Bază de date normalizată (3NF) pentru eliminarea anomaliilor de actualizare.
+                \item \small Mapare bidirecțională prin obiecte de transfer (DTOs) pentru securizarea endpoint-urilor.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -92,12 +92,12 @@
         \begin{column}{0.65\textwidth}
             \centering
             \includegraphics[width=\textwidth, height=0.75\textheight, keepaspectratio]{../paper/images/StateDiagram.png}
-            \\ \vspace{2mm} \textit{\tiny Tranziția Stărilor - Logica de control a unităților}
+            \\ \vspace{2mm} \textit{\tiny Tranziția Stărilor - Controlul comportamental al entităților}
         \end{column}
         \begin{column}{0.35\textwidth}
             \begin{itemize}
-                \item \textbf{State Pattern:} Gestionarea tranzițiilor între Idle, Atac și Mișcare.
-                \item \textbf{Component Pattern:} Decuplarea logicii vizuale de cea de combat.
+                \item \textbf{State Pattern:} Determinism în comportamentul unităților, eliminând structurile decizionale complexe.
+                \item \textbf{Component Pattern:} Agregarea funcționalităților (Viață, Hitbox) independent de ierarhia de moștenire vizuală.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -113,9 +113,9 @@
         \end{column}
         \begin{column}{0.3\textwidth}
             \begin{itemize}
-                \item \small Shared Dictionaries protejate prin \texttt{lock}.
-                \item \small Complexitate $O(1)$ pentru extragerea perechilor.
-                \item \small Lansarea dinamică a proceselor Headless.
+                \item \small Dicționare de memorie partajată securizate prin excludere mutuală (\texttt{lock}).
+                \item \small Garanția atomicității la asocierea perechilor cu o complexitate de evaluare $O(1)$.
+                \item \small Delegarea proceselor Headless către sistemul de operare host.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -131,9 +131,9 @@
         \end{column}
         \begin{column}{0.3\textwidth}
             \begin{itemize}
-                \item \small Validare prin \texttt{Version ID} pentru prevenirea conflictelor.
-                \item \small Reducerea apelurilor API cu peste 85\% în editor.
-                \item \small UX fluid fără blocarea interfeței.
+                \item \small Validare strictă prin \texttt{Version ID} pentru prevenirea coliziunilor de stare.
+                \item \small Comasarea cererilor rapide (Debouncing) a redus overhead-ul API-ului cu peste 85\%.
+                \item \small Interfață utilizator complet non-blocantă (Optimistic UI updates).
             \end{itemize}
         \end{column}
     \end{columns}
@@ -144,30 +144,38 @@
     \begin{center}
         \Large \textbf{[Rulare Video Demo - 3 Minute]} \\
         \vspace{5mm}
-        \normalsize Validarea funcționalității Server-Authoritative și a rezilienței la deconectări.
+        \normalsize Validarea funcționalității Server-Authoritative în arhitectură WAN și a rezilienței la deconectări.
     \end{center}
 \end{frame}
 
 % 9. Testare și Evaluare
-\begin{frame}{Testare și Profilare Funcțională}
-    \begin{itemize}
-        \item \textbf{Validarea Concurenței (xUnit):} Rularea a 1000 de instanțe asincrone prin \texttt{Task.WhenAll} a confirmat stabilitatea matchmaking-ului (0 coliziuni).
-        \item \textbf{Optimizarea Rețelei:} Profilarea mecanismului de debouncing pe client a evidențiat o reducere drastică a traficului nesemnificativ.
-        \item \textbf{Stabilitate Server:} Teste de stres cu 200+ entități simultane pe serverul headless fără degradarea TPS (Ticks Per Second).
-    \end{itemize}
+\begin{frame}{Testare și Evaluare}
+    \begin{block}{Validarea Concurenței Backend (xUnit \& NSubstitute)}
+        \begin{itemize}
+            \item \textbf{Thread-Safety:} Rularea a 1000 de cereri asincrone simultane (\texttt{Task.WhenAll}) a generat exact 500 de meciuri valide, confirmând prevenirea fenomenului de \textit{race conditions} prin \texttt{lock}.
+            \item \textbf{Idempotență și Izolare:} Gestionarea deterministă a structurilor \texttt{HashSet} prin respingerea apelurilor redundante și curățarea referințelor la abandon.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Profilare Funcțională Client-Side (DeckService)}
+        \begin{itemize}
+            \item \textbf{Eficiența Debouncing-ului:} Un test cu 20 de acțiuni rapide în interfață a comasat execuția în doar 2 apeluri HTTP înregistrate de backend, reducând traficul de rețea cu 90\%.
+            \item \textbf{Reziliența la Latență:} Inserarea unor întârzieri artificiale a confirmat capacitatea algoritmului de a respinge actualizările vizuale perimate, validând starea prin \texttt{\_latestVersion}.
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 % 10. Concluzii și Future Work
 \begin{frame}{Concluzii și Direcții Viitoare}
     \begin{block}{Realizări}
-        Dezvoltarea unei arhitecturi distribuite complete care izolează logic starea partajată, previne trișatul și gestionează eficient resursele hardware.
+        Dezvoltarea și validarea cu succes a unei arhitecturi distribuite care izolează logic starea partajată, asigură securitatea competiției (anti-cheat) și gestionează concurența la nivel de server.
     \end{block}
 
     \begin{block}{Dezvoltări Ulterioare (Future Work)}
         \begin{itemize}
-            \item Migrarea către containere Docker și orchestrare Kubernetes pentru scalare orizontală.
-            \item Implementarea unui sistem de MMR (Matchmaking Rating).
-            \item Integrarea agenților antrenați prin Reinforcement Learning.
+            \item Integrarea pipeline-urilor CI/CD și migrarea spre orchestrare Kubernetes (K8s) pentru scalare orizontală nativă.
+            \item Implementarea unui algoritm matematic de Matchmaking Rating (MMR).
+            \item Antrenarea și integrarea modelelor de Reinforcement Learning pentru modul PvE.
         \end{itemize}
     \end{block}
 \end{frame}
