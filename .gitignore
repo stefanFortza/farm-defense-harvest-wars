@@ -72,3 +72,28 @@ secrets.json
 .env.*
 config.cfg
 docker-compose.override.yml
+
+# -------------------------
+# LaTeX
+# -------------------------
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.glo
+*.idx
+*.ilg
+*.ind
+*.ist
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+*.bcf
+*.run.xml
+*.xdv

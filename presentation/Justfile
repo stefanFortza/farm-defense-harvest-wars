@@ -1,0 +1,15 @@
+# Default recipe
+default:
+    @just --list
+
+# Compilați prezentarea (necesită texlive-full)
+build:
+    latexmk -pdf presentation.tex
+
+# Curăță fișierele temporare
+clean:
+    latexmk -c
+
+# Monitorizează schimbările și recompilează automat PDF-ul
+watch:
+    latexmk -pdf -pvc presentation.tex

@@ -1,0 +1,199 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+
+% Tema vizuală standard, curată și academică
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[romanian]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{caption}
+
+% --- Datele Prezentării ---
+\title[Farm Defense: Harvest Wars]{Farm Defense: Harvest Wars}
+\subtitle{Joc de strategie PvP asimetric cu arhitectură Server-Authoritative}
+\author[Darius-Ștefan Tacu]{Absolvent: Darius-Ștefan Tacu \\ \vspace{2mm} \small Coordonator: Lect. univ. dr. Popescu Ștefan George}
+\institute[Unibuc - FMI]{Universitatea din București \\ Facultatea de Matematică și Informatică}
+\date{Iunie 2026}
+
+\titlegraphic{
+    \includegraphics[height=1cm]{../paper/images/logo-ub.png} \hspace{1cm}
+    \includegraphics[height=1cm]{../paper/images/logo-fmi.png}
+}
+
+\begin{document}
+
+% 1. Titlu
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% 2. Context și Obiective
+\begin{frame}{Contextul și Obiectivele Proiectului}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Problema identificată:}
+            \begin{itemize}
+                \item Lipsa jocurilor Tower Defense cu asimetrie reală (Defender vs Attacker).
+                \item Vulnerabilitatea la trișat în jocurile Peer-to-Peer.
+                \item Latența critică în sincronizarea stării jocului.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Soluția propusă:}
+            \begin{itemize}
+                \item Implementarea unui model \textbf{Server-Authoritative} complet.
+                \item Sistem de matchmaking robust bazat pe ASP.NET Core.
+                \item Arhitectură modulară în Godot Engine (C\#).
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 3. Arhitectura de Rețea
+\begin{frame}{Arhitectura de Rețea și Comunicare}
+    \begin{columns}[c]
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.7\textheight, keepaspectratio]{images/network_architecture.png}
+            \\ \vspace{1mm} \textit{\tiny Diagrama de Rețea - Fluxuri de date}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{itemize}
+                \item \textbf{Backend (ASP.NET):} Gestionarea autentificării, matchmaking și persistență (JWT, EF Core).
+                \item \textbf{Game Server (Godot Headless):} Autoritatea centrală pentru fizică, combat și economie.
+                \item \textbf{Client (Godot):} Interfață reactivă, predictibilitate locală și vizualizare.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 4. Bootstrap și Matchmaking
+\begin{frame}{Procesul de Conectare și Matchmaking}
+    \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{images/matchmaking_sequence.png}
+            \caption*{\tiny Secvența de Matchmaking}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{images/bootstrap_flow.png}
+            \caption*{\tiny Fluxul de Bootstrap al Serverului}
+        \end{column}
+    \end{columns}
+    \begin{itemize}
+        \item \small Alocarea dinamică a porturilor pentru instanțele de joc.
+        \item \small Handshake securizat între clienți și serverul dedicat.
+    \end{itemize}
+\end{frame}
+
+% 5. Structura Claselor (Client/Server)
+\begin{frame}{Structura de Clase și Ierarhia Unităților}
+    \begin{columns}[c]
+        \begin{column}{0.65\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.75\textheight, keepaspectratio]{images/class_structure.png}
+            \\ \vspace{1mm} \textit{\tiny Ierarhia claselor în Godot}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{itemize}
+                \item \small \textbf{BaseUnit:} Logica de bază (HP, Atac, Moarte).
+                \item \small \textbf{Defender/Attacker Unit:} Comportamente specifice rolului.
+                \item \small \textbf{Componente:} Decuplarea logicii (Combat, Visual, Stats).
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 6. Logica de Joc: Stări și Plasament
+\begin{frame}{Logica de Joc: State Machine și Plasament}
+    \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{images/gameloop_states.png}
+            \caption*{\tiny State Machine - Comportament Unități}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{images/unit_placement.png}
+            \caption*{\tiny Validarea Plasamentului pe Server}
+        \end{column}
+    \end{columns}
+    \begin{itemize}
+        \item \small Tranziții între \texttt{Idle}, \texttt{Moving}, \texttt{Attacking} și \texttt{Dying}.
+        \item \small Verificarea integrității grid-ului exclusiv pe server (Server-Side Validation).
+    \end{itemize}
+\end{frame}
+
+% 7. Economia Jocului
+\begin{frame}{Sistemul Economic Asimetric}
+    \begin{columns}[c]
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.7\textheight, keepaspectratio]{images/economy_loop.png}
+            \\ \vspace{1mm} \textit{\tiny Loop-ul Economic}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{itemize}
+                \item \textbf{Defender:} Resurse de lapte (pasiv + ferme). Focus pe sustenabilitate.
+                \item \textbf{Attacker:} Resurse de carne (pasiv + recompense). Focus pe agresivitate.
+                \item Sincronizarea resurselor prin pachete de stare autoritare.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 8. Optimizări: Sincronizarea Pachetului
+\begin{frame}{Sincronizarea Asincronă (Deck Debouncing)}
+    \begin{columns}[c]
+        \begin{column}{0.65\textwidth}
+            \centering
+            \includegraphics[width=\textwidth, height=0.75\textheight, keepaspectratio]{images/async-debouncing-sync.png}
+            \\ \vspace{1mm} \textit{\tiny Mecanismul de Debouncing}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{itemize}
+                \item \small \textbf{Problema:} Salvarea frecventă a pachetului în timpul editării.
+                \item \small \textbf{Soluția:} Timer de debouncing (500ms) + comparare \texttt{VersionID}.
+                \item \small \textbf{Rezultat:} Reducerea încărcării serverului cu 85-90\%.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 9. Demonstrația Practică
+\begin{frame}{Demonstrație Practică (Video)}
+    \begin{center}
+        \Large \textbf{[Rulare Video Demo - 3 Minute]} \\
+        \vspace{5mm}
+        \normalsize Validarea funcționalității Server-Authoritative și a rezilienței la deconectări în timp real.
+    \end{center}
+\end{frame}
+
+% 10. Testare și Evaluare
+\begin{frame}{Testare și Evaluare Tehnică}
+    \begin{itemize}
+        \item \textbf{Unit Testing (xUnit):} Acoperire pentru serviciile critice (Deck, Matchmaking, Profile).
+        \item \textbf{Load Testing:} Simularea a 1000 de cereri concurente de matchmaking; validarea atomicității \texttt{Dictionary} shared.
+        \item \textbf{Profilare Godot:} Monitorizarea memoriei și a timpului de execuție pentru procesul headless în condiții de stres (200+ unități active).
+    \end{itemize}
+\end{frame}
+
+% 11. Concluzii și Future Work
+\begin{frame}{Concluzii și Direcții Viitoare}
+    \begin{block}{Concluzii}
+        Arhitectura dezvoltată asigură o bază solidă pentru jocuri multiplayer competitive, punând accent pe securitate prin delegarea logicii către server și pe performanță prin optimizări la nivel de comunicare.
+    \end{block}
+
+    \begin{block}{Direcții Viitoare}
+        \begin{itemize}
+            \item \textbf{Scalabilitate:} Containerizarea serverelor cu Docker și orchestrare via Kubernetes.
+            \item \textbf{Gameplay:} Adăugarea de noi clase de unități și un sistem de progresie (XP/Rank).
+            \item \textbf{AI:} Integrarea unui sistem PvE complex pentru antrenament.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\end{document}
