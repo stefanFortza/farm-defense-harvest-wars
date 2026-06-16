@@ -8,6 +8,7 @@
 \usepackage[romanian]{babel}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{multimedia}
 
 % --- Datele Prezentării ---
 \title[Farm Defense: Harvest Wars]{Farm Defense: Harvest Wars}
@@ -35,7 +36,7 @@
     \begin{columns}[c]
         \begin{column}{0.6\textwidth}
             \centering
-            % \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{../paper/images/gameplay-screenshot.png}
+            \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{images/screen-shot-gameplay.png}
             \\ \vspace{1mm} \textit{\tiny Interfața meciului PvP în timp real}
         \end{column}
         \begin{column}{0.4\textwidth}
@@ -62,7 +63,16 @@
                 \item Vulnerabilități structurale de securitate (cheating) în topologiile de rețea Peer-to-Peer.
                 \item Desincronizarea stării partajate sub influența latenței.
             \end{itemize}
+
+            \vspace{6mm}
+            \centering
+            \textit{\small Titluri de referință din domeniu:}\\
+            \vspace{2mm}
+            % Logo-uri discrete ale jocurilor mari din aceeași zonă de gen
+            \includegraphics[height=1.0cm]{images/logo-clash-royale.png} \hspace{4mm}
+            \includegraphics[height=1.0cm]{images/logo-bloons.png}
         \end{column}
+
         \begin{column}{0.5\textwidth}
             \textbf{Soluția arhitecturală implementată:}
             \begin{itemize}
@@ -70,6 +80,14 @@
                 \item Sistem tranzacțional de matchmaking orchestrat via ASP.NET Core.
                 \item Decuplare logică totală pe clientul Godot Engine (C\#).
             \end{itemize}
+
+            \vspace{6mm}
+            \centering
+            \textit{\small Tehnologii fundamentale:}\\
+            \vspace{2mm}
+            % Logo-urile tehnologiilor tale
+            \includegraphics[height=1.0cm]{images/logo-dotnet.png} \hspace{4mm}
+            \includegraphics[height=1.0cm]{images/logo-godot.png}
         \end{column}
     \end{columns}
 \end{frame}
@@ -167,7 +185,13 @@
 \begin{frame}{Demonstrație Practică (Video)}
     \begin{center}
         \Large \textbf{[Rulare Video Demo - 3 Minute]} \\
-        \vspace{5mm}
+        \vspace{3mm}
+        
+        \movie[width=0.7\textwidth, height=0.4\textwidth, showcontrols, poster]{
+            \includegraphics[width=0.7\textwidth, height=0.4\textwidth]{images/screen-shot-gameplay.png}
+        }{images/video-demo.mp4}
+        
+        \vspace{3mm}
         \normalsize Validarea funcționalității Server-Authoritative în arhitectură WAN și a rezilienței la deconectări.
     \end{center}
 \end{frame}
