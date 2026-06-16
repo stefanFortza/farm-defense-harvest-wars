@@ -12,7 +12,7 @@ services:
       - GodotServer__Host=127.0.0.1
       - GodotServer__BackendBaseUrl=http://backend:80
     ports:
-      - "5177:80"
+      - "80:5177"
       - "7777-7800:7777-7800/udp"
       - "7777-7800:7777-7800/tcp"
     volumes:

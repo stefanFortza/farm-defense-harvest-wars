@@ -75,6 +75,10 @@ public class RangedAttackState : IAttackState
 
         double attackCycle = 1.0 / Mathf.Max(0.1f, _unit.Data.AttackSpeed);
         _windUpTimer = attackCycle * 0.5; // Always 50%
+        if (_unit.Data.Type == Shared.Enums.UnitType.SkeletonMage)
+        {
+            _windUpTimer = attackCycle * 0.8; // 80% for SkeletonMage for a more dramatic effect
+        }
         _cooldownTimer = attackCycle;
 
         // Notify clients to START the animation

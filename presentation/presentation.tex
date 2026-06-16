@@ -28,7 +28,31 @@
     \titlepage
 \end{frame}
 
-% 2. Context și Obiective
+% 2. Prezentarea Jocului (Noul slide adăugat)
+\begin{frame}{Prezentarea Jocului: Farm Defense}
+    \textbf{Până să trecem la prezentarea tehnică, vom prezenta pe scurt ce este jocul:}
+    \vspace{3mm}
+    \begin{columns}[c]
+        \begin{column}{0.6\textwidth}
+            \centering
+            % \includegraphics[width=\textwidth, height=0.65\textheight, keepaspectratio]{../paper/images/gameplay-screenshot.png}
+            \\ \vspace{1mm} \textit{\tiny Interfața meciului PvP în timp real}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{itemize}
+                \item \textbf{Gen:} Tower Defense Multiplayer.
+                \item \textbf{Mecanică Asimetrică (PvP):}
+                      \begin{itemize}
+                          \item \textit{Atacatorul} spawnează dinamic valuri de unități ofensive.
+                          \item \textit{Apărătorul} plasează strategic unități defensive pentru a proteja baza.
+                      \end{itemize}
+                \item \textbf{Progresie:} Gestiunea inventarului, sistem de cufere și configurarea pachetelor de joc (Deck Building).
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% 3. Context și Obiective
 \begin{frame}{Contextul și Obiectivele Proiectului}
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
@@ -50,7 +74,7 @@
     \end{columns}
 \end{frame}
 
-% 3. Arhitectura Generală (Diagrama C4)
+% 4. Arhitectura Generală (Diagrama C4)
 \begin{frame}{Arhitectura Generală (Modelul C4)}
     \begin{columns}[c]
         \begin{column}{0.7\textwidth}
@@ -68,7 +92,7 @@
     \end{columns}
 \end{frame}
 
-% 4. Modelarea Datelor
+% 5. Modelarea Datelor
 \begin{frame}{Modelarea Datelor și Persistența}
     \begin{columns}[c]
         \begin{column}{0.65\textwidth}
@@ -86,7 +110,7 @@
     \end{columns}
 \end{frame}
 
-% 5. Arhitectura Clientului Godot
+% 6. Arhitectura Clientului Godot
 \begin{frame}{Arhitectura Clientului (Godot Engine)}
     \begin{columns}[c]
         \begin{column}{0.65\textwidth}
@@ -103,7 +127,7 @@
     \end{columns}
 \end{frame}
 
-% 6. Algoritmul de Matchmaking
+% 7. Algoritmul de Matchmaking
 \begin{frame}{Matchmaking Concurent și Instanțiere}
     \begin{columns}[c]
         \begin{column}{0.7\textwidth}
@@ -121,7 +145,7 @@
     \end{columns}
 \end{frame}
 
-% 7. Sincronizarea Pachetului (Debouncing)
+% 8. Sincronizarea Pachetului (Debouncing)
 \begin{frame}{Sincronizarea Asincronă a Pachetului (Deck)}
     \begin{columns}[c]
         \begin{column}{0.7\textwidth}
@@ -139,7 +163,7 @@
     \end{columns}
 \end{frame}
 
-% 8. Demonstrația Practică
+% 9. Demonstrația Practică
 \begin{frame}{Demonstrație Practică (Video)}
     \begin{center}
         \Large \textbf{[Rulare Video Demo - 3 Minute]} \\
@@ -148,7 +172,7 @@
     \end{center}
 \end{frame}
 
-% 9. Testare și Evaluare
+% 10. Testare și Evaluare
 \begin{frame}{Testare și Evaluare}
     \begin{block}{Validarea Concurenței Backend (xUnit \& NSubstitute)}
         \begin{itemize}
@@ -165,7 +189,7 @@
     \end{block}
 \end{frame}
 
-% 10. Concluzii și Future Work
+% 11. Concluzii și Future Work
 \begin{frame}{Concluzii și Direcții Viitoare}
     \begin{block}{Realizări}
         Dezvoltarea și validarea cu succes a unei arhitecturi distribuite care izolează logic starea partajată, asigură securitatea competiției (anti-cheat) și gestionează concurența la nivel de server.

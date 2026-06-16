@@ -204,6 +204,7 @@ public partial class GameWorld : Node2D
 
 			unit.Name = name; 
 			unit.Position = (Vector2)data["pos"];
+			unit.TargetPosition = unit.Position;
 			unit.SetLevel((int)data["level"]);
 			unit.FacingDirection = (int)data["facing"];
 			unit.LaneCenterY = (float)data["laneY"];
@@ -241,6 +242,7 @@ public partial class GameWorld : Node2D
 
 			proj.Name = name;
 			proj.Position = (Vector2)data["pos"];
+			proj.TargetPosition = proj.Position;
 			proj.Initialize(((int)data["dmg"], (Vector2)data["dir"], (bool)data["atk"]));
 			proj.Speed = (float)data["speed"];
 			
@@ -312,7 +314,7 @@ public partial class GameWorld : Node2D
 			var unit = _unitContainer.GetNodeOrNull<BaseUnit>(name);
 			if (unit != null)
 			{
-				unit.Position = (Vector2)data["p"];
+				unit.TargetPosition = (Vector2)data["p"];
 				unit.HealthComponent.SetHealthSilently((int)data["h"], unit.MaxHealth);
 				unit.StateMachine.SyncedStateIndex = (int)data["s"];
 			}
@@ -327,7 +329,7 @@ public partial class GameWorld : Node2D
 			var proj = _projectileContainer.GetNodeOrNull<BaseProjectile>(name);
 			if (proj != null)
 			{
-				proj.Position = (Vector2)data["p"];
+				proj.TargetPosition = (Vector2)data["p"];
 			}
 		}
 

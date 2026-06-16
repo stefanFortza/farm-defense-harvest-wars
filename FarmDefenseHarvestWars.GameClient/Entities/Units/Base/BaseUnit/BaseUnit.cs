@@ -95,7 +95,7 @@ public partial class BaseUnit : CharacterBody2D
 
         HealthComponent.HealthChanged += OnHealthChanged;
         HealthComponent.Died += Die;
-        
+
         _eventsBound = true;
 
         HealthComponent.Initialize(ScaledMaxHealth);
@@ -125,8 +125,19 @@ public partial class BaseUnit : CharacterBody2D
         }
         else
         {
-            // Smoothly interpolate towards the server position to fix stuttering
-            GlobalPosition = GlobalPosition.Lerp(TargetPosition, (float)(InterpolationSpeed * delta));
+            float dist = GlobalPosition.DistanceTo(TargetPosition);
+            if (dist > 64f) // Safety snap for large desyncs
+            {
+                GlobalPosition = TargetPosition;
+            }
+            else
+            {
+                // Use a dynamic interpolation speed: 
+                // - Faster correction if we are further away
+                // - Very gentle if we are close to avoid jitter
+                float alpha = dist > 10f ? InterpolationSpeed : 5.0f;
+                GlobalPosition = GlobalPosition.Lerp(TargetPosition, (float)(alpha * delta));
+            }
         }
     }
 
@@ -212,5 +223,12 @@ public partial class BaseUnit : CharacterBody2D
         {
             StateMachine.RequestStateChange(UnitStateEnum.Dying);
         }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    public void SyncStartPosition(Vector2 position)
+    {
+        TargetPosition = position;
+        GlobalPosition = position;
     }
 }

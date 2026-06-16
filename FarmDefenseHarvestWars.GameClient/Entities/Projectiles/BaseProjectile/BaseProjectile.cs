@@ -44,7 +44,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
             return;
 
         // Auto-destroy after MaxLifetime seconds so missed projectiles don't linger.
-        GetTree().CreateTimer(MaxLifetime).Timeout += () => 
+        GetTree().CreateTimer(MaxLifetime).Timeout += () =>
         {
             if (IsInsideTree()) Rpc(nameof(NetDespawn));
         };
@@ -77,8 +77,20 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
         }
         else
         {
-            // Smoothly interpolate towards the server position
-            GlobalPosition = GlobalPosition.Lerp(TargetPosition, (float)(InterpolationSpeed * delta));
+            // 1. Predict (Move forward locally at the expected speed)
+            Position += Direction * Speed * (float)delta;
+
+            // 2. Teleport if the error is too large (safety net)
+            if (GlobalPosition.DistanceTo(TargetPosition) > 64f) 
+            {
+                GlobalPosition = TargetPosition;
+            }
+            else
+            {
+                // 3. Correct (Gently nudge towards the server's authoritative position)
+                // We use a lower speed for the correction to keep it smooth
+                GlobalPosition = GlobalPosition.Lerp(TargetPosition, (float)(10.0f * delta));
+            }
         }
     }
 
@@ -101,10 +113,10 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     protected virtual void OnHit(HurtboxComponent target)
     {
         ApplyAreaDamage(target);
-        
+
         // Broadcast visuals to all peers
         Rpc(nameof(PlayImpactVisualsRPC), target.GlobalPosition, IsFromAttacker);
-        
+
         Rpc(nameof(NetDespawn));
     }
 
@@ -112,7 +124,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
     private void PlayImpactVisualsRPC(Vector2 impactPoint, bool isFromAttacker)
     {
         float aoeRadius = Config?.AoeRadius ?? 0f;
-        
+
         // Show impact effect for everyone, even non-AOE (use small radius)
         float visualRadius = aoeRadius > 0 ? aoeRadius : 6.0f;
 
@@ -122,7 +134,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
             Color = GetImpactColor(),
             GlobalPosition = impactPoint
         };
-        
+
         // Add to parent to stay in the world coordinate system (e.g., ProjectileContainer)
         if (GetParent() != null)
         {
@@ -145,7 +157,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
         foreach (Node node in GetTree().GetNodesInGroup("Units"))
         {
             if (node is not BaseUnit unit) continue;
-            
+
             // Only play hurt for enemies
             bool isUnitAttacker = unit is AttackerUnit;
             if (isUnitAttacker == isFromAttacker) continue;
@@ -159,7 +171,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
             foreach (Node node in GetTree().GetNodesInGroup("DefenderBase"))
             {
                 if (node is not DefenderBase defBase) continue;
-                
+
                 float distance = defBase.GlobalPosition.DistanceTo(impactPoint);
                 if (radius > 0)
                 {
@@ -187,7 +199,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
         else
         {
             // Direct hit fallback - if it's very close to unit center
-            if (distance < 16f) 
+            if (distance < 16f)
             {
                 unit.Visuals?.GetNodeOrNull<UnitVisualsComponent>("UnitVisualsComponent")?.PlayHurtAnimation();
             }
@@ -233,7 +245,7 @@ public partial class BaseProjectile : Node2D, IInitializable<(int Damage, Vector
             foreach (Node node in GetTree().GetNodesInGroup("DefenderBase"))
             {
                 if (node is not DefenderBase defBase) continue;
-                
+
                 var hurtbox = defBase.HurtboxComponent;
                 if (hurtbox == null || !GodotObject.IsInstanceValid(hurtbox) || hurtbox == directHitTarget) continue;
 

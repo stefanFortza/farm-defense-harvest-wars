@@ -48,7 +48,8 @@ public partial class UnitFactory : Node, IInitializable<GameplayContext>
 
 		// 3. Setăm datele critice
 		var worldPos = grid.GetWorldPosition(gridPos);
-		unit.Position = worldPos;
+		unit.GlobalPosition = worldPos;
+		unit.TargetPosition = worldPos;
 		unit.LaneCenterY = worldPos.Y - 8;
 		// unit.GridPosition = gridPos; // Unitatea știe unde e
 

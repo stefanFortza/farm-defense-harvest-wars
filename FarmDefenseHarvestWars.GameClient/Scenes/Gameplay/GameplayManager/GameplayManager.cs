@@ -92,13 +92,13 @@ public partial class GameplayManager : Node, IInitializable<GameWorldContext>
 	private void OnMatchStateChanged(int newStateInt)
 	{
 		var newState = (MatchManager.MatchState)newStateInt;
-		
+
 		if (newState == MatchManager.MatchState.Playing && Multiplayer.IsServer() && !_initialUnitsSpawned)
 		{
 			if (_grid != null)
 			{
 				_initialUnitsSpawned = true;
-				SpawnInitialUnits(_grid);
+				// SpawnInitialUnits(_grid);
 			}
 			else
 			{
