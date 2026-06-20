@@ -150,7 +150,7 @@
     \begin{columns}[c]
         \begin{column}{0.7\textwidth}
             \centering
-            \includegraphics[height=0.85\textheight, width=\textwidth, keepaspectratio]{../paper/images/matchmaking-flow.png}
+            \includegraphics[height=0.85\textheight, width=\textwidth, keepaspectratio]{images/flow.png}
             \\ \vspace{1mm} \textit{\tiny Fluxul Matchmaking - Procesare asincronă și alocare server}
         \end{column}
         \begin{column}{0.3\textwidth}
@@ -168,14 +168,13 @@
     \begin{columns}[c]
         \begin{column}{0.7\textwidth}
             \centering
-            \includegraphics[height=0.85\textheight, width=\textwidth, keepaspectratio]{../paper/images/async-debouncing-sync.png}
+            \includegraphics[height=0.85\textheight, width=\textwidth, keepaspectratio]{images/async-debouncing-sync.png}
             \\ \vspace{1mm} \textit{\tiny Mecanismul de Debouncing - Optimizare trafic HTTP}
         \end{column}
         \begin{column}{0.3\textwidth}
             \begin{itemize}
                 \item \small Validare strictă prin \texttt{Version ID} pentru prevenirea coliziunilor de stare.
                 \item \small Comasarea cererilor rapide (Debouncing) a redus overhead-ul API-ului cu peste 85\%.
-                \item \small Interfață utilizator complet non-blocantă (Optimistic UI updates).
             \end{itemize}
         \end{column}
     \end{columns}
@@ -184,15 +183,9 @@
 % 9. Demonstrația Practică
 \begin{frame}{Demonstrație Practică (Video)}
     \begin{center}
-        \Large \textbf{[Rulare Video Demo - 3 Minute]} \\
-        \vspace{3mm}
-        
-        \movie[width=0.7\textwidth, height=0.4\textwidth, showcontrols, poster]{
-            \includegraphics[width=0.7\textwidth, height=0.4\textwidth]{images/screen-shot-gameplay.png}
+        \movie[width=.85\textwidth, showcontrols, poster]{
+            \includegraphics[width=.85\textwidth]{images/screen-shot-gameplay.png}
         }{images/video-demo.mp4}
-        
-        \vspace{3mm}
-        \normalsize Validarea funcționalității Server-Authoritative în arhitectură WAN și a rezilienței la deconectări.
     \end{center}
 \end{frame}
 
