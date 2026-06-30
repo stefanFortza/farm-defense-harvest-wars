@@ -128,22 +128,7 @@
     \end{columns}
 \end{frame}
 
-% 6. Arhitectura Clientului Godot
-\begin{frame}{Arhitectura Clientului (Godot Engine)}
-    \begin{columns}[c]
-        \begin{column}{0.65\textwidth}
-            \centering
-            \includegraphics[width=\textwidth, height=0.75\textheight, keepaspectratio]{../paper/images/StateDiagram.png}
-            \\ \vspace{2mm} \textit{\tiny Tranziția Stărilor - Controlul comportamental al entităților}
-        \end{column}
-        \begin{column}{0.35\textwidth}
-            \begin{itemize}
-                \item \textbf{State Pattern:} Determinism în comportamentul unităților, eliminând structurile decizionale complexe.
-                \item \textbf{Component Pattern:} Agregarea funcționalităților (Viață, Hitbox) independent de ierarhia de moștenire vizuală.
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
+
 
 % 7. Algoritmul de Matchmaking
 \begin{frame}{Matchmaking Concurent și Instanțiere}
@@ -158,23 +143,6 @@
                 \item \small Dicționare de memorie partajată securizate prin excludere mutuală (\texttt{lock}).
                 \item \small Garanția atomicității la asocierea perechilor cu o complexitate de evaluare $O(1)$.
                 \item \small Delegarea proceselor Headless către sistemul de operare host.
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-% 8. Sincronizarea Pachetului (Debouncing)
-\begin{frame}{Sincronizarea Asincronă a Pachetului (Deck)}
-    \begin{columns}[c]
-        \begin{column}{0.7\textwidth}
-            \centering
-            \includegraphics[height=0.85\textheight, width=\textwidth, keepaspectratio]{images/async-debouncing-sync.png}
-            \\ \vspace{1mm} \textit{\tiny Mecanismul de Debouncing - Optimizare trafic HTTP}
-        \end{column}
-        \begin{column}{0.3\textwidth}
-            \begin{itemize}
-                \item \small Validare strictă prin \texttt{Version ID} pentru prevenirea coliziunilor de stare.
-                \item \small Comasarea cererilor rapide (Debouncing) a redus overhead-ul API-ului cu peste 85\%.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -195,13 +163,6 @@
         \begin{itemize}
             \item \textbf{Thread-Safety:} Rularea a 1000 de cereri asincrone simultane (\texttt{Task.WhenAll}) a generat exact 500 de meciuri valide, confirmând prevenirea fenomenului de \textit{race conditions} prin \texttt{lock}.
             \item \textbf{Idempotență și Izolare:} Gestionarea deterministă a structurilor \texttt{HashSet} prin respingerea apelurilor redundante și curățarea referințelor la abandon.
-        \end{itemize}
-    \end{block}
-
-    \begin{block}{Profilare Funcțională Client-Side (DeckService)}
-        \begin{itemize}
-            \item \textbf{Eficiența Debouncing-ului:} Un test cu 20 de acțiuni rapide în interfață a comasat execuția în doar 2 apeluri HTTP înregistrate de backend, reducând traficul de rețea cu 90\%.
-            \item \textbf{Reziliența la Latență:} Inserarea unor întârzieri artificiale a confirmat capacitatea algoritmului de a respinge actualizările vizuale perimate, validând starea prin \texttt{\_latestVersion}.
         \end{itemize}
     \end{block}
 \end{frame}
